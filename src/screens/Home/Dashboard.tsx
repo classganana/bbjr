@@ -4,6 +4,7 @@ import { DashboardStyle } from './DashboardStyle'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { Sprit, Star } from '../../components/common/SvgComponent/SvgComponent'
 import { defaultButton } from '../../components/common/ButttonComponent/ButtonStyles'
+import { ProgressBar } from '../../components/home/components/ProgressBar'
 
 export const Dashboard = () => {
   return (
@@ -36,10 +37,11 @@ export const Dashboard = () => {
                   } }></Button>
             </View>
             <View style={DashboardStyle.leaderBoardBody}>
-                  <Star height={'53'} width={'53'} fill={'green'} ></Star>
+                  <Star height={'60'} width={'60'} fill={'green'} ></Star>
                   <View style={DashboardStyle.leaderBoardBodyDetails}>
-                        <Text>Level 1</Text>
-                        <Text>500 Points to next level</Text>
+                        <Text style={DashboardStyle.leaderBoardBodyDetailsLevel}>Level 1</Text>
+                        <Text style={DashboardStyle.leaderBoardBodyPoints}>500 Points to next level</Text>
+                        <ProgressBar perc={10} />
                   </View>
 
             </View>

@@ -10,8 +10,8 @@ import {
   Modal,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ResetPassword } from "../Auth/CreateNewPasswordScreen";
-import { LoginScreen } from "../Auth/LoginScreen/LoginScreen";
+import { ResetPassword } from "../auth/CreateNewPasswordScreen";
+import { LoginScreen } from "../auth/LoginScreen/LoginScreen";
 import  StudentAssistantSetupScreen  from "../studentaiAssistant/StudentAssistantSetupScreen";
 const Tab = createBottomTabNavigator();
 const BottomTabSetup = () => {

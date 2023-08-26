@@ -22,6 +22,24 @@ export interface Props {
   style?: StyleProp<any>;
 }
 
+export const Questions = (props: Props) => {
+  return (
+    <Svg
+      viewBox="0 0 41 40"
+      {...props}
+    >
+      <Ellipse cx={20.2778} cy={20} rx={20.2778} ry={20} fill="#333" />
+      <Path
+        d="M25.621 28.16H15.158c-.73 0-1.318-.58-1.318-1.3V13.95c0-.72.588-1.3 1.318-1.3H25.62c.73 0 1.318.58 1.318 1.3v12.91c0 .72-.588 1.3-1.318 1.3zM17.307 18.43h4.136M17.307 22.38h6.164"
+        stroke="#fff"
+        strokeWidth={1.2}
+        strokeMiterlimit={10}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
 
 export const FirstCorousel = (props: Props) => (
   <Svg

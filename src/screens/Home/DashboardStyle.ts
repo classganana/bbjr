@@ -62,6 +62,7 @@ export const DashboardStyle = StyleSheet.create({
         color: Colors.white
     },
     body: {
+        width: "100%",
         backgroundColor: Colors.white,
         paddingHorizontal: 26,
         flex: 1,
@@ -77,20 +78,31 @@ export const DashboardStyle = StyleSheet.create({
     },
     leaderBoardBody: {
         width: "100%",
-        height: 97,
         flexShrink: 0,
         borderRadius: 12,
         backgroundColor: "#F1F1F1",
         paddingHorizontal: 14,
+        paddingVertical: 20,
         alignItems: 'center',
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        gap: 10,
     },
     leaderBoardBodyDetails: {
         display: 'flex',
-        gap: 12,
+        gap: 1,
+        flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
+    },
+    leaderBoardBodyDetailsLevel: {
+      fontSize: 22,
+      fontWeight: "600",
+      color: Colors.black_01
+    },
+    leaderBoardBodyPoints: {
+      color: "rgba(0, 0, 0, 0.30)",
+      fontWeight: "600"
     },
     options: {
         display: 'flex',

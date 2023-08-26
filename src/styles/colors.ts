@@ -16,6 +16,7 @@ export const Colors = {
   black_04: "#C8C8C8",
   black_05:"#212121",
   black_06:"#2D1C1C",
+  black_07:"#333",
   gray_01: "#F7F8F9",
   gray_02: "#8391A1",
   gray_03: "#606060",
