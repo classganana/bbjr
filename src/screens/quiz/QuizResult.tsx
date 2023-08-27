@@ -47,7 +47,7 @@ export const QuizResult = (props: Props) => {
                 </View>
             </View>
             <View style={styles.imageSection}>
-                <Image source={require('../../../assets/png/trophy.png')}></Image>
+                <Image style={styles.image} source={require('../../../assets/png/trophy.png')}></Image>
             </View>
             <View style={styles.cardsContainer}>
                 {result.map((item, index) => (
@@ -104,7 +104,13 @@ const styles = StyleSheet.create({
     imageSection: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: 300,
+        // width: "100%"
+    },
+    image: {
+        height:300,
+        width: "100%"
     },
     cardsContainer: {
         display: 'flex',
