@@ -61,6 +61,25 @@ export const LoginButton = StyleSheet.create<Style>({
   },
 });
 
+export const OutlineButton = StyleSheet.create<Style>({
+  container: {
+    height: 56,
+    // flex: 1,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    borderWidth: 1/4
+  },
+  title: {
+    color: '#757474',
+    fontWeight: "600",
+    fontSize: 20,
+    fontFamily: "Inter-Regular",
+  },
+});
+
 export const GoogleSignIn = StyleSheet.create<Style>({
   container: {
     height: 56,

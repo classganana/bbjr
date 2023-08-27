@@ -8,7 +8,7 @@ import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 
 export const QuizQuestionsPage = () => {
-    const [timer, setTimer] = useState(1800); // Initial timer value in seconds (30 minutes)
+    const [timer, setTimer] = useState(10); // Initial timer value in seconds
 
     const questionScrollViewRef = useRef(null);
 
@@ -49,6 +49,8 @@ export const QuizQuestionsPage = () => {
         if (currentQuestionIndex < quizQuestions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             scrollToNextQuestion();
+        } else {
+            console.log("Ended")
         }
     };
 
