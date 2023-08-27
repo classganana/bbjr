@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { Colors } from '../../styles/colors'
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent'
+import React, { useEffect, useRef, useState } from 'react';
+import { Colors } from '../../styles/colors';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
+import { Button } from '../../components/common/ButttonComponent/Button';
+import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 
 export const QuizQuestionsPage = () => {
     const [timer, setTimer] = useState(1800); // Initial timer value in seconds (30 minutes)
+
+    const questionScrollViewRef = useRef(null);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -44,6 +48,15 @@ export const QuizQuestionsPage = () => {
     const navigateToNextQuestion = () => {
         if (currentQuestionIndex < quizQuestions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
+            scrollToNextQuestion();
+        }
+    };
+
+    const scrollToNextQuestion = () => {
+        const nextQuestionIndex = currentQuestionIndex + 1;
+        const scrollX = nextQuestionIndex * 40; // Adjust this value based on your layout
+        if (questionScrollViewRef.current) {
+            questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
     };
 
@@ -67,8 +80,7 @@ export const QuizQuestionsPage = () => {
                     </View>
                 </View>
             </View>
-            <ScrollView contentContainerStyle={styles.container}>
-                <ScrollView horizontal style={styles.questionNumbersScroll}>
+                <ScrollView  ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
                         {quizQuestions.map((_, index) => (
                             <TouchableOpacity
@@ -84,36 +96,43 @@ export const QuizQuestionsPage = () => {
                         ))}
                     </View>
                 </ScrollView>
-                <QuestionComponent
-                    question={currentQuestion.question}
-                    options={currentQuestion.options}
-                    onSelectOption={handleSelectOption}
-                />
+                <ScrollView contentContainerStyle={styles.scrollContainer}>
+                    <QuestionComponent
+                        question={currentQuestion.question}
+                        options={currentQuestion.options}
+                        onSelectOption={handleSelectOption}
+                    />
+                </ScrollView>
+            <View style={styles.nextQuizButton}>
                 <Button
-                    title={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Next Question'}
+                    label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Next Question'}
+                    className={LoginButton}
+                    disabled={false}
                     onPress={navigateToNextQuestion}
                 />
-            </ScrollView>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        margin: 0,
-        backgroundColor: Colors.white
+        flex: 1,
+        backgroundColor: Colors.white,
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        paddingBottom: 60,
     },
     questionNumbersScroll: {
         marginTop: 10,
-        display: 'flex',
-        flexDirection: 'row',
-        marginHorizontal: 1
+        marginBottom: 16,
+        maxHeight: 40,
     },
     header: {
         paddingHorizontal: 24,
         paddingVertical: 26,
         height: 96,
-        flexShrink: 0,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 25,
@@ -129,29 +148,25 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     heading: {
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         gap: 28,
-        // justifyContent: 'space-between'
     },
     headingTitle: {
         color: "#7A7A7A",
         fontWeight: "500",
-        fontSize: 14
+        fontSize: 14,
     },
     headingInfo: {
-        fontWeight: '500'
+        fontWeight: '500',
     },
     backButton: {
         height: 45,
         width: 45,
         borderRadius: 45,
         backgroundColor: "#D9D9D9",
-        display: 'flex',
-        // flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     timer: {
         textAlign: 'center',
@@ -166,23 +181,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 8,
         elevation: 2,
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     timerText: {
         marginTop: 4,
         textAlign: 'center',
         color: "#525252",
-        fontSize: 12
-    },
-    navigationButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 16,
+        fontSize: 12,
     },
     questionNumbers: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginBottom: 16,
+        marginBottom: 10,
     },
     questionNumber: {
         alignItems: 'center',
@@ -196,10 +206,19 @@ const styles = StyleSheet.create({
     questionNumberText: {
         color: Colors.white,
         fontSize: 16,
-        fontWeight: '700'
+        fontWeight: '700',
     },
     activeQuestion: {
         backgroundColor: Colors.primary, // Change to your active question color
         color: Colors.white,
-    }
-})
+    },
+    nextQuizButton: {
+        width: "90%",
+        position: 'absolute',
+        bottom: 20,
+        alignSelf: 'center',
+        paddingHorizontal: 16,
+    },
+});
+
+export default QuizQuestionsPage;
