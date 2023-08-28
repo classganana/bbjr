@@ -22,6 +22,9 @@ export const QuizQuestionsPage = () => {
             }
         }, 1000); // Update the timer every second
 
+        if(timer == 0) console.log("Ended");
+
+
         return () => {
             clearInterval(interval); // Clear the interval on component unmount
         };

@@ -13,19 +13,19 @@ const OtpVerification = () => {
 
   const handleTextChange = (text: string, inputRef: React.RefObject<TextInput>) => {
     const numericText = text.replace(/[^0-9]/g, ''); // Filter out non-numeric characters
-  
-    inputRef.current?.setNativeProps({ text: numericText }); // Set the numeric text as the input's value
-  
-    if (numericText.length === 0) {
-      focusPreviousInput(inputRef);
-    } else if (numericText.length >= 1) {
-      inputRef.current?.blur();
-      focusNextInput(inputRef);
+
+    // Update the value of the input using state
+    if (inputRef.current) {
+      const currentInputRef = inputRef.current;
+      currentInputRef.value = numericText; // Set the value using the 'value' prop
+
+      if (numericText.length === 0) {
+        focusPreviousInput(inputRef);
+      } else if (numericText.length >= 1) {
+        currentInputRef.blur();
+        focusNextInput(inputRef);
+      }
     }
-  
-    const inputStyle = inputRef.current?.setNativeProps({
-      style: { borderColor: numericText.length > 0 ? '#35C2C1' : '#000000' },
-    });
   };
   
   const focusNextInput = (currentInputRef: React.RefObject<TextInput>) => {
@@ -62,7 +62,7 @@ const OtpVerification = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.inputView}
+          style={[styles.inputView]}
           maxLength={1}
           onChangeText={(text) => handleTextChange(text, input1Ref)}
           ref={input1Ref}
@@ -121,6 +121,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Inter-Bold',
     fontSize: 20
+  },
+  inputViewBg: {
+    backgroundColor: 'red'
   },
   button: {
     marginTop: 20,
