@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     questionNumbersScroll: {
         marginTop: 10,
         marginBottom: 16,
-        maxHeight: 40,
+        maxHeight: 50,
     },
     header: {
         paddingHorizontal: 24,
@@ -194,7 +194,8 @@ const styles = StyleSheet.create({
     questionNumbers: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginBottom: 10,
+        // marginBottom: 10,
+        padding:10,
     },
     questionNumber: {
         alignItems: 'center',

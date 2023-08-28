@@ -15,7 +15,7 @@ export const defaultButton = StyleSheet.create<Style>({
     padding: 5,
     backgroundColor: Colors.gray_15,
     borderColor: Colors.Lavender_Pinocchio,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 10,
     display: 'flex',
     justifyContent: 'center',

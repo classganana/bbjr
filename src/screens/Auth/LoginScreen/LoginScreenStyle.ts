@@ -24,7 +24,7 @@ export const LoginScreenStyle = StyleSheet.create({
         backgroundColor: Colors.primary
     },
     formContainer: {
-        marginVertical: 'auto',
+        // marginVertical: 'auto',
         backgroundColor: Colors.white,
         paddingHorizontal: 16,
 
