@@ -24,7 +24,7 @@ export const LoginScreen = () => {
       <View style={LoginScreenStyle.container}>
         <Stack.Navigator>
           <Stack.Screen name='LoginForm' component={LoginForm} options={{ headerShown: false }}></Stack.Screen>
-          <Stack.Screen
+        <Stack.Screen
         name="Otp"
         component={OtpVerification}
         options={{
