@@ -36,6 +36,24 @@ export const ShareIcon = (props: Props) => {
   )
 }
 
+export const StrongBackButton = (props: Props) => {
+  return (
+    <Svg
+    viewBox="0 0 25 25"
+    {...props}
+  >
+    <G id="Group 427319405">
+      <Circle id="Ellipse 2369" cx={12.5} cy={12.5} r={12.5} fill="#FAFAFA" />
+      <Path
+        id="Arrow 1"
+        d="M6.1109 11.7929C5.72037 12.1834 5.72037 12.8166 6.1109 13.2071L12.4749 19.5711C12.8654 19.9616 13.4985 19.9616 13.8891 19.5711C14.2796 19.1805 14.2796 18.5474 13.8891 18.1569L8.23222 12.5L13.8891 6.84315C14.2796 6.45262 14.2796 5.81946 13.8891 5.42893C13.4985 5.03841 12.8654 5.03841 12.4749 5.42893L6.1109 11.7929ZM18.1816 11.5L6.818 11.5V13.5L18.1816 13.5V11.5Z"
+        fill={props.fill}
+      />
+    </G>
+  </Svg>
+  )
+}
+
 export const Questions = (props: Props) => {
   return (
     <Svg
@@ -397,6 +415,17 @@ export function Pencil(props: Props) {
 //   );
 // }
 
+
+export function GreenCheck(props: Props) {
+  return  <Svg
+  viewBox="0 0 11 11"
+  {...props}
+>
+  <Circle cx={5.5} cy={5.5} r={5.5} fill="#006B7F" />
+  <Path d="M3 5.18208L4.78571 7.00027L8 3.72754" stroke="white" />
+</Svg>
+}
+
 export function DropdownComponentIcon(props: Props) {
   return (
     <Svg {...props} viewBox="0 0 8 16">
@@ -410,7 +439,7 @@ export function DropdownComponentIcon(props: Props) {
 
 export function SearchIcon(props: Props) {
   return (
-    <Svg {...props}>
+    <Svg {...props} viewBox="0 0 20 15">
       <Path
         d="M12.851 12.857a.499.499 0 01-.35.143.518.518 0 01-.355-.143l-2.695-2.701a5.752 5.752 0 11.705-.705l2.695 2.694a.499.499 0 010 .712zm-7.087-2.352a4.741 4.741 0 100-9.482 4.741 4.741 0 000 9.482z"
         fill="#858282"

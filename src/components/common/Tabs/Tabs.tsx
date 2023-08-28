@@ -1,5 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { Colors } from "../../../styles/colors";
 
 interface TabsProps {
   activeTab: string;
@@ -33,33 +34,33 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, tabs, onChangeTab }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#f2f2f2",
+    // backgroundColor: "#f2f2f2",
   },
   tab: {
     flex: 1,
     paddingVertical: 16,
     alignItems: "center",
     justifyContent: "center",
-    borderBottomWidth: 2,
-    borderBottomColor: "transparent",
+    borderBottomWidth: 1/4,
+    borderBottomColor: Colors.gray_16,
   },
   activeTab: {
-    borderBottomColor: "blue",
+    borderBottomColor: Colors.primary,
   },
   tabText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "black",
+    color: Colors.gray_16,
   },
   activeTabText: {
-    color: "blue",
+    color: Colors.primary,
   },
   indicator: {
     position: "absolute",
     bottom: 0,
     height: 2,
     width: "100%",
-    backgroundColor: "blue",
+    backgroundColor: Colors.primary,
   },
 });
 export default Tabs;

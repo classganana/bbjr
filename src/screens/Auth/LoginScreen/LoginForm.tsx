@@ -2,7 +2,6 @@ import { Text, TextInput, View } from "react-native";
 import { LoginScreenStyle } from "./LoginScreenStyle"
 import { Button } from "../../../components/common/ButttonComponent/Button"
 import { LoginButton } from "../../../components/common/ButttonComponent/ButtonStyles"
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 export const LoginForm = () => {
