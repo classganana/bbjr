@@ -12,9 +12,9 @@ export const AppNavigator = () => {
     return (
         <View style={{ flex: 1, width: "100%", backgroundColor: 'white' }}>
             <Stack.Navigator>
-                {/* <Stack.Screen name='OnBoarding' component={OnBoardingNavigator} options={{ headerShown: false }}></Stack.Screen> */}
-                {/* <Stack.Screen name="Login" component={LoginScreen} options={{ headerTitle: '' }} /> */}
-                {/* <Stack.Screen name="DashboardNavigator" component={DashboardNavigator} options={{ headerShown: false }} /> */}
+                <Stack.Screen name='OnBoarding' component={OnBoardingNavigator} options={{ headerShown: false }}></Stack.Screen>
+                <Stack.Screen name="Login" component={LoginScreen} options={{ headerTitle: '' }} />
+                <Stack.Screen name="DashboardNavigator" component={DashboardNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name="Quiz" component={QuizNavigator} options={{ headerShown: false }}></Stack.Screen>
             </Stack.Navigator>
         </View>

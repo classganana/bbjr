@@ -18,6 +18,7 @@ export const QuizNavigator = () => {
               {/* <Stack.Screen name="QuizQuestionPages" component={QuizQuestionsPage} options={{ headerShown: false }} />  */}
               <Stack.Screen name="QuizHomePage" component={QuizHomePage} options={{ headerShown: false }} /> 
 
+
           </Stack.Navigator>
     </View>
     )

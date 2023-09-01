@@ -4,6 +4,7 @@ import { Colors } from "../../styles/colors";
 export const DashboardStyle = StyleSheet.create({
     container: {
         flex: 1,
+        
     },
     header: {
         height: 150,
@@ -66,6 +67,7 @@ export const DashboardStyle = StyleSheet.create({
         backgroundColor: Colors.white,
         paddingHorizontal: 26,
         flex: 1,
+        gap:20,
     },
     leaderboardHeader: {
         display: 'flex',
@@ -110,14 +112,23 @@ export const DashboardStyle = StyleSheet.create({
         gap: 20,
         backgroundColor: 'white',
       },
+      optionHeading: {
+        fontSize: 16,
+        fontWeight: '500'
+      },
       option: {
         width: "50%",
         height: 200,
         flex: 1,
         display: 'flex',
         padding: 12,
+        borderRadius:20,
         gap: 25,
         backgroundColor: 'white', // Set a non-transparent background color
+        shadowColor: Colors.black_03,
+        shadowOffset: { width: 0, height: 2 },
+       shadowOpacity: 0.1,
+        shadowRadius: 4,
         ...Platform.select({
           ios: {
             shadowColor: 'rgba(0, 0, 0, 0.15)',
