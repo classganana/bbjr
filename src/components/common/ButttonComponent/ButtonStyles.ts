@@ -42,6 +42,28 @@ export const primaryButton = StyleSheet.create<Style>({
   },
 });
 
+
+export const PrimarySmallButton = StyleSheet.create({
+  container: {
+    height: 22,
+    // flex: 1,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 4
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "400",
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+  },  
+})
+
 export const LoginButton = StyleSheet.create<Style>({
   container: {
     height: 56,
@@ -61,6 +83,28 @@ export const LoginButton = StyleSheet.create<Style>({
   },
 });
 
+
+export const SmallOutlineButton = StyleSheet.create<Style>({
+  container: {
+    height: 22,
+    // flex: 1,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    borderWidth: 1/4,
+    borderColor: Colors.primary,
+    paddingVertical: 8,
+  },
+  title: {
+    color: Colors.primary,
+    fontWeight: "500",
+    fontSize: 10,
+    fontFamily: "Inter-Regular",
+  },
+});
+
 export const OutlineButton = StyleSheet.create<Style>({
   container: {
     height: 56,
@@ -70,7 +114,8 @@ export const OutlineButton = StyleSheet.create<Style>({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    borderWidth: 1/4
+    borderWidth: 1/4,
+    borderColor: Colors.primary
   },
   title: {
     color: '#757474',

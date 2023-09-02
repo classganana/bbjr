@@ -3,18 +3,10 @@ import { Image, Text, View } from 'react-native'
 import { DashboardStyle } from './DashboardStyle'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { Sprit, Star } from '../../components/common/SvgComponent/SvgComponent'
-import { defaultButton } from '../../components/common/ButttonComponent/ButtonStyles'
+import { LoginButton, PrimarySmallButton, defaultButton } from '../../components/common/ButttonComponent/ButtonStyles'
 import { ProgressBar } from '../../components/home/components/ProgressBar'
-import { useNavigation } from '@react-navigation/native'
 
 export const Dashboard = () => {
-    const navigation = useNavigation();
-
-  const moveToQuiz = () => {
-    navigation.navigate("Quiz" as never);
-  };
-
-
   return (
     <View style={DashboardStyle.container}>
         <View style={DashboardStyle.header}>
@@ -40,9 +32,11 @@ export const Dashboard = () => {
                 <Text style={DashboardStyle.leaderboardHeaderText}>
                     Leaderboard
                 </Text>
-                <Button label={"View More"} disabled={false} onPress={function (): void {
-                      throw new Error('Function not implemented.')
-                  } }></Button>
+                <View>
+                    <Button label={"View"} className={PrimarySmallButton}  disabled={false} onPress={function (): void {
+                        throw new Error('Function not implemented.')
+                    } }></Button>
+                </View>
             </View>
             <View style={DashboardStyle.leaderBoardBody}>
                   <Star height={'60'} width={'60'} fill={'green'} ></Star>
@@ -54,10 +48,6 @@ export const Dashboard = () => {
 
             </View>
             <View style={DashboardStyle.options}>
-                <View style={{width: "50%"}}>
-                    <Text style={DashboardStyle.optionHeading}>
-                        Ayush
-                    </Text>
                 <View style={DashboardStyle.option}>
                     <View style={DashboardStyle.optionHeader}>
                         <Sprit height={'36'} width={'36'} fill={'red'} />
@@ -73,10 +63,6 @@ export const Dashboard = () => {
                           throw new Error('Function not implemented.')
                       } }></Button>
                 </View>
-                </View>
-                <View style={{width: "50%"}}>
-                <Text style={DashboardStyle.optionHeading}>
-                        Wakshe</Text>
                 <View style={DashboardStyle.option}>
                     <View style={DashboardStyle.optionHeader}>
                         <Image source={require("../../../assets/svg/books.png")}></Image>
@@ -89,7 +75,6 @@ export const Dashboard = () => {
                           throw new Error('Function not implemented.')
                       } }></Button>
                 </View>
-                </View>
             </View>
             <View>
                 <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat</Text>
@@ -97,7 +82,9 @@ export const Dashboard = () => {
                     <View>
                         <Text>Your Assistant is here</Text>
                         <Text>Ask anything 🚀</Text>
-                        <Button label={"Lets go"} className={defaultButton} disabled={false} onPress={moveToQuiz}></Button>
+                        <Button label={"Lets go"} className={defaultButton} disabled={false} onPress={function (): void {
+                              throw new Error('Function not implemented.')
+                          } }></Button>
                     </View>
                     <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
                 </View>

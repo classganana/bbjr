@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Colors } from '../../styles/colors';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
 
 export const QuizQuestionsPage = () => {
-    const [timer, setTimer] = useState(10); // Initial timer value in seconds
+    const [timer, setTimer] = useState(100); // Initial timer value in seconds
 
     const questionScrollViewRef = useRef(null);
 
@@ -22,9 +22,7 @@ export const QuizQuestionsPage = () => {
             }
         }, 1000); // Update the timer every second
 
-        if(timer == 0) console.log("Ended");
-
-
+        if (timer == 0) console.log("Ended");
         return () => {
             clearInterval(interval); // Clear the interval on component unmount
         };
@@ -72,20 +70,28 @@ export const QuizQuestionsPage = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.heading}>
-                    <View style={styles.backButton}>
-                        <ArrowLeft height={'25'} width={'25'} fill={'black'} />
-                    </View>
                     <View>
-                        <Text style={styles.headingTitle}>Quiz Details</Text>
+                        <Text style={styles.headingTitle}>Test</Text>
                         <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
                     </View>
-                    <View style={{ position: "absolute", right: 10 }}>
-                        <Text style={styles.timer}>{formatTime(timer)}</Text>
-                        <Text style={styles.timerText}>mins left</Text>
+                    <View style={{display: 'flex', gap: 10}}>
+                        <View style={styles.timerBlock}>
+                            <Text style={styles.timerText}>Time Left:</Text>
+                            <Text style={styles.timer}>{formatTime(timer)}</Text>
+                        </View>
+                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => {}}/>
                     </View>
                 </View>
             </View>
-                <ScrollView  ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
+            <View style={styles.body}>
+                <View style={styles.questionInfo}>
+                    <View style={styles.questionInfoDropDown}>
+                        <Text style={styles.questionInfoText}>Question {currentQuestionIndex+1}/{quizQuestions.length}</Text>
+                        <DownArrow height={'20'} width={'20'} fill={'black'} />
+                    </View>
+                    <ReportIcon height={'18'} width={'18'} fill={'white'} />
+                </View>
+                <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
                         {quizQuestions.map((_, index) => (
                             <TouchableOpacity
@@ -108,13 +114,14 @@ export const QuizQuestionsPage = () => {
                         onSelectOption={handleSelectOption}
                     />
                 </ScrollView>
-            <View style={styles.nextQuizButton}>
-                <Button
-                    label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Next Question'}
-                    className={LoginButton}
-                    disabled={false}
-                    onPress={navigateToNextQuestion}
-                />
+                <View style={styles.nextQuizButton}>
+                    <Button
+                        label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Next Question'}
+                        className={LoginButton}
+                        disabled={false}
+                        onPress={navigateToNextQuestion}
+                    />
+                </View>
             </View>
         </View>
     );
@@ -123,13 +130,14 @@ export const QuizQuestionsPage = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: "#F2F7F8",
     },
     scrollContainer: {
         flexGrow: 1,
         paddingBottom: 60,
     },
     questionNumbersScroll: {
+        backgroundColor: 'white',
         marginTop: 10,
         marginBottom: 16,
         maxHeight: 50,
@@ -142,23 +150,16 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 25,
         borderBottomRightRadius: 25,
-        backgroundColor: '#F0F0F0',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.15,
-        shadowRadius: 4,
-        elevation: 2,
+        backgroundColor: '#F2F7F8',
     },
     heading: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         gap: 28,
     },
     headingTitle: {
-        color: "#7A7A7A",
+        color: Colors.primary,
         fontWeight: "500",
         fontSize: 14,
     },
@@ -173,10 +174,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    timerBlock: {
+        //  position: "absolute",
+         display: 'flex',
+         flexDirection: 'row',
+         right: 10 
+    },
     timer: {
         textAlign: 'center',
         borderRadius: 10,
-        padding: 2,
+        padding: 3,
         backgroundColor: '#FFF',
         shadowColor: '#000',
         shadowOffset: {
@@ -198,7 +205,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         // marginBottom: 10,
-        padding:10,
+        padding: 10,
+        borderBottomWidth: 1/4,
     },
     questionNumber: {
         alignItems: 'center',
@@ -225,6 +233,39 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         paddingHorizontal: 16,
     },
+    body: {
+        flex: 1,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        backgroundColor: '#FFF',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.10,
+        shadowRadius: 15,
+        elevation: 2, // for Android shadow
+    },
+    questionInfo: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 6,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 24,
+        paddingVertical: 16
+    },
+    questionInfoDropDown: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 6,
+        alignItems: 'center',
+    },
+    questionInfoText: {
+        fontSize: 16,
+        fontWeight: '500',
+    }
 });
 
 export default QuizQuestionsPage;

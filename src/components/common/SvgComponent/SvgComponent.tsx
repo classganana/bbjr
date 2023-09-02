@@ -22,6 +22,32 @@ export interface Props {
   style?: StyleProp<any>;
 }
 
+
+export const ReportIcon = (props: Props) => {
+    return (
+      <Svg
+        viewBox="0 0 18 17"
+        {...props}
+      >
+        <Path
+          d="M3.631 7.166C5.95 3.056 7.11 1 8.945 1c1.835 0 2.995 2.055 5.313 6.166l.29.512c1.926 3.416 2.89 5.124 2.019 6.373-.871 1.25-3.026 1.25-7.333 1.25h-.579c-4.307 0-6.462 0-7.332-1.25-.871-1.249.093-2.957 2.02-6.373l.288-.512z"
+          stroke="#5D5D5D"
+          strokeWidth={1.5}
+        />
+        <Path
+          d="M8.945 4.973v3.972"
+          stroke="#5D5D5D"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+        />
+        <Path
+          d="M8.943 12.122a.794.794 0 100-1.589.794.794 0 000 1.59z"
+          fill="#000"
+        />
+      </Svg>
+    )
+  }
+
 export const ShareIcon = (props: Props) => {
   return (
     <Svg

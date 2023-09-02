@@ -61,23 +61,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFF',
     padding: 12,
-    borderRadius: 8,
     marginBottom: 8,
-    elevation: 2,
-    ...Platform.select({
-        ios: {
-          shadowColor: 'black',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.15,
-          shadowRadius: 4,
-        },
-        android: {
-          shadowColor: 'black',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.15,
-          shadowRadius: 4,
-        },
-      }),
+    borderRadius: 12,
+    borderWidth: 0.5,
+    borderColor: 'rgba(0, 107, 127, 0.35)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    elevation: 2, // for Android shadow
   },
   selectedOptionButton: {
     borderWidth: 1/2,

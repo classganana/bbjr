@@ -4,15 +4,12 @@ import { Colors } from "../../styles/colors";
 export const DashboardStyle = StyleSheet.create({
     container: {
         flex: 1,
-        
     },
     header: {
         height: 150,
         width: "100%",
         backgroundColor: Colors.primary,
         color: Colors.white,
-        borderBottomLeftRadius: 25, 
-        borderBottomRightRadius: 25,
         paddingHorizontal: 24,
         paddingTop: 34,
         paddingBottom: 24,
@@ -82,7 +79,7 @@ export const DashboardStyle = StyleSheet.create({
         width: "100%",
         flexShrink: 0,
         borderRadius: 12,
-        backgroundColor: "#F1F1F1",
+        backgroundColor: "#006B7F14",
         paddingHorizontal: 14,
         paddingVertical: 20,
         alignItems: 'center',
