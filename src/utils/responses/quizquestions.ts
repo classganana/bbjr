@@ -2,6 +2,7 @@ export const quizQuestions: Array<{
     question: string;
     options: string[];
     correctAnswer: string;
+    selectedAnswer?: string
   }> = [
     {
       question: "What is the capital of France?",

@@ -14,9 +14,9 @@ export const QuizNavigator = () => {
     return (
     <View style={{flex: 1, width: "100%", backgroundColor: Colors.white}}>
           <Stack.Navigator>
-              <Stack.Screen name="ExploreQuiz" component={QuizFirstPage} options={{ headerShown: false }} /> 
+              {/* <Stack.Screen name="ExploreQuiz" component={QuizFirstPage} options={{ headerShown: false }} />  */}
               <Stack.Screen name="QuizQuestionPages" component={QuizQuestionsPage} options={{ headerShown: false }} /> 
-              {/* <Stack.Screen name="QuizHomePage" component={QuizHomePage} options={{ headerShown: false }} />  */}
+              {/* <Stack.Screen name="QuizResultPage" component={() => <QuizResult noOfQuestions={10} noOfCorrectAnswers={6} />} options={{ headerShown: false }} />  */}
           </Stack.Navigator>
     </View>
     )

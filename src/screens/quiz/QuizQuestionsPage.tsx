@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Colors } from '../../styles/colors';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ArrowLeft, DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { LoginButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const QuizQuestionsPage = () => {
     const [timer, setTimer] = useState(100); // Initial timer value in seconds
-
     const questionScrollViewRef = useRef(null);
+    const [quizQuestionList, setQuizQuestionList] = useState(quizQuestions);
+
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -34,12 +36,15 @@ export const QuizQuestionsPage = () => {
         return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
     };
 
-
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const handleSelectOption = (selectedOption: string) => {
         // Handle the selected option if needed
-        console.log('Selected:', selectedOption);
+        setQuizQuestionList((quizQuestionList) => {
+            const updatedList = [...quizQuestionList];
+            updatedList[currentQuestionIndex].selectedAnswer = selectedOption;
+            return updatedList;
+        });
     };
 
     const navigateToQuestion = (index: number) => {
@@ -55,16 +60,23 @@ export const QuizQuestionsPage = () => {
         }
     };
 
-    const scrollToNextQuestion = () => {
+    const scrollToNextQuestion = async () => {
         const nextQuestionIndex = currentQuestionIndex + 1;
         const scrollX = nextQuestionIndex * 40; // Adjust this value based on your layout
         if (questionScrollViewRef.current) {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
+        try {
+            const list = JSON.stringify(quizQuestionList)
+            await AsyncStorage.setItem('questions', list);
+            const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
+            console.log(UserAnswerList[currentQuestionIndex]);
+        } catch (error) {
+            console.error('Error storing data:', error);
+        }
     };
 
     const currentQuestion = quizQuestions[currentQuestionIndex];
-
 
     return (
         <View style={styles.container}>
@@ -74,19 +86,19 @@ export const QuizQuestionsPage = () => {
                         <Text style={styles.headingTitle}>Test</Text>
                         <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
                     </View>
-                    <View style={{display: 'flex', gap: 10}}>
+                    <View style={{ display: 'flex', gap: 10 }}>
                         <View style={styles.timerBlock}>
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
                         </View>
-                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => {}}/>
+                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => { }} />
                     </View>
                 </View>
             </View>
             <View style={styles.body}>
                 <View style={styles.questionInfo}>
                     <View style={styles.questionInfoDropDown}>
-                        <Text style={styles.questionInfoText}>Question {currentQuestionIndex+1}/{quizQuestions.length}</Text>
+                        <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestions.length}</Text>
                         <DownArrow height={'20'} width={'20'} fill={'black'} />
                     </View>
                     <ReportIcon height={'18'} width={'18'} fill={'white'} />
@@ -176,9 +188,9 @@ const styles = StyleSheet.create({
     },
     timerBlock: {
         //  position: "absolute",
-         display: 'flex',
-         flexDirection: 'row',
-         right: 10 
+        display: 'flex',
+        flexDirection: 'row',
+        right: 10
     },
     timer: {
         textAlign: 'center',
@@ -206,7 +218,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         // marginBottom: 10,
         padding: 10,
-        borderBottomWidth: 1/4,
+        borderBottomWidth: 1 / 4,
     },
     questionNumber: {
         alignItems: 'center',
@@ -240,8 +252,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 0,
+            width: 0,
+            height: 0,
         },
         shadowOpacity: 0.10,
         shadowRadius: 15,

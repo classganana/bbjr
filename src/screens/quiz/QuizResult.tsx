@@ -57,7 +57,7 @@ export const QuizResult = (props: Props) => {
                             styles.values,
                             item.label === 'Wrong Questions' && styles.redText,
                             item.label === 'Right Questions' && styles.greenText
-                        ]}>23</Text>
+                        ]}>{item.value}</Text>
                     </View>
                 ))}
             </View>
