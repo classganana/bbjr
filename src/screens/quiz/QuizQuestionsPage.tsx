@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Colors } from '../../styles/colors';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ArrowLeft, CrossIcon, Down, Report } from '../../components/common/SvgComponent/SvgComponent';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { FinishButton, LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 
 export const QuizQuestionsPage = () => {
     const [timer, setTimer] = useState(10); // Initial timer value in seconds
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     const questionScrollViewRef = useRef(null);
 
@@ -75,16 +76,22 @@ export const QuizQuestionsPage = () => {
                     <View style={styles.backButton}>
                         <ArrowLeft height={'25'} width={'25'} fill={'black'} />
                     </View>
-                    <View>
+                    <View >
                         <Text style={styles.headingTitle}>Quiz Details</Text>
                         <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
                     </View>
                     <View style={{ position: "absolute", right: 10 }}>
                         <Text style={styles.timer}>{formatTime(timer)}</Text>
                         <Text style={styles.timerText}>mins left</Text>
+                        <Button label={'Finish Test'} disabled={false} className={FinishButton} onPress={() => setBottomSheetVisible(true)}></Button>
                     </View>
                 </View>
             </View>
+                <View style={{display:"flex",flexDirection:"row",gap:5}}>
+                <Text>Questions 1/12</Text>
+                <Down height={'13'} width={'10'} fill={''}></Down>
+                <Report height={'18'} width={'17'} fill={''}></Report>
+                </View>
                 <ScrollView  ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
                         {quizQuestions.map((_, index) => (
@@ -116,6 +123,36 @@ export const QuizQuestionsPage = () => {
                     onPress={navigateToNextQuestion}
                 />
             </View>
+            <Modal
+        animationType="slide"
+        transparent={true}
+        visible={bottomSheetVisible}
+        onRequestClose={() => setBottomSheetVisible(false)}
+      >
+        <View style={styles.bottomSheetContainer}>
+          {/* <Student
+            selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
+          /> */}
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+              position: "absolute",
+              bottom: 0,
+            }}
+          >
+            <View style={styles.closeButton}>
+              <TouchableOpacity
+                style={styles.edit}
+                onPress={() => setBottomSheetVisible(false)}
+              >
+                <CrossIcon height={20} width={32} fill={"red"} />
+              </TouchableOpacity>
+              <Text>Select Subject</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
         </View>
     );
 };
@@ -225,6 +262,38 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         paddingHorizontal: 16,
     },
+    bottomSheetContainer: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        height: "50%",
+        backgroundColor: Colors.primary,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        // padding: 20,
+      },
+      closeButton: {
+        // alignSelf: "center",
+        // marginTop: 10,
+        // padding: 10,
+        flexDirection: "row",
+        bottom: 10,
+        position: "absolute",
+        gap: 10,
+        alignItems: "center",
+        // backgroundColor: Colors.light_gray_01,
+        // borderRadius: 5,
+      },
+      edit: {
+        alignItems: "center",
+        justifyContent: "center",
+        width: 32,
+        height: 32,
+        backgroundColor: Colors.Hawkes_Blue,
+        borderColor: Colors.skyblue,
+        borderWidth: 0.5,
+        borderRadius: 90,
+      },
 });
 
 export default QuizQuestionsPage;

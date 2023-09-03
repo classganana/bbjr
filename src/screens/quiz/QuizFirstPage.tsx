@@ -6,8 +6,14 @@ import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
 import { QuizInformation } from '../../components/quiz/QuizInformation'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles'
+import { useNavigation } from '@react-navigation/native'
 
 export const QuizFirstPage = () => {
+    const navigation = useNavigation();
+
+  const moveToQuizQuestionsPage = () => {
+    navigation.navigate("QuizQuestionsPage" as never);
+  };
   return (
     <View style={styles.container}>
         <View style={styles.header}>
@@ -31,9 +37,7 @@ export const QuizFirstPage = () => {
             <QuizInformation />
         </View>
         <View style={styles.startQuizButton}>
-            <Button label={"Start Quiz"} className={LoginButton} disabled={false} onPress={function (): void {
-                throw new Error('Function not implemented.')
-            } } ></Button>
+            <Button label={"Start Quiz"} className={LoginButton} disabled={false} onPress={moveToQuizQuestionsPage} ></Button>
         </View>
     </View>
   )

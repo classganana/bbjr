@@ -229,3 +229,21 @@ export const StartButton = StyleSheet.create<Style>({
     fontFamily: "Inter-SemiBold",
   },
 });
+
+export const FinishButton = StyleSheet.create<Style>({
+  container: {
+    height: 22,
+    // flex: 1,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    borderWidth: 1/4,
+    borderColor: Colors.primary,
+    paddingVertical: 8,
+  },
+  title: {
+    fontSize: 16
+  }
+});
