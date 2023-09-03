@@ -70,7 +70,7 @@ export const QuizQuestionsPage = () => {
             const list = JSON.stringify(quizQuestionList)
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-            console.log(UserAnswerList[currentQuestionIndex]);
+            console.log(UserAnswerList);
         } catch (error) {
             console.error('Error storing data:', error);
         }
@@ -91,7 +91,7 @@ export const QuizQuestionsPage = () => {
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
                         </View>
-                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => { }} />
+                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => {}} />
                     </View>
                 </View>
             </View>

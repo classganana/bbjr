@@ -3,7 +3,7 @@ import { Image, Text, View } from 'react-native'
 import { DashboardStyle } from './DashboardStyle'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { Sprit, Star } from '../../components/common/SvgComponent/SvgComponent'
-import { LoginButton, PrimarySmallButton, defaultButton } from '../../components/common/ButttonComponent/ButtonStyles'
+import { PrimarySmallButton, defaultButton } from '../../components/common/ButttonComponent/ButtonStyles'
 import { ProgressBar } from '../../components/home/components/ProgressBar'
 
 export const Dashboard = () => {
