@@ -441,6 +441,19 @@ export function Pencil(props: Props) {
 //   );
 // }
 
+export function BasicCheck(props: Props) {
+  return (
+    <Svg
+      viewBox="0 0 32 32"
+      {...props}
+    >
+      <Path
+        d="M6.707 15.293a1 1 0 00-1.414 1.414l7 7a1 1 0 001.414 0l14-14a1 1 0 00-1.414-1.414L13 21.586l-6.293-6.293z"
+        fill={props.fill}
+      />
+    </Svg>
+  )
+}
 
 export function GreenCheck(props: Props) {
   return  <Svg
@@ -604,14 +617,14 @@ export function Pen(props: Props) {
 
 export function Cross(props: Props) {
   return (
-    <Svg viewBox="0 0 31 31" {...props}>
+    <Svg viewBox="0 0 32 32" {...props}>
          <Path
         d="M10.86 21.069l10.209-10.21a.656.656 0 00-.928-.927L9.93 20.14a.656.656 0 00.929.928z"
-        fill="#1C1C1C"
+        fill={props.fill}
       />
       <Path
         d="M9.932 10.86L20.14 21.069a.656.656 0 00.929-.929L10.859 9.932a.656.656 0 00-.927.928z"
-        fill="#1C1C1C"
+        fill={props.fill}
       />
     </Svg>
   );
