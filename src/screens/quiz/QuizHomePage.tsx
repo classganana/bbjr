@@ -1,34 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ArrowLeft, StrongBackButton } from '../../components/common/SvgComponent/SvgComponent';
+import { StrongBackButton } from '../../components/common/SvgComponent/SvgComponent';
 import { SearchIcon } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { Card, CardData } from '../../components/quiz/QuizCard';
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Quizzes');
-    const data: CardData[] = [
+    const [data, setData] = useState([
         {
-            id: '1',
+            id: '0',
             title: 'Test Your Knowledge on',
             infoText: 'Info about Card 1',
             imageUrl: 'https://example.com/image1.jpg',
             done: false,
             noOfQuestions: 30,
             timeRequired: 30,
+            selected: false
         },
         {
-            id: '2',
+            id: '1',
             title: 'Card 2',
             infoText: 'Info about Card 2',
             imageUrl: 'https://example.com/image2.jpg',
             done: false,
             noOfQuestions: 30,
             timeRequired: 30,
+            selected: false
         },
         {
-            id: '3',
+            id: '2',
             title: 'Card Cmapis',
             infoText: 'Info about Card 2',
             imageUrl: 'https://example.com/image2.jpg',
@@ -37,7 +39,22 @@ export const QuizHomePage = () => {
             timeRequired: 20,
             selected: true
         },
-    ];
+    ]);
+
+    // useEffect(() => {}, [data])
+
+    const updateList = (index: number) => {
+        let tempData = data;
+        // high order function , map, filter, reduce, some, find,
+        tempData = tempData.map((temp) => {
+            if(temp.id != (index as unknown as string)) {
+                    temp.selected = false;
+            }
+            return temp;
+        })
+        tempData[index].selected = true;
+        setData(() => [...tempData]);
+    }
 
     return (
         <View style={styles.container}>
@@ -62,7 +79,7 @@ export const QuizHomePage = () => {
                     data={data}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <Card {...item} />
+                        <Card {...item}  onCardClick={(i) => updateList(i)}/>
                     )}
                 />
             </View>
