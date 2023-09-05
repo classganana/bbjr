@@ -9,12 +9,16 @@ export interface CardData {
     imageUrl: string;
     noOfQuestions: number,
     timeRequired: number,
-    done: boolean
+    done: boolean,
+    selected?: boolean,
+    onCardClick: (selectedOption: string) => void;
 }
 
 
-export const Card: React.FC<CardData> =  ({ title, infoText, imageUrl, done, noOfQuestions, timeRequired }) => (
-    <View style={[styles.card, done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' } ]}>
+export const Card: React.FC<CardData> =  ({ title, infoText, imageUrl, done, noOfQuestions, timeRequired, selected }) => (
+    <View style={[styles.card, 
+                done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
+                selected && styles.selected ]}>
         <View style={styles.imageContainer}>
             <Image source={{ uri: imageUrl }} style={styles.image} />
         </View>
@@ -84,5 +88,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         gap: 8
+    },
+    selected: {
+        borderWidth: 1/2,
+        borderColor: '#006B7F',
+        shadowColor: 'rgba(0, 0, 0, 0.25)',
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 8,
+        shadowOpacity: 1,
+        elevation: 4, // For Android shadow
     }
 })

@@ -14,7 +14,7 @@ export const QuizHomePage = () => {
             title: 'Test Your Knowledge on',
             infoText: 'Info about Card 1',
             imageUrl: 'https://example.com/image1.jpg',
-            done: true,
+            done: false,
             noOfQuestions: 30,
             timeRequired: 30,
         },
@@ -32,9 +32,10 @@ export const QuizHomePage = () => {
             title: 'Card Cmapis',
             infoText: 'Info about Card 2',
             imageUrl: 'https://example.com/image2.jpg',
-            done: true,
+            done: false,
             noOfQuestions: 10,
             timeRequired: 20,
+            selected: true
         },
     ];
 
@@ -43,7 +44,6 @@ export const QuizHomePage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <View style={styles.backButton}>
-                        {/* <StrongBackButton height={'16'} width={'16'} fill={'black'} /> */}
                         <StrongBackButton height={'25'} width={'25'} fill={'black'} />
                     </View>
                     <Text style={styles.headingTitle}>Explore Quiz</Text>
@@ -138,5 +138,4 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: Colors.black_03
     }
-}
-);
+});

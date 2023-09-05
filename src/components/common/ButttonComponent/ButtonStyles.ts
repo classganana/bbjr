@@ -52,9 +52,9 @@ export const PrimarySmallButton = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
-    borderRadius: 5,
+    borderRadius: 6,
     paddingHorizontal: 12,
-    paddingVertical: 4
+    // paddingVertical: 6
   },
   title: {
     color: Colors.white,
@@ -63,6 +63,26 @@ export const PrimarySmallButton = StyleSheet.create({
     fontFamily: "Inter-Regular",
   },  
 })
+
+export const PrimaryDefaultButton = StyleSheet.create<Style>({
+  container: {
+    height: 28,
+    // flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 8,
+    // padding: 12
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "400",
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+  },
+});
 
 export const LoginButton = StyleSheet.create<Style>({
   container: {
