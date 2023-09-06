@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Colors } from '../../styles/colors';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { CrossIcon, DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
@@ -77,6 +77,7 @@ export const QuizQuestionsPage = () => {
     };
 
     const currentQuestion = quizQuestions[currentQuestionIndex];
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -91,7 +92,7 @@ export const QuizQuestionsPage = () => {
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
                         </View>
-                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => {}} />
+                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => { }} />
                     </View>
                 </View>
             </View>
@@ -101,7 +102,11 @@ export const QuizQuestionsPage = () => {
                         <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestions.length}</Text>
                         <DownArrow height={'20'} width={'20'} fill={'black'} />
                     </View>
-                    <ReportIcon height={'18'} width={'18'} fill={'white'} />
+                    <TouchableOpacity
+                        onPress={() => setBottomSheetVisible(true)}
+                    >
+                        <ReportIcon height={'18'} width={'18'} fill={'white'} />
+                    </TouchableOpacity>
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
@@ -135,6 +140,40 @@ export const QuizQuestionsPage = () => {
                     />
                 </View>
             </View>
+            
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={bottomSheetVisible}
+                    onRequestClose={() => setBottomSheetVisible(false)}
+                >
+                <View style={{backgroundColor: 'rgba(0, 0, 0,0.3)',flex:1}}>
+                    <View style={styles.bottomSheetContainer}>
+                        {/* <Student
+                        selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
+                          /> */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                gap: 5,
+                                position: "absolute",
+                                bottom: 0,
+
+                            }}
+                        >
+                            <View style={styles.closeButton}>
+                                <TouchableOpacity
+                                    style={styles.edit}
+                                    onPress={() => setBottomSheetVisible(false)}
+                                >
+                                    <CrossIcon height={20} width={32} fill={"red"} />
+                                </TouchableOpacity>
+                                {/* <Text>Select Subject</Text> */}
+                            </View>
+                        </View>
+                    </View>
+                 </View>
+            </Modal>
         </View>
     );
 };
@@ -277,7 +316,34 @@ const styles = StyleSheet.create({
     questionInfoText: {
         fontSize: 16,
         fontWeight: '500',
-    }
+    },
+    bottomSheetContainer: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        height: "75%",
+        backgroundColor: Colors.white,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+
+    },
+    closeButton: {
+        flexDirection: "row",
+        bottom: 10,
+        position: "absolute",
+        gap: 10,
+        alignItems: "center",
+    },
+    edit: {
+        alignItems: "center",
+        justifyContent: "center",
+        width: 32,
+        height: 32,
+        backgroundColor: Colors.Hawkes_Blue,
+        borderColor: Colors.skyblue,
+        borderWidth: 0.5,
+        borderRadius: 90,
+    },
 });
 
 export default QuizQuestionsPage;
