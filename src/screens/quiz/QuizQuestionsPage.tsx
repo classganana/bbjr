@@ -5,14 +5,22 @@ import { CrossIcon, DownArrow, ReportIcon } from '../../components/common/SvgCom
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useNavigation } from '@react-navigation/native';
+
+export type Answers = Array<{
+    question: string;
+    options: string[];
+    correctAnswer: string;
+    selectedAnswer?: string
+  }>
 
 export const QuizQuestionsPage = () => {
     const [timer, setTimer] = useState(100); // Initial timer value in seconds
-    const questionScrollViewRef = useRef(null);
+    const questionScrollViewRef = useRef<ScrollView | null>(null);;
     const [quizQuestionList, setQuizQuestionList] = useState(quizQuestions);
-
+    const navigation = useNavigation();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -54,15 +62,37 @@ export const QuizQuestionsPage = () => {
     const navigateToNextQuestion = () => {
         if (currentQuestionIndex < quizQuestions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
-            scrollToNextQuestion();
-        } else {
-            console.log("Ended")
         }
+        scrollToNextQuestion();
     };
+
+    const navigateToPrevQuestion = () => {
+        if (currentQuestionIndex < quizQuestions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex - 1);
+        }
+        scrollToPrevQuestion();
+    };
+
+    const calculateScore = (answerList: Answers) => {
+        let score = 0;
+        answerList.forEach((answer) => {
+            if(answer.correctAnswer == answer.selectedAnswer)
+                score+=10;
+        })
+        return score;
+    }
+
+    const scrollToPrevQuestion = () => {
+        const nextQuestionIndex = currentQuestionIndex + 1;
+        const scrollX = nextQuestionIndex * (-40); 
+        if (questionScrollViewRef.current) {
+            questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
+        }
+    }
 
     const scrollToNextQuestion = async () => {
         const nextQuestionIndex = currentQuestionIndex + 1;
-        const scrollX = nextQuestionIndex * 40; // Adjust this value based on your layout
+        const scrollX = nextQuestionIndex * 40; 
         if (questionScrollViewRef.current) {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
@@ -70,7 +100,11 @@ export const QuizQuestionsPage = () => {
             const list = JSON.stringify(quizQuestionList)
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-            console.log(UserAnswerList);
+            console.log(calculateScore(UserAnswerList));
+            if (currentQuestionIndex == quizQuestions.length - 1) {
+                console.log(calculateScore(UserAnswerList));
+                navigation.navigate('QuizResultPage' as never);
+            }
         } catch (error) {
             console.error('Error storing data:', error);
         }
@@ -128,12 +162,20 @@ export const QuizQuestionsPage = () => {
                     <QuestionComponent
                         question={currentQuestion.question}
                         options={currentQuestion.options}
-                        onSelectOption={handleSelectOption}
+                        onSelectOption={handleSelectOption} isResult={false}
                     />
                 </ScrollView>
                 <View style={styles.nextQuizButton}>
+                   {
+                    currentQuestionIndex != 0 && <Button
+                    label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Previous'}
+                    className={OutlineButton}
+                    disabled={false}
+                    onPress={navigateToPrevQuestion}
+                    />
+                   }
                     <Button
-                        label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Next Question'}
+                        label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Save & Next'}
                         className={LoginButton}
                         disabled={false}
                         onPress={navigateToNextQuestion}
@@ -278,11 +320,15 @@ const styles = StyleSheet.create({
         color: Colors.white,
     },
     nextQuizButton: {
+        flex: 1,
         width: "90%",
         position: 'absolute',
         bottom: 20,
+        display: 'flex',
+        flexDirection: 'row',
         alignSelf: 'center',
         paddingHorizontal: 16,
+        justifyContent: 'space-between'
     },
     body: {
         flex: 1,

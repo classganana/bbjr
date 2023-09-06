@@ -1,20 +1,25 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedbackComponent, View } from "react-native";
 import { Colors } from "../../styles/colors";
 import { GreenCheck } from "../common/SvgComponent/SvgComponent";
 
 export interface CardData {
-    id: string;
+    id: number;
     title: string;
     infoText: string;
     imageUrl: string;
     noOfQuestions: number,
     timeRequired: number,
-    done: boolean
+    done: boolean,
+    selected?: boolean,
+    onCardClick?: (selectedOption: number) => void;
 }
 
 
-export const Card: React.FC<CardData> =  ({ title, infoText, imageUrl, done, noOfQuestions, timeRequired }) => (
-    <View style={[styles.card, done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' } ]}>
+export const Card: React.FC<CardData> = ({ id, title, infoText, imageUrl, done, noOfQuestions, timeRequired, selected, onCardClick }) => (
+    <TouchableOpacity onPress={() => onCardClick && onCardClick(id)}>
+    <View style={[styles.card,
+    done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
+    selected && styles.selected]}>
         <View style={styles.imageContainer}>
             <Image source={{ uri: imageUrl }} style={styles.image} />
         </View>
@@ -27,10 +32,11 @@ export const Card: React.FC<CardData> =  ({ title, infoText, imageUrl, done, noO
                 <Text style={styles.questionText}>{noOfQuestions} Questions</Text>
                 <Text>•</Text>
                 <Text style={styles.questionText}>{timeRequired} minutes</Text>
-                { done && <GreenCheck height={"11"} width={"11"} fill={"green"} /> }
+                {done && <GreenCheck height={"11"} width={"11"} fill={"green"} />}
             </View>
         </View>
     </View>
+    </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
@@ -78,11 +84,20 @@ const styles = StyleSheet.create({
         color: "#999",
         fontSize: 12
     },
-    quizInfo : {
+    quizInfo: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
         gap: 8
+    },
+    selected: {
+        borderWidth: 1 / 2,
+        borderColor: '#006B7F',
+        shadowColor: 'rgba(0, 0, 0, 0.25)',
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 8,
+        shadowOpacity: 1,
+        elevation: 4, // For Android shadow
     }
 })

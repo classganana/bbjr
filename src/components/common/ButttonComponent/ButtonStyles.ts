@@ -52,9 +52,9 @@ export const PrimarySmallButton = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
-    borderRadius: 5,
+    borderRadius: 6,
     paddingHorizontal: 12,
-    paddingVertical: 4
+    // paddingVertical: 6
   },
   title: {
     color: Colors.white,
@@ -64,16 +64,37 @@ export const PrimarySmallButton = StyleSheet.create({
   },  
 })
 
-export const LoginButton = StyleSheet.create<Style>({
+export const PrimaryDefaultButton = StyleSheet.create<Style>({
   container: {
-    height: 56,
+    height: 28,
     // flex: 1,
-    width: "100%",
+    // width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
     borderRadius: 8,
+    // padding: 12
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "400",
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+  },
+});
+
+export const LoginButton = StyleSheet.create<Style>({
+  container: {
+    height: 56,
+    // flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 8,
+    padding: 12
   },
   title: {
     color: Colors.white,
@@ -109,16 +130,18 @@ export const OutlineButton = StyleSheet.create<Style>({
   container: {
     height: 56,
     // flex: 1,
-    width: "100%",
+    // width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
     borderWidth: 1/4,
-    borderColor: Colors.primary
+    borderColor: "rgba(0, 107, 127, 0.50)",
+    // padding: 12
   },
   title: {
-    color: '#757474',
+    padding: 12,
+    color: 'rgba(0, 107, 127, 0.50)',
     fontWeight: "600",
     fontSize: 20,
     fontFamily: "Inter-Regular",

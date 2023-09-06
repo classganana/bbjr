@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { Colors } from '../../../styles/colors';
 
 type Props = {
     perc: number
@@ -20,18 +21,19 @@ export const ProgressBar = (props: Props) => {
 
 const ProgressBarStyle = StyleSheet.create({
     container: {
-        backgroundColor: "#D9D9D9",
+        backgroundColor: "#006B7F47",
         width: "100%",
-        height: 20,
+        height: 14,
         borderRadius: 20,
         overflow: 'hidden',
 
     },
     progress: {
-        backgroundColor: '#999999',
+        backgroundColor: Colors.white,
         height: '100%',
     },
     infoText: {
-        color: "#5E5E5E"
+        color: "#5E5E5E",
+        paddingBottom: 2
     }
 });

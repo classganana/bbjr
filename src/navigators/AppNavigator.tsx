@@ -4,7 +4,7 @@ import React from 'react';
 import { OnBoardingNavigator } from './OnboardinNavigator';
 import { DashboardNavigator } from './DashboardNavigator';
 import { QuizNavigator } from './QuizNavigator';
-import { LoginScreen } from '../screens/Auth/LoginScreen/LoginScreen';
+// import { LoginScreen } from '../screens/Auth/LoginScreen/LoginScreen';
 
 export const AppNavigator = () => {
 
