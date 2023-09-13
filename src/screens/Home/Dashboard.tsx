@@ -53,7 +53,7 @@ export const Dashboard = () => {
                         <Text style={DashboardStyle.leaderBoardBodyDetailsLevel}>Level 1</Text>
                         <Text style={DashboardStyle.leaderBoardBodyPoints}>500 Points to next level</Text>
                         <View style={{ paddingTop: 8 }}>
-                            <ProgressBar perc={140} />
+                            <ProgressBar perc={140} label={`140 point earned`} />
                         </View>
                     </View>
 

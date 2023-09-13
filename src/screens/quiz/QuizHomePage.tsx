@@ -5,15 +5,16 @@ import { ClockIcon, StrongBackButton, TestIcon } from '../../components/common/S
 import { SearchIcon } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { Card, CardData } from '../../components/quiz/QuizCard';
+import { ExamPrepSubjects } from '../../components/quiz/ExamPrepSubjects';
 
 export const QuizHomePage = () => {
-    const [tab, setTab] = useState('Quizzes');
+    const [tab, setTab] = useState('Exam Prep');
     const [data, setData] = useState<CardData[]>([
         {
             id: 0,
             title: 'Test Your Knowledge on',
             infoText: 'Info about Card 1',
-            imageUrl: 'https://example.com/image1.jpg',
+            imageUrl: 'https://placehold.co/400',
             done: false,
             noOfQuestions: 30,
             timeRequired: 30,
@@ -23,7 +24,7 @@ export const QuizHomePage = () => {
             id: 1,
             title: 'Card 2',
             infoText: 'Info about Card 2',
-            imageUrl: 'https://example.com/image2.jpg',
+            imageUrl: 'https://placehold.co/400',
             done: false,
             noOfQuestions: 30,
             timeRequired: 30,
@@ -33,7 +34,7 @@ export const QuizHomePage = () => {
             id: 2,
             title: 'Card Cmapis',
             infoText: 'Info about Card 2',
-            imageUrl: 'https://example.com/image2.jpg',
+            imageUrl: 'https://placehold.co/400',
             done: false,
             noOfQuestions: 10,
             timeRequired: 20,
@@ -41,14 +42,24 @@ export const QuizHomePage = () => {
     ]);
     const [options, setOptions] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-
+    const [subjects, setSubject] = useState([
+        "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
+    ]);
 
     useEffect(() => {
         setOptions(false);
-    },[tab, searchTerm])
+        resetSelection();
+    }, [tab, searchTerm])
 
-    
-    
+    const resetSelection = () => {
+        let tempData = data;
+        tempData = tempData.map((temp) => {
+            temp.selected = false;
+            return temp;
+        });
+        setData(() => [...tempData]);
+    }
+
     const updateList = (index: number) => {
         setOptions(true);
         let tempData = data;
@@ -74,22 +85,28 @@ export const QuizHomePage = () => {
                 <View style={styles.infoContainer}>
                     <SearchIcon height={'20'} width={'20'} fill={'#787878'} />
                     <TextInput style={styles.searchBox}
-                     onChangeText={(text) => {setSearchTerm(text)}}
-                     placeholderTextColor={"#808080"} placeholder='Seach Quizzes'></TextInput>
+                        onChangeText={(text) => { setSearchTerm(text) }}
+                        placeholderTextColor={"#808080"} placeholder='Seach Quizzes'></TextInput>
                 </View>
             </View>
             <View style={styles.tabs}>
-                <Tabs activeTab={tab} tabs={['Quizzes', 'Practices']} onChangeTab={(i) => setTab(i)} ></Tabs>
+                <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => setTab(i)} ></Tabs>
             </View>
             <View style={styles.tabs}>
-                <Text style={styles.selectedOption}>{tab}</Text>
-                <FlatList
-                    data={data}
-                    keyExtractor={(item) => item.title}
-                    renderItem={({ item }) => (
-                        <Card {...item} onCardClick={(i) => updateList(i)} />
-                    )}
-                />
+                { tab == "Quizzes" && <>
+                    <Text style={styles.selectedOption}>{tab}</Text>
+                    <FlatList
+                        data={data}
+                        keyExtractor={(item) => item.title}
+                        renderItem={({ item }) => (
+                            <Card {...item} onCardClick={(i) => updateList(i)} />
+                        )}
+                    />
+                </>}
+                { tab == 'Exam Prep' && <>
+                        <ExamPrepSubjects subjects={subjects} />
+                    </>
+                }
             </View>
             {options && <View style={styles.floatingButtonContainer}>
                 <View style={styles.floatingButton}>

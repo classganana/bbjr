@@ -3,7 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../../../styles/colors';
 
 type Props = {
-    perc: number
+    label: string,
+    perc: number,
 }
 
 export const ProgressBar = (props: Props) => {
@@ -11,7 +12,7 @@ export const ProgressBar = (props: Props) => {
 
     return (
         <View>
-            <Text style={ProgressBarStyle.infoText}>{props.perc} Points earned </Text>
+            <Text style={ProgressBarStyle.infoText}>{props.label} </Text>
         <View style={ProgressBarStyle.container}>
             <View style={[ProgressBarStyle.progress, { width: props.perc }]}></View>
             </View>
