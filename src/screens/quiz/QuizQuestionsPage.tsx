@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigation } from '@react-navigation/native';
 import styles from './QuizQuestionsPageStyle';
 import ReportComponent from '../../components/quiz/ReportComponent';
+import { Description } from '../../components/feedback/Description/Description';
 
 export type Answers = Array<{
     question: string;
@@ -192,10 +193,10 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                        {/* <Student
-                        selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
-                          /> */}
                           <ReportComponent/>
+                          <View style={{ paddingHorizontal: 20,paddingVertical: 20,}}>
+                          <Description placeholder={'Write your feedback'} title={''}/>
+                          </View>
                         <View
                             style={{
                                 flexDirection: "row",
@@ -204,6 +205,7 @@ export const QuizQuestionsPage = () => {
                                 bottom: 0,
 
                             }}
+                            
                         >
                             <View style={styles.closeButton}>
                                 <TouchableOpacity
