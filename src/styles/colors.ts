@@ -3,7 +3,7 @@ export const Colors = {
   headerColor: "#F6F5FF",
   brand: "#F6F5FF",
   red: "#EF452F",
-  red_01:"#FF0000",
+  red_01:"#FF 0",
   blue: "blue",
   blue_01:"#5BA1ED",
   blue_02:"#DCEDFF",

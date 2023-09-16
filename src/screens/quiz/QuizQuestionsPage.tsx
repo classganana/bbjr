@@ -1,5 +1,5 @@
 import { Colors } from '../../styles/colors';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
@@ -7,13 +7,16 @@ import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigation } from '@react-navigation/native';
+import { useEffect, useRef, useState } from 'react';
+import Popup from '../Popup/popup';
+
 
 export type Answers = Array<{
     question: string;
     options: string[];
     correctAnswer: string;
     selectedAnswer?: string
-  }>
+}>
 
 export const QuizQuestionsPage = () => {
     const [timer, setTimer] = useState(100); // Initial timer value in seconds
@@ -75,15 +78,15 @@ export const QuizQuestionsPage = () => {
     const calculateScore = (answerList: Answers) => {
         let score = 0;
         answerList.forEach((answer) => {
-            if(answer.correctAnswer == answer.selectedAnswer)
-                score+=10;
+            if (answer.correctAnswer == answer.selectedAnswer)
+                score += 10;
         })
         return score;
     }
 
     const scrollToPrevQuestion = () => {
         const nextQuestionIndex = currentQuestionIndex + 1;
-        const scrollX = nextQuestionIndex * (-40); 
+        const scrollX = nextQuestionIndex * (-40);
         if (questionScrollViewRef.current) {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
@@ -91,7 +94,7 @@ export const QuizQuestionsPage = () => {
 
     const scrollToNextQuestion = async () => {
         const nextQuestionIndex = currentQuestionIndex + 1;
-        const scrollX = nextQuestionIndex * 40; 
+        const scrollX = nextQuestionIndex * 40;
         if (questionScrollViewRef.current) {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
@@ -110,7 +113,7 @@ export const QuizQuestionsPage = () => {
     };
 
     const currentQuestion = quizQuestions[currentQuestionIndex];
-
+    const [modalVisible, setModalVisible] = useState(false);
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -124,7 +127,7 @@ export const QuizQuestionsPage = () => {
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
                         </View>
-                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => { }} />
+                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => setModalVisible(true)} />
                     </View>
                 </View>
             </View>
@@ -160,14 +163,14 @@ export const QuizQuestionsPage = () => {
                     />
                 </ScrollView>
                 <View style={styles.nextQuizButton}>
-                   {
-                    currentQuestionIndex != 0 && <Button
-                    label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Previous'}
-                    className={OutlineButton}
-                    disabled={false}
-                    onPress={navigateToPrevQuestion}
-                    />
-                   }
+                    {
+                        currentQuestionIndex != 0 && <Button
+                            label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Previous'}
+                            className={OutlineButton}
+                            disabled={false}
+                            onPress={navigateToPrevQuestion}
+                        />
+                    }
                     <Button
                         label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Save & Next'}
                         className={LoginButton}
@@ -176,6 +179,13 @@ export const QuizQuestionsPage = () => {
                     />
                 </View>
             </View>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(!modalVisible)}>
+                <Popup />
+            </Modal>
         </View>
     );
 };
