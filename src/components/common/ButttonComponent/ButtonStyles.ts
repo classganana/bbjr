@@ -42,16 +42,59 @@ export const primaryButton = StyleSheet.create<Style>({
   },
 });
 
-export const LoginButton = StyleSheet.create<Style>({
+
+export const PrimarySmallButton = StyleSheet.create({
   container: {
-    height: 56,
+    height: 22,
     // flex: 1,
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    // paddingVertical: 6
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "400",
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+  },  
+})
+
+export const PrimaryDefaultButton = StyleSheet.create<Style>({
+  container: {
+    height: 28,
+    // flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
     borderRadius: 8,
+    // padding: 12
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "400",
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+  },
+});
+
+export const LoginButton = StyleSheet.create<Style>({
+  container: {
+    height: 56,
+    // flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 8,
+    padding: 12
   },
   title: {
     color: Colors.white,
@@ -61,19 +104,44 @@ export const LoginButton = StyleSheet.create<Style>({
   },
 });
 
-export const OutlineButton = StyleSheet.create<Style>({
+
+export const SmallOutlineButton = StyleSheet.create<Style>({
   container: {
-    height: 56,
+    height: 22,
     // flex: 1,
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    borderWidth: 1/4
+    borderWidth: 1/4,
+    borderColor: Colors.primary,
+    paddingVertical: 8,
   },
   title: {
-    color: '#757474',
+    color: Colors.primary,
+    fontWeight: "500",
+    fontSize: 10,
+    fontFamily: "Inter-Regular",
+  },
+});
+
+export const OutlineButton = StyleSheet.create<Style>({
+  container: {
+    height: 56,
+    // flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    borderWidth: 1/4,
+    borderColor: "rgba(0, 107, 127, 0.50)",
+    // padding: 12
+  },
+  title: {
+    padding: 12,
+    color: 'rgba(0, 107, 127, 0.50)',
     fontWeight: "600",
     fontSize: 20,
     fontFamily: "Inter-Regular",
