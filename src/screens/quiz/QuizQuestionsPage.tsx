@@ -213,7 +213,7 @@ export const QuizQuestionsPage = () => {
                             
                         >
                             <Button label={'cancel'} disabled={false} className={OutlineButton} onPress={() => setBottomSheetVisible(false)}></Button>
-                            <Button label={'submit'} disabled={false} className={LoginButton} onPress={function (): void {
+                            <Button label={'Report'} disabled={false} className={LoginButton} onPress={function (): void {
                                 throw new Error('Function not implemented.');
                             } }></Button>
                         </View>
