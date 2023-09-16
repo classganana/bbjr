@@ -6,8 +6,14 @@ import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
 import { QuizInformation } from '../../components/quiz/QuizInformation'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles'
+import { useNavigation } from '@react-navigation/native'
 
 export const QuizFirstPage = () => {
+  const navigation = useNavigation();
+  const startQuiz = () => {
+        navigation.navigate('QuizQuestionPages' as never)
+  }  
+
   return (
     <View style={styles.container}>
         <View style={styles.header}>
@@ -31,9 +37,7 @@ export const QuizFirstPage = () => {
             <QuizInformation />
         </View>
         <View style={styles.startQuizButton}>
-            <Button label={"Start Quiz"} className={LoginButton} disabled={false} onPress={function (): void {
-                throw new Error('Function not implemented.')
-            } } ></Button>
+            <Button label={"Start Quiz"} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
         </View>
     </View>
   )
@@ -43,26 +47,13 @@ const styles = StyleSheet.create({
     container: {
         margin: 0,
         flex: 1,
-        backgroundColor: Colors.white
+        backgroundColor: "#F2F7F8"
     },
     header: {
         paddingHorizontal: 24,
         paddingVertical: 26,
         height: 150,
         flexShrink: 0,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 25,
-        borderBottomRightRadius: 25,
-        backgroundColor: '#F0F0F0',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.15,
-        shadowRadius: 4,
-        elevation: 2,
     },
     heading: {
         display: 'flex',
@@ -101,6 +92,18 @@ const styles = StyleSheet.create({
         color: Colors.black_01
     },
     quizInfo: {
+        flex: 1,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        backgroundColor: '#FFF',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.10,
+        shadowRadius: 15,
+        elevation: 2, // for Android shadow
         paddingHorizontal: 24,
     },
     startQuizButton: {

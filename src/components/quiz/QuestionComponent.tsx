@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Colors } from '../../styles/colors';
+import { BasicCheck, Cross } from '../common/SvgComponent/SvgComponent';
 
 type QuestionProps = {
   question: string;
   options: string[];
+  correctAnswer?: string;
+  selectedAnswer?: string | undefined;
+  isResult: boolean,
   onSelectOption: (selectedOption: string) => void;
 };
 
 const QuestionComponent: React.FC<QuestionProps> = ({
   question,
   options,
+  selectedAnswer,
+  correctAnswer,
+  isResult,
   onSelectOption,
 }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  useEffect(() => {
+    console.log(correctAnswer, selectedAnswer)
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -24,18 +35,42 @@ const QuestionComponent: React.FC<QuestionProps> = ({
           style={[
             styles.optionButton,
             selectedOption === option && styles.selectedOptionButton,
+            correctAnswer === option && styles.correct,
+            (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrong,
           ]}
           onPress={() => {
-            onSelectOption(option);
-            setSelectedOption(option);
+            if (!isResult) {
+              onSelectOption(option);
+              setSelectedOption(option);
+            }
           }}
         >
-          <View style={[styles.optionMarker, selectedOption === option && styles.optionMarkerSelected]}>
-            <Text style={[styles.optionMarkerText,selectedOption === option && styles.selectedOptionMarkerText]}>{String.fromCharCode(65 + index)}</Text>
+          <View style={styles.optionButtonContainer}>
+            <View style={[styles.optionMarker, selectedOption === option && styles.optionMarkerSelected,
+            correctAnswer === option && styles.correctCircle, (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrongCircle]}>
+              <Text style={[styles.optionMarkerText, selectedOption === option && styles.selectedOptionMarkerText,
+              correctAnswer === option && { color: Colors.white }, (selectedAnswer === option && selectedAnswer !== correctAnswer) && { color: Colors.white }]}>
+                {String.fromCharCode(65 + index)}
+              </Text>
+            </View>
+            <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
+              {option}
+            </Text>
           </View>
-          <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
-            {option}
-          </Text>
+
+          <View>
+            {
+              (correctAnswer === option) ?
+                <View style={[styles.correctCircle, { borderRadius: 32, padding: 2 }]}>
+                  <BasicCheck height={'18'} width={'18'} fill={'white'} />
+                </View>
+                : (selectedAnswer === option && selectedAnswer !== correctAnswer) ?
+                  <View style={[styles.wrongCircle, { borderRadius: 32, padding: 0 }]}>
+                    <Cross height={'22'} width={'22'} fill={'white'} />
+                  </View> : <></>
+
+            }
+          </View>
         </TouchableOpacity>
       ))}
     </View>
@@ -59,28 +94,29 @@ const styles = StyleSheet.create({
   optionButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#FFF',
     padding: 12,
-    borderRadius: 8,
     marginBottom: 8,
-    elevation: 2,
-    ...Platform.select({
-        ios: {
-          shadowColor: 'black',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.15,
-          shadowRadius: 4,
-        },
-        android: {
-          shadowColor: 'black',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.15,
-          shadowRadius: 4,
-        },
-      }),
+    borderRadius: 12,
+    borderWidth: 0.5,
+    borderColor: 'rgba(0, 107, 127, 0.35)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    elevation: 2, // for Android shadow
+  },
+  optionButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   selectedOptionButton: {
-    borderWidth: 1/2,
+    borderWidth: 1 / 2,
     borderColor: Colors.primary, // Change to the desired border color
     borderBottomColor: Colors.primary, // Change to the desired background color
   },
@@ -109,6 +145,24 @@ const styles = StyleSheet.create({
   selectedOptionText: {
     color: Colors.black_01, // Change to the desired text color
   },
+  correctCircle: {
+    backgroundColor: "#4BAE4F",
+    color: Colors.white
+  },
+  wrongCircle: {
+    color: Colors.white,
+    backgroundColor: "#EE0000"
+  },
+  correct: {
+    borderColor: "#29CB00",
+    borderWidth: 1,
+    backgroundColor: "#E7FFE1"
+  },
+  wrong: {
+    borderColor: "#EE0000",
+    borderWidth: 1,
+    backgroundColor: "#FFEEEE"
+  }
 });
 
 export default QuestionComponent;

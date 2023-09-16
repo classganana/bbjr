@@ -1,41 +1,40 @@
 import { Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedbackComponent, View } from "react-native";
 import { Colors } from "../../styles/colors";
-import { GreenCheck } from "../common/SvgComponent/SvgComponent";
+import { ExamPrepProgressBar } from "./ExamPrepProgressBar";
 
-export interface CardData {
+export interface ExamPrepQuizCardData {
     id: number;
-    title: string;
+    title: string; // we can also name it chapter name
     infoText: string;
     imageUrl: string;
     noOfQuestions: number,
-    timeRequired: number,
+    timeRequired?: number,
+    prevTestScore?: number,
     done: boolean,
+    practiceProgress?: number,
     selected?: boolean,
     onCardClick?: (selectedOption: number) => void;
 }
 
 
-export const Card: React.FC<CardData> = ({ id, title, infoText, imageUrl, done, noOfQuestions, timeRequired, selected, onCardClick }) => (
+export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id, title, infoText, imageUrl, done, noOfQuestions, timeRequired, selected, onCardClick }) => (
     <TouchableOpacity onPress={() => onCardClick && onCardClick(id)}>
-    <View style={[styles.card,
-    done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
-    selected && styles.selected]}>
-        <View style={styles.imageContainer}>
-            <Image source={{ uri: imageUrl }} style={styles.image} />
-        </View>
-        <View style={styles.textContainer}>
-            <View>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.infoText}>{infoText}</Text>
+        <View style={[styles.card,
+        done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
+        selected && styles.selected]}>
+            <View style={styles.imageContainer}>
+                <Image source={{ uri: imageUrl }} style={styles.image} />
             </View>
-            <View style={styles.quizInfo}>
-                <Text style={styles.questionText}>{noOfQuestions} Questions</Text>
-                <Text>•</Text>
-                <Text style={styles.questionText}>{timeRequired} minutes</Text>
-                {done && <GreenCheck height={"11"} width={"11"} fill={"green"} />}
+            <View style={styles.textContainer}>
+                <View>
+                    <Text style={styles.infoText}>{title}</Text>
+                    <Text style={styles.title}>Test score - 40/100</Text>
+                </View>
+                <View style={styles.quizInfo}>
+                    <ExamPrepProgressBar perc={30} label={"Practice"} />
+                </View>
             </View>
         </View>
-    </View>
     </TouchableOpacity>
 );
 
@@ -69,7 +68,8 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         flex: 1,
-        gap: 18
+        gap: 18,
+        width: "100%"
     },
     title: {
         fontSize: 14,
@@ -87,9 +87,9 @@ const styles = StyleSheet.create({
     quizInfo: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-end',
         alignItems: 'center',
-        gap: 8
+        gap: 8,
+        width: "100%"
     },
     selected: {
         borderWidth: 1 / 2,
