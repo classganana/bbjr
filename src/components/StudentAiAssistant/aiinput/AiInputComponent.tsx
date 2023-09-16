@@ -11,7 +11,6 @@ import { Colors } from "../../../styles/colors";
 import Student from "../subjectbuttons/Subject";
 import {
   CrossIcon,
-  MicroPhone,
   Pen,
   Send,
 } from "../../common/SvgComponent/SvgComponent";
@@ -67,17 +66,21 @@ export const Aiinput: React.FC = ({ onsendclick, onSubjectChange }: any) => {
             gap: 12,
             paddingVertical: 8,
             paddingHorizontal: 16,
+            justifyContent: 'flex-end'
           }}
         >
-          <TouchableOpacity
-            style={styles.edit}
-            onPress={() => setBottomSheetVisible(true)}
-          >
-            <Pen height={"18"} width={"18"} fill={"black"} />
-          </TouchableOpacity>
-          <Text style={styles.selectedSubject}>
-            {selectedSubject?.subjectName}
-          </Text>
+          <View style={styles.selectSubjectContainer}>
+            <Text style={styles.selectedSubject}>
+              Biology
+              {selectedSubject?.subjectName}
+            </Text>
+            <TouchableOpacity
+              style={styles.edit}
+              onPress={() => setBottomSheetVisible(true)}
+            >
+              <Pen height={"18"} width={"18"} fill={"white"} />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.content}>
           <View style={styles.inputContainer}>
@@ -99,11 +102,13 @@ export const Aiinput: React.FC = ({ onsendclick, onSubjectChange }: any) => {
       </View>
 
       <Modal
-        animationType="slide"
+        style={{borderRadius: 300}}
+        animationType="fade"
         transparent={true}
         visible={bottomSheetVisible}
         onRequestClose={() => setBottomSheetVisible(false)}
       >
+        <View style={{backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1}}></View>
         <View style={styles.bottomSheetContainer}>
           <Student
             selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
@@ -111,19 +116,22 @@ export const Aiinput: React.FC = ({ onsendclick, onSubjectChange }: any) => {
           <View
             style={{
               flexDirection: "row",
+              justifyContent: 'flex-end',
               gap: 5,
-              position: "absolute",
-              bottom: 0,
+              // position: "absolute",
+              bottom: 15,
+              right: 15,
+              flex: 1,
             }}
           >
             <View style={styles.closeButton}>
+              <Text>Cancle</Text>
               <TouchableOpacity
                 style={styles.edit}
                 onPress={() => setBottomSheetVisible(false)}
               >
-                <CrossIcon height={20} width={32} fill={"red"} />
+                <CrossIcon height={20} width={32} fill={"white"} />
               </TouchableOpacity>
-              <Text>Select Subject</Text>
             </View>
           </View>
         </View>
@@ -139,8 +147,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  selectSubjectContainer: {
+      borderRadius: 25,
+      backgroundColor: "#006B7F14",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      paddingLeft: 10
+  },
   selectedSubject: {
-    backgroundColor: Colors.Hawkes_Blue,
+    // backgroundColor: Colors.primary,
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 20,
@@ -166,7 +182,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   rectangle: {
-    backgroundColor: Colors.white_01,
+    // backgroundColor: Colors.white_01,
     // padding: 16,
     flexDirection: "column",
     // gap: 15,
@@ -190,7 +206,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 32,
     height: 32,
-    backgroundColor: Colors.Hawkes_Blue,
+    backgroundColor: Colors.primary,
     borderColor: Colors.skyblue,
     borderWidth: 0.5,
     borderRadius: 90,
@@ -213,19 +229,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    overflow: 'hidden'
     // padding: 20,
   },
   closeButton: {
-    // alignSelf: "center",
-    // marginTop: 10,
-    // padding: 10,
     flexDirection: "row",
     bottom: 10,
+    borderRadius: 25,
+    backgroundColor: "#006B7F14",
     position: "absolute",
     gap: 10,
     alignItems: "center",
-    // backgroundColor: Colors.light_gray_01,
-    // borderRadius: 5,
+    paddingLeft: 10
   },
   text: {
     position: "absolute",
