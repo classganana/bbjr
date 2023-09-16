@@ -203,18 +203,19 @@ export const QuizQuestionsPage = () => {
                                 gap: 5,
                                 position: "absolute",
                                 bottom: 0,
+                                // left:20,
+                                paddingHorizontal:20,
+                                paddingVertical:20,
+                                justifyContent:"space-between",
+                                width:'100%',
 
                             }}
                             
                         >
-                            <View style={styles.closeButton}>
-                                <TouchableOpacity
-                                    style={styles.edit}
-                                    onPress={() => setBottomSheetVisible(false)}
-                                >
-                                    <CrossIcon height={20} width={32} fill={"red"} />
-                                </TouchableOpacity>
-                            </View>
+                            <Button label={'cancel'} disabled={false} className={OutlineButton} onPress={() => setBottomSheetVisible(false)}></Button>
+                            <Button label={'submit'} disabled={false} className={LoginButton} onPress={function (): void {
+                                throw new Error('Function not implemented.');
+                            } }></Button>
                         </View>
                     </View>
                 </View>
