@@ -40,8 +40,7 @@ const styles = StyleSheet.create({
     gap: 10,
     backgroundColor: Colors.white,
     borderRadius: 20,
-    padding: 30,
-    
+    padding: 20, 
   },
   headerText: {
     color: Colors.black_03,
@@ -51,11 +50,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   OptButton: {
+    marginLeft:10,
     alignSelf:'flex-start',
     borderWidth: 1,
-    padding: 12,
+    padding: 8,
     borderColor: Colors.gray_17,
-    borderRadius: 25,
+    borderRadius: 20,
   },
   text: {
       color: Colors.black_03,
