@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { CrossIcon, DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { Colors } from '../../styles/colors';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
@@ -10,6 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import styles from './QuizQuestionsPageStyle';
 import ReportComponent from '../../components/quiz/ReportComponent';
 import { Description } from '../../components/feedback/Description/Description';
+import Popup from '../Popup/popup';
+
 
 export type Answers = Array<{
     question: string;
@@ -115,6 +118,7 @@ export const QuizQuestionsPage = () => {
     const currentQuestion = quizQuestions[currentQuestionIndex];
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
+    const [modalVisible, setModalVisible] = useState(false);
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -128,7 +132,7 @@ export const QuizQuestionsPage = () => {
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
                         </View>
-                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => { }} />
+                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => setModalVisible(true)} />
                     </View>
                 </View>
             </View>
@@ -219,6 +223,13 @@ export const QuizQuestionsPage = () => {
                         </View>
                     </View>
                 </View>
+                </Modal>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(!modalVisible)}>
+                    <Popup setModalVisible={setModalVisible}/>
             </Modal>
         </View>
     );
