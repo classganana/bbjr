@@ -320,11 +320,12 @@ export const CancelButton = StyleSheet.create<Style>({
 export const ExitButton = StyleSheet.create<Style>({
   container: {
     height: 40,
+    width:  130,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    borderWidth: 1/4,
+    // borderWidth: 4/4,
     backgroundColor:Colors.primary,
     borderColor:Colors.primary,
 

@@ -184,7 +184,7 @@ export const QuizQuestionsPage = () => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}>
-                <Popup />
+                    <Popup setModalVisible={setModalVisible}/>
             </Modal>
         </View>
     );
