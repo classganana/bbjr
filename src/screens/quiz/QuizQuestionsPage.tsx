@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CrossIcon, DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
-import { Colors } from '../../styles/colors';
+import { InfoIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
@@ -12,6 +11,7 @@ import styles from './QuizQuestionsPageStyle';
 import ReportComponent from '../../components/quiz/ReportComponent';
 import { Description } from '../../components/feedback/Description/Description';
 import Popup from '../Popup/popup';
+import { QuizOverView } from '../../components/quiz/QuizOverView';
 
 
 export type Answers = Array<{
@@ -115,9 +115,13 @@ export const QuizQuestionsPage = () => {
         }
     };
 
+    const onInfoClick = () => {
+
+    }
+
     const currentQuestion = quizQuestions[currentQuestionIndex];
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-
+    const [questionInfoSheet, setQuestionInfoSheet] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     return (
         <View style={styles.container}>
@@ -140,7 +144,9 @@ export const QuizQuestionsPage = () => {
                 <View style={styles.questionInfo}>
                     <View style={styles.questionInfoDropDown}>
                         <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestions.length}</Text>
-                        <DownArrow height={'20'} width={'20'} fill={'black'} />
+                        <TouchableOpacity onPress={() => setQuestionInfoSheet(true)}>
+                            <InfoIcon height={'20'} width={'20'} fill={'black'} />
+                        </TouchableOpacity>
                     </View>
                     <TouchableOpacity
                         onPress={() => setBottomSheetVisible(true)}
@@ -231,6 +237,20 @@ export const QuizQuestionsPage = () => {
                 onRequestClose={() => setModalVisible(!modalVisible)}>
                     <Popup setModalVisible={setModalVisible}/>
             </Modal>
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={questionInfoSheet}
+                onRequestClose={() => setBottomSheetVisible(false)}
+            >
+                <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+                    <View style={styles.bottomSheetContainer}>
+                            <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false) }} />
+                    </View>
+                </View>
+            </Modal>
+            
         </View>
     );
 };
