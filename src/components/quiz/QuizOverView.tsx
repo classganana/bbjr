@@ -12,7 +12,7 @@ type Props = {
 
 export const QuizOverView = ({onCloseSheet, time}: any) => {
 
-  const tabs: any= ['Overview', 'Instructions']  
+  const tabs: string[]= ['Overview', 'Instructions']  
 
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
