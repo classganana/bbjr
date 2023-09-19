@@ -1,44 +1,62 @@
+import React, { useState } from "react";
 import { Text, TextInput, View } from "react-native";
-import { LoginScreenStyle } from "./LoginScreenStyle"
-import { Button } from "../../../components/common/ButttonComponent/Button"
-import { LoginButton } from "../../../components/common/ButttonComponent/ButtonStyles"
+import { LoginScreenStyle } from "./LoginScreenStyle";
+import { Button } from "../../../components/common/ButttonComponent/Button";
+import { PrimaryDefaultButton } from "../../../components/common/ButttonComponent/ButtonStyles";
 import { useNavigation } from "@react-navigation/native";
 
 export const LoginForm = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
-    function moveToOtpScreen() {
-        navigation.navigate('Otp' as never);
-        
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
+
+  // Define a regular expression for a valid phone number pattern.
+  const phoneRegex = /^[0-9]{10}$/;
+
+  const validatePhoneNumber = (inputPhoneNumber: string) => {
+    if (!phoneRegex.test(inputPhoneNumber)) {
+      setPhoneNumberError("Please enter a valid 10-digit phone number.");
+    } else {
+      setPhoneNumberError("");
     }
+  };
 
-    return (
-        <View style={LoginScreenStyle.formContainer}>
-            <Text style={LoginScreenStyle.formContainerTitle}>Create Account</Text>
-            <View style={LoginScreenStyle.inputSection}>
-                <View style={LoginScreenStyle.inputFieldContainer}>
-                    <Text style={LoginScreenStyle.inputFieldLabel}>Name</Text>
-                    <TextInput style={LoginScreenStyle.inputField}></TextInput>
-                </View>
-                <View style={LoginScreenStyle.inputFieldContainer}>
-                    <Text style={LoginScreenStyle.inputFieldLabel}>Mobile Number</Text>
-                    <View style={LoginScreenStyle.inputPhoneField}>
-                        <Text>+91</Text>
-                        <View style={LoginScreenStyle.verticalLine}></View>
-                        <TextInput></TextInput>
-                    </View>
-                    <Text style={LoginScreenStyle.errorMsg}>
-                        The phone number is already in use by another account, try again
-                    </Text>
-                </View>
-                <Text style={LoginScreenStyle.termsAndPolicy}>
-                    By signing in, you agree to our Terms & Conditions and Privacy Policy
-                </Text>
-            </View>
-            <View style={LoginScreenStyle.actionButtons} >
-                <Button label={"Sign In"} className={LoginButton} disabled={false}
-                    onPress={moveToOtpScreen}></Button>
-            </View>
+  function moveToOtpScreen() {
+    console.log(phoneNumber);
+    // navigation.navigate("Otp" as never);
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View>
+        <Text style={LoginScreenStyle.loginHeading}>Log in</Text>
+      </View>
+      <View>
+        <View style={LoginScreenStyle.imageBlock}></View>
+        <View style={LoginScreenStyle.inputContainer}>
+          <TextInput
+            style={LoginScreenStyle.input}
+            placeholder="Enter phone number"
+            keyboardType="numeric"
+            onChangeText={(text) => {
+              setPhoneNumber(text);
+              validatePhoneNumber(text);
+            }}
+          />
         </View>
-    )
-}
+          {phoneNumberError !== "" && (
+            <Text style={{ color: "red" }}>{phoneNumberError}</Text>
+          )}
+      </View>
+      <View style={{ position: "absolute", bottom: 50, width: "100%" }}>
+        <Button
+          className={PrimaryDefaultButton}
+          label={"Login"}
+          disabled={phoneNumberError !== ""}
+          onPress={moveToOtpScreen}
+        />
+      </View>
+    </View>
+  );
+};

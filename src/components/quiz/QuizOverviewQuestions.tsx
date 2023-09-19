@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Colors } from '../../styles/colors'
 import { Button } from '../common/ButttonComponent/Button'
-import { CancelButton, OutlineButton, PrimaryOutlineButton, SmallOutlineButton, SubmitButton } from '../common/ButttonComponent/ButtonStyles'
+import { PrimaryOutlineButton, SmallOutlineButton, SubmitButton } from '../common/ButttonComponent/ButtonStyles'
 
 export const QuizOverviewQuestions = ({closeSheet}: any) => {
  

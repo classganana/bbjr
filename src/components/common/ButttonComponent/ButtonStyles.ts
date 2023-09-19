@@ -74,7 +74,7 @@ export const PrimaryDefaultButton = StyleSheet.create<Style>({
     justifyContent: "center",
     backgroundColor: Colors.primary,
     borderRadius: 8,
-    // padding: 12
+    padding: 12
   },
   title: {
     color: Colors.white,

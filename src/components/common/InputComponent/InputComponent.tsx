@@ -1,11 +1,5 @@
-import {
-  Platform,
-  StyleProp,
-  Text,
-  TextInput,
-  TextStyle,
-  View,
-} from "react-native";
+import React from "react";
+import { StyleProp, Text, TextInput, TextStyle, View } from "react-native";
 import { InputComponentStyle } from "./InputComponentStyle";
 
 export interface InputComponentProps {
@@ -17,7 +11,7 @@ export interface InputComponentProps {
     inputBox: StyleProp<any>;
   };
   secureTextEntry?: boolean;
-  onChange: any;
+  onChange: (name: string,text: string) => void; // Corrected type for onChange
 }
 
 export const InputComponent = ({
@@ -28,18 +22,15 @@ export const InputComponent = ({
   secureTextEntry,
 }: InputComponentProps) => {
   return (
-    <>
-      <View style={InputComponentStyle.container}>
-        <Text style={InputComponentStyle.title}>{label}</Text>
-        <TextInput
-          style={InputComponentStyle.input}
-          secureTextEntry={secureTextEntry}
-          placeholder={placeholder}
-          key={name}
-          onChangeText={(text) => onChange(text)}
-          onChange={onChange}
-        />
-      </View>
-    </>
+    <View style={InputComponentStyle.container}>
+      <Text style={InputComponentStyle.title}>{label}</Text>
+      <TextInput
+        style={InputComponentStyle.input}
+        secureTextEntry={secureTextEntry}
+        placeholder={placeholder}
+        key={name}
+        onChangeText={(text) => onChange(name,text)}
+      />
+    </View>
   );
 };
