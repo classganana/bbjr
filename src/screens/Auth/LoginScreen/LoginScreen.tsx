@@ -15,9 +15,6 @@ export const LoginScreen = () => {
 
   function moveToOtpScreen() {
     setOtpScreen(true);
-    if (!otpScreen) {
-      navigation.navigate('LoginForm' as never);
-    }
   }
 
   return (

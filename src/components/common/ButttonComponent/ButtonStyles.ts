@@ -66,7 +66,7 @@ export const PrimarySmallButton = StyleSheet.create({
 
 export const PrimaryDefaultButton = StyleSheet.create<Style>({
   container: {
-    height: 28,
+    height: 40,
     // flex: 1,
     // width: "100%",
     display: "flex",
@@ -74,7 +74,7 @@ export const PrimaryDefaultButton = StyleSheet.create<Style>({
     justifyContent: "center",
     backgroundColor: Colors.primary,
     borderRadius: 8,
-    padding: 12
+    // paddingHorizontal: 12
   },
   title: {
     color: Colors.white,

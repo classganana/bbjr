@@ -1,57 +1,70 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { Colors } from '../../styles/colors';
 
-const OtpVerification = () => {
-  const input1Ref = useRef<TextInput>(null);
-  const input2Ref = useRef<TextInput>(null);
-  const input3Ref = useRef<TextInput>(null);
-  const input4Ref = useRef<TextInput>(null);
+type Props = {
+  phoneNumber: string,
+  otpGiven:(otp:string) => void,
+  sendOtp: () => void
+}
 
-  const handleTextChange = (text: string, inputRef: React.RefObject<TextInput>) => {
-    const numericText = text.replace(/[^0-9]/g, ''); // Filter out non-numeric characters
+const OtpVerification = (props: Props) => {
+  const inputRefs = Array.from({ length: 6 }, () => useRef<TextInput>(null));
 
-    // Update the value of the input using state
-    if (inputRef.current) {
-      const currentInputRef = inputRef.current;
-      currentInputRef.value = numericText; // Set the value using the 'value' prop
+  const [isButtonDisabled, setButtonDisabled] = useState(true);
+  const [otp, setOtp] = useState<string>();
+
+  const handleTextChange = useCallback((text: string, index: number) => {
+    const numericText = text.replace(/[^0-9]/g, '');
+
+    if (inputRefs[index].current) {
+      inputRefs[index].current.value = numericText;
 
       if (numericText.length === 0) {
-        focusPreviousInput(inputRef);
+        focusPreviousInput(index);
       } else if (numericText.length >= 1) {
-        currentInputRef.blur();
-        focusNextInput(inputRef);
+        focusNextInput(index);
       }
     }
-  };
-  
-  const focusNextInput = (currentInputRef: React.RefObject<TextInput>) => {
-    if (currentInputRef.current === input1Ref.current) {
-      input2Ref.current?.focus();
-    } else if (currentInputRef.current === input2Ref.current) {
-      input3Ref.current?.focus();
-    } else if (currentInputRef.current === input3Ref.current) {
-      input4Ref.current?.focus();
+  }, [inputRefs]);
+
+  useEffect(() => {
+    const isFilled = inputRefs.every((ref) => ref.current?.value.length === 1);
+
+    if (isFilled) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
     }
+  }, [inputRefs]);
+
+  const focusNextInput = (currentIndex: number) => {
+    if (currentIndex < inputRefs.length - 1) {
+      inputRefs[currentIndex + 1].current?.focus();
+    }
+    moveToResetPassword();
   };
 
-  const focusPreviousInput = (currentInputRef: React.RefObject<TextInput>) => {
-    if (currentInputRef.current === input2Ref.current) {
-      input1Ref.current?.focus();
-    } else if (currentInputRef.current === input3Ref.current) {
-      input2Ref.current?.focus();
-    } else if (currentInputRef.current === input4Ref.current) {
-      input3Ref.current?.focus();
+
+  const focusPreviousInput = (currentIndex: number) => {
+    if (currentIndex > 0) {
+      inputRefs[currentIndex - 1].current?.focus();
     }
+    moveToResetPassword();
   };
 
   const navigation = useNavigation();
 
   const moveToResetPassword = () => {
-    navigation.navigate("DashboardNavigator" as never);
+    const otp = inputRefs.map((ref) => ref.current?.value || '').join('');
+    setOtp(otp);
+    if (otp.length === 6) {
+      console.log(otp);
+      props.otpGiven(otp);
+    }
   };
 
   return (
@@ -60,42 +73,26 @@ const OtpVerification = () => {
       <Text style={styles.title}>Enter the verification code we just sent to your email address.</Text>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={[styles.inputView]}
-          maxLength={1}
-          onChangeText={(text) => handleTextChange(text, input1Ref)}
-          ref={input1Ref}
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.inputView}
-          maxLength={1}
-          onChangeText={(text) => handleTextChange(text, input2Ref)}
-          ref={input2Ref}
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.inputView}
-          maxLength={1}
-          onChangeText={(text) => handleTextChange(text, input3Ref)}
-          ref={input3Ref}
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.inputView}
-          maxLength={1}
-          onChangeText={(text) => handleTextChange(text, input4Ref)}
-          ref={input4Ref}
-          keyboardType="numeric"
-        />
-      </View>
-        </KeyboardAvoidingView>
+        <View style={styles.inputContainer}>
+          {inputRefs.map((ref, index) => (
+            <TextInput
+              key={index}
+              style={styles.inputView}
+              maxLength={1}
+              onChangeText={(text) => handleTextChange(text, index)}
+              ref={ref}
+              keyboardType="numeric"
+            />
+          ))}
+        </View>
+      </KeyboardAvoidingView>
       <TouchableOpacity style={styles.button}>
         <Button
-                  onPress={moveToResetPassword}
-                  label="Submit"
-                  className={LoginButton} disabled={false} />
+          onPress={moveToResetPassword}
+          label="Verify"
+          className={LoginButton}
+          disabled={isButtonDisabled}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -113,14 +110,16 @@ const styles = StyleSheet.create({
     width: "90%"
   },
   inputView: {
-    width: 70,
-    height: 60,
-    borderWidth: 0.5,
+    width: 50,
+    height: 50,
+    borderWidth: 0,
     borderRadius: 10,
+    backgroundColor: "rgba(0, 107, 127, 0.10)",
     margin: 5,
     textAlign: 'center',
     fontFamily: 'Inter-Bold',
-    fontSize: 20
+    fontSize: 20,
+    ...(Platform.OS === "web" ? { outlineStyle: "none" } : {}),
   },
   inputViewBg: {
     backgroundColor: 'red'
