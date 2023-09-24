@@ -23,16 +23,16 @@ const OtpVerification = (props: Props) => {
     if (inputRefs[index].current) {
       inputRefs[index].current.value = numericText;
 
-      if (numericText.length === 0) {
+      if (numericText && numericText.length === 0) {
         focusPreviousInput(index);
-      } else if (numericText.length >= 1) {
+      } else if (numericText && numericText.length >= 1) {
         focusNextInput(index);
       }
     }
   }, [inputRefs]);
 
   useEffect(() => {
-    const isFilled = inputRefs.every((ref) => ref.current?.value.length === 1);
+    const isFilled = inputRefs.every((ref) => ref.current?.value && ref.current?.value?.length === 1);
 
     if (isFilled) {
       setButtonDisabled(false);
@@ -42,7 +42,7 @@ const OtpVerification = (props: Props) => {
   }, [inputRefs]);
 
   const focusNextInput = (currentIndex: number) => {
-    if (currentIndex < inputRefs.length - 1) {
+    if (inputRefs &&  currentIndex < inputRefs.length - 1) {
       inputRefs[currentIndex + 1].current?.focus();
     }
     moveToResetPassword();
@@ -61,7 +61,7 @@ const OtpVerification = (props: Props) => {
   const moveToResetPassword = () => {
     const otp = inputRefs.map((ref) => ref.current?.value || '').join('');
     setOtp(otp);
-    if (otp.length === 6) {
+    if (otp && otp.length === 6) {
       console.log(otp);
       props.otpGiven(otp);
     }

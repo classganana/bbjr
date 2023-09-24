@@ -25,9 +25,10 @@ export const LoginForm = () => {
   const sendVerification = ()  => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current).then((item) => {
+      setOtpScreen(true)
         setVerificationId(item)
-        setOtpScreen(true)
-    })
+    }
+    )
     .catch(() => {
         setOtpScreen(false);
     })
@@ -62,9 +63,7 @@ export const LoginForm = () => {
       .catch(() => {
         console.log("failed")
       })
-}
-
-
+  }
 
   return (
     <View style={{ flex: 1 }}>
