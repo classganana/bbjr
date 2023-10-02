@@ -100,10 +100,12 @@ const OtpVerification = (props: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
+    backgroundColor: 'transparent',
     display: "flex",
     flex: 1,
     alignItems: 'center',
+    width: "100%",
+    height: 600
   },
   inputContainer: {
     flexDirection: 'row',
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red'
   },
   button: {
-    marginTop: 20,
+    marginTop: 70,
     width: "90%"
   },
   text: {

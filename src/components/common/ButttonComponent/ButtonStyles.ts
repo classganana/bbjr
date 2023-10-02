@@ -64,6 +64,26 @@ export const PrimarySmallButton = StyleSheet.create({
   },  
 })
 
+export const PrimaryDefaultCircleButton = StyleSheet.create<Style>({
+  container: {
+    height: 40,
+    // flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 24,
+    paddingHorizontal: 12
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "400",
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
+  },
+});
+
 export const PrimaryDefaultButton = StyleSheet.create<Style>({
   container: {
     height: 40,

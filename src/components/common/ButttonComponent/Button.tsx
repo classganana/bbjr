@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   TextStyle,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from "react-native";
@@ -22,7 +22,7 @@ export interface Props {
 export const Button = (props: Props) => {
   return (
     <>
-      <TouchableOpacity
+      <TouchableWithoutFeedback
         style={[
           props.className?.container,
           props.disabled
@@ -35,7 +35,7 @@ export const Button = (props: Props) => {
         <View style={[props.className?.container, props.styles]}>
           <Text style={props.className?.title}>{props.label}</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
     </>
   );
 };

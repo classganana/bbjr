@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedbackComponent, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Colors } from "../../styles/colors";
 import { ExamPrepProgressBar } from "./ExamPrepProgressBar";
 
@@ -13,14 +13,16 @@ export interface ExamPrepQuizCardData {
     done: boolean,
     practiceProgress?: number,
     selected?: boolean,
+    multiSelect?: boolean,
     onCardClick?: (selectedOption: number) => void;
 }
 
 
-export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id, title, infoText, imageUrl, done, noOfQuestions, timeRequired, selected, onCardClick }) => (
-    <TouchableOpacity onPress={() => onCardClick && onCardClick(id)}>
+export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id, title, infoText, imageUrl, done, noOfQuestions, timeRequired, selected, multiSelect ,onCardClick }) => (
+    <TouchableWithoutFeedback onPress={() => onCardClick && onCardClick(id)}>
         <View style={[styles.card,
         done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
+        selected && multiSelect && styles.multiSelected,
         selected && styles.selected]}>
             <View style={styles.imageContainer}>
                 <Image source={{ uri: imageUrl }} style={styles.image} />
@@ -35,7 +37,7 @@ export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id, title, in
                 </View>
             </View>
         </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
 );
 
 const styles = StyleSheet.create({
@@ -50,9 +52,9 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
-        shadowOpacity: 0.15,
+        shadowOpacity: 1,
         shadowRadius: 4,
-        elevation: 2,
+        elevation: 1,
         marginBottom: 10,
         gap: 12
     },
@@ -99,5 +101,15 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         shadowOpacity: 1,
         elevation: 4, // For Android shadow
-    }
+    },
+    multiSelected: {
+        borderWidth: 1 / 2,
+        borderColor: '#006B7F',
+        shadowColor: 'rgba(0, 0, 0, 0.25)',
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 8,
+        shadowOpacity: 1,
+        backgroundColor: "#F0F6F8",
+        elevation: 4
+    },
 })

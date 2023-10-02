@@ -18,7 +18,7 @@ type CustomDropdownProps = {
 };
 
 export const CustomDropdown: React.FC<CustomDropdownProps> = ({
-  label,
+  label,x
   dropdownPlaceholder,
   list,
 }) => {

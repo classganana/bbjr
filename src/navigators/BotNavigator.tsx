@@ -8,7 +8,7 @@ export const BotNavigator = () => {
     return (
     <View style={{flex: 1, width: "100%"}}>
           <Stack.Navigator>
-              <Stack.Screen name="BotNavigation" component={BotScreen} options={{ headerShown: false }} /> 
+              <Stack.Screen name="LoginScreen" component={BotScreen} options={{ headerShown: false }} /> 
           </Stack.Navigator>
     </View>
     )

@@ -29,11 +29,11 @@ export const LoginScreenStyle = StyleSheet.create({
         backgroundColor: Colors.white,
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
-        paddingHorizontal: 25
+        // paddingHorizontal: 25
     },
     imageBlock: {
-        height: 300,
-        width: 300
+        height: 380,
+        width: "100%"
     },
     inputContainer: {
         borderWidth: 1,
@@ -57,6 +57,8 @@ export const LoginScreenStyle = StyleSheet.create({
         // backgroundColor: Colors.gray_01,
       },
     loginHeading: {
+        top: 20,
+        left: 30,
         fontSize: 20,
         fontWeight: '600'
     }  

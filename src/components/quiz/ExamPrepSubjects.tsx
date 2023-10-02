@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors'
 import { Pencil } from '../common/SvgComponent/SvgComponent'
 import { ExamPrepQuizCard, ExamPrepQuizCardData } from './ExamPrepQuizCard'
+import { httpClient } from '../../services/HttpServices'
 
 type Props = {
     subjects: string[]
 }
 
 export const ExamPrepSubjects = ({ subjects }: Props) => {
-    const [selectedSubject, setSelectedSubject] = useState("Maths");
+    const [selectedSubject, setSelectedSubject] = useState("Science");
+    const [board, setBoard] = useState("CBSE");
+    const [className, setClassName] = useState(10);
     // const [showSubjectList, setShowSubjectList] = useState(false);
     const [data, setData] = useState<ExamPrepQuizCardData[]>([
         {
@@ -42,6 +45,62 @@ export const ExamPrepSubjects = ({ subjects }: Props) => {
             timeRequired: 20,
         },
     ]);
+
+    const updateList = (index: number) => {
+        // setOptions(true);
+        let tempData = data;
+        tempData = tempData.map((temp) => {
+            if (temp.id != (index)) {
+                temp.selected = false;
+            }
+            return temp;
+        })
+        tempData[index].selected = true;
+        setData(() => [...tempData]);
+    }
+
+    /* 
+        [
+            {
+                "chapterName": "Chapter1 Chemical Reactions and Equations",
+                "questions": 346,
+                "time": 1038
+            }
+        ]
+    */
+
+    useEffect(() => {
+        const reqObj = {
+            "service": "ml_service",
+            // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
+            "endpoint": `/data/quizz/${board}/${className}/${selectedSubject}`,
+            "requestMethod": "GET",
+            "requestBody": {
+                "chapterName": "Chapter1 Chemical Reactions and Equations",
+                "questions": 346,
+                "time": 1038
+            }
+        }
+
+
+        selectedSubject && httpClient.post(`auth/c-auth`, reqObj)
+            .then((res: any) => {
+                let chapters: any[] = res.data.data;
+                chapters = chapters.map((chapter: any, index: number) => {
+                    return {
+                        id: index + 1,
+                        title: chapter.chapterName,
+                        infoText: 'Info about Card 1',
+                        imageUrl: 'https://placehold.co/400',
+                        done: false,
+                        noOfQuestions: chapter.questions,
+                        timeRequired: chapter.time,
+                        selected: false
+                    }
+                })
+                // setData(chapters);
+            });
+    }, [selectedSubject])
 
     const Block = ({ title }: any) => {
         return <TouchableOpacity style={blockStyle.container} onPress={() => setSelectedSubject(title)}>
@@ -80,13 +139,21 @@ export const ExamPrepSubjects = ({ subjects }: Props) => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                    <FlatList
-                        data={data}
-                        keyExtractor={(item) => item.title}
-                        renderItem={({ item }) => (
-                            <ExamPrepQuizCard {...item} onCardClick={() =>{}} />
-                        )}
-                    />
+
+                <ExamPrepQuizCard onCardClick={() => { }} id={0} title={selectedSubject} infoText={''} imageUrl={''} noOfQuestions={0} done={false} />
+                <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <Text>All Chapter Wise</Text>
+                    <TouchableOpacity style={styles.editSelectedSubject} onPress={() => setSelectedSubject("")} >
+                        <Text>Select</Text>
+                    </TouchableOpacity>
+                </View>
+                <FlatList
+                    data={data}
+                    keyExtractor={(item) => item.title}
+                    renderItem={({ item }) => (
+                        <ExamPrepQuizCard {...item} onCardClick={updateList} />
+                    )}
+                />
             </View>}
         </>
     )
