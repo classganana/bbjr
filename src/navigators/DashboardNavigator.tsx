@@ -2,6 +2,7 @@ import { Text, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Dashboard } from '../screens/Home/Dashboard';
+import EditProfile from '../screens/Profile/EditProfile';
 
 export const DashboardNavigator = () => {
 
@@ -9,7 +10,8 @@ export const DashboardNavigator = () => {
     return (
     <View style={{flex: 1, width: "100%"}}>
           <Stack.Navigator>
-              <Stack.Screen name="Home" component={Dashboard} options={{ headerShown: false }} /> 
+              {/* <Stack.Screen name="Home" component={Dashboard} options={{ headerShown: false }} /> */}
+              <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }} /> 
           </Stack.Navigator>
     </View>
     )
