@@ -344,6 +344,7 @@ export const StartButton = StyleSheet.create<Style>({
 export const CancelButton = StyleSheet.create<Style>({
   container: {
     height: 40,
+    width:130,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -353,7 +354,7 @@ export const CancelButton = StyleSheet.create<Style>({
     // padding: 12
   },
   title: {
-    padding: 30,
+    // padding: 30,
     color: Colors.primary,
     fontWeight: "500",
     fontSize: 15,
@@ -374,7 +375,28 @@ export const ExitButton = StyleSheet.create<Style>({
 
   },
   title: {
-    padding: 30,
+    // padding: 30,
+    color: Colors.white,
+    fontWeight: "500",
+    fontSize: 15,
+    fontFamily: "Inter-Regular",
+  }
+});
+export const EditButton = StyleSheet.create<Style>({
+  container: {
+    height: 40,
+    width:  '100%',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    // borderWidth: 4/4,
+    backgroundColor:Colors.primary,
+    borderColor:Colors.primary,
+
+  },
+  title: {
+    // padding: 30,
     color: Colors.white,
     fontWeight: "500",
     fontSize: 15,

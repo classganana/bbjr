@@ -747,3 +747,26 @@ export const Speaker = (props: Props) => {
     </Svg>
   )
 }
+export const CameraIcon = (props :Props) => {
+  return (
+    <Svg
+      // xmlns="http://www.w3.org/2000/svg"
+      // width={51}
+      // height={51}
+      viewBox="0 0 51 51"
+      // fill="none"
+      {...props}
+    >
+      <G filter="url(#filter0_d_8337_47908)">
+        <Circle cx={25.5} cy={25.5} r={21.5} fill="#006B7F" />
+      </G>
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M21.574 18.336A3 3 0 0124.07 17h3.86a2.999 2.999 0 012.496 1.336l.812 1.219a1 1 0 00.832.445H33a3 3 0 013 3v9a3 3 0 01-3 3H19a3 3 0 01-3-3v-9a3 3 0 013-3h.93a1 1 0 00.832-.445l.812-1.219zM24 27a2 2 0 114 0 2 2 0 01-4 0zm2-4a4 4 0 100 8 4 4 0 000-8z"
+        fill="#fff"
+      />
+      <Defs></Defs>
+    </Svg>
+  )
+}
