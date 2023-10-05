@@ -42,8 +42,15 @@ export const SettingsPage = () => {
         </View>
       </View>
       <View style={styles.DetailContainer}>
+        <View style={styles.block1}>
         <View style={styles.ProfileImage}></View>
-        <Text>{user && user.name}</Text>
+        <View style={{gap:6}}>
+        <Text style={styles.name}>{user && user.name}</Text>
+        <Text>{user && user.class}</Text>
+        <Text>{user && user.school}</Text>
+        <Text>{user && user.board}</Text>
+        </View>
+        </View>
         <View style={styles.block2}>
           <View style={styles.friend}>
             <ContactIcon height={'15'} width={'16'} fill={''} />
@@ -74,7 +81,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     backgroundColor: Colors.primary,
-
+    flex:1,
 
   },
   header: {
@@ -100,11 +107,12 @@ const styles = StyleSheet.create({
   DetailContainer: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: '100%',
+    // height: '100%',
     backgroundColor: Colors.white,
     paddingHorizontal: 20,
     paddingVertical: 20,
     gap: 32,
+    flex:1,
 
   },
 
@@ -131,6 +139,12 @@ const styles = StyleSheet.create({
     // position: 'relative',
     // borderBottomWidth: 1
   },
+  block1:{
+    flexDirection:'row',
+    alignItems:'center',
+    display:'flex',
+    gap:32,
+  },
   block2: {
     position: 'relative',
     borderBottomWidth: 1,
@@ -143,5 +157,13 @@ const styles = StyleSheet.create({
     width: '50%',
     position: 'absolute',
     right: 0,
+  },
+  name:{
+    color: '#2C2C2C',
+    fontFamily: 'Inter-Regular',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 19.764, 
   }
 })
