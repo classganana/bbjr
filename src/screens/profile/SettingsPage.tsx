@@ -1,12 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, Platform, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { IconButton } from '../../components/common/IconButtonComponent/IconButton'
 import { defaultIconButton, EditIconButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
 import { AboutIcon, ArrowIcon, ArrowLeft, ConditionIcon, ContactIcon, CrossIcon, LeaderIcon, LogoutIcon, PencilIcon, PrivacyIcon, ScoreIcon } from '../../components/common/SvgComponent/SvgComponent'
 import { Constants } from '../../constants/constants'
 import { Colors } from '../../styles/colors'
+import { httpClient } from '../../services/HttpServices'
 
 export const SettingsPage = () => {
+  const [user, setUser] = useState<any>();
+
+  useEffect(() => {
+      httpClient.get('users/johndoe123').then((res) => {
+          setUser(res.data);
+      }).catch(() => {
+        console.log("Something went wrong")
+      })    
+  },[])
+
   const labels = [
     { title: 'View leader board', leftSvg: <LeaderIcon height={'15'} width={'17'} fill={'black'} /> },
     { title: 'Previous Test Scores', leftSvg: <ScoreIcon height={'13'} width={'13'} fill={'black'} /> },
@@ -32,6 +43,7 @@ export const SettingsPage = () => {
       </View>
       <View style={styles.DetailContainer}>
         <View style={styles.ProfileImage}></View>
+        <Text>{user && user.name}</Text>
         <View style={styles.block2}>
           <View style={styles.friend}>
             <ContactIcon height={'15'} width={'16'} fill={''} />
