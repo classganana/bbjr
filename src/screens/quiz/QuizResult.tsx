@@ -25,11 +25,11 @@ export const QuizResult = (props: Props) => {
         },
         {
             label: "Wrong Questions",
-            value: `${props.noOfQuestions - props.noOfCorrectAnswers}`
+            value: `${props.noOfCorrectAnswers}`
         },
         {
             label: "Right Questions",
-            value: `${props.noOfCorrectAnswers}`
+            value: `${props.noOfQuestions - props.noOfCorrectAnswers}`
         }
     ]);
 

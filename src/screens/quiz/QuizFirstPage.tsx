@@ -1,5 +1,5 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent'
 import { Colors } from '../../styles/colors'
 import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
@@ -7,21 +7,40 @@ import { QuizInformation } from '../../components/quiz/QuizInformation'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles'
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 export const QuizFirstPage = () => {
   const navigation = useNavigation();
+  const [quizType, setQuizType] = useState('')
   const startQuiz = () => {
         navigation.navigate('QuizQuestionPages' as never)
   }  
+
+  useEffect(() => {
+    getQuizType().then((n) => {
+        n && setQuizType(n);
+        console.log(n);
+    })
+  },[])
+
+  const getQuizType = async () => {
+    return await AsyncStorage.getItem('quizType');
+  }
+  
+  const onBack = () => {
+    navigation.navigate('QuizHomepage' as never)
+  }
+
 
   return (
     <View style={styles.container}>
         <View style={styles.header}>
             <View style={styles.heading}>
-                <View style={styles.backButton}>
+                <TouchableOpacity onPress={onBack} style={styles.backButton}>
                     <ArrowLeft height={'25'} width={'25'} fill={'black'} />
-                </View>
-                <Text style={styles.headingTitle}>Quiz Details</Text>
+                </TouchableOpacity>
+                <Text style={styles.headingTitle}>{quizType} Details</Text>
             </View>
             <View style={styles.infoContainer}>
                 <Text style={styles.infoContainerTitle}>
@@ -62,6 +81,7 @@ const styles = StyleSheet.create({
         gap: 28
     },
     headingTitle: {
+        textTransform: 'capitalize',
         color: Colors.black_01,
         fontWeight: "500",
         fontSize: 18

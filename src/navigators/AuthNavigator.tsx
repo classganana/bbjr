@@ -10,7 +10,7 @@ export const AuthNavigator = () => {
     return (
     <View style={{flex: 1, width: "100%"}}>
           <Stack.Navigator>
-              {/* <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />  */}
+              <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} /> 
               <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} /> 
           </Stack.Navigator>
     </View>

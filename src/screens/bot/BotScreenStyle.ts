@@ -3,7 +3,7 @@ import { Colors } from "../../styles/colors";
 
 export const BotStyle = StyleSheet.create({
     container: {
-        flex: 4,
+        flex: 1,
         backgroundColor: Colors.white
     },
     header: {

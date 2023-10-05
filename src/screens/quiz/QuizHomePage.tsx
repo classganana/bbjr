@@ -49,6 +49,7 @@ export const QuizHomePage = () => {
     const [board, setBoard] = useState("CBSE");
     const [className, setClassName] = useState(10);
     const [multiSelect, setMultiSelect] = useState(false);
+    const [totalQuestions, setTotalQuestions] = useState(0);
     // const [subject, setSubject] = useState()
 
     const [subjects, setSubject] = useState([
@@ -61,6 +62,7 @@ export const QuizHomePage = () => {
     const navigation = useNavigation();
 
     useEffect(() => {
+        AsyncStorage.removeItem('quizType');
         setOptions(false);
         resetSelection();
     }, [tab, searchTerm])
@@ -77,7 +79,6 @@ export const QuizHomePage = () => {
     const updateList = (index: number) => {
         setOptions(true);
         let tempData = data;
-        debugger
         tempData = tempData.map((temp) => {
             if (temp.id != (index)) {
                 !multiSelect && (temp.selected = false);
@@ -89,36 +90,63 @@ export const QuizHomePage = () => {
         setData(() => [...tempData]);
     }
 
-    const startTheQuiz = () => {
-        navigation.navigate('ExploreQuiz' as never);
-        AsyncStorage.setItem('','')
+    const startTheQuiz = async () => {
+        await AsyncStorage.removeItem('quizType');
+        navigation.navigate('QuizFirstPage' as never);
+        await AsyncStorage.setItem('quizType','quiz');
     }
 
-    // useEffect(() => {
-    //     const reqObj = {
-    //         "service": "ml_service",
-    //         // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
-    //         "endpoint":  `/data/quizz/${board}/${className}/Science`,
-    //         "requestMethod": "GET",
-    //         "requestBody": {
-    //             "chapterName": "Chapter1 Chemical Reactions and Equations",
-    //             "questions": 346,
-    //             "time": 1038
-    //         }
-    //       }
-          
+    const startThePractice = async () => {
+        await AsyncStorage.removeItem('quizType');
+        const item = data.filter((item) => item.selected == true )[0];
+        navigation.navigate('QuizFirstPage' as never, {noOfQuestions: item.noOfQuestions} as never);
+        await AsyncStorage.setItem('quizType','practice');
+    }
 
-    //     httpClient.post(`auth/c-auth`, reqObj)
-    //     .then(() => {});
-    // },[])
+    useEffect(() => {
+        const reqObj = {
+            "service": "ml_service",
+            // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
+            "endpoint":  `/data/quizz/${board}/${className}/Science`,
+            "requestMethod": "GET",
+            "requestBody": {
+                "chapterName": "Chapter1 Chemical Reactions and Equations",
+                "questions": 346,
+                "time": 1038
+            }
+          }          
+
+        httpClient.post(`auth/c-auth`, reqObj)
+        .then((res) => {
+            let list = res.data.data
+            list = list.map((item: any, index: number) => {
+                      return {
+                        id: index,
+                        title: item.chapterName,
+                        infoText: 'Info about Card 1',
+                        imageUrl: 'https://placehold.co/400',
+                        done: false,
+                        noOfQuestions: item.questions,
+                        timeRequired: item.time,
+                        selected: false
+                      }
+                })
+                setData(list);
+
+        });
+    },[])
+
+    const onBack = () => {
+        navigation.navigate('QuizHomepage' as never)
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.heading}>
-                    <View style={styles.backButton}>
+                    <TouchableOpacity style={styles.backButton} onPress={onBack}>
                         <StrongBackButton height={'25'} width={'25'} fill={'black'} />
-                    </View>
+                    </TouchableOpacity>
                     <Text style={styles.headingTitle}>Explore Quiz</Text>
                 </View>
                 <View style={styles.infoContainer}>
@@ -180,7 +208,7 @@ export const QuizHomePage = () => {
                 }
             </View>
             {options && <View style={styles.floatingButtonContainer}>
-                <TouchableOpacity style={styles.floatingButton}>
+                <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
                     <TestIcon height={'20'} width={'20'} fill={'black'} />
                     <Text style={styles.floatingButtonText}>Practice</Text>
                 </TouchableOpacity>

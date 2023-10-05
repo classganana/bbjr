@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { InfoIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, CrossIcon, InfoIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
@@ -12,20 +12,43 @@ import ReportComponent from '../../components/quiz/ReportComponent';
 import { Description } from '../../components/feedback/Description/Description';
 import Popup from '../Popup/popup';
 import { QuizOverView } from '../../components/quiz/QuizOverView';
+import { httpClient } from '../../services/HttpServices';
 
 
 export type Answers = Array<{
     question: string;
     options: string[];
-    correctAnswer: string;
+    answer: string;
     selectedAnswer?: string
 }>
 
 export const QuizQuestionsPage = () => {
-    const [timer, setTimer] = useState(100); // Initial timer value in seconds
+    const [timer, setTimer] = useState(100);
     const questionScrollViewRef = useRef<ScrollView | null>(null);;
     const [quizQuestionList, setQuizQuestionList] = useState(quizQuestions);
     const navigation = useNavigation();
+
+    useEffect(() => {
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint":  `/data/mcq`,
+            "requestMethod": "POST",
+            "requestBody": {
+                "schoolId": "default",
+                "boardId": "CBSE",
+                "subject": "Science",
+                "className": 10,
+                "chapterName": "string",
+                "studentId": 10,
+                "size": 10
+              }
+          }          
+
+        httpClient.post(`auth/c-auth`, reqObj)
+        .then((res) => {
+            setQuizQuestionList(res.data.data.mcqs);
+        });
+    }, [])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -52,7 +75,6 @@ export const QuizQuestionsPage = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const handleSelectOption = (selectedOption: string) => {
-        // Handle the selected option if needed
         setQuizQuestionList((quizQuestionList) => {
             const updatedList = [...quizQuestionList];
             updatedList[currentQuestionIndex].selectedAnswer = selectedOption;
@@ -65,14 +87,14 @@ export const QuizQuestionsPage = () => {
     };
 
     const navigateToNextQuestion = () => {
-        if (currentQuestionIndex < quizQuestions.length - 1) {
+        if (currentQuestionIndex < quizQuestionList.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
         scrollToNextQuestion();
     };
 
     const navigateToPrevQuestion = () => {
-        if (currentQuestionIndex < quizQuestions.length - 1) {
+        if (currentQuestionIndex < quizQuestionList.length) {
             setCurrentQuestionIndex(currentQuestionIndex - 1);
         }
         scrollToPrevQuestion();
@@ -81,7 +103,8 @@ export const QuizQuestionsPage = () => {
     const calculateScore = (answerList: Answers) => {
         let score = 0;
         answerList.forEach((answer) => {
-            if (answer.correctAnswer == answer.selectedAnswer)
+            debugger
+            if (answer.selectedAnswer && answer.answer == answer.selectedAnswer)
                 score += 10;
         })
         return score;
@@ -105,8 +128,7 @@ export const QuizQuestionsPage = () => {
             const list = JSON.stringify(quizQuestionList)
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-            console.log(calculateScore(UserAnswerList));
-            if (currentQuestionIndex == quizQuestions.length - 1) {
+            if (currentQuestionIndex == quizQuestionList.length - 1) {
                 console.log(calculateScore(UserAnswerList));
                 navigation.navigate('QuizResultPage' as never);
             }
@@ -115,13 +137,9 @@ export const QuizQuestionsPage = () => {
         }
     };
 
-    const onInfoClick = () => {
-
-    }
-
-    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const currentQuestion = quizQuestionList[currentQuestionIndex];
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-    const [questionInfoSheet, setQuestionInfoSheet] = useState(true);
+    const [questionInfoSheet, setQuestionInfoSheet] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     return (
         <View style={styles.container}>
@@ -143,7 +161,7 @@ export const QuizQuestionsPage = () => {
             <View style={styles.body}>
                 <View style={styles.questionInfo}>
                     <View style={styles.questionInfoDropDown}>
-                        <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestions.length}</Text>
+                        <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestionList.length}</Text>
                         <TouchableOpacity onPress={() => setQuestionInfoSheet(true)}>
                             <InfoIcon height={'20'} width={'20'} fill={'black'} />
                         </TouchableOpacity>
@@ -156,7 +174,7 @@ export const QuizQuestionsPage = () => {
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
-                        {quizQuestions.map((_, index) => (
+                        {quizQuestionList.map((_, index) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
@@ -180,14 +198,14 @@ export const QuizQuestionsPage = () => {
                 <View style={styles.nextQuizButton}>
                     {
                         currentQuestionIndex != 0 && <Button
-                            label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Previous'}
+                            label={'Previous'}
                             className={OutlineButton}
                             disabled={false}
                             onPress={navigateToPrevQuestion}
                         />
                     }
                     <Button
-                        label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Save & Next'}
+                        label={currentQuestionIndex === quizQuestionList.length - 1 ? 'Submit' : 'Save & Next'}
                         className={LoginButton}
                         disabled={false}
                         onPress={navigateToNextQuestion}

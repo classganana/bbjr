@@ -69,7 +69,7 @@ export const Student = ({ selectedSubject }: Props) => {
   const getSubjects = () => {
     // some API call or data fetching
     const result = [
-      { subjectName: "kkk" },
+      { subjectName: "Science" },
       { subjectName: "Maths" },
       { subjectName: "Geography" },
       { subjectName: "History" },

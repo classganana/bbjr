@@ -17,9 +17,9 @@ export const AppNavigator = () => {
             <Stack.Navigator>
                 {/* <Stack.Screen name='OnBoarding' component={OnBoardingNavigator} options={{ headerShown: false }}></Stack.Screen> */}
                 {/* <Stack.Screen name="Auth" component={AuthNavigator} options={{ headerShown: false }} /> */}
-                <Stack.Screen name="DashboardNavigator" component={DashboardNavigator} options={{ headerShown: false }} />
-                {/* <Stack.Screen name="Quiz" component={QuizNavigator} options={{ headerShown: false }}></Stack.Screen> */}
-                {/* <Stack.Screen name="Bot" component={BotNavigator} options={{ headerShown: false }}></Stack.Screen> */}
+                {/* <Stack.Screen name="DashboardNavigator" component={DashboardNavigator} options={{ headerShown: false }} /> */}
+                <Stack.Screen name="Quiz" component={QuizNavigator} options={{ headerShown: false }}></Stack.Screen>
+                <Stack.Screen name="Bot" component={BotNavigator} options={{ headerShown: false }}></Stack.Screen>
             </Stack.Navigator>
         </View>
     )
