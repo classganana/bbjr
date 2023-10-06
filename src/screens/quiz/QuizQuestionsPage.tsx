@@ -22,10 +22,15 @@ export type Answers = Array<{
     selectedAnswer?: string
 }>
 
+export type questionWithTime = {
+    timeTaken: number,
+    quizQuestionList: Answers
+}
+
 export const QuizQuestionsPage = () => {
     const [timer, setTimer] = useState(100);
     const questionScrollViewRef = useRef<ScrollView | null>(null);;
-    const [quizQuestionList, setQuizQuestionList] = useState(quizQuestions);
+    const [quizQuestionList, setQuizQuestionList] = useState<any>(quizQuestions);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -40,7 +45,7 @@ export const QuizQuestionsPage = () => {
                 "className": 10,
                 "chapterName": "string",
                 "studentId": 10,
-                "size": 10
+                "size": 1
               }
           }          
 
@@ -100,9 +105,9 @@ export const QuizQuestionsPage = () => {
         scrollToPrevQuestion();
     };
 
-    const calculateScore = (answerList: Answers) => {
+    const calculateScore = (answerList: questionWithTime) => {
         let score = 0;
-        answerList.forEach((answer) => {
+        answerList.quizQuestionList.forEach((answer) => {
             debugger
             if (answer.selectedAnswer && answer.answer == answer.selectedAnswer)
                 score += 10;
@@ -125,12 +130,18 @@ export const QuizQuestionsPage = () => {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
         try {
-            const list = JSON.stringify(quizQuestionList)
+            debugger
+            const quizDetails = {
+                timeTaken: timer,
+                quizQuestionList
+            }
+            quizQuestionList['timeTaken'] = timer;
+            const list = JSON.stringify(quizDetails)
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
             if (currentQuestionIndex == quizQuestionList.length - 1) {
                 console.log(calculateScore(UserAnswerList));
-                navigation.navigate('QuizResultPage' as never);
+                navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
             }
         } catch (error) {
             console.error('Error storing data:', error);
