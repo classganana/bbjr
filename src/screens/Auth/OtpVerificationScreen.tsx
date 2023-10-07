@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { Colors } from '../../styles/colors';
+import { Aiinput } from '../../components/StudentAiAssistant/aiinput/AiInputComponent';
 
 const OtpVerification = () => {
   const input1Ref = useRef<TextInput>(null);
@@ -91,12 +92,14 @@ const OtpVerification = () => {
         />
       </View>
         </KeyboardAvoidingView>
+        
       <TouchableOpacity style={styles.button}>
         <Button
                   onPress={moveToResetPassword}
                   label="Submit"
                   className={LoginButton} disabled={false} />
       </TouchableOpacity>
+      <Aiinput/>
     </View>
   );
 };
