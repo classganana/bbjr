@@ -7,7 +7,7 @@ import { Aiinput } from '../StudentAiAssistant/aiinput/AiInputComponent'
 
 export const BotIntroduction = () => {
 
-  const [showOptions, setShowOptions] = useState(true);  
+  const [showOptions, setShowOptions] = useState(false);  
 
   const basicInfoList: string[] = [
     "Great choice! You've selected Class III. 📚",
@@ -77,7 +77,7 @@ export const BotIntroduction = () => {
         </View>}
     </View>
         <View style={{position: 'absolute', bottom: 0, width: "100%"}}>
-            <Aiinput />
+            <Aiinput onSubjectChange={(sub: any) => { console.log(sub) }} />
         </View>
     </>
   )

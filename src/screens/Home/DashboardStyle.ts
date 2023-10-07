@@ -3,20 +3,21 @@ import { Colors } from "../../styles/colors";
 
 export const DashboardStyle = StyleSheet.create({
     container: {
+
         flex: 1,
         backgroundColor: Colors.primary,
     },
     header: {
-        height: 150,
+        height: 66,
         width: "100%",
         backgroundColor: Colors.primary,
         color: Colors.white,
         paddingHorizontal: 24,
-        paddingTop: 34,
-        paddingBottom: 24,
         display: 'flex',
         flexDirection: 'row',
-        gap: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // gap: 12,
         ...Platform.select({
             ios: {
             shadowColor: Colors.primary,
@@ -33,7 +34,7 @@ export const DashboardStyle = StyleSheet.create({
             },
           }),
     },
-    hello: {
+    brand: {
         color: "#E3F5FF",
         fontSize: 24
     },
@@ -108,10 +109,34 @@ export const DashboardStyle = StyleSheet.create({
       fontWeight: "600"
     },
     options: {
-        display: 'flex',
+        height: 310,
+        backgroundColor: '#F0F2F580',
+        paddingVertical: 12,
+        paddingHorizontal: 14
+    },
+    optionTitle: {
         flexDirection: 'row',
-        gap: 20,
-        backgroundColor: 'white',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        paddingHorizontal: 5,
+        borderBottomColor: Colors.primary,
+        borderBottomWidth: 1/2,
+        marginBottom: 20
+    },
+    viewAllBlock: {
+      borderBlockColor: Colors.primary,
+      borderBottomWidth: 1
+    },
+    viewAllText: {
+      fontWeight: '500',
+      color: Colors.primary
+    },
+    optionsCard: {
+      width: "100%",
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'row',
+      gap: 20,
     },
     optionHeading: {
       fontSize: 16,
@@ -178,22 +203,65 @@ export const DashboardStyle = StyleSheet.create({
       fontSize: 18
     },
     botBlock: {
-      display: 'flex',
-      flexDirection: "row",
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      backgroundColor: "#2E8494",
-      height: 150,
-      width: "100%",
+      height: 140,
+      padding: 14,
+      backgroundColor: '#FFF', // You can adjust this background color if needed
+      shadowColor: Colors.black_03, // Use your shadow color
+      shadowOffset: {
+        width: 0,
+        height: 0, // Adjust this value to control the shadow's vertical offset
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4, // Adjust this value to control the shadow's spread
+      elevation: 4,
+      // height: 150,
+      width: '100%',
       borderRadius: 12,
     },
-    botGif: {
-      right: 0,
+    botBlockDesc: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+    },
+    headerBotGif: {
       height: 150, 
+      width: 100
+    }, 
+    botGif: {
+      position:"relative",
+      bottom: -20,
+      right: -20,
+      height: 110, 
       width: 100
     },
     yourAssistant: {
       color: "#E5FF7F"
+    },
+    leaderBoardSection: {
+      flexDirection: 'row',
+      alignItems: "center",
+      borderRadius: 6,
+      borderWidth: 0.5,
+      borderColor: 'rgba(0, 107, 127, 0.40)',
+      backgroundColor: '#FFF',
+      shadowColor: 'rgba(0, 0, 0, 0.10)',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 1,
+      shadowRadius: 4,
+      elevation: 4,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      gap: 12
+    },
+    continuePractice: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    explore: {
+      color: Colors.primary,
+      fontWeight: '500'
     }
 
 })

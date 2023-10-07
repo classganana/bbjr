@@ -1,20 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Colors } from '../../styles/colors';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { InfoIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigation } from '@react-navigation/native';
+import styles from './QuizQuestionsPageStyle';
+import ReportComponent from '../../components/quiz/ReportComponent';
+import { Description } from '../../components/feedback/Description/Description';
+import Popup from '../Popup/popup';
+import { QuizOverView } from '../../components/quiz/QuizOverView';
+
 
 export type Answers = Array<{
     question: string;
     options: string[];
     correctAnswer: string;
     selectedAnswer?: string
-  }>
+}>
 
 export const QuizQuestionsPage = () => {
     const [timer, setTimer] = useState(100); // Initial timer value in seconds
@@ -76,15 +81,15 @@ export const QuizQuestionsPage = () => {
     const calculateScore = (answerList: Answers) => {
         let score = 0;
         answerList.forEach((answer) => {
-            if(answer.correctAnswer == answer.selectedAnswer)
-                score+=10;
+            if (answer.correctAnswer == answer.selectedAnswer)
+                score += 10;
         })
         return score;
     }
 
     const scrollToPrevQuestion = () => {
         const nextQuestionIndex = currentQuestionIndex + 1;
-        const scrollX = nextQuestionIndex * (-40); 
+        const scrollX = nextQuestionIndex * (-40);
         if (questionScrollViewRef.current) {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
@@ -92,7 +97,7 @@ export const QuizQuestionsPage = () => {
 
     const scrollToNextQuestion = async () => {
         const nextQuestionIndex = currentQuestionIndex + 1;
-        const scrollX = nextQuestionIndex * 40; 
+        const scrollX = nextQuestionIndex * 40;
         if (questionScrollViewRef.current) {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
@@ -110,8 +115,14 @@ export const QuizQuestionsPage = () => {
         }
     };
 
-    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const onInfoClick = () => {
 
+    }
+
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+    const [questionInfoSheet, setQuestionInfoSheet] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -125,7 +136,7 @@ export const QuizQuestionsPage = () => {
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
                         </View>
-                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => { }} />
+                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => setModalVisible(true)} />
                     </View>
                 </View>
             </View>
@@ -133,9 +144,15 @@ export const QuizQuestionsPage = () => {
                 <View style={styles.questionInfo}>
                     <View style={styles.questionInfoDropDown}>
                         <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestions.length}</Text>
-                        <DownArrow height={'20'} width={'20'} fill={'black'} />
+                        <TouchableOpacity onPress={() => setQuestionInfoSheet(true)}>
+                            <InfoIcon height={'20'} width={'20'} fill={'black'} />
+                        </TouchableOpacity>
                     </View>
-                    <ReportIcon height={'18'} width={'18'} fill={'white'} />
+                    <TouchableOpacity
+                        onPress={() => setBottomSheetVisible(true)}
+                    >
+                        <ReportIcon height={'18'} width={'18'} fill={'white'} />
+                    </TouchableOpacity>
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
@@ -161,14 +178,14 @@ export const QuizQuestionsPage = () => {
                     />
                 </ScrollView>
                 <View style={styles.nextQuizButton}>
-                   {
-                    currentQuestionIndex != 0 && <Button
-                    label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Previous'}
-                    className={OutlineButton}
-                    disabled={false}
-                    onPress={navigateToPrevQuestion}
-                    />
-                   }
+                    {
+                        currentQuestionIndex != 0 && <Button
+                            label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Previous'}
+                            className={OutlineButton}
+                            disabled={false}
+                            onPress={navigateToPrevQuestion}
+                        />
+                    }
                     <Button
                         label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Save & Next'}
                         className={LoginButton}
@@ -177,153 +194,65 @@ export const QuizQuestionsPage = () => {
                     />
                 </View>
             </View>
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={bottomSheetVisible}
+                onRequestClose={() => setBottomSheetVisible(false)}
+            >
+                <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+                    <View style={styles.bottomSheetContainer}>
+                          <ReportComponent/>
+                          <View style={{ paddingHorizontal: 20,paddingVertical: 20,}}>
+                          <Description placeholder={'Write your feedback'} title={''}/>
+                          </View>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                gap: 5,
+                                position: "absolute",
+                                bottom: 0,
+                                // left:20,
+                                paddingHorizontal:20,
+                                paddingVertical:20,
+                                justifyContent:"space-between",
+                                width:'100%',
+
+                            }}
+                            
+                        >
+                            <Button label={'cancel'} disabled={false} className={OutlineButton} onPress={() => setBottomSheetVisible(false)}></Button>
+                            <Button label={'Report'} disabled={false} className={LoginButton} onPress={function (): void {
+                                throw new Error('Function not implemented.');
+                            } }></Button>
+                        </View>
+                    </View>
+                </View>
+                </Modal>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(!modalVisible)}>
+                    <Popup setModalVisible={setModalVisible}/>
+            </Modal>
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={questionInfoSheet}
+                onRequestClose={() => setBottomSheetVisible(false)}
+            >
+                <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+                    <View style={styles.bottomSheetContainer}>
+                            <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false) }} />
+                    </View>
+                </View>
+            </Modal>
+            
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#F2F7F8",
-    },
-    scrollContainer: {
-        flexGrow: 1,
-        paddingBottom: 60,
-    },
-    questionNumbersScroll: {
-        backgroundColor: 'white',
-        marginTop: 10,
-        marginBottom: 16,
-        maxHeight: 50,
-    },
-    header: {
-        paddingHorizontal: 24,
-        paddingVertical: 26,
-        height: 96,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 25,
-        borderBottomRightRadius: 25,
-        backgroundColor: '#F2F7F8',
-    },
-    heading: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 28,
-    },
-    headingTitle: {
-        color: Colors.primary,
-        fontWeight: "500",
-        fontSize: 14,
-    },
-    headingInfo: {
-        fontWeight: '500',
-    },
-    backButton: {
-        height: 45,
-        width: 45,
-        borderRadius: 45,
-        backgroundColor: "#D9D9D9",
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    timerBlock: {
-        //  position: "absolute",
-        display: 'flex',
-        flexDirection: 'row',
-        right: 10
-    },
-    timer: {
-        textAlign: 'center',
-        borderRadius: 10,
-        padding: 3,
-        backgroundColor: '#FFF',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 0,
-        },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 2,
-        overflow: 'hidden',
-    },
-    timerText: {
-        marginTop: 4,
-        textAlign: 'center',
-        color: "#525252",
-        fontSize: 12,
-    },
-    questionNumbers: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        // marginBottom: 10,
-        padding: 10,
-        borderBottomWidth: 1 / 4,
-    },
-    questionNumber: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 30,
-        height: 30,
-        borderRadius: 15,
-        backgroundColor: '#D4D4D4',
-        marginHorizontal: 5,
-    },
-    questionNumberText: {
-        color: Colors.white,
-        fontSize: 16,
-        fontWeight: '700',
-    },
-    activeQuestion: {
-        backgroundColor: Colors.primary, // Change to your active question color
-        color: Colors.white,
-    },
-    nextQuizButton: {
-        flex: 1,
-        width: "90%",
-        position: 'absolute',
-        bottom: 20,
-        display: 'flex',
-        flexDirection: 'row',
-        alignSelf: 'center',
-        paddingHorizontal: 16,
-        justifyContent: 'space-between'
-    },
-    body: {
-        flex: 1,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-        backgroundColor: '#FFF',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 0,
-        },
-        shadowOpacity: 0.10,
-        shadowRadius: 15,
-        elevation: 2, // for Android shadow
-    },
-    questionInfo: {
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 6,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 24,
-        paddingVertical: 16
-    },
-    questionInfoDropDown: {
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 6,
-        alignItems: 'center',
-    },
-    questionInfoText: {
-        fontSize: 16,
-        fontWeight: '500',
-    }
-});
 
 export default QuizQuestionsPage;

@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
   },
+
   question: {
     backgroundColor: Colors.white,
     fontSize: 18,

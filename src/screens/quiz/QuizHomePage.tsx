@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ClockIcon, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ClockIcon, CrossIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { SearchIcon } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { Card, CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepSubjects } from '../../components/quiz/ExamPrepSubjects';
+import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
+import { useNavigation } from '@react-navigation/native';
+import { httpClient } from '../../services/HttpServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Exam Prep');
@@ -42,9 +46,19 @@ export const QuizHomePage = () => {
     ]);
     const [options, setOptions] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [board, setBoard] = useState("CBSE");
+    const [className, setClassName] = useState(10);
+    const [multiSelect, setMultiSelect] = useState(false);
+    // const [subject, setSubject] = useState()
+
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
+
+    const selectSpecificSubject = () => {
+    }
+
+    const navigation = useNavigation();
 
     useEffect(() => {
         setOptions(false);
@@ -63,15 +77,40 @@ export const QuizHomePage = () => {
     const updateList = (index: number) => {
         setOptions(true);
         let tempData = data;
+        debugger
         tempData = tempData.map((temp) => {
             if (temp.id != (index)) {
-                temp.selected = false;
+                !multiSelect && (temp.selected = false);
             }
             return temp;
-        })
-        tempData[index].selected = true;
+        });
+
+        (tempData[index].selected = true);
         setData(() => [...tempData]);
     }
+
+    const startTheQuiz = () => {
+        navigation.navigate('ExploreQuiz' as never);
+        AsyncStorage.setItem('','')
+    }
+
+    // useEffect(() => {
+    //     const reqObj = {
+    //         "service": "ml_service",
+    //         // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
+    //         "endpoint":  `/data/quizz/${board}/${className}/Science`,
+    //         "requestMethod": "GET",
+    //         "requestBody": {
+    //             "chapterName": "Chapter1 Chemical Reactions and Equations",
+    //             "questions": 346,
+    //             "time": 1038
+    //         }
+    //       }
+          
+
+    //     httpClient.post(`auth/c-auth`, reqObj)
+    //     .then(() => {});
+    // },[])
 
     return (
         <View style={styles.container}>
@@ -93,36 +132,78 @@ export const QuizHomePage = () => {
                 <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => setTab(i)} ></Tabs>
             </View>
             <View style={styles.tabs}>
-                { tab == "Quizzes" && <>
+                {tab == "Quizzes" && <>
                     <Text style={styles.selectedOption}>{tab}</Text>
                     <FlatList
                         data={data}
                         keyExtractor={(item) => item.title}
                         renderItem={({ item }) => (
-                            <Card {...item} onCardClick={(i) => updateList(i)} />
+                            <ExamPrepQuizCard {...item} onCardClick={(i) => updateList(i)} />
                         )}
                     />
                 </>}
-                { tab == 'Exam Prep' && <>
-                        <ExamPrepSubjects subjects={subjects} />
-                    </>
+                {tab == 'Exam Prep' && <>
+                    {/* <ExamPrepSubjects subjects={subjects} /> */}
+                    <View>
+                    <TouchableOpacity >
+                        <Text>Exam Preparation</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity  >
+                        <Text>Change</Text>
+                        <View >
+                            <Pencil height={'20'} width={'20'} fill={Colors.white} />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                    <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} />
+                    <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <Text>All Chapter Wise</Text>
+                    <TouchableOpacity  onPress={() => {setMultiSelect(!multiSelect)}}>
+                    {multiSelect && <View style={styles.crossMultiSelect} >
+                    <CrossIcon height={12} width={12} fill={Colors.black_01} />
+                    <Text>
+                        12
+                    </Text>
+                    </View>}
+                    {!multiSelect && <Text>Select</Text>}
+                    </TouchableOpacity>
+                    </View>
+                    <FlatList
+                        data={data}
+                        keyExtractor={(item) => item.title}
+                        renderItem={({ item }) => (
+                            <ExamPrepQuizCard {...item} multiSelect={multiSelect} onCardClick={(i) => updateList(i)} />
+                            // <ExamPrepSubjects {...item}  />
+                        )}
+                    />
+                </>
                 }
             </View>
             {options && <View style={styles.floatingButtonContainer}>
-                <View style={styles.floatingButton}>
+                <TouchableOpacity style={styles.floatingButton}>
                     <TestIcon height={'20'} width={'20'} fill={'black'} />
                     <Text style={styles.floatingButtonText}>Practice</Text>
-                </View>
-                <View style={styles.floatingButton}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
                     <ClockIcon height={'20'} width={'20'} fill={'black'} />
                     <Text style={styles.floatingButtonText}>Take a Test</Text>
-                </View>
+                </TouchableOpacity>
             </View>}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    crossMultiSelect: {
+        borderColor: "#C5C5C5",
+        borderWidth: 1/2,
+        borderRadius: 20,
+        flexDirection: 'row',
+        gap: 8,
+        alignItems: 'center',
+        paddingVertical: 4,
+        paddingHorizontal: 10
+    },
     container: {
         margin: 0,
         flex: 1,

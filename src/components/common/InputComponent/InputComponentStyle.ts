@@ -17,7 +17,7 @@ export const InputComponentStyle: InputComponentStyle =
       width: "100%",
       display: "flex",
       flexDirection: "row",
-      backgroundColor: Colors.gray_01,
+      // backgroundColor: Colors.gray_01,
       padding: 18,
       gap: 10,
       borderRadius: 12,
@@ -29,6 +29,6 @@ export const InputComponentStyle: InputComponentStyle =
       fontWeight: "500",
       width: "100%",
       color: Colors.gray_02,
-      backgroundColor: Colors.gray_01,
+      // backgroundColor: Colors.gray_01,
     },
   });
