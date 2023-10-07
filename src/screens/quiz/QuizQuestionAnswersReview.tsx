@@ -1,55 +1,44 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Colors } from '../../styles/colors';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { DownArrow, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
-import quizQuestions from '../../utils/responses/quizquestions';
+import { DownArrow } from '../../components/common/SvgComponent/SvgComponent';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useNavigation } from '@react-navigation/native';
 
-export type Answers = Array<{
+type Question = {
     question: string;
     options: string[];
     correctAnswer: string;
-    selectedAnswer?: string
-  }>
+    selectedAnswer?: string;
+}
 
-export const QuizQuestionsPage = () => {
-    const [timer, setTimer] = useState(100); // Initial timer value in seconds
-    const questionScrollViewRef = useRef<ScrollView | null>(null);;
-    const [quizQuestionList, setQuizQuestionList] = useState(quizQuestions);
-    const navigation = useNavigation();
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (timer > 0) {
-                setTimer(timer - 1);
-            } else {
-                clearInterval(interval);
-                // Handle timer completion, e.g., show a message or trigger an action
-            }
-        }, 1000); // Update the timer every second
-
-        if (timer == 0) console.log("Ended");
-        return () => {
-            clearInterval(interval); // Clear the interval on component unmount
-        };
-    }, [timer]);
-
-    const formatTime = (seconds: number) => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-    };
-
+export const QuizQuestionAnswerReview = () => {
+    const questionScrollViewRef = useRef<ScrollView | null>(null);
+    const [quizQuestionList, setQuizQuestionList] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+    useEffect(() => {
+        getData();
+    }, []);
+
+    useEffect(() => {
+        currentQuestion = quizQuestionList[currentQuestionIndex];
+    }, [quizQuestionList, currentQuestionIndex]);
+
+    const getData = async () => {
+        try {
+            const userAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) || '[]');
+            setQuizQuestionList(userAnswerList);
+        } catch (error) {
+            console.error('Error retrieving data:', error);
+        }
+    };
+
     const handleSelectOption = (selectedOption: string) => {
-        // Handle the selected option if needed
-        setQuizQuestionList((quizQuestionList) => {
-            const updatedList = [...quizQuestionList];
+        setQuizQuestionList((prevList) => {
+            const updatedList = [...prevList];
             updatedList[currentQuestionIndex].selectedAnswer = selectedOption;
             return updatedList;
         });
@@ -60,57 +49,28 @@ export const QuizQuestionsPage = () => {
     };
 
     const navigateToNextQuestion = () => {
-        if (currentQuestionIndex < quizQuestions.length - 1) {
+        if (currentQuestionIndex < quizQuestionList.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
+            scrollToNextQuestion();
+        } else {
+            console.log("Quiz Ended");
         }
-        scrollToNextQuestion();
     };
-
-    const navigateToPrevQuestion = () => {
-        if (currentQuestionIndex < quizQuestions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex - 1);
-        }
-        scrollToPrevQuestion();
-    };
-
-    const calculateScore = (answerList: Answers) => {
-        let score = 0;
-        answerList.forEach((answer) => {
-            if(answer.correctAnswer == answer.selectedAnswer)
-                score+=10;
-        })
-        return score;
-    }
-
-    const scrollToPrevQuestion = () => {
-        const nextQuestionIndex = currentQuestionIndex + 1;
-        const scrollX = nextQuestionIndex * (-40); 
-        if (questionScrollViewRef.current) {
-            questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
-        }
-    }
 
     const scrollToNextQuestion = async () => {
         const nextQuestionIndex = currentQuestionIndex + 1;
-        const scrollX = nextQuestionIndex * 40; 
+        const scrollX = nextQuestionIndex * 40; // Adjust this value based on your layout
         if (questionScrollViewRef.current) {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
         try {
-            const list = JSON.stringify(quizQuestionList)
-            await AsyncStorage.setItem('questions', list);
-            const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-            console.log(calculateScore(UserAnswerList));
-            if (currentQuestionIndex == quizQuestions.length - 1) {
-                console.log(calculateScore(UserAnswerList));
-                navigation.navigate('QuizResultPage' as never);
-            }
+            await AsyncStorage.setItem('questions', JSON.stringify(quizQuestionList));
         } catch (error) {
             console.error('Error storing data:', error);
         }
     };
 
-    const currentQuestion = quizQuestions[currentQuestionIndex];
+    let currentQuestion = quizQuestionList[currentQuestionIndex];
 
     return (
         <View style={styles.container}>
@@ -120,30 +80,26 @@ export const QuizQuestionsPage = () => {
                         <Text style={styles.headingTitle}>Test</Text>
                         <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
                     </View>
-                    <View style={{ display: 'flex', gap: 10 }}>
-                        <View style={styles.timerBlock}>
-                            <Text style={styles.timerText}>Time Left:</Text>
-                            <Text style={styles.timer}>{formatTime(timer)}</Text>
-                        </View>
-                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => { }} />
-                    </View>
                 </View>
             </View>
             <View style={styles.body}>
                 <View style={styles.questionInfo}>
                     <View style={styles.questionInfoDropDown}>
-                        <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestions.length}</Text>
+                        <Text style={styles.questionInfoText}>
+                            Question {currentQuestionIndex + 1}/{quizQuestionList.length}
+                        </Text>
                         <DownArrow height={'20'} width={'20'} fill={'black'} />
                     </View>
-                    <ReportIcon height={'18'} width={'18'} fill={'white'} />
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
-                        {quizQuestions.map((_, index) => (
+                        {quizQuestionList.map((_, index) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
                                     styles.questionNumber,
+                                    quizQuestionList[index].correctAnswer == quizQuestionList[index].selectedAnswer  && { backgroundColor: '#4BAE4F'},
+                                    quizQuestionList[index].correctAnswer != quizQuestionList[index].selectedAnswer  && { backgroundColor: 'red'},
                                     currentQuestionIndex === index && styles.activeQuestion,
                                 ]}
                                 onPress={() => navigateToQuestion(index)}
@@ -154,23 +110,24 @@ export const QuizQuestionsPage = () => {
                     </View>
                 </ScrollView>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
+                {currentQuestion && (
                     <QuestionComponent
+                        isResult={true}
                         question={currentQuestion.question}
                         options={currentQuestion.options}
-                        onSelectOption={handleSelectOption} isResult={false}
+                        selectedAnswer={currentQuestion.selectedAnswer}
+                        correctAnswer={currentQuestion.correctAnswer}
+                        onSelectOption={handleSelectOption}
                     />
+                )}
                 </ScrollView>
                 <View style={styles.nextQuizButton}>
-                   {
-                    currentQuestionIndex != 0 && <Button
-                    label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Previous'}
-                    className={OutlineButton}
-                    disabled={false}
-                    onPress={navigateToPrevQuestion}
-                    />
-                   }
                     <Button
-                        label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Save & Next'}
+                        label={
+                            currentQuestionIndex === quizQuestionList.length - 1
+                                ? 'Submit'
+                                : 'Next Question'
+                        }
                         className={LoginButton}
                         disabled={false}
                         onPress={navigateToNextQuestion}
@@ -229,10 +186,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     timerBlock: {
-        //  position: "absolute",
         display: 'flex',
         flexDirection: 'row',
-        right: 10
+        right: 10,
     },
     timer: {
         textAlign: 'center',
@@ -258,7 +214,6 @@ const styles = StyleSheet.create({
     questionNumbers: {
         flexDirection: 'row',
         justifyContent: 'center',
-        // marginBottom: 10,
         padding: 10,
         borderBottomWidth: 1 / 4,
     },
@@ -277,19 +232,15 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
     activeQuestion: {
-        backgroundColor: Colors.primary, // Change to your active question color
+        backgroundColor: Colors.primary,
         color: Colors.white,
     },
     nextQuizButton: {
-        flex: 1,
         width: "90%",
         position: 'absolute',
         bottom: 20,
-        display: 'flex',
-        flexDirection: 'row',
         alignSelf: 'center',
         paddingHorizontal: 16,
-        justifyContent: 'space-between'
     },
     body: {
         flex: 1,
@@ -303,7 +254,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.10,
         shadowRadius: 15,
-        elevation: 2, // for Android shadow
+        elevation: 2,
     },
     questionInfo: {
         display: 'flex',
@@ -312,7 +263,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 24,
-        paddingVertical: 16
+        paddingVertical: 16,
     },
     questionInfoDropDown: {
         display: 'flex',
@@ -323,7 +274,5 @@ const styles = StyleSheet.create({
     questionInfoText: {
         fontSize: 16,
         fontWeight: '500',
-    }
+    },
 });
-
-export default QuizQuestionsPage;

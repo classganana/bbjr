@@ -4,6 +4,7 @@ import { Colors } from "../../styles/colors";
 export const DashboardStyle = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: Colors.primary,
     },
     header: {
         height: 150,
@@ -63,8 +64,11 @@ export const DashboardStyle = StyleSheet.create({
         width: "100%",
         backgroundColor: Colors.white,
         paddingHorizontal: 26,
+        paddingTop: 8,
         flex: 1,
-        gap:20,
+        gap:10,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
     },
     leaderboardHeader: {
         display: 'flex',
@@ -108,74 +112,88 @@ export const DashboardStyle = StyleSheet.create({
         flexDirection: 'row',
         gap: 20,
         backgroundColor: 'white',
-      },
-      optionHeading: {
-        fontSize: 16,
-        fontWeight: '500'
-      },
-      option: {
-        width: "50%",
-        height: 200,
-        flex: 1,
-        display: 'flex',
-        padding: 12,
-        borderRadius:20,
-        gap: 25,
-        backgroundColor: 'white', // Set a non-transparent background color
-        shadowColor: Colors.black_03,
-        shadowOffset: { width: 0, height: 2 },
-       shadowOpacity: 0.1,
-        shadowRadius: 4,
-        ...Platform.select({
-          ios: {
-            shadowColor: 'rgba(0, 0, 0, 0.15)',
-            shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 1,
-            shadowRadius: 8,
-          },
-          android: {
-            elevation: 4,
-          },
-        }),
-      },
-      optionHeader: {
-        width: '100%',
-        height: 30,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-      },
-      optionHeaderText: {
-        fontSize: 22,
-        fontWeight: "600"
-      },
-      optionHeaderInfoText: {
-            fontSize: 22,
-            fontWeight: "600"
-      },
-      optionBodyDescription: {
-        fontSize: 14,
-        color: '#676767'
-      },
-      botHeading: {
-        color: "#000",
-        fontWeight: "500",
-        fontSize: 18
-      },
-      botBlock: {
-        display: 'flex',
-        flexDirection: "row",
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: "#92CFDA",
-        height: 150,
-        width: "100%",
-        borderRadius: 12,
-      },
-      botGif: {
-        right: 0,
-        height: 150, 
-        width: 100
-      }
+    },
+    optionHeading: {
+      fontSize: 16,
+      fontWeight: '500'
+    },
+    optionCard: {
+      width: "47%",
+      height: 220,
+    },
+    optionCardHeading: {
+      fontSize: 16,
+      color: "#4E4E4E",
+      fontWeight: '500',
+      marginBottom: 6
+    },
+    option: {
+      width: "100%",
+      height: 220,
+      flex: 1,
+      display: 'flex',
+      padding: 12,
+      borderRadius:20,
+      gap: 25,
+      backgroundColor: 'white', // Set a non-transparent background color
+      shadowColor: Colors.black_03,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      ...Platform.select({
+        ios: {
+          shadowColor: 'rgba(0, 0, 0, 0.15)',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 1,
+          shadowRadius: 8,
+        },
+        android: {
+          elevation: 4,
+        },
+      }),
+    },
+    optionHeader: {
+      width: '100%',
+      height: 30,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    optionHeaderText: {
+      fontSize: 22,
+      fontWeight: "600"
+    },
+    optionHeaderInfoText: {
+          fontSize: 12,
+          fontWeight: "500",
+          color: "#9098A3"
+    },
+    optionBodyDescription: {
+      fontSize: 14,
+      color: '#676767'
+    },
+    botHeading: {
+      color: "#000",
+      fontWeight: "500",
+      fontSize: 18
+    },
+    botBlock: {
+      display: 'flex',
+      flexDirection: "row",
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      backgroundColor: "#2E8494",
+      height: 150,
+      width: "100%",
+      borderRadius: 12,
+    },
+    botGif: {
+      right: 0,
+      height: 150, 
+      width: 100
+    },
+    yourAssistant: {
+      color: "#E5FF7F"
+    }
 
 })

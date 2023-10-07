@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { Colors } from '../../styles/colors';
 import { ArrowLeft, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton, OutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Answers } from './QuizQuestionsPage';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = {
     noOfQuestions: number,
@@ -11,7 +14,7 @@ type Props = {
 }
 
 export const QuizResult = (props: Props) => {
-    const result = [
+    const [result, setResult] = useState([
         {
             label: "Total Score",
             value: `${props.noOfCorrectAnswers}/${props.noOfQuestions}`
@@ -28,11 +31,44 @@ export const QuizResult = (props: Props) => {
             label: "Right Questions",
             value: `${props.noOfCorrectAnswers}`
         }
-    ]
+    ]);
 
-    console.log(result);
+    const navigator = useNavigation();
 
+    useEffect(() => {
+        getData();
+    }, [])
 
+    async function getData() {
+        try {
+            const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
+            const score = calculateScore(UserAnswerList);
+            const totalMarks = UserAnswerList.length * 10;
+            const updatedResult = [...result];
+
+            // Update specific values in the copied array
+            updatedResult[0].value = `${score}/${totalMarks}`;
+            updatedResult[1].value = `${UserAnswerList.length}`;
+            updatedResult[2].value = `${(UserAnswerList.length - score / 10)}`;
+            updatedResult[3].value = `${score / 10}`;
+            setResult(updatedResult);
+        } catch (error) {
+            console.error('Error storing data:', error);
+        }
+    }
+
+    function showAnswersScreen() {
+        navigator.navigate('QuizQuestionAnswersReview' as never)
+    }
+
+    const calculateScore = (answerList: Answers) => {
+        let score = 0;
+        answerList.forEach((answer) => {
+            if (answer.correctAnswer == answer.selectedAnswer)
+                score += 10;
+        })
+        return score;
+    }
 
     return (
         <View style={styles.container}>
@@ -57,17 +93,13 @@ export const QuizResult = (props: Props) => {
                             styles.values,
                             item.label === 'Wrong Questions' && styles.redText,
                             item.label === 'Right Questions' && styles.greenText
-                        ]}>23</Text>
+                        ]}>{item.value}</Text>
                     </View>
                 ))}
             </View>
             <View style={styles.buttonSection}>
-                <Button label={"Show Answers"} className={OutlineButton} disabled={false} onPress={function (): void {
-                    throw new Error('Function not implemented.');
-                } } ></Button>
-                <Button label={"Play Again"} className={LoginButton} disabled={false} onPress={function (): void {
-                    throw new Error('Function not implemented.');
-                } } ></Button>
+                <Button label={"Show Answers"} className={OutlineButton} disabled={false} onPress={showAnswersScreen} />
+                <Button label={"Play Again"} className={LoginButton} disabled={false} onPress={function (): void {}} />
             </View>
 
         </View>
@@ -109,14 +141,14 @@ const styles = StyleSheet.create({
         // width: "100%"
     },
     image: {
-        height:300,
+        height: 300,
         width: "100%"
     },
     cardsContainer: {
         display: 'flex',
         gap: 10,
         paddingHorizontal: 20
-        },
+    },
     marksCards: {
         display: 'flex',
         padding: 24,
@@ -149,7 +181,7 @@ const styles = StyleSheet.create({
     greenText: {
         color: 'green'
     },
-    buttonSection:{
+    buttonSection: {
         display: 'flex',
         gap: 10,
         paddingHorizontal: 16,

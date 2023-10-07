@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     // flex: 1,
-    height: 300,
+    // height: 300,
     width: "100%",
     backgroundColor: Colors.white,
     // position: "relative",
