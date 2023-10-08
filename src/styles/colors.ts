@@ -42,6 +42,7 @@ export const Colors = {
   light_gray_02: "#D7D7D7",
   light_gray_03:"#C9C9C9",
   light_gray_04:"#717171",
+  light_gray_05:"#DEDEDE",
   Hawkes_Blue: "#E0DDFF",
   Snow_Flurry: "#E4FFD1",
   Peach_Schnapps: "#FFDCD6",

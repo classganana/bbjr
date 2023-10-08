@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
 import { ClockIcon, CrossIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { SearchIcon } from '../../components/common/SvgComponent/SvgComponent';
@@ -10,6 +10,9 @@ import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
 import { useNavigation } from '@react-navigation/native';
 import { httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
+import { Button } from '../../components/common/ButttonComponent/Button';
+import { CancelButton, EditButton, ExitButton } from '../../components/common/ButttonComponent/ButtonStyles';
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Exam Prep');
@@ -91,8 +94,18 @@ export const QuizHomePage = () => {
 
     const startTheQuiz = () => {
         navigation.navigate('ExploreQuiz' as never);
-        AsyncStorage.setItem('','')
+        AsyncStorage.setItem('', '')
     }
+
+    const setSubjectAndCloseModal = (item: any) => {
+        setBottomSheetVisible(false);
+        setSelectedSubject(item);
+      };
+
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+    const [selectedSubject, setSelectedSubject] = useState<{
+        subjectName: string;
+    }>({subjectName:"wakshe"});
 
     // useEffect(() => {
     //     const reqObj = {
@@ -106,7 +119,7 @@ export const QuizHomePage = () => {
     //             "time": 1038
     //         }
     //       }
-          
+
 
     //     httpClient.post(`auth/c-auth`, reqObj)
     //     .then(() => {});
@@ -145,28 +158,33 @@ export const QuizHomePage = () => {
                 {tab == 'Exam Prep' && <>
                     {/* <ExamPrepSubjects subjects={subjects} /> */}
                     <View>
-                    <TouchableOpacity >
-                        <Text>Exam Preparation</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  >
-                        <Text>Change</Text>
-                        <View >
-                            <Pencil height={'20'} width={'20'} fill={Colors.white} />
+                        <TouchableOpacity >
+                            <Text>Exam Preparation</Text>
+                        </TouchableOpacity>
+                        <View style={styles.buttoncontainer}>
+                        <Text style={styles.selectedSubject}>
+                            {selectedSubject?.subjectName}
+                        </Text>
+                        <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
+                            <Text>Change</Text>
+                            <View style={styles.pencil}>
+                                <Pencil height={'20'} width={'20'} fill={Colors.white} />
+                            </View>
+                        </TouchableOpacity>
                         </View>
-                    </TouchableOpacity>
-                </View>
-                    <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} />
-                    <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                    <Text>All Chapter Wise</Text>
-                    <TouchableOpacity  onPress={() => {setMultiSelect(!multiSelect)}}>
-                    {multiSelect && <View style={styles.crossMultiSelect} >
-                    <CrossIcon height={12} width={12} fill={Colors.black_01} />
-                    <Text>
-                        12
-                    </Text>
-                    </View>}
-                    {!multiSelect && <Text>Select</Text>}
-                    </TouchableOpacity>
+                    </View>
+                    <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={'https://placehold.co/400'} noOfQuestions={0} done={false} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Text>All Chapter Wise</Text>
+                        <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
+                            {multiSelect && <View style={styles.crossMultiSelect} >
+                                <CrossIcon height={12} width={12} fill={Colors.black_01} />
+                                <Text>
+                                    12
+                                </Text>
+                            </View>}
+                            {!multiSelect && <Text>Select</Text>}
+                        </TouchableOpacity>
                     </View>
                     <FlatList
                         data={data}
@@ -189,6 +207,43 @@ export const QuizHomePage = () => {
                     <Text style={styles.floatingButtonText}>Take a Test</Text>
                 </TouchableOpacity>
             </View>}
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={bottomSheetVisible}
+                onRequestClose={() => setBottomSheetVisible(false)}
+            >
+                <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+                    <View style={styles.bottomSheetContainer}>
+                        <Text style={styles.subjecttxt}>Subject</Text>
+                        <View style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05 }}>
+                            <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} />
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                gap: 5,
+                                position: "absolute",
+                                bottom: 0,
+                                paddingHorizontal: 20,
+                                paddingVertical: 20,
+                                width: '100%',
+
+                            }}
+
+                        >
+                            <Button
+                                label={'Continue'}
+                                disabled={false}
+                                className={EditButton}
+                                onPress={() => setBottomSheetVisible(false)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
         </View>
     )
 }
@@ -196,7 +251,7 @@ export const QuizHomePage = () => {
 const styles = StyleSheet.create({
     crossMultiSelect: {
         borderColor: "#C5C5C5",
-        borderWidth: 1/2,
+        borderWidth: 1 / 2,
         borderRadius: 20,
         flexDirection: 'row',
         gap: 8,
@@ -207,7 +262,7 @@ const styles = StyleSheet.create({
     container: {
         margin: 0,
         flex: 1,
-        backgroundColor: Colors.white
+        backgroundColor: Colors.white,
     },
     header: {
         paddingHorizontal: 24,
@@ -305,5 +360,68 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
         color: Colors.primary
-    }
+    },
+    bottomSheetContainer: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        height: "75%",
+        backgroundColor: Colors.white,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+
+    },
+    subjecttxt: {
+        alignSelf: 'center',
+        paddingTop: 30,
+        paddingBottom: 10,
+        fontFamily: 'Inter-Bold',
+        fontSize: 18,
+        fontWeight: '500',
+        color: Colors.black_01,
+        borderTopWidth: 5,
+        marginTop: 5
+    },
+    selectedSubject: {
+        width:'40%',
+        textAlign:'center',
+        borderRadius: 25,
+        borderWidth:0.5,
+        backgroundColor:Colors.light_gray_05,
+        borderColor:Colors.primary,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+
+    },
+    changebutton:{ 
+        borderRadius: 25, 
+        backgroundColor: 'rgba(0, 107, 127, 0.08)',
+         width: '40%', 
+         justifyContent: 'center', 
+         alignItems: 'center', 
+         flexDirection: 'row', 
+         position: 'relative' 
+        },
+        pencil:{ 
+            width: 26.35, 
+            height: 26.35, 
+            borderRadius: 26.35, 
+            backgroundColor: Colors.primary, 
+            alignItems: 'center', 
+            position: 'absolute', 
+            right: 0, 
+        },
+        buttoncontainer:{
+            flexDirection:'row',
+            justifyContent:'space-between',
+            paddingHorizontal:20,
+            paddingVertical:20,
+            
+        }
 });

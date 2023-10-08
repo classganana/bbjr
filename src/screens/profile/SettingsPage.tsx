@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Platform, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { IconButton } from '../../components/common/IconButtonComponent/IconButton'
-import { defaultIconButton, EditIconButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
-import { AboutIcon, ArrowIcon, ArrowLeft, ConditionIcon, ContactIcon, CrossIcon, LeaderIcon, LogoutIcon, PencilIcon, PrivacyIcon, ScoreIcon } from '../../components/common/SvgComponent/SvgComponent'
-import { Constants } from '../../constants/constants'
+import { EditIconButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
+import { AboutIcon, ArrowIcon, ArrowLeft, ConditionIcon, ContactIcon, LeaderIcon, LogoutIcon, PencilIcon, PrivacyIcon, ScoreIcon } from '../../components/common/SvgComponent/SvgComponent'
 import { Colors } from '../../styles/colors'
 import { httpClient } from '../../services/HttpServices'
+import { useNavigation } from '@react-navigation/native'
 
 export const SettingsPage = () => {
   const [user, setUser] = useState<any>();
 
+  const navigation = useNavigation();
+  const moveToEditProfile = () => {
+    navigation.navigate("EditProfile" as never);
+    console.log("EditProfile");
+  };
+
   useEffect(() => {
-      httpClient.get('users/johndoe123').then((res) => {
-          setUser(res.data);
-      }).catch(() => {
-        console.log("Something went wrong")
-      })    
-  },[])
+    httpClient.get('users/johndoe123').then((res) => {
+      setUser(res.data);
+    }).catch(() => {
+      console.log("Something went wrong")
+    })
+  }, [])
 
   const labels = [
     { title: 'View leader board', leftSvg: <LeaderIcon height={'15'} width={'17'} fill={'black'} /> },
@@ -43,13 +49,13 @@ export const SettingsPage = () => {
       </View>
       <View style={styles.DetailContainer}>
         <View style={styles.block1}>
-        <View style={styles.ProfileImage}></View>
-        <View style={{gap:6}}>
-        <Text style={styles.name}>{user && user.name}</Text>
-        <Text>{user && user.class}</Text>
-        <Text>{user && user.school}</Text>
-        <Text>{user && user.board}</Text>
-        </View>
+          <View style={styles.ProfileImage}></View>
+          <View style={{ gap: 6 }}>
+            <Text style={styles.name}>{user && user.name}</Text>
+            <Text>{user && user.class}</Text>
+            <Text>{user && user.school}</Text>
+            <Text>{user && user.board}</Text>
+          </View>
         </View>
         <View style={styles.block2}>
           <View style={styles.friend}>
@@ -57,16 +63,14 @@ export const SettingsPage = () => {
             <Text>Invite Friends</Text>
           </View>
           <View style={styles.button}>
-            <IconButton onPress={function (): void {
-              throw new Error('Function not implemented.')
-            }} className={EditIconButton} icon={<PencilIcon height={'15'} width={'15'} fill={'#fff'} />} label={'Edit Profile'} pos={'right'} backgroundColor={'#006B7F'}></IconButton>
+            <IconButton onPress={() => moveToEditProfile()} className={EditIconButton} icon={<PencilIcon height={'15'} width={'15'} fill={'#fff'} />} label={'Edit Profile'} pos={'right'} backgroundColor={'#006B7F'}></IconButton>
           </View>
         </View>
         {labels.map((buttonLabel, index) => (
-          <TouchableOpacity key={index} onPress={() => setSelectedButton(index)} style={{ flexDirection: 'row', alignItems: 'center', gap: 20,position:'relative' }}>
+          <TouchableOpacity key={index} onPress={() => setSelectedButton(index)} style={{ flexDirection: 'row', alignItems: 'center', gap: 20, position: 'relative' }}>
             {buttonLabel.leftSvg}
             <Text>{buttonLabel.title}</Text>
-            <View style={{position:'absolute', right:0}}>
+            <View style={{ position: 'absolute', right: 0 }}>
               <ArrowIcon height={'5'} width={'10'} fill={'black'} />
             </View>
           </TouchableOpacity>
@@ -81,7 +85,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     backgroundColor: Colors.primary,
-    flex:1,
+    flex: 1,
 
   },
   header: {
@@ -90,7 +94,6 @@ const styles = StyleSheet.create({
 
   },
   heading: {
-    // display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 20
@@ -107,12 +110,11 @@ const styles = StyleSheet.create({
   DetailContainer: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    // height: '100%',
     backgroundColor: Colors.white,
     paddingHorizontal: 20,
     paddingVertical: 20,
     gap: 32,
-    flex:1,
+    flex: 1,
 
   },
 
@@ -129,21 +131,18 @@ const styles = StyleSheet.create({
     width: 125,
     borderRadius: 100,
     backgroundColor: Colors.gray_05,
-    // position: 'relative',
     paddingHorizontal: 20,
 
   },
   friend: {
     flexDirection: 'row',
     gap: 7,
-    // position: 'relative',
-    // borderBottomWidth: 1
   },
-  block1:{
-    flexDirection:'row',
-    alignItems:'center',
-    display:'flex',
-    gap:32,
+  block1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    display: 'flex',
+    gap: 32,
   },
   block2: {
     position: 'relative',
@@ -158,12 +157,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
   },
-  name:{
+  name: {
     color: '#2C2C2C',
     fontFamily: 'Inter-Regular',
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 19.764, 
+    lineHeight: 19.764,
   }
 })

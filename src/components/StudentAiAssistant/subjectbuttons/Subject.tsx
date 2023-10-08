@@ -23,19 +23,26 @@ interface ButtonProps {
   buttonData: ButtonData;
   onPress: (item: any) => void;
   isPressed: boolean;
+  themeColor: boolean
 }
 
 const ChipComponent: React.FC<ButtonProps> = ({
   buttonData,
   onPress,
   isPressed,
+  themeColor
 }) => {
-  const buttonStyle = [
-    styles.child,
+  const textStyle:any=[
+    {color: themeColor && isPressed && Colors.white},
+  ]
+  const buttonStyle:any= [
+    styles.child,{borderColor: themeColor && 'rgba(150, 150, 150, 0.64)',
+      borderWidth: themeColor && 1},
     { backgroundColor: buttonData.color || Colors.Snow_Flurry },
     isPressed
       ? {
           shadowColor: "#000",
+          backgroundColor: themeColor && Colors.primary,
           shadowOffset: {
             width: 0,
             height: 2,
@@ -43,23 +50,25 @@ const ChipComponent: React.FC<ButtonProps> = ({
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
           elevation: 5,
+
         }
       : null,
   ];
 
   return (
     <TouchableOpacity style={buttonStyle} onPress={onPress}>
-      <Text style={styles.buttonText}>{buttonData.text}</Text>
+      <Text style={[styles.buttonText,textStyle]}>{buttonData.text}</Text>
     </TouchableOpacity>
   );
 };
 
 export interface Props {
   selectedSubject: (item: any) => void;
+  themeColor: boolean
 }
 
 // change component name from student to subject
-export const Student = ({ selectedSubject }: Props) => {
+export const Student = ({ selectedSubject, themeColor }: Props) => {
   const [listOfSubjects, setListOfSubjects] = useState<Subject[]>([]);
   const [colorsMappedSubjectList, setColorsMappedSubjectList] = useState<
     SubjectWithColor[]
@@ -69,7 +78,7 @@ export const Student = ({ selectedSubject }: Props) => {
   const getSubjects = () => {
     // some API call or data fetching
     const result = [
-      { subjectName: "kkk" },
+      { subjectName: "Science" },
       { subjectName: "Maths" },
       { subjectName: "Geography" },
       { subjectName: "History" },
@@ -89,11 +98,18 @@ export const Student = ({ selectedSubject }: Props) => {
   const mapSubjectWithColors = (listOfSubject?: Subject[]) => {
     const mappedSubjectWithColor = listOfSubject?.map(
       (subject: Subject, index) => {
-        const colorIndex = index % SubjectColors.length;
-        return {
-          subjectName: subject.subjectName,
-          color: SubjectColors[colorIndex],
-        };
+        if(!themeColor) {
+          const colorIndex = index % SubjectColors.length;
+          return {
+            subjectName: subject.subjectName,
+            color: SubjectColors[colorIndex],
+          };
+        } else {
+          return {
+            subjectName: subject.subjectName,
+            color: Colors.white,
+          };
+        }
       }
     );
     return mappedSubjectWithColor || [];
@@ -119,6 +135,7 @@ export const Student = ({ selectedSubject }: Props) => {
         <View style={styles.subjectcontainer}>
           {colorsMappedSubjectList.map((subjectWithColor, index) => (
             <ChipComponent
+              themeColor={themeColor}
               key={index}
               buttonData={{
                 text: subjectWithColor.subjectName,
