@@ -3,52 +3,52 @@ import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { Colors } from '../../styles/colors';
 import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { ExitButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { ExploreButton } from '../../components/common/ButttonComponent/ButtonStyles';
 
-
-const viewLeadboard = () => {
-    const HighScorelabels = Array.from({ length: 4 }, (_, index) => ({
-        rollNumber: index + 1,
+const ViewLeadboard = () => {
+    const HighScorelabels = Array.from({ length: 5 }, (_, index) => ({
+        rollNumber: `#${index + 1}`,
         title: `Student Name`,
-        score: 5234,
+        score: 1523,
         school: `School/College Name`,
     }));
     const Ranklabel = Array.from({ length: 5 }, () => ({
         title: `Student Name`,
-        score: 521,
+        score: 300,
         school: `School/College Name`,
     }));
 
     return (
-
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
                         <View style={styles.backButton}>
-                            <ArrowLeft height={'25'} width={'25'} fill={'black'} />
+                        <ArrowLeft height={25} width={25} fill={'black'} />
                         </View>
-                        <Text style={styles.headingTitle}>view leadboard</Text>
+                        <Text style={styles.headingTitle}>view leaderboard</Text>
                     </View>
                 </View>
                 <View style={styles.DetailContainer}>
-                    <Text style={styles.BodyTitle}>Leadboard</Text>
+                    <Text style={styles.BodyTitle}>Leaderboard</Text>
                     <View style={styles.BodyContainer}>
                         <Text style={styles.BodyText}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text>
-                        <Button label={'Explore'} className={ExitButton} disabled={false} onPress={function (): void { }} />
+                        <Button label={'Explore'} className={ExploreButton} disabled={false} onPress={() => { }} />
                     </View>
-                    <View style={styles.HighscoreCard} >
+                    <View style={styles.HighscoreCard}>
                         <View style={styles.HighScoreTitle}>
                             <Text style={styles.Titlescore}># High Scores</Text>
                             <Text style={styles.score}>Score</Text>
                         </View>
                         {HighScorelabels.map((HighestScoreLabel, index) => (
-                            <View style={styles.rankProfileCard}>
-                                <Text>{HighestScoreLabel.rollNumber}</Text>
-                                <View style={styles.ProfileImage} />
-                                <View>
-                                    <Text>{HighestScoreLabel.title}</Text>
-                                    <Text>{HighestScoreLabel.school}</Text>
+                            <View key={index} style={styles.rankProfileCard}>
+                                <View style={styles.ScoreInnerCard}>
+                                    <Text style={styles.rollNumber}>{HighestScoreLabel.rollNumber}</Text>
+                                    <View style={styles.ProfileImage} />
+                                    <View>
+                                        <Text style={styles.StudCard}>{HighestScoreLabel.title}</Text>
+                                        <Text style={styles.SchoolCard}>{HighestScoreLabel.school}</Text>
+                                    </View>
                                 </View>
                                 <Text>{HighestScoreLabel.score}</Text>
                             </View>
@@ -60,56 +60,56 @@ const viewLeadboard = () => {
                             <Text style={styles.score}>Score</Text>
                         </View>
                         {Ranklabel.map((RankLabel, index) => (
-                            <View style={styles.rankScoreCard}>
-                                <View style={styles.ProfileImage} />
-                                <View>
-                                    <Text>{RankLabel.title}</Text>
-                                    <Text>{RankLabel.school}</Text>
+                            <View style={styles.rankScoreCard} key={index}>
+                                <View style={styles.ScoreInnerCard}>
+                                    <View style={styles.ProfileImage} />
+                                    <View>
+                                        <Text style={styles.StudCard}>{RankLabel.title}</Text>
+                                        <Text style={styles.SchoolCard}>{RankLabel.school}</Text>
+                                    </View>
                                 </View>
                                 <Text>{RankLabel.score}</Text>
-
                             </View>
                         ))}
                     </View>
-                </View>
+                </View >
             </View>
         </ScrollView>
-    )
+    );
 };
-
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.primary
+        flex: 1,
+        backgroundColor: Colors.primary,
     },
     header: {
         paddingHorizontal: 20,
-        paddingVertical: 20,
-        flexShrink: 0,
+        paddingVertical: 10,
     },
     heading: {
-        display: 'flex',
+        borderRadius:20,
+        borderColor:Colors.white,
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10
+        gap: 10,
+    },
+    backButton: {
+        height: 32,
+        width: 32,
+        borderRadius: 45,
+        backgroundColor: Colors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     headingTitle: {
         color: Colors.white,
         fontWeight: "500",
         fontSize: 18,
     },
-    backButton: {
-        height: 45,
-        width: 45,
-        borderRadius: 45,
-        backgroundColor: Colors.white,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     BodyTitle: {
         color: Colors.black_01,
         fontSize: 18,
         fontWeight: '500',
-        letterSpacing: 0.3,
         paddingHorizontal: 15,
         paddingVertical: 13,
     },
@@ -118,69 +118,82 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         backgroundColor: Colors.white,
         paddingHorizontal: 19,
-        gap: 6
+        gap: 10,
     },
     BodyContainer: {
-        display: 'flex',
+        width: '100%',
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        paddingVertical: 9,
         backgroundColor: Colors.lemon_yellow,
         borderRadius: 8,
-        flexDirection: 'row',
-        paddingHorizontal:13,
-        paddingVertical:9,
-        width: '100%',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignSelf: 'center',
         gap: 6,
     },
     BodyText: {
+        width: '75%',
         fontSize: 13,
-        fontStyle: 'normal',
         fontWeight: '500',
-        lineHeight: 15,
         color: Colors.primary,
     },
     HighscoreCard: {
         borderRadius: 10,
         backgroundColor: 'rgba(0, 107, 127, 0.05)',
-        gap: 6,
-        paddingHorizontal: 10,
+        gap: 10,
+        paddingHorizontal: 9,
+        paddingBottom: 10,
+    },
+    rollNumber: {
+        fontSize: 14,
+        fontStyle: 'italic',
+        fontWeight: '600',
     },
     rankProfileCard: {
-        paddingHorizontal: 10,
-        paddingVertical: 10,
+        paddingHorizontal: 14,
+        paddingVertical: 4,
         borderRadius: 10,
         backgroundColor: Colors.white,
         shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowOpacity: 1,
-        shadowRadius: 4,
-        display: 'flex',
+        shadowOpacity: 3,
+        shadowRadius: 5,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
     HighScoreTitle: {
-        justifyContent: 'space-between',
+        flexDirection: 'row',
         paddingHorizontal: 10,
-        display: 'flex',
-        flexDirection: 'row'
+        justifyContent: 'space-between',
     },
     Titlescore: {
         fontSize: 14,
-        fontStyle: 'normal',
-        fontWeight: '500',
-        lineHeight: 18,
+        fontWeight: '600',
         paddingVertical: 10,
+    },
+    ScoreInnerCard: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 10,
+        alignItems: 'center'
     },
     score: {
         paddingVertical: 10,
-        // top: 15,
-        // paddingHorizontal: 15,
+    },
+    StudCard: {
+        fontSize: 12,
+        fontWeight: '500',
+        paddingVertical: 4,
+    },
+    SchoolCard: {
+        fontSize: 10,
+        fontWeight: '500',
     },
     ProfileImage: {
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
         borderRadius: 50,
-        backgroundColor: Colors.gray_07
+        backgroundColor: Colors.gray_07,
     },
     RankCard: {
         borderRadius: 10,
@@ -191,15 +204,21 @@ const styles = StyleSheet.create({
     rankScoreCard: {
         paddingHorizontal: 10,
         paddingVertical: 10,
-        borderRadius: 10,
+        borderRadius: 3,
+        borderWidth: 0.1,
+        borderColor: Colors.primary,
         backgroundColor: Colors.white,
-        shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowOpacity: 1,
-        shadowRadius: 4,
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
+    button: {
+        color: Colors.white,
+        fontWeight: "500",
+        fontSize: 15,
+        paddingHorizontal: 15,
+        paddingVertical: 5,
+        backgroundColor: Colors.primary,
+    },
 });
-export default viewLeadboard;
+export default ViewLeadboard;

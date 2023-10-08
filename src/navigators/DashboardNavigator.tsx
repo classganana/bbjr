@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Dashboard } from '../screens/Home/Dashboard';
 import EditProfile from '../screens/Profile/EditProfile';
-import viewLeadboard from '../screens/Profile/viewLeadboard';
+import viewLeadboard from '../screens/Profile/ViewLeadboard';
 
 export const DashboardNavigator = () => {
 
