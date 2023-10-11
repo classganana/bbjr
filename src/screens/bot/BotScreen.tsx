@@ -9,30 +9,36 @@ import { httpClient } from '../../services/HttpServices'
 
 export const BotScreen = () => {
     const [subject, setSubject] = useState("");
+    const [messages, setMessages] = useState<any>([]);
 
     useEffect(() => {
         const req = {
             service: "ml_service",
-            endpoint: "/conversations/101/10/Science",
+            endpoint: "/conversations?student_id=10&subject=Science&school_id=default",
             requestMethod: "GET",
             requestBody: {
-                schoolId: 101,
-                boardId: 101,
+                schoolId: "default",
+                boardId: "CBSE",
                 subject: 'Science',
-                className: 8,
+                className: 10,
                 studentName: "Trin",
                 studentId: 10
         }};
 
-    },[])
+        httpClient.post('auth/c-auth',req).then((res) => {
+          setMessages(() => res.data.data)
+            console.log(messages);
+        })
+
+    },[subject])
 
     const pushMessageIntoQueue = (text: string) => {
         const msg = {
           source: "user",
           text: text,
-          timestamp: 1690709815485.8948,
+          timestamp: Date.now(),
         };
-        setMessages((prev) => [...prev, msg]);    
+        setMessages((prev: any) => [...prev, msg]);    
         const chat_history = () => {
           if (messages.length >= 4) {
             const lastFourMessages = messages.slice(
@@ -57,10 +63,10 @@ export const BotScreen = () => {
             endpoint: "/generate/answer",
             requestMethod: "POST",
             requestBody: {
-                schoolId: 101,
-                boardId: 101,
-                subject: 'Science',
-                className: 8,
+                schoolId: 'default',
+                boardId: 'CBSE',
+                subject: subject.subjectName,
+                className: 10,
                 studentName: "Trin",
                 studentId: 10,
                 userMessage: text,
@@ -74,23 +80,9 @@ export const BotScreen = () => {
             text: data.text,
             timestamp: 1690709815485.8948,
           };
-          setMessages((prev) => [...prev, botmsg]);
+          setMessages((prev: any) => [...prev, botmsg]);
         });
       };
-
-    const [messages, setMessages] = useState([
-        {
-            "source": "user",
-            "text": "what is agriculture implements?",
-            "timestamp": 1696070668
-        },
-        {
-            "source": "bot",
-            "text": "Agricultural implements are tools and machinery used in farming and crop production. They include tools like ploughs, hoes, cultivators, seed drills, and harvesters. These implements are used for various tasks such as tilling the soil, removing weeds, sowing seeds, and harvesting crops. (Chapter: CROP PRODUCTION AND MANAGEMENT)",
-            "timestamp": 1696070671,
-            "reference": {}
-        }
-    ]);
 
     return (
         <KeyboardAvoidingView
@@ -110,10 +102,11 @@ export const BotScreen = () => {
                     </View>
                 </View>
                 <View style={{ flex: 1 }}>
-                    {messages.length == 0 || (subject == "") 
+                    {messages && messages.length == 0 || (subject == "") 
                     ? <BotIntroduction />
                     :<MessageContainer messages={messages} />
                     }
+
                 </View>
                 <View style={{ justifyContent: 'flex-end', width: "100%" }}>
                     <Aiinput onSubjectChange={(item: any) => { setSubject(item) }} onSendClick={(text: any) => pushMessageIntoQueue(text)} />

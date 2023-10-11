@@ -6,7 +6,7 @@ import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import styles from './QuizQuestionsPageStyle';
 import ReportComponent from '../../components/quiz/ReportComponent';
 import { Description } from '../../components/feedback/Description/Description';
@@ -14,8 +14,8 @@ import Popup from '../Popup/popup';
 import { QuizOverView } from '../../components/quiz/QuizOverView';
 import { httpClient } from '../../services/HttpServices';
 
-
 export type Answers = Array<{
+    mcq_id?: string,
     question: string;
     options: string[];
     answer: string;
@@ -32,27 +32,51 @@ export const QuizQuestionsPage = () => {
     const questionScrollViewRef = useRef<ScrollView | null>(null);;
     const [quizQuestionList, setQuizQuestionList] = useState<any>(quizQuestions);
     const navigation = useNavigation();
+    const route = useRoute();
+    const [reqObject, setReqObject] = useState();
 
     useEffect(() => {
-        const reqObj = {
-            "service": "ml_service",
-            "endpoint":  `/data/mcq`,
-            "requestMethod": "POST",
-            "requestBody": {
-                "schoolId": "default",
-                "boardId": "CBSE",
-                "subject": "Science",
-                "className": 10,
-                "chapterName": "string",
-                "studentId": 10,
-                "size": 1
-              }
-          }          
+        const req  = {
+            "schoolId": "default",
+            "boardId": "CBSE",
+            "subject": "string",
+            "className": 0,
+            "studentId": 0,
+            "chapterName": [
+              "string"
+            ],
+            "dataType": "school",
+            "size": 0
+          }
 
-        httpClient.post(`auth/c-auth`, reqObj)
-        .then((res) => {
-            setQuizQuestionList(res.data.data.mcqs);
-        });
+        console.log(route.params);
+        setReqObject(route.params as any);
+        // add time score dataType screenpage
+        setQuizQuestionList(route.params.mcqs);
+        setTimer(route.params.time)
+        // const reqObj = {
+        //     "service": "ml_service",
+        //     "endpoint":  `/data/quizz`,
+        //     "requestMethod": "POST",
+        //     "requestBody": {
+        //         "schoolId": "default",
+        //         "boardId": "CBSE",
+        //         "subject": "Science",
+        //         "className": 10,
+        //         "chapterName": [
+        //             "Crop Production and Management"
+        //         ],
+        //         "studentId": 10,
+        //         "size": 10,
+        //         "dataType": "school"
+        //     }
+        //   }          
+
+        // httpClient.post(`auth/c-auth`, reqObj)
+        // .then((res) => {
+
+        //     // setQuizQuestionList(res.data.data.mcqs);
+        // });
     }, [])
 
     useEffect(() => {
@@ -65,7 +89,10 @@ export const QuizQuestionsPage = () => {
             }
         }, 1000); // Update the timer every second
 
-        if (timer == 0) console.log("Ended");
+        if (timer == 0) {
+            console.log("Ended")
+            timerEnds()
+        };
         return () => {
             clearInterval(interval); // Clear the interval on component unmount
         };
@@ -80,7 +107,7 @@ export const QuizQuestionsPage = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const handleSelectOption = (selectedOption: string) => {
-        setQuizQuestionList((quizQuestionList) => {
+        setQuizQuestionList((quizQuestionList: any) => {
             const updatedList = [...quizQuestionList];
             updatedList[currentQuestionIndex].selectedAnswer = selectedOption;
             return updatedList;
@@ -107,8 +134,8 @@ export const QuizQuestionsPage = () => {
 
     const calculateScore = (answerList: questionWithTime) => {
         let score = 0;
+        answerList.timeTaken;
         answerList.quizQuestionList.forEach((answer) => {
-            debugger
             if (answer.selectedAnswer && answer.answer == answer.selectedAnswer)
                 score += 10;
         })
@@ -130,7 +157,6 @@ export const QuizQuestionsPage = () => {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
         try {
-            debugger
             const quizDetails = {
                 timeTaken: timer,
                 quizQuestionList
@@ -140,13 +166,49 @@ export const QuizQuestionsPage = () => {
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
             if (currentQuestionIndex == quizQuestionList.length - 1) {
-                console.log(calculateScore(UserAnswerList));
+                submitQuiz(UserAnswerList)
                 navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
             }
         } catch (error) {
             console.error('Error storing data:', error);
         }
     };
+
+    const submitQuiz = (answerList: questionWithTime) => {
+        const questions = answerList.quizQuestionList.map((answer) => {
+                return {
+                    mcqId: answer.mcq_id,
+                    selectedAnswer: answer.selectedAnswer? answer.selectedAnswer : undefined
+                }
+        });
+
+        const tempRequest: any = reqObject;
+        tempRequest.mcqs = questions;
+        tempRequest.score = calculateScore(answerList);
+        tempRequest.time = timer;
+
+        setReqObject(tempRequest);
+        console.log(reqObject);
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint":  `/answered/quizz`,
+            "requestMethod": "POST",
+            "requestBody": reqObject
+          }          
+
+        httpClient.post(`auth/c-auth`, reqObj)
+        .then((res) => {
+            console.log(res);
+
+            // setQuizQuestionList(res.data.data.mcqs);
+        });
+    }
+
+    const timerEnds = async () => {
+        const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
+            submitQuiz(UserAnswerList)
+    }
+
 
     const currentQuestion = quizQuestionList[currentQuestionIndex];
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -185,7 +247,7 @@ export const QuizQuestionsPage = () => {
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
-                        {quizQuestionList.map((_, index) => (
+                        {quizQuestionList.map((_ : any, index: number) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
@@ -200,11 +262,12 @@ export const QuizQuestionsPage = () => {
                     </View>
                 </ScrollView>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    <QuestionComponent
+                   {currentQuestion && currentQuestion.question &&  <QuestionComponent
                         question={currentQuestion.question}
                         options={currentQuestion.options}
                         onSelectOption={handleSelectOption} isResult={false}
                     />
+                    }
                 </ScrollView>
                 <View style={styles.nextQuizButton}>
                     {

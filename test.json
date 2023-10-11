@@ -1,0 +1,40 @@
+{
+    "schoolId": "default",
+    "chapterName": [
+      "CHAPTER 10 Light – Reflection and Refraction"
+    ],
+    "subject": "Science",
+    "boardId": "CBSE",
+    "className": 10,
+    "studentId": 10,
+    "quizzType": "examPreparation",
+    "screenPage": "examPreparation",
+    "quizzId": "652535067c334ebc26665b05",
+    "mcqs": [
+      {
+        "mcqId": "65242a025e329c1823f1da1f",
+        "selectedAnswer": "Dioptre"
+      }
+    ],
+    "time": 88,
+    "score": 10
+  }
+  {
+    "schoolId": "default",
+    "boardId": "CBSE",
+    "subject": "string",
+    "className": 0,
+    "studentId": 0,
+    "chapterName": [
+      "string"
+    ],
+    "mcqs": [
+      {}
+    ],
+    "quizzId": "string",
+    "time": 0,
+    "score": 0,
+    "quizzType": "string",
+    "dataType": "school",
+    "screenPage": "examPreparation"
+  }

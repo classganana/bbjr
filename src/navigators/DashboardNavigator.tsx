@@ -10,8 +10,8 @@ export const DashboardNavigator = () => {
     return (
     <View style={{flex: 1, width: "100%"}}>
           <Stack.Navigator>
-              {/* <Stack.Screen name="Home" component={Dashboard} options={{ headerShown: false }} /> */}
-              <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }} /> 
+              <Stack.Screen name="Home" component={Dashboard} options={{ headerShown: false }} />
+              {/* <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }} />  */}
           </Stack.Navigator>
     </View>
     )

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
 import { ArrowLeft, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton, OutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { Answers } from './QuizQuestionsPage';
+import { Answers, questionWithTime } from './QuizQuestionsPage';
 import { useNavigation } from '@react-navigation/native';
+import { captureRef } from 'react-native-view-shot';
+import * as MediaLibrary from 'expo-media-library';
 
 type Props = {
     noOfQuestions: number,
@@ -14,6 +16,7 @@ type Props = {
 }
 
 export const QuizResult = (props: Props) => {
+    const imageRef = useRef();
     const [result, setResult] = useState([
         {
             label: "Total Score",
@@ -46,7 +49,7 @@ export const QuizResult = (props: Props) => {
     async function getData() {
         try {
             const data = JSON.parse((await AsyncStorage.getItem('questions')) as string); 
-            const UserAnswerList = data.quizQuestionList
+            const UserAnswerList = data && (data.quizQuestionList) ? data.quizQuestionList : []
             const score = calculateScore(UserAnswerList);
             const totalMarks = UserAnswerList.length * 10;
             const updatedResult = [...result];
@@ -77,25 +80,46 @@ export const QuizResult = (props: Props) => {
         return unanswered;        
     }
 
-    const calculateScore = (answerList: Answers) => {
+    const calculateScore = (answerList: questionWithTime) => {
         let score = 0;
-        answerList.forEach((answer) => {
+        answerList && answerList.quizQuestionList && answerList.quizQuestionList.forEach((answer) => {
             if (answer.answer == answer.selectedAnswer)
                 score += 10;
         })
         return score;
     }
 
+    const onSaveImageAsync = async () => {
+        try {
+          const localUri = await captureRef(imageRef, {
+            height: 440,
+            quality: 1,
+          });
+    
+          await MediaLibrary.saveToLibraryAsync(localUri);
+          if (localUri) {
+            alert("Saved!");
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
     return (
-        <View style={styles.container}>
+        <View ref={imageRef} collapsable={false} style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <View style={styles.backButton}>
                         <ArrowLeft height={'30'} width={'30'} fill={'white'}></ArrowLeft>
                     </View>
-                    <View style={[styles.shareButton, { position: "absolute", right: 10 }]}>
+                    <TouchableOpacity onPress={onSaveImageAsync} style={[styles.shareButton, { position: "absolute", right: 10 }]}>
                         <ShareIcon height={'20'} width={'20'} fill={Colors.primary} />
-                    </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={styles.scoreContainer}>
+                <View style={styles.scoreCard}>
+                    <Text>Ayush</Text>
                 </View>
             </View>
             <ImageBackground source={require('../../../assets/gifs/celebrate.gif')} style={styles.imageSection}>
@@ -170,6 +194,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1/2,
         borderColor: Colors.primary
+    },
+    scoreContainer: {
+        alignSelf: 'center',
+        width: "90%",
+        position: 'relative',
+        backgroundColor: '#006B7F8F',
+        transform: [{ rotate: '3deg' }],
+        height: 54,
+        borderRadius: 20
+    },
+    scoreCard: {
+        backgroundColor: Colors.white,
+        borderRadius: 20,
+        transform: [{ rotate: '-3deg' }],
+        flex: 1,
+        borderColor: "#006B7F8F",
+        borderWidth: 1/2
     },
     imageSection: {
         display: 'flex',

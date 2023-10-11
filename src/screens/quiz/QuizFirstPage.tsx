@@ -6,22 +6,26 @@ import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
 import { QuizInformation } from '../../components/quiz/QuizInformation'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { httpClient } from '../../services/HttpServices'
 
 
 export const QuizFirstPage = () => {
   const navigation = useNavigation();
-  const [quizType, setQuizType] = useState('')
+  const [quizType, setQuizType] = useState('');
+  const [quizContent, setQuizContent] = useState();
   const startQuiz = () => {
-        navigation.navigate('QuizQuestionPages' as never)
-  }  
+        navigation.navigate('QuizQuestionPages' as never, quizContent as never);
+  };
 
+  const [currentQuiz, setCurrentQuiz] = useState<any>();
+  //   console.log(route.params);
+  const route = useRoute();
   useEffect(() => {
-    getQuizType().then((n) => {
-        n && setQuizType(n);
-        console.log(n);
-    })
+    setCurrentQuiz(() => route.params)
+    getQuizContent();
+
   },[])
 
   const getQuizType = async () => {
@@ -30,6 +34,50 @@ export const QuizFirstPage = () => {
   
   const onBack = () => {
     navigation.navigate('QuizHomepage' as never)
+  }
+
+  const getQuizContent = () => {
+    console.log(route.params);
+    const listOfChapters = route && route.params && route.params  && route.params[0].map((item: any) => {
+        return item.title;
+    })
+    setCurrentQuiz(() => route.params)
+    console.log(listOfChapters)
+    console.log(currentQuiz);
+    const req = {
+        "schoolId": "default",
+        "boardId": "CBSE",
+        "subject": "Science",
+        "className": 10,
+        "studentId": 10,
+        "chapterName": listOfChapters,
+        "dataType": "school",
+        "size": 2
+      }
+
+      const reqObj = {
+        "service": "ml_service",
+        "endpoint": `/data/quizz`,
+        "requestMethod": "POST",
+        "requestBody": req
+    }
+
+    httpClient.post(`auth/c-auth`, reqObj)
+        .then((res: any) => {
+            console.log(res.data.data);
+            const quiz = {
+                schoolId: 'default',
+                chapterName: listOfChapters,
+                subject: "Science",
+                boardId: "CBSE",
+                className: 10,
+                studentId: 10,
+                quizzType: "chapter",
+                screenPage: "examPreparation",
+                ...res.data.data,
+            }
+            setQuizContent(quiz);
+        })
   }
 
 

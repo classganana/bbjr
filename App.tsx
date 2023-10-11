@@ -4,10 +4,20 @@ import * as Font from 'expo-font';
 import { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { AppNavigator } from './src/navigators/AppNavigator';
+import * as MediaLibrary from 'expo-media-library';
+import AnimatedSplash from "react-native-animated-splash-screen";
+
+
 
 export default function App() {
   const [isFontLoaded, setFontLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+
+  if (status === null) {
+    requestPermission();
+  }
+
 
   async function loadFonts() {
     await Font.loadAsync({
@@ -18,7 +28,7 @@ export default function App() {
     setFontLoaded(true);
     setTimeout(() => {
       setLoading(true); // Set loading to true when fonts are loaded
-    }, 100);
+    }, 500);
   }
 
   useEffect(() => {
@@ -27,7 +37,15 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+   <AnimatedSplash
+        translucent={true}
+        isLoaded={loading}
+        logoImage={require("./assets/gifs/splash.gif")}
+        backgroundColor={"#262626"}
+        logoHeight={1000}
+        logoWidth={500}
+      >
+    {Platform.OS === "android" && (<StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />)}
       {loading && isFontLoaded ? (
         <NavigationContainer>
           <AppNavigator />
@@ -37,6 +55,7 @@ export default function App() {
           <Text>Loading</Text>
         </View>
       )}
+      </AnimatedSplash>
     </SafeAreaView>
   );
 }

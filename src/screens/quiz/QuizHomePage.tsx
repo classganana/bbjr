@@ -13,37 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Exam Prep');
-    const [data, setData] = useState<CardData[]>([
-        {
-            id: 0,
-            title: 'Test Your Knowledge on',
-            infoText: 'Info about Card 1',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 30,
-            timeRequired: 30,
-            selected: false
-        },
-        {
-            id: 1,
-            title: 'Card 2',
-            infoText: 'Info about Card 2',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 30,
-            timeRequired: 30,
-            selected: false
-        },
-        {
-            id: 2,
-            title: 'Card Cmapis',
-            infoText: 'Info about Card 2',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 10,
-            timeRequired: 20,
-        },
-    ]);
+    const [data, setData] = useState<CardData[]>([]);
     const [options, setOptions] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [board, setBoard] = useState("CBSE");
@@ -51,13 +21,13 @@ export const QuizHomePage = () => {
     const [multiSelect, setMultiSelect] = useState(false);
     const [totalQuestions, setTotalQuestions] = useState(0);
     // const [subject, setSubject] = useState()
+    const [selectedQuiz, setSelectedQuiz] = useState<any[]>();
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
 
-    const selectSpecificSubject = () => {
-    }
+    const selectSpecificSubject = () => { }
 
     const navigation = useNavigation();
 
@@ -65,6 +35,7 @@ export const QuizHomePage = () => {
         AsyncStorage.removeItem('quizType');
         setOptions(false);
         resetSelection();
+        setMultiSelect(false);
     }, [tab, searchTerm])
 
     const resetSelection = () => {
@@ -79,7 +50,7 @@ export const QuizHomePage = () => {
     const updateList = (index: number) => {
         setOptions(true);
         let tempData = data;
-        tempData = tempData.map((temp) => {
+        tempData  = tempData.map((temp) => {
             if (temp.id != (index)) {
                 !multiSelect && (temp.selected = false);
             }
@@ -87,54 +58,97 @@ export const QuizHomePage = () => {
         });
 
         (tempData[index].selected = true);
+        setSelectedQuiz(() => [tempData.filter((item) => item.selected)]);
         setData(() => [...tempData]);
     }
 
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
-        navigation.navigate('QuizFirstPage' as never);
-        await AsyncStorage.setItem('quizType','quiz');
+        await AsyncStorage.setItem('quizType', 'quiz');
+        console.log(selectedQuiz);
+        navigation.navigate('QuizFirstPage' as never, selectedQuiz  as never);
     }
 
     const startThePractice = async () => {
         await AsyncStorage.removeItem('quizType');
-        const item = data.filter((item) => item.selected == true )[0];
-        navigation.navigate('QuizFirstPage' as never, {noOfQuestions: item.noOfQuestions} as never);
-        await AsyncStorage.setItem('quizType','practice');
+        const item = data.filter((item) => item.selected == true)[0];
+        await AsyncStorage.setItem('quizType', 'practice');
+        // navigation.navigate('QuizFirstPage' as never, { noOfQuestions: item.noOfQuestions } as never);
     }
 
     useEffect(() => {
+        const s = {
+            "schoolId": "default",
+            "boardId": "CBSE",
+            "className": 10,
+            "studentId": 10,
+            "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+            "subject": "Science"
+        }
+
         const reqObj = {
             "service": "ml_service",
-            // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
-            "endpoint":  `/data/quizz/${board}/${className}/Science`,
-            "requestMethod": "GET",
-            "requestBody": {
-                "chapterName": "Chapter1 Chemical Reactions and Equations",
-                "questions": 346,
-                "time": 1038
-            }
-          }          
-
+            "endpoint": `/explore_quizzes/data`,
+            "requestMethod": "POST",
+            "requestBody": s
+        }
         httpClient.post(`auth/c-auth`, reqObj)
-        .then((res) => {
-            let list = res.data.data
-            list = list.map((item: any, index: number) => {
-                      return {
+            .then((res) => {
+                let list = res.data.data.quizzes
+                list = list.map((item: any, index: number) => {
+                    return {
                         id: index,
-                        title: item.chapterName,
+                        title: (tab == 'Quizzes') ? item.name : item.chapterName,
                         infoText: 'Info about Card 1',
                         imageUrl: 'https://placehold.co/400',
                         done: false,
-                        noOfQuestions: item.questions,
+                        noOfQuestions: item.totalQuestions,
                         timeRequired: item.time,
-                        selected: false
-                      }
+                        selected: false,
+                        score: item.score
+                    }
+                })
+                console.log(list)
+                setData(list);
+            });
+    }, [])
+
+    useEffect(() => {
+        const req = {
+            "schoolId": "default",
+            "boardId": "CBSE",
+            "className": 10,
+            "studentId": 10,
+            "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+            "subject": "Science"
+        }
+
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint": `/explore_quizzes/data`,
+            "requestMethod": "POST",
+            "requestBody": req
+        }
+
+        httpClient.post(`auth/c-auth`, reqObj)
+            .then((res) => {
+                let list = res.data.data.quizzes
+                list = list.map((item: any, index: number) => {
+                    return {
+                        id: index,
+                        title: (tab == "Exam Prep") ? item.chapterName: item.name,
+                        infoText: 'Info about Card 1',
+                        imageUrl: 'https://placehold.co/400',
+                        done: false,
+                        noOfQuestions: item.totalQuestions,
+                        timeRequired: item.time,
+                        selected: false,
+                        score: item.score
+                    }
                 })
                 setData(list);
-
-        });
-    },[])
+            })
+    }, [tab])
 
     const onBack = () => {
         navigation.navigate('QuizHomepage' as never)
@@ -164,44 +178,43 @@ export const QuizHomePage = () => {
                     <Text style={styles.selectedOption}>{tab}</Text>
                     <FlatList
                         data={data}
-                        keyExtractor={(item) => item.title}
+                        keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                            <ExamPrepQuizCard {...item} onCardClick={(i) => updateList(i)} />
+                            <ExamPrepQuizCard key={item.id} {...item} onCardClick={(i) => updateList(i)} />
                         )}
                     />
                 </>}
                 {tab == 'Exam Prep' && <>
                     {/* <ExamPrepSubjects subjects={subjects} /> */}
                     <View>
-                    <TouchableOpacity >
-                        <Text>Exam Preparation</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  >
-                        <Text>Change</Text>
-                        <View >
-                            <Pencil height={'20'} width={'20'} fill={Colors.white} />
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                    <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} />
-                    <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                    <Text>All Chapter Wise</Text>
-                    <TouchableOpacity  onPress={() => {setMultiSelect(!multiSelect)}}>
-                    {multiSelect && <View style={styles.crossMultiSelect} >
-                    <CrossIcon height={12} width={12} fill={Colors.black_01} />
-                    <Text>
-                        12
-                    </Text>
-                    </View>}
-                    {!multiSelect && <Text>Select</Text>}
-                    </TouchableOpacity>
+                        <TouchableOpacity >
+                            <Text>Exam Preparation</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity  >
+                            <Text>Change</Text>
+                            <View >
+                                <Pencil height={'20'} width={'20'} fill={Colors.black_01} />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} score={10} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Text>All Chapter Wise</Text>
+                        <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
+                            {multiSelect && <View style={styles.crossMultiSelect} >
+                                <CrossIcon height={12} width={12} fill={Colors.black_01} />
+                                <Text>
+                                    12
+                                </Text>
+                            </View>}
+                            {!multiSelect && <Text>Select</Text>}
+                        </TouchableOpacity>
                     </View>
                     <FlatList
                         data={data}
-                        keyExtractor={(item) => item.title}
+                        keyExtractor={(item) => item.id.toString()} // Assuming `id` is unique and of string type
                         renderItem={({ item }) => (
-                            <ExamPrepQuizCard {...item} multiSelect={multiSelect} onCardClick={(i) => updateList(i)} />
-                            // <ExamPrepSubjects {...item}  />
+                            <ExamPrepQuizCard score={item.score} key={item.id} {...item} onCardClick={(i) => updateList(i)} />
                         )}
                     />
                 </>
@@ -224,7 +237,7 @@ export const QuizHomePage = () => {
 const styles = StyleSheet.create({
     crossMultiSelect: {
         borderColor: "#C5C5C5",
-        borderWidth: 1/2,
+        borderWidth: 1 / 2,
         borderRadius: 20,
         flexDirection: 'row',
         gap: 8,
