@@ -13,37 +13,37 @@ import { httpClient } from '../../services/HttpServices'
 
 export const QuizFirstPage = () => {
   const navigation = useNavigation();
-  const [quizType, setQuizType] = useState('');
+  const [quizType, setQuizType] = useState<string | null>();
   const [quizContent, setQuizContent] = useState();
   const startQuiz = () => {
         navigation.navigate('QuizQuestionPages' as never, quizContent as never);
   };
 
   const [currentQuiz, setCurrentQuiz] = useState<any>();
-  //   console.log(route.params);
   const route = useRoute();
   useEffect(() => {
-    setCurrentQuiz(() => route.params)
-    getQuizContent();
-
+        getQuizType();
+        setCurrentQuiz(() => route.params)
   },[])
 
-  const getQuizType = async () => {
-    return await AsyncStorage.getItem('quizType');
+  const getQuizType = () => {
+    AsyncStorage.getItem('quizType').then((q) => {
+        console.log(q);
+        getQuizContent(q);
+
+    })
   }
   
   const onBack = () => {
     navigation.navigate('QuizHomepage' as never)
   }
 
-  const getQuizContent = () => {
+  const getQuizContent = (quizType: string | null) => {
     console.log(route.params);
     const listOfChapters = route && route.params && route.params  && route.params[0].map((item: any) => {
         return item.title;
     })
     setCurrentQuiz(() => route.params)
-    console.log(listOfChapters)
-    console.log(currentQuiz);
     const req = {
         "schoolId": "default",
         "boardId": "CBSE",
@@ -55,16 +55,17 @@ export const QuizFirstPage = () => {
         "size": 2
       }
 
+      const endPoint = quizType == 'quiz'?'/data/quizz': '/data/mcq' ; 
+
       const reqObj = {
         "service": "ml_service",
-        "endpoint": `/data/quizz`,
+        "endpoint":  endPoint,
         "requestMethod": "POST",
         "requestBody": req
     }
 
     httpClient.post(`auth/c-auth`, reqObj)
         .then((res: any) => {
-            console.log(res.data.data);
             const quiz = {
                 schoolId: 'default',
                 chapterName: listOfChapters,
@@ -92,7 +93,7 @@ export const QuizFirstPage = () => {
             </View>
             <View style={styles.infoContainer}>
                 <Text style={styles.infoContainerTitle}>
-                    Quizzes
+                   {quizType}
                 </Text>
                 <Text style={styles.infoContainerText}>
                     English Vocabulary Quiz
@@ -152,7 +153,8 @@ const styles = StyleSheet.create({
     infoContainerTitle: {
         fontSize: 18,
         fontWeight: "500",
-        color: "#7A7A7A"
+        color: "#7A7A7A",
+        textTransform: 'capitalize'
     },
     infoContainerText: {
         fontSize: 18,

@@ -34,6 +34,11 @@ export const QuizQuestionsPage = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const [reqObject, setReqObject] = useState();
+    const [quizType, setQuizType] = useState<string | null>('');
+
+    const getQuizType = async () => {
+        setQuizType(await AsyncStorage.getItem('quizType'));
+      }
 
     useEffect(() => {
         const req  = {
@@ -191,7 +196,7 @@ export const QuizQuestionsPage = () => {
         console.log(reqObject);
         const reqObj = {
             "service": "ml_service",
-            "endpoint":  `/answered/quizz`,
+            "endpoint":  quizType == 'quiz'? `/answered/quizz` : `/answered/mcq` ,
             "requestMethod": "POST",
             "requestBody": reqObject
           }          
@@ -222,13 +227,13 @@ export const QuizQuestionsPage = () => {
                         <Text style={styles.headingTitle}>Test</Text>
                         <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
                     </View>
-                    <View style={{ display: 'flex', gap: 10 }}>
+                    {timer && <View style={{ display: 'flex', gap: 10 }}>
                         <View style={styles.timerBlock}>
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
                         </View>
                         <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => setModalVisible(true)} />
-                    </View>
+                    </View>}
                 </View>
             </View>
             <View style={styles.body}>

@@ -65,7 +65,6 @@ export const QuizHomePage = () => {
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
         await AsyncStorage.setItem('quizType', 'quiz');
-        console.log(selectedQuiz);
         navigation.navigate('QuizFirstPage' as never, selectedQuiz  as never);
     }
 
@@ -73,7 +72,7 @@ export const QuizHomePage = () => {
         await AsyncStorage.removeItem('quizType');
         const item = data.filter((item) => item.selected == true)[0];
         await AsyncStorage.setItem('quizType', 'practice');
-        // navigation.navigate('QuizFirstPage' as never, { noOfQuestions: item.noOfQuestions } as never);
+        navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
     }
 
     useEffect(() => {
@@ -143,7 +142,8 @@ export const QuizHomePage = () => {
                         noOfQuestions: item.totalQuestions,
                         timeRequired: item.time,
                         selected: false,
-                        score: item.score
+                        score: item.score,
+                        quizType: tab
                     }
                 })
                 setData(list);
@@ -180,7 +180,7 @@ export const QuizHomePage = () => {
                         data={data}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                            <ExamPrepQuizCard key={item.id} {...item} onCardClick={(i) => updateList(i)} />
+                        <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} score={10} />
                         )}
                     />
                 </>}
