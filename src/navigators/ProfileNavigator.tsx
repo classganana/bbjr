@@ -1,9 +1,10 @@
 import { View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { SettingsPage } from '../screens/profile/SettingsPage';
-import EditProfile from '../screens/profile/EditProfile';
-import ViewLeadboard from '../screens/profile/viewLeadboard';
+import { SettingsPage } from '../screens/Profile/SettingsPage';
+import ViewLeadboard from '../screens/Profile/viewLeadboard';
+import EditProfile from '../screens/Profile/EditProfile';
+
 
 export const ProfileNavigator = () => {
 

@@ -64,7 +64,7 @@ export const SettingsPage = () => {
         </View>
         <View style={styles.block2}>
           <View style={styles.friend}>
-            <ContactIcon height={'15'} width={'16'} fill={''} />
+            <ContactIcon height={'15'} width={'16'} fill={'black'} />
             <Text>Invite Friends</Text>
           </View>
           <View style={styles.button}>
