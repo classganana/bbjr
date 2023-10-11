@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { SettingsPage } from '../screens/profile/SettingsPage';
 import EditProfile from '../screens/profile/EditProfile';
+import ViewLeadboard from '../screens/profile/viewLeadboard';
 
 export const ProfileNavigator = () => {
 
@@ -12,6 +13,7 @@ export const ProfileNavigator = () => {
             <Stack.Navigator>
                 <Stack.Screen name="Setting" component={SettingsPage} options={{ headerShown: false }} />
                 <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }} />
+                <Stack.Screen name="Leaderboard" component={ViewLeadboard} options={{ headerShown: false }} />
             </Stack.Navigator>
         </View>
     )

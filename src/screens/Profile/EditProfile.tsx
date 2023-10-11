@@ -135,7 +135,7 @@ const EditProfile = () => {
                     <Text style={styles.label}>Guardian’s Email</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Enter Guardian’s Email"
+                        placeholder="Enter Guardian's Email"
                         value={GuardianEmail}
                         editable={isEditMode}
                         onChangeText={text => {

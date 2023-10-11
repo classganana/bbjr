@@ -16,6 +16,11 @@ export const SettingsPage = () => {
     console.log("EditProfile");
   };
 
+  const moveToLeaderboard = () => {
+    navigation.navigate("Leaderboard" as never);
+    console.log("Leaderboard");
+  };
+
   useEffect(() => {
     httpClient.get('users/johndoe123').then((res) => {
       setUser(res.data);
@@ -67,7 +72,7 @@ export const SettingsPage = () => {
           </View>
         </View>
         {labels.map((buttonLabel, index) => (
-          <TouchableOpacity key={index} onPress={() => setSelectedButton(index)} style={{ flexDirection: 'row', alignItems: 'center', gap: 20, position: 'relative' }}>
+          <TouchableOpacity key={index} onPress={() => moveToLeaderboard()} style={{ flexDirection: 'row', alignItems: 'center', gap: 20, position: 'relative' }}>
             {buttonLabel.leftSvg}
             <Text>{buttonLabel.title}</Text>
             <View style={{ position: 'absolute', right: 0 }}>
@@ -166,3 +171,7 @@ const styles = StyleSheet.create({
     lineHeight: 19.764,
   }
 })
+
+function moveToLeaderboard(): void {
+  throw new Error('Function not implemented.')
+}
