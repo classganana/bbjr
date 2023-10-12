@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, ScrollView, Platform, Image, Text, StyleSheet } from 'react-native';
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { Colors } from '../../styles/colors';
 import { ArrowLeft, CameraIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Picker } from '@react-native-picker/picker';
 import { CancelButton, EditButton, ExitButton, LoginButton, OutlineButton, SubmitButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { httpClient } from '../../services/HttpServices';
 
 const EditProfile = () => {
     const [name, setName] = useState('');
@@ -14,12 +15,53 @@ const EditProfile = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [GuardianName, setGuardianName] = useState('');
     const [GuardianEmail, setGuardianEmail] = useState('');
+    const [userId, setUserId] = useState<any>('');
 
     const [isEditMode, setIsEditMode] = useState(false);
 
     const toggleEditMode = () => {
         setIsEditMode(!isEditMode);
     };
+
+
+    useEffect(() => {
+        httpClient.get('users/johndoe123').then((res) => {
+            const user = res.data;
+            setName(user.name);
+            setBoard(user.board);
+            setClassValue(user.class);
+            setPhoneNumber(user.phoneNumber);
+            setSchool(user.school);
+            setUserId(user.userId);
+            user.guardianEmail && setGuardianEmail(user.guardianEmail);
+            user.guardianName &&setGuardianName(user.guardianName);
+
+        }).catch(() => {
+            console.log("Something went wrong")
+        })
+    }, [])
+
+
+    const updateProfile = () => {
+        let updatedData: any = {
+            name,
+            class: classValue,
+            school,
+            board,
+            phoneNumber,
+        };
+
+        GuardianName? updatedData = {...updatedData, GuardianName}: ''
+        GuardianEmail? updatedData = {...updatedData, GuardianEmail}: ''
+
+        httpClient.patch(`users/${userId}`, {
+            ...updatedData
+        }).then((res) => {
+            (res.data.acknowledged) && toggleEditMode(); 
+        });
+    }
+
+
     return (
 
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -48,7 +90,7 @@ const EditProfile = () => {
                         editable={isEditMode}
                         value={name}
                         onChangeText={text => {
-                            setName(text);
+                            setName(() => text);
                             // checkFields();
                         }}
                     />
@@ -75,9 +117,9 @@ const EditProfile = () => {
                                 // checkFields();
                             }}
                         >
-                            <Picker.Item label="Select Class" value="" />
+                            <Picker.Item label={(classValue) || "Select Class"} value={classValue} />
                             {Array.from({ length: 10 }, (_, i) => i + 3).map((item) => (
-                                <Picker.Item label={item.toString()} value={item.toString()} key={item} />
+                                <Picker.Item label={item.toString()} value={item} key={item} />
                             ))}
                         </Picker>
                     </View>
@@ -103,7 +145,7 @@ const EditProfile = () => {
                                 // checkFields();
                             }}
                         >
-                            <Picker.Item label="Select Board" value="" />
+                            <Picker.Item label="Select Board" value=""/>
                             <Picker.Item label="ICSE" value="ICSE" />
                             <Picker.Item label="CBSE" value="CBSE" />
                             <Picker.Item label="TELANGANA" value="TELANGANA" />
@@ -123,7 +165,7 @@ const EditProfile = () => {
                     <Text style={styles.label}>Guardian’s Email</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Enter Guardian’s Email"
+                        placeholder="Enter Guardian's Email"
                         value={GuardianEmail}
                         editable={isEditMode}
                         onChangeText={text => {
@@ -132,19 +174,19 @@ const EditProfile = () => {
                         }}
                     />
                     <View style={styles.btn}>
-                    {!isEditMode ? (
-                        <Button
-                            label={'Edit Profile'}
-                            disabled={false}
-                            className={EditButton}
-                            onPress={toggleEditMode} // Toggle edit mode when the button is pressed
-                        />
-                    ) : (
-                        <>
-                            <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={toggleEditMode} />
-                            <Button label={'Submit'} disabled={false} className={ExitButton} onPress={toggleEditMode} />
-                        </>
-                    )}
+                        {!isEditMode ? (
+                            <Button
+                                label={'Edit Profile'}
+                                disabled={false}
+                                className={EditButton}
+                                onPress={toggleEditMode} // Toggle edit mode when the button is pressed
+                            />
+                        ) : (
+                            <>
+                                <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={toggleEditMode} />
+                                <Button label={'Submit'} disabled={false} className={ExitButton} onPress={updateProfile} />
+                            </>
+                        )}
                     </View>
                 </View>
             </View>
@@ -231,16 +273,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignSelf: 'center',
         width: '100%',
-        // flex:1,
     },
     Editbtn: {
-        // display: 'flex',
         margin: 50,
-        // flexDirection: 'row',
         justifyContent: 'center',
         alignSelf: 'center',
-        // width: '100%',
-        // flex:1,
     }
 });
 export default EditProfile;

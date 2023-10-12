@@ -403,3 +403,24 @@ export const EditButton = StyleSheet.create<Style>({
     fontFamily: "Inter-Regular",
   }
 });
+export const ExploreButton = StyleSheet.create<Style>({
+  container: {
+    height: 30,
+    width:  80,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    // borderWidth: 4/4,
+    backgroundColor:Colors.primary,
+    borderColor:Colors.primary,
+    paddingHorizontal:15,
+    paddingVertical:5,
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "500",
+    fontSize: 15,
+    fontFamily: "Inter-Regular",
+  }
+});

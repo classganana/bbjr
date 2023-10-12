@@ -33,7 +33,7 @@ export const httpClient = {
     let headers;
     headers = await getHeaders(_headers);
     let options = { params, headers };
-    const res = await axios.get(path, options);
+    const res = await axios.get(`${AUTH_API}/${path}`, options);
     return res;
   },
   post: async (path: string, data: any, params = {}, _headers = {}) => {
@@ -48,7 +48,7 @@ export const httpClient = {
     let headers;
     headers = await getHeaders(_headers);
     const options = { params, headers };
-    const res = await axios.patch(path, data, options);
+    const res = await axios.patch(`${AUTH_API}/${path}`, data, options);
     return res;
   },
   put: async (path: string, data: any, params = {}, _headers = {}) => {

@@ -32,8 +32,12 @@ const ChipComponent: React.FC<ButtonProps> = ({
   isPressed,
   themeColor
 }) => {
-  const buttonStyle: any = [
-    styles.child,
+  const textStyle:any=[
+    {color: themeColor && isPressed && Colors.white},
+  ]
+  const buttonStyle:any= [
+    styles.child,{borderColor: themeColor && 'rgba(150, 150, 150, 0.64)',
+      borderWidth: themeColor && 1},
     { backgroundColor: buttonData.color || Colors.Snow_Flurry },
     isPressed
       ? {
@@ -46,13 +50,14 @@ const ChipComponent: React.FC<ButtonProps> = ({
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
           elevation: 5,
+
         }
       : null,
   ];
 
   return (
     <TouchableOpacity style={buttonStyle} onPress={onPress}>
-      <Text style={styles.buttonText}>{buttonData.text}</Text>
+      <Text style={[styles.buttonText,textStyle]}>{buttonData.text}</Text>
     </TouchableOpacity>
   );
 };

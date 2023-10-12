@@ -15,7 +15,7 @@ import { QuizOverView } from '../../components/quiz/QuizOverView';
 import { httpClient } from '../../services/HttpServices';
 
 export type Answers = Array<{
-    mcq_id?: string,
+    mcqId?: string,
     question: string;
     options: string[];
     answer: string;
@@ -182,7 +182,7 @@ export const QuizQuestionsPage = () => {
     const submitQuiz = (answerList: questionWithTime) => {
         const questions = answerList.quizQuestionList.map((answer) => {
                 return {
-                    mcqId: answer.mcq_id,
+                    mcqId: answer.mcqId,
                     selectedAnswer: answer.selectedAnswer? answer.selectedAnswer : undefined
                 }
         });

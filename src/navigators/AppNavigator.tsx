@@ -7,6 +7,7 @@ import { QuizNavigator } from './QuizNavigator';
 import { BotNavigator } from './BotNavigator';
 import { LoginScreen } from '../screens/auth/LoginScreen/LoginScreen';
 import { AuthNavigator } from './AuthNavigator';
+import { ProfileNavigator } from './ProfileNavigator';
 // import { LoginScreen } from '../screens/Auth/LoginScreen/LoginScreen';
 
 export const AppNavigator = () => {
@@ -20,6 +21,7 @@ export const AppNavigator = () => {
                 {/* <Stack.Screen name="DashboardNavigator" component={DashboardNavigator} options={{ headerShown: false }} /> */}
                 <Stack.Screen name="Quiz" component={QuizNavigator} options={{ headerShown: false }}></Stack.Screen>
                 {/* <Stack.Screen name="Bot" component={BotNavigator} options={{ headerShown: false }}></Stack.Screen> */}
+                <Stack.Screen name="Profile" component={ProfileNavigator} options={{ headerShown: false }} />
             </Stack.Navigator>
         </View>
     )

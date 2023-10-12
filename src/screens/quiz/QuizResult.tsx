@@ -50,6 +50,7 @@ export const QuizResult = (props: Props) => {
         try {
             const data = JSON.parse((await AsyncStorage.getItem('questions')) as string); 
             const UserAnswerList = data && (data.quizQuestionList) ? data.quizQuestionList : []
+            debugger
             const score = calculateScore(UserAnswerList);
             const totalMarks = UserAnswerList.length * 10;
             const updatedResult = [...result];
@@ -80,9 +81,9 @@ export const QuizResult = (props: Props) => {
         return unanswered;        
     }
 
-    const calculateScore = (answerList: questionWithTime) => {
+    const calculateScore = (answerList: Answers) => {
         let score = 0;
-        answerList && answerList.quizQuestionList && answerList.quizQuestionList.forEach((answer) => {
+        answerList && answerList.forEach((answer) => {
             if (answer.answer == answer.selectedAnswer)
                 score += 10;
         })
