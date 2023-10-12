@@ -15,6 +15,7 @@ const EditProfile = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [GuardianName, setGuardianName] = useState('');
     const [GuardianEmail, setGuardianEmail] = useState('');
+    const [userId, setUserId] = useState<any>('');
 
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -22,16 +23,45 @@ const EditProfile = () => {
         setIsEditMode(!isEditMode);
     };
 
-    const [user, setUser] = useState<any>();
 
     useEffect(() => {
         httpClient.get('users/johndoe123').then((res) => {
-            setUser(res.data);
+            const user = res.data;
+            setName(user.name);
+            setBoard(user.board);
             setClassValue(user.class);
+            setPhoneNumber(user.phoneNumber);
+            setSchool(user.school);
+            setUserId(user.userId);
+            user.guardianEmail && setGuardianEmail(user.guardianEmail);
+            user.guardianName &&setGuardianName(user.guardianName);
+
         }).catch(() => {
             console.log("Something went wrong")
         })
     }, [])
+
+
+    const updateProfile = () => {
+        let updatedData: any = {
+            name,
+            class: classValue,
+            school,
+            board,
+            phoneNumber,
+        };
+
+        GuardianName? updatedData = {...updatedData, GuardianName}: ''
+        GuardianEmail? updatedData = {...updatedData, GuardianEmail}: ''
+
+        httpClient.patch(`users/${userId}`, {
+            ...updatedData
+        }).then((res) => {
+            (res.data.acknowledged) && toggleEditMode(); 
+        });
+    }
+
+
     return (
 
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -58,9 +88,9 @@ const EditProfile = () => {
                         style={styles.input}
                         placeholder="Student Name"
                         editable={isEditMode}
-                        value={user && user.name}
+                        value={name}
                         onChangeText={text => {
-                            setName(text);
+                            setName(() => text);
                             // checkFields();
                         }}
                     />
@@ -69,7 +99,7 @@ const EditProfile = () => {
                     <TextInput
                         style={styles.input}
                         placeholder="Phone number"
-                        value={user && user.phoneNumber}
+                        value={phoneNumber}
                         editable={isEditMode}
                         onChangeText={text => {
                             setPhoneNumber(text);
@@ -87,9 +117,9 @@ const EditProfile = () => {
                                 // checkFields();
                             }}
                         >
-                            <Picker.Item label="Select Class" value={user && user.class} />
+                            <Picker.Item label={(classValue) || "Select Class"} value={classValue} />
                             {Array.from({ length: 10 }, (_, i) => i + 3).map((item) => (
-                                <Picker.Item label={item.toString()} value={item.toString()} key={item} />
+                                <Picker.Item label={item.toString()} value={item} key={item} />
                             ))}
                         </Picker>
                     </View>
@@ -97,7 +127,7 @@ const EditProfile = () => {
                     <TextInput
                         style={styles.input}
                         placeholder="School Name"
-                        value={user && user.school}
+                        value={school}
                         editable={isEditMode}
                         onChangeText={text => {
                             setSchool(text);
@@ -109,13 +139,13 @@ const EditProfile = () => {
                     <View style={styles.picker}>
                         <Picker
                             enabled={isEditMode}
-                            selectedValue={user && user.board}
+                            selectedValue={board}
                             onValueChange={(itemValue) => {
                                 setBoard(itemValue);
                                 // checkFields();
                             }}
                         >
-                            <Picker.Item label="Select Board" value="" />
+                            <Picker.Item label="Select Board" value=""/>
                             <Picker.Item label="ICSE" value="ICSE" />
                             <Picker.Item label="CBSE" value="CBSE" />
                             <Picker.Item label="TELANGANA" value="TELANGANA" />
@@ -154,7 +184,7 @@ const EditProfile = () => {
                         ) : (
                             <>
                                 <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={toggleEditMode} />
-                                <Button label={'Submit'} disabled={false} className={ExitButton} onPress={toggleEditMode} />
+                                <Button label={'Submit'} disabled={false} className={ExitButton} onPress={updateProfile} />
                             </>
                         )}
                     </View>
