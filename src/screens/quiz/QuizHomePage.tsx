@@ -205,9 +205,9 @@ export const QuizHomePage = () => {
                     <Text style={styles.selectedOption}>{tab}</Text>
                     <FlatList
                         data={data}
-                        keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item) => item.id.toString()} // Assuming `id` is unique and of string type
                         renderItem={({ item }) => (
-                        <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} score={10} />
+                            <ExamPrepQuizCard score={item.score} key={item.id} {...item} onCardClick={(i) => updateList(i)} />
                         )}
                     />
                 </>}

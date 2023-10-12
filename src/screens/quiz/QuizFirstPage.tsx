@@ -44,7 +44,7 @@ export const QuizFirstPage = () => {
         return item.title;
     })
     setCurrentQuiz(() => route.params)
-    const req = {
+    let req = {
         "schoolId": "default",
         "boardId": "CBSE",
         "subject": "Science",
@@ -52,17 +52,22 @@ export const QuizFirstPage = () => {
         "studentId": 10,
         "chapterName": listOfChapters,
         "dataType": "school",
-        "size": 2
-      }
-
-      const endPoint = quizType == 'quiz'?'/data/quizz': '/data/mcq' ; 
-
-      const reqObj = {
+        "size": quizType == 'quiz' ? listOfChapters.length * 10: 50
+    };
+    
+    const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
+    debugger
+    if (quizType == 'quiz') {
+        delete req.chapterName;
+    }
+    
+    const reqObj = {
         "service": "ml_service",
-        "endpoint":  endPoint,
+        "endpoint": endPoint,
         "requestMethod": "POST",
         "requestBody": req
-    }
+    };
+    
 
     httpClient.post(`auth/c-auth`, reqObj)
         .then((res: any) => {
