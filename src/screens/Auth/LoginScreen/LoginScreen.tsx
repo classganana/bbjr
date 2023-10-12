@@ -1,5 +1,5 @@
 import { Image, Text, TextInput, Touchable, TouchableNativeFeedback, View } from "react-native";
-import { LoginScreenStyle } from "./LoginScreenStyle"
+import { LoginScreenStyle } from "../LoginScreenStyle"
 import { useState } from "react";
 import OtpVerification from "../OtpVerificationScreen";
 import { LoginForm } from "./LoginForm";
