@@ -61,13 +61,14 @@ export const BottomSheetScreen: React.FC = () => {
     const req = {
       schoolId: 101,
       boardId: 101,
-      subject: subject,
+      subject: 'Science',
       className: 10,
       studentName: "Trin",
       studentId: 10,
       userMessage: text,
       chatHistory: messages.length >= 4 ? chat_history() : [],
     };
+
 
     httpClient.post(customApiEndpoint, req).then((res) => {
       const data = res.data.data;

@@ -1,20 +1,24 @@
 export const quizQuestions: Array<{
     question: string;
     options: string[];
-    correctAnswer: string;
-    selectedAnswer?: string
+    answer: string;
+    selectedAnswer?: string,
+    mcq_id: string,
   }> = [
     {
+      mcq_id: "12",
       question: "What is the capital of France?",
       options: ["New York", "Paris", "London", "Tokyo"],
-      correctAnswer: "Paris",
+      answer: "Paris",
     },
     {
+      mcq_id: "12",
       question: "Which planet is known as the Red Planet?",
       options: ["Mars", "Venus", "Jupiter", "Neptune"],
-      correctAnswer: "Mars",
+      answer: "Mars",
     },
     {
+      mcq_id: "12",
       question: "Who wrote the play 'Romeo and Juliet'?",
       options: [
         "William Shakespeare",
@@ -22,19 +26,22 @@ export const quizQuestions: Array<{
         "Charles Dickens",
         "Mark Twain",
       ],
-      correctAnswer: "William Shakespeare",
+      answer: "William Shakespeare",
     },
     {
+      mcq_id: "12",
       question: "Which gas do plants use for photosynthesis?",
       options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
-      correctAnswer: "Carbon Dioxide",
+      answer: "Carbon Dioxide",
     },
     {
+      mcq_id: "14",
       question: "What is the largest mammal on Earth?",
       options: ["Elephant", "Giraffe", "Blue Whale", "Lion"],
-      correctAnswer: "Blue Whale",
+      answer: "Blue Whale",
     },
     {
+      mcq_id: "16",
       question: "Which scientist developed the theory of relativity?",
       options: [
         "Isaac Newton",
@@ -42,34 +49,40 @@ export const quizQuestions: Array<{
         "Galileo Galilei",
         "Nikola Tesla",
       ],
-      correctAnswer: "Albert Einstein",
+      answer: "Albert Einstein",
     },
     {
+      mcq_id: "12",
       question: "Which language is widely used for web development?",
       options: ["Java", "C++", "Python", "JavaScript"],
-      correctAnswer: "JavaScript",
+      answer: "JavaScript",
     },
     {
+      mcq_id: "12",
       question: "What is the chemical symbol for gold?",
       options: ["Ag", "Au", "Fe", "Cu"],
-      correctAnswer: "Au",
+      answer: "Au",
     },
     {
+      mcq_id: "152",
       question: "What is the largest planet in our solar system?",
       options: ["Earth", "Mars", "Jupiter", "Venus"],
-      correctAnswer: "Jupiter",
+      answer: "Jupiter",
     },
     {
+      mcq_id: "72",
         question: "What is the largest planet in our solar system?",
         options: ["Earth", "Mars", "Jupiter", "Venus"],
-        correctAnswer: "Jupiter",
+        answer: "Jupiter",
       },
       {
+        mcq_id: "122",
         question: "What is the largest planet in our solar system?",
         options: ["Earth", "Mars", "Jupiter", "Venus"],
-        correctAnswer: "Jupiter",
+        answer: "Jupiter",
       },
     {
+      mcq_id: "12",
       question: "Which famous painting features a woman with a mysterious smile?",
       options: [
         "Starry Night",
@@ -77,93 +90,103 @@ export const quizQuestions: Array<{
         "The Persistence of Memory",
         "American Gothic",
       ],
-      correctAnswer: "Mona Lisa",
+      answer: "Mona Lisa",
     },
   ];
 
 
-export const quizQuestionsWithAnswer: Array<{
-    question: string;
-    options: string[];
-    correctAnswer: string;
-    selectedAnswer?: string
-  }> = [
-    {
-      question: "What is the capital of France?",
-      options: ["New York", "Paris", "London", "Tokyo"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "Which planet is known as the Red Planet?",
-      options: ["Mars", "Venus", "Jupiter", "Neptune"],
-      correctAnswer: "Mars",
-    },
-    {
-      question: "Who wrote the play 'Romeo and Juliet'?",
-      options: [
-        "William Shakespeare",
-        "Jane Austen",
-        "Charles Dickens",
-        "Mark Twain",
-      ],
-      selectedAnswer: "Charles Dickens",
-      correctAnswer: "William Shakespeare",
-    },
-    {
-      question: "Which gas do plants use for photosynthesis?",
-      options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
-      correctAnswer: "Carbon Dioxide",
-    },
-    {
-      question: "What is the largest mammal on Earth?",
-      options: ["Elephant", "Giraffe", "Blue Whale", "Lion"],
-      correctAnswer: "Blue Whale",
-    },
-    {
-      question: "Which scientist developed the theory of relativity?",
-      options: [
-        "Isaac Newton",
-        "Albert Einstein",
-        "Galileo Galilei",
-        "Nikola Tesla",
-      ],
-      correctAnswer: "Albert Einstein",
-    },
-    {
-      question: "Which language is widely used for web development?",
-      options: ["Java", "C++", "Python", "JavaScript"],
-      correctAnswer: "JavaScript",
-    },
-    {
-      question: "What is the chemical symbol for gold?",
-      options: ["Ag", "Au", "Fe", "Cu"],
-      correctAnswer: "Au",
-    },
-    {
-      question: "What is the largest planet in our solar system?",
-      options: ["Earth", "Mars", "Jupiter", "Venus"],
-      correctAnswer: "Jupiter",
-    },
-    {
-        question: "What is the largest planet in our solar system?",
-        options: ["Earth", "Mars", "Jupiter", "Venus"],
-        correctAnswer: "Jupiter",
-      },
-      {
-        question: "What is the largest planet in our solar system?",
-        options: ["Earth", "Mars", "Jupiter", "Venus"],
-        correctAnswer: "Jupiter",
-      },
-    {
-      question: "Which famous painting features a woman with a mysterious smile?",
-      options: [
-        "Starry Night",
-        "Mona Lisa",
-        "The Persistence of Memory",
-        "American Gothic",
-      ],
-      correctAnswer: "Mona Lisa",
-    },
-  ];  
+// export const quizQuestionsWithAnswer: Array<{
+//     question: string;
+//     options: string[];
+//     answer: string;
+//     selectedAnswer?: string
+//   }> = [
+//     {
+//       mcq_id: "12",
+//       question: "What is the capital of France?",
+//       options: ["New York", "Paris", "London", "Tokyo"],
+//       answer: "Paris",
+//     },
+//     {
+//       mcq_id: "12",
+//       question: "Which planet is known as the Red Planet?",
+//       options: ["Mars", "Venus", "Jupiter", "Neptune"],
+//       answer: "Mars",
+//     },
+//     {
+//       mcq_id: "12",
+//       question: "Who wrote the play 'Romeo and Juliet'?",
+//       options: [
+//         "William Shakespeare",
+//         "Jane Austen",
+//         "Charles Dickens",
+//         "Mark Twain",
+//       ],
+//       selectedAnswer: "Charles Dickens",
+//       answer: "William Shakespeare",
+//     },
+//     {
+//       mcq_id: "12",
+//       question: "Which gas do plants use for photosynthesis?",
+//       options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+//       answer: "Carbon Dioxide",
+//     },
+//     {
+//       mcq_id: "12",
+//       question: "What is the largest mammal on Earth?",
+//       options: ["Elephant", "Giraffe", "Blue Whale", "Lion"],
+//       answer: "Blue Whale",
+//     },
+//     {
+//       mcq_id: "12",
+//       question: "Which scientist developed the theory of relativity?",
+//       options: [
+//         "Isaac Newton",
+//         "Albert Einstein",
+//         "Galileo Galilei",
+//         "Nikola Tesla",
+//       ],
+//       answer: "Albert Einstein",
+//     },
+//     {
+//       mcq_id: "12",
+//       question: "Which language is widely used for web development?",
+//       options: ["Java", "C++", "Python", "JavaScript"],
+//       answer: "JavaScript",
+//     },
+//     {
+//       mcq_id: "12",
+//       question: "What is the chemical symbol for gold?",
+//       options: ["Ag", "Au", "Fe", "Cu"],
+//       answer: "Au",
+//     },
+//     {
+//       mcq_id: "12",
+//       question: "What is the largest planet in our solar system?",
+//       options: ["Earth", "Mars", "Jupiter", "Venus"],
+//       answer: "Jupiter",
+//     },
+//     {
+//         question: "What is the largest planet in our solar system?",
+//         options: ["Earth", "Mars", "Jupiter", "Venus"],
+//         answer: "Jupiter",
+//       },
+//       {
+//         question: "What is the largest planet in our solar system?",
+//         options: ["Earth", "Mars", "Jupiter", "Venus"],
+//         answer: "Jupiter",
+//       },
+//     {
+//       mcq_id: "12",
+//       question: "Which famous painting features a woman with a mysterious smile?",
+//       options: [
+//         "Starry Night",
+//         "Mona Lisa",
+//         "The Persistence of Memory",
+//         "American Gothic",
+//       ],
+//       answer: "Mona Lisa",
+//     },
+//   ];  
 export default quizQuestions;
   

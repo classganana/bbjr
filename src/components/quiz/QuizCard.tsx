@@ -11,13 +11,15 @@ export interface CardData {
     timeRequired: number,
     done: boolean,
     selected?: boolean,
+    score?: number,
+    subject?: string,
     onCardClick?: (selectedOption: number) => void;
 }
 
 
 export const Card: React.FC<CardData> = ({ id, title, infoText, imageUrl, done, noOfQuestions, timeRequired, selected, onCardClick }) => (
-    <TouchableOpacity onPress={() => onCardClick && onCardClick(id)}>
-    <View style={[styles.card,
+ <TouchableOpacity onPress={() => onCardClick && onCardClick(id)}>
+     <View style={[styles.card,
     done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
     selected && styles.selected]}>
         <View style={styles.imageContainer}>

@@ -16,7 +16,13 @@ import {
 } from "../../common/SvgComponent/SvgComponent";
 import { useNavigation } from "@react-navigation/native";
 
-export const Aiinput: React.FC = ({ onsendclick, onSubjectChange }: any) => {
+type Props = {
+  onSendClick: (selectedOption: string) => void;
+  onSubjectChange: (selectedOption: any) => void;
+}
+
+
+export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<{
     subjectName: string;
@@ -44,14 +50,12 @@ export const Aiinput: React.FC = ({ onsendclick, onSubjectChange }: any) => {
   };
 
   const onSend = () => {
-    if (text) onsendclick(text);
-    console.log(text);
+    if (text) onSendClick(text);
     setText("");
-    console.log(text);
   };
 
   function handleOnSubmitEditing(): void {
-    if (text) onsendclick(text);
+    if (text) onSendClick(text);
     setText("");
   }
 
@@ -70,10 +74,12 @@ export const Aiinput: React.FC = ({ onsendclick, onSubjectChange }: any) => {
           }}
         >
           <View style={styles.selectSubjectContainer}>
-            <Text style={styles.selectedSubject}>
-              Biology
+            <Text style={styles.selectedSubject}> 
               {selectedSubject?.subjectName}
             </Text>
+            {!selectedSubject?.subjectName && <Text style={styles.selectedSubject}>
+              Select Subject
+            </Text>}
             <TouchableOpacity
               style={styles.edit}
               onPress={() => setBottomSheetVisible(true)}

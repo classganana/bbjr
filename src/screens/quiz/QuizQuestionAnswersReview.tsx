@@ -6,6 +6,7 @@ import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useNavigation } from '@react-navigation/native';
 
 type Question = {
     question: string;
@@ -18,7 +19,7 @@ export const QuizQuestionAnswerReview = () => {
     const questionScrollViewRef = useRef<ScrollView | null>(null);
     const [quizQuestionList, setQuizQuestionList] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
+    const navigation = useNavigation()
     useEffect(() => {
         getData();
     }, []);
@@ -53,6 +54,7 @@ export const QuizQuestionAnswerReview = () => {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             scrollToNextQuestion();
         } else {
+            navigation.navigate('QuizHomepage' as never);
             console.log("Quiz Ended");
         }
     };
@@ -125,7 +127,7 @@ export const QuizQuestionAnswerReview = () => {
                     <Button
                         label={
                             currentQuestionIndex === quizQuestionList.length - 1
-                                ? 'Submit'
+                                ? 'Exit'
                                 : 'Next Question'
                         }
                         className={LoginButton}

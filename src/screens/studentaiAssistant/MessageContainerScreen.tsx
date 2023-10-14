@@ -27,23 +27,7 @@ export const MessageContainer = ({ messages }: { messages: Chats[] }) => {
   return (
     <>
       <View style={style.container}>
-        <View style={style.header}>
-          <View style={{ position: "absolute", left: 12 }}>
-            <TouchableOpacity
-              style={style.backButton}
-              onPress={() => moveToStudentAssistant()}
-            >
-              <ArrowLeft height={"22"} width={"22"} fill={"black"} />
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: "row", gap: 15 }}>
-            <Image
-              source={require("../../../assets/png/blueai.png")}
-              style={style.headerimage}
-            />
-            <Text style={style.headertext}>Student Assistant</Text>
-          </View>
-        </View>
+      
         <ScrollView
           contentContainerStyle={{
             display: "flex",
@@ -86,10 +70,6 @@ export const InfoSection = () => {
   return (
     <>
       <View style={style.infoMessagesContainer}>
-        <Image
-          source={require("../../../assets/png/grayai.png")}
-          style={style.image}
-        />
         <Text style={style.infoMessagesTitle}>Student Assistant</Text>
         <Text style={style.infoMessages}>
           Welcome to your AI-powered Student Q&A Assistant! Here, you can ask

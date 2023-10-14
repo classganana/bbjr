@@ -107,7 +107,7 @@ export const PrimaryDefaultButton = StyleSheet.create<Style>({
 export const LoginButton = StyleSheet.create<Style>({
   container: {
     height: 56,
-    // flex: 1,
+    flex: 1,
     // width: "100%",
     display: "flex",
     alignItems: "center",
@@ -172,8 +172,8 @@ export const PrimaryOutlineButton = StyleSheet.create<Style>({
 export const OutlineButton = StyleSheet.create<Style>({
   container: {
     height: 56,
-    // flex: 1,
-    width: "100%",
+    flex: 1,
+    // width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

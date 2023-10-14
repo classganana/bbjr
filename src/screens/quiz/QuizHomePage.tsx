@@ -16,56 +16,29 @@ import { CancelButton, EditButton, ExitButton } from '../../components/common/Bu
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Exam Prep');
-    const [data, setData] = useState<CardData[]>([
-        {
-            id: 0,
-            title: 'Test Your Knowledge on',
-            infoText: 'Info about Card 1',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 30,
-            timeRequired: 30,
-            selected: false
-        },
-        {
-            id: 1,
-            title: 'Card 2',
-            infoText: 'Info about Card 2',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 30,
-            timeRequired: 30,
-            selected: false
-        },
-        {
-            id: 2,
-            title: 'Card Cmapis',
-            infoText: 'Info about Card 2',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 10,
-            timeRequired: 20,
-        },
-    ]);
+    const [data, setData] = useState<CardData[]>([]);
     const [options, setOptions] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [board, setBoard] = useState("CBSE");
     const [className, setClassName] = useState(10);
     const [multiSelect, setMultiSelect] = useState(false);
+    const [totalQuestions, setTotalQuestions] = useState(0);
     // const [subject, setSubject] = useState()
+    const [selectedQuiz, setSelectedQuiz] = useState<any[]>();
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
 
-    const selectSpecificSubject = () => {
-    }
+    const selectSpecificSubject = () => { }
 
     const navigation = useNavigation();
 
     useEffect(() => {
+        AsyncStorage.removeItem('quizType');
         setOptions(false);
         resetSelection();
+        setMultiSelect(false);
     }, [tab, searchTerm])
 
     const resetSelection = () => {
@@ -80,21 +53,17 @@ export const QuizHomePage = () => {
     const updateList = (index: number) => {
         setOptions(true);
         let tempData = data;
-        debugger
-        tempData = tempData.map((temp) => {
+        tempData  = tempData.map((temp) => {
             if (temp.id != (index)) {
                 !multiSelect && (temp.selected = false);
             }
             return temp;
         });
 
-        (tempData[index].selected = true);
+        tempData[index].selected = true;
+        tempData[index].subject = selectedSubject.subjectName;
+        setSelectedQuiz(() => [tempData.filter((item) => item.selected)]);
         setData(() => [...tempData]);
-    }
-
-    const startTheQuiz = () => {
-        navigation.navigate('ExploreQuiz' as never);
-        AsyncStorage.setItem('', '')
     }
 
     const setSubjectAndCloseModal = (item: any) => {
@@ -105,7 +74,7 @@ export const QuizHomePage = () => {
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
     const [selectedSubject, setSelectedSubject] = useState<{
         subjectName: string;
-    }>({subjectName:"wakshe"});
+    }>({subjectName:"Science"});
 
     // useEffect(() => {
     //     const reqObj = {
@@ -120,18 +89,143 @@ export const QuizHomePage = () => {
     //         }
     //       }
 
+    const startTheQuiz = async () => {
+        await AsyncStorage.removeItem('quizType');
+        await AsyncStorage.setItem('quizType', 'quiz');
+        navigation.navigate('QuizFirstPage' as never, selectedQuiz  as never);
+    }
 
-    //     httpClient.post(`auth/c-auth`, reqObj)
-    //     .then(() => {});
-    // },[])
+    const startThePractice = async () => {
+        await AsyncStorage.removeItem('quizType');
+        const item = data.filter((item) => item.selected == true)[0];
+        await AsyncStorage.setItem('quizType', 'practice');
+        navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
+    }
+
+    useEffect(() => {
+        const s = {
+            "schoolId": "default",
+            "boardId": "CBSE",
+            "className": 10,
+            "studentId": 10,
+            "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+            "subject": selectedSubject.subjectName
+        }
+
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint": `/explore_quizzes/data`,
+            "requestMethod": "POST",
+            "requestBody": s
+        }
+        httpClient.post(`auth/c-auth`, reqObj)
+            .then((res) => {
+                let list = res.data.data.quizzes
+                list = list.map((item: any, index: number) => {
+                    return {
+                        id: index,
+                        title: (tab == 'Quizzes') ? item.name : item.chapterName,
+                        infoText: 'Info about Card 1',
+                        imageUrl: 'https://placehold.co/400',
+                        done: false,
+                        noOfQuestions: item.totalQuestions,
+                        timeRequired: item.time,
+                        selected: false,
+                        score: item.score,
+                        subject: selectedSubject.subjectName
+                    }
+                })
+                console.log(list)
+                setData(list);
+            });
+    }, [])
+
+    useEffect(() => {
+        const s = {
+            "schoolId": "default",
+            "boardId": "CBSE",
+            "className": 10,
+            "studentId": 10,
+            "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+            "subject": selectedSubject.subjectName
+        }
+
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint": `/explore_quizzes/data`,
+            "requestMethod": "POST",
+            "requestBody": s
+        }
+        httpClient.post(`auth/c-auth`, reqObj)
+            .then((res) => {
+                let list = res.data.data.quizzes
+                list = list.map((item: any, index: number) => {
+                    return {
+                        id: index,
+                        title: (tab == 'Quizzes') ? item.name : item.chapterName,
+                        infoText: 'Info about Card 1',
+                        imageUrl: 'https://placehold.co/400',
+                        done: false,
+                        noOfQuestions: item.totalQuestions,
+                        timeRequired: item.time,
+                        selected: false,
+                        score: item.score
+                    }
+                })
+                console.log(list)
+                setData(list);
+            });
+    },[selectedSubject?.subjectName])
+
+    useEffect(() => {
+        const req = {
+            "schoolId": "default",
+            "boardId": "CBSE",
+            "className": 10,
+            "studentId": 10,
+            "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+            "subject": selectedSubject.subjectName
+        }
+
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint": `/explore_quizzes/data`,
+            "requestMethod": "POST",
+            "requestBody": req
+        }
+
+        httpClient.post(`auth/c-auth`, reqObj)
+            .then((res) => {
+                let list = res.data.data.quizzes
+                list = list.map((item: any, index: number) => {
+                    return {
+                        id: index,
+                        title: (tab == "Exam Prep") ? item.chapterName: item.name,
+                        infoText: 'Info about Card 1',
+                        imageUrl: 'https://placehold.co/400',
+                        done: false,
+                        noOfQuestions: item.totalQuestions,
+                        timeRequired: item.time,
+                        selected: false,
+                        score: item.score,
+                        quizType: tab
+                    }
+                })
+                setData(list);
+            })
+    }, [tab])
+
+    const onBack = () => {
+        navigation.navigate('QuizHomepage' as never)
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.heading}>
-                    <View style={styles.backButton}>
+                    <TouchableOpacity style={styles.backButton} onPress={onBack}>
                         <StrongBackButton height={'25'} width={'25'} fill={'black'} />
-                    </View>
+                    </TouchableOpacity>
                     <Text style={styles.headingTitle}>Explore Quiz</Text>
                 </View>
                 <View style={styles.infoContainer}>
@@ -149,9 +243,9 @@ export const QuizHomePage = () => {
                     <Text style={styles.selectedOption}>{tab}</Text>
                     <FlatList
                         data={data}
-                        keyExtractor={(item) => item.title}
+                        keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                            <ExamPrepQuizCard {...item} onCardClick={(i) => updateList(i)} />
+                        <ExamPrepQuizCard title={selectedSubject.subjectName} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} score={10} />
                         )}
                     />
                 </>}
@@ -173,7 +267,15 @@ export const QuizHomePage = () => {
                         </TouchableOpacity>
                         </View>
                     </View>
-                    <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={'https://placehold.co/400'} noOfQuestions={0} done={false} />
+                    {/* <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={'https://placehold.co/400'} noOfQuestions={0} done={false} score={undefined} /> */}
+                        <TouchableOpacity  >
+                            <Text>Change</Text>
+                            <View >
+                                <Pencil height={'20'} width={'20'} fill={Colors.black_01} />
+                            </View>
+                        </TouchableOpacity>
+                    {/* </View> */}
+                    {/* <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} score={10} /> */}
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Text>All Chapter Wise</Text>
                         <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
@@ -188,17 +290,16 @@ export const QuizHomePage = () => {
                     </View>
                     <FlatList
                         data={data}
-                        keyExtractor={(item) => item.title}
+                        keyExtractor={(item) => item.id.toString()} // Assuming `id` is unique and of string type
                         renderItem={({ item }) => (
-                            <ExamPrepQuizCard {...item} multiSelect={multiSelect} onCardClick={(i) => updateList(i)} />
-                            // <ExamPrepSubjects {...item}  />
+                            <ExamPrepQuizCard score={item.score} key={item.id} {...item} onCardClick={(i) => updateList(i)} />
                         )}
                     />
                 </>
                 }
             </View>
             {options && <View style={styles.floatingButtonContainer}>
-                <TouchableOpacity style={styles.floatingButton}>
+                <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
                     <TestIcon height={'20'} width={'20'} fill={'black'} />
                     <Text style={styles.floatingButtonText}>Practice</Text>
                 </TouchableOpacity>
@@ -243,7 +344,6 @@ export const QuizHomePage = () => {
                     </View>
                 </View>
             </Modal>
-
         </View>
     )
 }

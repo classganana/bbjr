@@ -10,7 +10,7 @@ export const ScreenThird = () => {
     const navigation = useNavigation();
 
     function moveToScreenThird() {
-        navigation.navigate('Login' as never);
+        navigation.navigate('Auth' as never);
     }
 
 

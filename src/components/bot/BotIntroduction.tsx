@@ -15,7 +15,7 @@ export const BotIntroduction = () => {
     "Feel free to ask questions related to your Class III curriculum, and we'll provide you with accurate and helpful information.",
     "We're here to support your learning journey in Class III. Ask away!"
   ]  
-  const [messages, setMessages] = useState([
+  const [intromessages, setIntroMessages] = useState([
     { text: "Where should I begin to get started?" },
     {
       // Include the PenIcon component within the text
@@ -30,6 +30,8 @@ export const BotIntroduction = () => {
       ),
     },
   ]);
+
+  
 
   const guideUser = () => {
     setShowOptions(true);
@@ -60,7 +62,7 @@ export const BotIntroduction = () => {
         }
         {!showOptions && <BotMessage text={"Hello there! How may I assist you with your studies today?"} />}
         {
-            showOptions && messages.map((msg, index) => {
+            showOptions && intromessages.map((msg, index) => {
                 return <BotMessage key={index} text={msg.text} />
             })
         }
@@ -76,9 +78,6 @@ export const BotIntroduction = () => {
             </View>
         </View>}
     </View>
-        <View style={{position: 'absolute', bottom: 0, width: "100%"}}>
-            <Aiinput onSubjectChange={(sub: any) => { console.log(sub) }} />
-        </View>
     </>
   )
 }

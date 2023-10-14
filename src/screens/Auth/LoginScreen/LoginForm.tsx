@@ -5,7 +5,6 @@ import {
   TextInput,
   View,
   Image,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -30,7 +29,7 @@ export const LoginForm = () => {
   const recaptchaVerifier = useRef(null);
 
   // Define a regular expression for a valid phone number pattern.
-  const phoneRegex = /^\+91\d{10}$/;
+  const phoneRegex = /^\d{10}$/;
 
   useEffect(() => {
     const data = {
@@ -49,13 +48,13 @@ export const LoginForm = () => {
     }
     
     httpClient.post('auth/c-auth',data).then(() => {
-      
+
     })
   },[])
 
   const sendVerification = () => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current).then((item) => {
+    phoneProvider.verifyPhoneNumber(`+91${phoneNumber}`, recaptchaVerifier.current).then((item) => {
       setOtpScreen(true)
       setVerificationId(item)
     }
@@ -74,6 +73,8 @@ export const LoginForm = () => {
   };
 
   function moveToOtpScreen() {
+    console.log(phoneNumber);
+    setPhoneNumber((prevPhoneNumber) => "+91" + prevPhoneNumber);
     sendVerification();
   }
 

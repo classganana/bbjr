@@ -1,31 +1,89 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { InfoIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, CrossIcon, InfoIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import styles from './QuizQuestionsPageStyle';
 import ReportComponent from '../../components/quiz/ReportComponent';
 import { Description } from '../../components/feedback/Description/Description';
 import Popup from '../Popup/popup';
 import { QuizOverView } from '../../components/quiz/QuizOverView';
-
+import { httpClient } from '../../services/HttpServices';
 
 export type Answers = Array<{
+    mcq_id?: string,
     question: string;
     options: string[];
-    correctAnswer: string;
+    answer: string;
     selectedAnswer?: string
 }>
 
+export type questionWithTime = {
+    timeTaken: number,
+    quizQuestionList: Answers
+}
+
 export const QuizQuestionsPage = () => {
-    const [timer, setTimer] = useState(100); // Initial timer value in seconds
+    const [timer, setTimer] = useState(100);
     const questionScrollViewRef = useRef<ScrollView | null>(null);;
-    const [quizQuestionList, setQuizQuestionList] = useState(quizQuestions);
+    const [quizQuestionList, setQuizQuestionList] = useState<any>(quizQuestions);
     const navigation = useNavigation();
+    const route = useRoute();
+    const [reqObject, setReqObject] = useState();
+    const [quizType, setQuizType] = useState<string | null>('');
+
+    const getQuizType = async () => {
+        setQuizType(await AsyncStorage.getItem('quizType'));
+      }
+
+    useEffect(() => {
+        getQuizType();
+        const req  = {
+            "schoolId": "default",
+            "boardId": "CBSE",
+            "subject": "string",
+            "className": 0,
+            "studentId": 0,
+            "chapterName": [
+              "string"
+            ],
+            "dataType": "school",
+            "size": 0
+          }
+
+        console.log(route.params);
+        setReqObject(route.params as any);
+        // add time score dataType screenpage
+        setQuizQuestionList(route.params.mcqs);
+        setTimer(route.params.time)
+        // const reqObj = {
+        //     "service": "ml_service",
+        //     "endpoint":  `/data/quizz`,
+        //     "requestMethod": "POST",
+        //     "requestBody": {
+        //         "schoolId": "default",
+        //         "boardId": "CBSE",
+        //         "subject": "Science",
+        //         "className": 10,
+        //         "chapterName": [
+        //             "Crop Production and Management"
+        //         ],
+        //         "studentId": 10,
+        //         "size": 10,
+        //         "dataType": "school"
+        //     }
+        //   }          
+
+        // httpClient.post(`auth/c-auth`, reqObj)
+        // .then((res) => {
+
+        //     // setQuizQuestionList(res.data.data.mcqs);
+        // });
+    }, [])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -37,7 +95,10 @@ export const QuizQuestionsPage = () => {
             }
         }, 1000); // Update the timer every second
 
-        if (timer == 0) console.log("Ended");
+        if (timer == 0) {
+            console.log("Ended")
+            timerEnds()
+        };
         return () => {
             clearInterval(interval); // Clear the interval on component unmount
         };
@@ -52,8 +113,7 @@ export const QuizQuestionsPage = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const handleSelectOption = (selectedOption: string) => {
-        // Handle the selected option if needed
-        setQuizQuestionList((quizQuestionList) => {
+        setQuizQuestionList((quizQuestionList: any) => {
             const updatedList = [...quizQuestionList];
             updatedList[currentQuestionIndex].selectedAnswer = selectedOption;
             return updatedList;
@@ -65,23 +125,24 @@ export const QuizQuestionsPage = () => {
     };
 
     const navigateToNextQuestion = () => {
-        if (currentQuestionIndex < quizQuestions.length - 1) {
+        if (currentQuestionIndex < quizQuestionList.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
         scrollToNextQuestion();
     };
 
     const navigateToPrevQuestion = () => {
-        if (currentQuestionIndex < quizQuestions.length - 1) {
+        if (currentQuestionIndex < quizQuestionList.length) {
             setCurrentQuestionIndex(currentQuestionIndex - 1);
         }
         scrollToPrevQuestion();
     };
 
-    const calculateScore = (answerList: Answers) => {
+    const calculateScore = (answerList: questionWithTime) => {
         let score = 0;
-        answerList.forEach((answer) => {
-            if (answer.correctAnswer == answer.selectedAnswer)
+        answerList.timeTaken;
+        answerList.quizQuestionList.forEach((answer) => {
+            if (answer.selectedAnswer && answer.answer == answer.selectedAnswer)
                 score += 10;
         })
         return score;
@@ -102,26 +163,62 @@ export const QuizQuestionsPage = () => {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
         try {
-            const list = JSON.stringify(quizQuestionList)
+            const quizDetails = {
+                timeTaken: timer,
+                quizQuestionList
+            }
+            quizQuestionList['timeTaken'] = timer;
+            const list = JSON.stringify(quizDetails)
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-            console.log(calculateScore(UserAnswerList));
-            if (currentQuestionIndex == quizQuestions.length - 1) {
-                console.log(calculateScore(UserAnswerList));
-                navigation.navigate('QuizResultPage' as never);
+            if (currentQuestionIndex == quizQuestionList.length - 1) {
+                submitQuiz(UserAnswerList)
+                navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
             }
         } catch (error) {
             console.error('Error storing data:', error);
         }
     };
 
-    const onInfoClick = () => {
+    const submitQuiz = (answerList: questionWithTime) => {
+        const questions = answerList.quizQuestionList.map((answer) => {
+                return {
+                    mcqId: answer.mcq_id,
+                    selectedAnswer: answer.selectedAnswer? answer.selectedAnswer : undefined
+                }
+        });
 
+        const tempRequest: any = reqObject;
+        tempRequest.mcqs = questions;
+        tempRequest.score = calculateScore(answerList);
+        tempRequest.time = timer;
+
+        setReqObject(tempRequest);
+        console.log(reqObject);
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint":  quizType == 'quiz'? `/answered/quizz` : `/answered/mcq` ,
+            "requestMethod": "POST",
+            "requestBody": reqObject
+          }          
+
+        httpClient.post(`auth/c-auth`, reqObj)
+        .then((res) => {
+            console.log(res);
+
+            // setQuizQuestionList(res.data.data.mcqs);
+        });
     }
 
-    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const timerEnds = async () => {
+        const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
+            submitQuiz(UserAnswerList)
+    }
+
+
+    const currentQuestion = quizQuestionList[currentQuestionIndex];
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-    const [questionInfoSheet, setQuestionInfoSheet] = useState(true);
+    const [questionInfoSheet, setQuestionInfoSheet] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     return (
         <View style={styles.container}>
@@ -131,19 +228,19 @@ export const QuizQuestionsPage = () => {
                         <Text style={styles.headingTitle}>Test</Text>
                         <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
                     </View>
-                    <View style={{ display: 'flex', gap: 10 }}>
+                    {timer && <View style={{ display: 'flex', gap: 10 }}>
                         <View style={styles.timerBlock}>
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
                         </View>
                         <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => setModalVisible(true)} />
-                    </View>
+                    </View>}
                 </View>
             </View>
             <View style={styles.body}>
                 <View style={styles.questionInfo}>
                     <View style={styles.questionInfoDropDown}>
-                        <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestions.length}</Text>
+                        <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestionList.length}</Text>
                         <TouchableOpacity onPress={() => setQuestionInfoSheet(true)}>
                             <InfoIcon height={'20'} width={'20'} fill={'black'} />
                         </TouchableOpacity>
@@ -156,7 +253,7 @@ export const QuizQuestionsPage = () => {
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
-                        {quizQuestions.map((_, index) => (
+                        {quizQuestionList.map((_ : any, index: number) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
@@ -171,23 +268,24 @@ export const QuizQuestionsPage = () => {
                     </View>
                 </ScrollView>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    <QuestionComponent
+                   {currentQuestion && currentQuestion.question &&  <QuestionComponent
                         question={currentQuestion.question}
                         options={currentQuestion.options}
                         onSelectOption={handleSelectOption} isResult={false}
                     />
+                    }
                 </ScrollView>
                 <View style={styles.nextQuizButton}>
                     {
                         currentQuestionIndex != 0 && <Button
-                            label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Previous'}
+                            label={'Previous'}
                             className={OutlineButton}
                             disabled={false}
                             onPress={navigateToPrevQuestion}
                         />
                     }
                     <Button
-                        label={currentQuestionIndex === quizQuestions.length - 1 ? 'Submit' : 'Save & Next'}
+                        label={currentQuestionIndex === quizQuestionList.length - 1 ? 'Submit' : 'Save & Next'}
                         className={LoginButton}
                         disabled={false}
                         onPress={navigateToNextQuestion}
