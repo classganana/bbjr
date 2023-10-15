@@ -1,54 +1,67 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { IconButton } from '../../components/common/IconButtonComponent/IconButton'
-import { EditIconButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
-import { AboutIcon, ArrowIcon, ArrowLeft, ConditionIcon, ContactIcon, LeaderIcon, LogoutIcon, PencilIcon, PrivacyIcon, ScoreIcon } from '../../components/common/SvgComponent/SvgComponent'
-import { Colors } from '../../styles/colors'
-import { httpClient } from '../../services/HttpServices'
-import { useNavigation } from '@react-navigation/native'
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { IconButton } from '../../components/common/IconButtonComponent/IconButton';
+import { EditIconButton } from '../../components/common/IconButtonComponent/iconButtonStyle';
+import {
+  AboutIcon,
+  ArrowIcon,
+  ArrowLeft,
+  ConditionIcon,
+  ContactIcon,
+  LeaderIcon,
+  LogoutIcon,
+  PencilIcon,
+  PrivacyIcon,
+  ScoreIcon,
+} from '../../components/common/SvgComponent/SvgComponent';
+import { Colors } from '../../styles/colors';
+import { httpClient } from '../../services/HttpServices';
+import { useNavigation } from '@react-navigation/native';
 
 export const SettingsPage = () => {
   const [user, setUser] = useState<any>();
 
   const navigation = useNavigation();
+
   const moveToEditProfile = () => {
-    navigation.navigate("EditProfile" as never);
-    console.log("EditProfile");
+    // navigation.navigate('EditProfile' as never);
+    // navigation.navigate('Root' as never, { screen: 'EditProfile' } as never);
+      // navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never); 
+      navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never);
+
   };
 
   const moveToLeaderboard = () => {
-    navigation.navigate("Leaderboard" as never);
-    console.log("Leaderboard");
+    navigation.navigate('Leaderboard' as never);
   };
 
   useEffect(() => {
     httpClient.get('users/johndoe123').then((res) => {
       setUser(res.data);
     }).catch(() => {
-      console.log("Something went wrong")
-    })
-  }, [])
+      console.log('Something went wrong');
+    });
+  }, []);
 
   const labels = [
-    { title: 'View leader board', leftSvg: <LeaderIcon height={'15'} width={'17'} fill={'black'} /> },
-    { title: 'Previous Test Scores', leftSvg: <ScoreIcon height={'13'} width={'13'} fill={'black'} /> },
-    { title: 'Help and Support', leftSvg: <ScoreIcon height={'13'} width={'13'} fill={'black'} /> },
-    { title: 'Privacy', leftSvg: <PrivacyIcon height={'14'} width={'14'} fill={'black'} /> },
-    { title: 'Terms and Condition', leftSvg: <ConditionIcon height={'14'} width={'11'} fill={'black'} /> },
-    { title: 'About', leftSvg: <AboutIcon height={'14'} width={'5'} fill={'black'} /> },
-    { title: 'Log Out', leftSvg: <LogoutIcon height={'15'} width={'14'} fill={'black'} /> },
-  ]
-  const [selectedButton, setSelectedButton] = useState(null);
+    { title: 'View leaderboard', leftSvg: <LeaderIcon height={15} width={17} fill={'black'} /> },
+    { title: 'Previous Test Scores', leftSvg: <ScoreIcon height={13} width={13} fill={'black'} /> },
+    { title: 'Help and Support', leftSvg: <ContactIcon height={13} width={13} fill={'black'} /> },
+    { title: 'Privacy', leftSvg: <PrivacyIcon height={14} width={14} fill={'black'} /> },
+    { title: 'Terms and Conditions', leftSvg: <ConditionIcon height={14} width={11} fill={'black'} /> },
+    { title: 'About', leftSvg: <AboutIcon height={14} width={5} fill={'black'} /> },
+    { title: 'Log Out', leftSvg: <LogoutIcon height={15} width={14} fill={'black'} /> },
+  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.heading}>
           <View style={styles.backButton}>
-            <ArrowLeft height={'25'} width={'25'} fill={'black'} />
+            <ArrowLeft height={25} width={25} fill={'black'} />
           </View>
-
           <View>
-            <Text style={styles.headingTitle}>Setting</Text>
+            <Text style={styles.headingTitle}>Settings</Text>
           </View>
         </View>
       </View>
@@ -64,26 +77,40 @@ export const SettingsPage = () => {
         </View>
         <View style={styles.block2}>
           <View style={styles.friend}>
-            <ContactIcon height={'15'} width={'16'} fill={'black'} />
+            <ContactIcon height={15} width={16} fill={'black'} />
             <Text>Invite Friends</Text>
           </View>
           <View style={styles.button}>
-            <IconButton onPress={() => moveToEditProfile()} className={EditIconButton} icon={<PencilIcon height={'15'} width={'15'} fill={'#fff'} />} label={'Edit Profile'} pos={'right'} backgroundColor={'#006B7F'}></IconButton>
+            <IconButton
+              onPress={moveToEditProfile}
+              className={EditIconButton}
+              icon={<PencilIcon height={15} width={15} fill={'#fff'} />}
+              label={'Edit Profile'}
+              pos={'right'}
+              backgroundColor={'#006B7F'}
+            />
           </View>
         </View>
         {labels.map((buttonLabel, index) => (
-          <TouchableOpacity key={index} onPress={() => moveToLeaderboard()} style={{ flexDirection: 'row', alignItems: 'center', gap: 20, position: 'relative' }}>
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              if (buttonLabel.title === 'View leaderboard') {
+                moveToLeaderboard();
+              } // You can add more conditions for other buttons
+            }}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 20, position: 'relative' }}>
             {buttonLabel.leftSvg}
             <Text>{buttonLabel.title}</Text>
             <View style={{ position: 'absolute', right: 0 }}>
-              <ArrowIcon height={'5'} width={'10'} fill={'black'} />
+              <ArrowIcon height={5} width={10} fill={'black'} />
             </View>
           </TouchableOpacity>
         ))}
       </View>
     </View>
-  )
-}
+  );
+};
 
 
 const styles = StyleSheet.create({

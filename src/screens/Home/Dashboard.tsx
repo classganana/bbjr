@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { DashboardStyle } from './DashboardStyle'
 import { Button } from '../../components/common/ButttonComponent/Button'
@@ -8,12 +8,19 @@ import { useNavigation } from '@react-navigation/native'
 import { Constants } from '../../constants/constants'
 import { Colors } from '../../styles/colors'
 import { ExamPrepQuizCard, ExamPrepQuizCardData } from '../../components/quiz/ExamPrepQuizCard'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const Dashboard = () => {
     const navigator = useNavigation();
 
 
-    const moveToExploreQuizPage = () => {
+    const moveToExploreQuizPage = async () => {
+        await AsyncStorage.setItem('quizFlow', 'Quizzes');
+        navigator.navigate('Quiz' as never);
+    }
+
+    const moveToExploreExamPrepPage = async () => {
+        await AsyncStorage.setItem('quizFlow', 'Exam Prep');
         navigator.navigate('Quiz' as never);
     }
 
@@ -21,37 +28,23 @@ export const Dashboard = () => {
         navigator.navigate('Bot' as never);
     }
 
-    const [data, setData] = useState<ExamPrepQuizCardData[]>([
-        {
-            id: 0,
-            title: 'Test Your Knowledge on',
-            infoText: 'Info about Card 1',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 30,
-            timeRequired: 30,
-            selected: false
-        },
-        {
-            id: 1,
-            title: 'Card 2',
-            infoText: 'Info about Card 2',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 30,
-            timeRequired: 30,
-            selected: false
-        },
-        {
-            id: 2,
-            title: 'Card Cmapis',
-            infoText: 'Info about Card 2',
-            imageUrl: 'https://placehold.co/400',
-            done: false,
-            noOfQuestions: 10,
-            timeRequired: 20,
-        },
-    ]);
+    const getPendingQuiz = async () => {
+        const localQuiz = await AsyncStorage.getItem('localQuizzes');
+        if(localQuiz) return JSON.parse(localQuiz);
+    }   
+
+    useEffect(() => {
+        getPendingQuiz().then((list) => {
+            console.log(list);
+            list = list.map((item: any) => {
+                item.title = (item.screenPage == "examPreparation") ? item.chapterName: item.name;
+                return item;
+            })
+            setData(list)
+        })
+    }, [])
+
+    const [data, setData] = useState<ExamPrepQuizCardData[]>([]);
 
 
     return (
@@ -120,7 +113,7 @@ export const Dashboard = () => {
                                 <Text style={DashboardStyle.optionBodyDescription}>
                                     You have played total 55 quizzes last month!
                                 </Text>
-                                <Button label={"Explore"} className={PrimaryDefaultButton} disabled={false} onPress={() => moveToExploreBotPage()}></Button>
+                                <Button label={"Explore"} className={PrimaryDefaultButton} disabled={false} onPress={() => moveToExploreExamPrepPage()}></Button>
                             </View>
                         </View>
                     </View>
@@ -160,8 +153,8 @@ export const Dashboard = () => {
                     </View>
                     <View>
                     <View>
-                    {data.map((item) => (
-                        <ExamPrepQuizCard key={item.title} {...item} onCardClick={(i) => { console.log(i) }} />
+                    {data && data.map((item, index) => (
+                        <ExamPrepQuizCard key={index} {...item} onCardClick={(i) => { console.log(i) }} />
                     ))}
                     </View>
                     </View>

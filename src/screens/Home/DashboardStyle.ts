@@ -205,7 +205,7 @@ export const DashboardStyle = StyleSheet.create({
     botBlock: {
       height: 140,
       padding: 14,
-      backgroundColor: '#FFF', // You can adjust this background color if needed
+      backgroundColor: '#F0F6F8', // You can adjust this background color if needed
       shadowColor: Colors.black_03, // Use your shadow color
       shadowOffset: {
         width: 0,

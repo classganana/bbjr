@@ -14,6 +14,7 @@ import { httpClient } from '../../services/HttpServices'
 export const QuizFirstPage = () => {
   const navigation = useNavigation();
   const [quizType, setQuizType] = useState<string | null>();
+//   const [quizType, setQuizType] = useState<string | null>();
   const [quizContent, setQuizContent] = useState();
   const startQuiz = () => {
         navigation.navigate('QuizQuestionPages' as never, quizContent as never);
@@ -29,7 +30,6 @@ export const QuizFirstPage = () => {
   const getQuizType = () => {
     AsyncStorage.getItem('quizType').then((q) => {
         getQuizContent(q);
-
     })
   }
   
@@ -37,8 +37,7 @@ export const QuizFirstPage = () => {
     navigation.navigate('QuizHomepage' as never)
   }
 
-  const getQuizContent = (quizType: string | null) => {
-    
+  const getQuizContent = (quizType: string | null) => {    
     const listOfChapters = route && route.params && route.params  && route.params[0].map((item: any) => {
         return item.title;
     })
@@ -53,10 +52,12 @@ export const QuizFirstPage = () => {
         "studentId": 10,
         "chapterName": listOfChapters,
         "dataType": "school",
-        "size": 5
+        "size": 1
       }
-      const endPoint = quizType == 'quiz'?'/data/quizz': '/data/mcq' ; 
 
+      if(quizType == 'quiz') delete req.chapterName
+
+      const endPoint = quizType == 'quiz'?'/data/quizz': '/data/mcq'; 
       const reqObj = {
         "service": "ml_service",
         "endpoint":  endPoint,
@@ -81,8 +82,42 @@ export const QuizFirstPage = () => {
                 ...res.data.data,
             }
             setQuizContent(quiz);
+            maintainQuizInLocal(quiz);
         })
   }
+
+  const maintainQuizInLocal = async (selectedQuiz: any) => {
+    let quizList: any | null = await AsyncStorage.getItem('localQuizzes');
+    if (!quizList) {
+        // If no data is in local storage, create a new list with the selected quiz.
+        quizList = [selectedQuiz];
+    } else {
+        quizList = JSON.parse(quizList);
+
+        // Function to check if two arrays are equal
+        const arraysEqual = (arr1: any[], arr2: any[]) => {
+            return (
+                arr1.length === arr2.length &&
+                arr1.every((value, index) => value === arr2[index])
+            );
+        };
+
+        // Check if there's a quiz with the same chapterName (arraysEqual).
+        const index = quizList.findIndex((quiz: any) => arraysEqual(quiz.chapterName, selectedQuiz.chapterName));
+
+        if (index !== -1) {
+            // If a quiz with the same chapterName exists, replace it with the new selectedQuiz.
+            quizList[index] = selectedQuiz;
+        } else {
+            // If there's no quiz with the same chapterName, add the selectedQuiz to the list.
+            quizList.push(selectedQuiz);
+        }
+    }
+
+    await AsyncStorage.setItem('localQuizzes', JSON.stringify(quizList));
+    console.log(quizList);
+};
+
 
 
   return (

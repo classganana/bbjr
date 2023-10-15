@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 type Question = {
     question: string;
     options: string[];
-    correctAnswer: string;
+    answer: string;
     selectedAnswer?: string;
 }
 
@@ -29,9 +29,10 @@ export const QuizQuestionAnswerReview = () => {
     }, [quizQuestionList, currentQuestionIndex]);
 
     const getData = async () => {
+        debugger
         try {
             const userAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) || '[]');
-            setQuizQuestionList(userAnswerList);
+            setQuizQuestionList(userAnswerList.quizQuestionList);
         } catch (error) {
             console.error('Error retrieving data:', error);
         }
@@ -100,8 +101,8 @@ export const QuizQuestionAnswerReview = () => {
                                 key={index}
                                 style={[
                                     styles.questionNumber,
-                                    quizQuestionList[index].correctAnswer == quizQuestionList[index].selectedAnswer  && { backgroundColor: '#4BAE4F'},
-                                    quizQuestionList[index].correctAnswer != quizQuestionList[index].selectedAnswer  && { backgroundColor: 'red'},
+                                    quizQuestionList[index].answer == quizQuestionList[index].selectedAnswer  && { backgroundColor: '#4BAE4F'},
+                                    quizQuestionList[index].answer != quizQuestionList[index].selectedAnswer  && { backgroundColor: 'red'},
                                     currentQuestionIndex === index && styles.activeQuestion,
                                 ]}
                                 onPress={() => navigateToQuestion(index)}
@@ -118,7 +119,7 @@ export const QuizQuestionAnswerReview = () => {
                         question={currentQuestion.question}
                         options={currentQuestion.options}
                         selectedAnswer={currentQuestion.selectedAnswer}
-                        correctAnswer={currentQuestion.correctAnswer}
+                        correctAnswer={currentQuestion.answer}
                         onSelectOption={handleSelectOption}
                     />
                 )}

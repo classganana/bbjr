@@ -15,6 +15,7 @@ export interface ExamPrepQuizCardData {
     selected?: boolean,
     multiSelect?: boolean,
     score: number | undefined,
+    quizzId?: string | undefined,
     onCardClick?: (selectedOption: number) => void;
 }
 

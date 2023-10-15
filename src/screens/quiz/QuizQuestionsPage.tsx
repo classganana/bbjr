@@ -15,7 +15,7 @@ import { QuizOverView } from '../../components/quiz/QuizOverView';
 import { httpClient } from '../../services/HttpServices';
 
 export type Answers = Array<{
-    mcq_id?: string,
+    mcqId?: string,
     question: string;
     options: string[];
     answer: string;
@@ -35,31 +35,39 @@ export const QuizQuestionsPage = () => {
     const route = useRoute();
     const [reqObject, setReqObject] = useState();
     const [quizType, setQuizType] = useState<string | null>('');
+    const [quizFlow, setQuizFlow] = useState<string | null>('');
+    const [quizzId, setQuizzId] = useState<string | null>('')
 
     const getQuizType = async () => {
         setQuizType(await AsyncStorage.getItem('quizType'));
-      }
+    }
+
+    const getQuizFlow = async () => {
+        setQuizFlow(await AsyncStorage.getItem('quizFlow'));
+    }
 
     useEffect(() => {
         getQuizType();
-        const req  = {
+        getQuizFlow();
+        const req = {
             "schoolId": "default",
             "boardId": "CBSE",
             "subject": "string",
             "className": 0,
             "studentId": 0,
             "chapterName": [
-              "string"
+                "string"
             ],
             "dataType": "school",
             "size": 0
-          }
+        }
 
-        console.log(route.params);
-        setReqObject(route.params as any);
         // add time score dataType screenpage
+        setReqObject(route.params as any);
         setQuizQuestionList(route.params.mcqs);
-        setTimer(route.params.time)
+        setTimer(route.params.time);
+        setQuizzId(route.params.quizzId)
+
         // const reqObj = {
         //     "service": "ml_service",
         //     "endpoint":  `/data/quizz`,
@@ -96,7 +104,6 @@ export const QuizQuestionsPage = () => {
         }, 1000); // Update the timer every second
 
         if (timer == 0) {
-            console.log("Ended")
             timerEnds()
         };
         return () => {
@@ -173,7 +180,7 @@ export const QuizQuestionsPage = () => {
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
             if (currentQuestionIndex == quizQuestionList.length - 1) {
                 submitQuiz(UserAnswerList)
-                navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
+                // navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
             }
         } catch (error) {
             console.error('Error storing data:', error);
@@ -182,37 +189,40 @@ export const QuizQuestionsPage = () => {
 
     const submitQuiz = (answerList: questionWithTime) => {
         const questions = answerList.quizQuestionList.map((answer) => {
-                return {
-                    mcqId: answer.mcq_id,
-                    selectedAnswer: answer.selectedAnswer? answer.selectedAnswer : undefined
-                }
+            return {
+                mcqId: answer.mcqId,
+                selectedAnswer: answer.selectedAnswer ? answer.selectedAnswer : undefined
+            }
         });
 
         const tempRequest: any = reqObject;
         tempRequest.mcqs = questions;
         tempRequest.score = calculateScore(answerList);
         tempRequest.time = timer;
+        tempRequest.studentName = "Trin";
+        tempRequest.screenPage = quizFlow != 'Quizzes' ? 'examPreparation' : `quizzes`
+        if(quizFlow == 'Quizzes') delete tempRequest.chapterName;
 
         setReqObject(tempRequest);
         console.log(reqObject);
         const reqObj = {
             "service": "ml_service",
-            "endpoint":  quizType == 'quiz'? `/answered/quizz` : `/answered/mcq` ,
+            "endpoint": quizType == 'quiz' ? `/answered/quizz` : `/answered/mcq`,
             "requestMethod": "POST",
             "requestBody": reqObject
-          }          
+        }
 
-        httpClient.post(`auth/c-auth`, reqObj)
-        .then((res) => {
-            console.log(res);
-
-            // setQuizQuestionList(res.data.data.mcqs);
-        });
+        return httpClient.post(`auth/c-auth`, reqObj)
+            .then((res) => {
+                if (res.data.statusCode == 200) {
+                    navigation.navigate('QuizResultPage' as never, answerList as never);
+                }
+            });
     }
 
     const timerEnds = async () => {
         const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-            submitQuiz(UserAnswerList)
+        submitQuiz(UserAnswerList)
     }
 
 
@@ -228,7 +238,7 @@ export const QuizQuestionsPage = () => {
                         <Text style={styles.headingTitle}>Test</Text>
                         <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
                     </View>
-                    {timer && <View style={{ display: 'flex', gap: 10 }}>
+                    {timer > 0 && <View style={{ display: 'flex', gap: 10 }}>
                         <View style={styles.timerBlock}>
                             <Text style={styles.timerText}>Time Left:</Text>
                             <Text style={styles.timer}>{formatTime(timer)}</Text>
@@ -253,7 +263,7 @@ export const QuizQuestionsPage = () => {
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
                     <View style={styles.questionNumbers}>
-                        {quizQuestionList.map((_ : any, index: number) => (
+                        {quizQuestionList.map((_: any, index: number) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
@@ -268,7 +278,7 @@ export const QuizQuestionsPage = () => {
                     </View>
                 </ScrollView>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                   {currentQuestion && currentQuestion.question &&  <QuestionComponent
+                    {currentQuestion && currentQuestion.question && <QuestionComponent
                         question={currentQuestion.question}
                         options={currentQuestion.options}
                         onSelectOption={handleSelectOption} isResult={false}
@@ -301,10 +311,10 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                          <ReportComponent/>
-                          <View style={{ paddingHorizontal: 20,paddingVertical: 20,}}>
-                          <Description placeholder={'Write your feedback'} title={''}/>
-                          </View>
+                        <ReportComponent />
+                        <View style={{ paddingHorizontal: 20, paddingVertical: 20, }}>
+                            <Description placeholder={'Write your feedback'} title={''} />
+                        </View>
                         <View
                             style={{
                                 flexDirection: "row",
@@ -312,28 +322,28 @@ export const QuizQuestionsPage = () => {
                                 position: "absolute",
                                 bottom: 0,
                                 // left:20,
-                                paddingHorizontal:20,
-                                paddingVertical:20,
-                                justifyContent:"space-between",
-                                width:'100%',
+                                paddingHorizontal: 20,
+                                paddingVertical: 20,
+                                justifyContent: "space-between",
+                                width: '100%',
 
                             }}
-                            
+
                         >
                             <Button label={'cancel'} disabled={false} className={OutlineButton} onPress={() => setBottomSheetVisible(false)}></Button>
                             <Button label={'Report'} disabled={false} className={LoginButton} onPress={function (): void {
                                 throw new Error('Function not implemented.');
-                            } }></Button>
+                            }}></Button>
                         </View>
                     </View>
                 </View>
-                </Modal>
+            </Modal>
             <Modal
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}>
-                    <Popup setModalVisible={setModalVisible}/>
+                <Popup setModalVisible={setModalVisible} />
             </Modal>
 
             <Modal
@@ -344,11 +354,11 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                            <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false) }} />
+                        <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false) }} />
                     </View>
                 </View>
             </Modal>
-            
+
         </View>
     );
 };

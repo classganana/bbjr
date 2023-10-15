@@ -74,7 +74,7 @@ export const PrimaryDefaultCircleButton = StyleSheet.create<Style>({
     justifyContent: "center",
     backgroundColor: Colors.primary,
     borderRadius: 24,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
   title: {
     color: Colors.white,

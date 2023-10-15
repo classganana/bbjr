@@ -1,11 +1,32 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Colors } from "../../../styles/colors";
 import * as Speech from 'expo-speech';
 import { Speaker } from "../../common/SvgComponent/SvgComponent";
 
+function StreamingText({ text }: any) {
+  const [streamedText, setStreamedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-export const Bot = ({ text }: any) => {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (currentIndex < text.length) {
+        setStreamedText((prevText: string) => prevText + text[currentIndex]);
+        setCurrentIndex(currentIndex + 1);
+      } else {
+        clearInterval(interval);
+      }
+    }, 1); // Adjust the interval as needed (e.g., for faster or slower text rendering).
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [text, currentIndex]);
+
+  return <>{streamedText}</>;
+}
+
+export const Bot = ({ text, stream }: any) => {
 
   const readTheMessage = async () => {
     const thingToSay = text;
@@ -18,14 +39,23 @@ export const Bot = ({ text }: any) => {
 
 
   return (
+    <>
+    { text == 'typing' ?
+    <Image style={{height: 60, width: 60}} source={require('../../../../assets/gifs/typing.gif')} /> :    
     <View style={styles.rectangle}>
       <View style={styles.msg}>
         <TouchableOpacity onPress={readTheMessage} style={styles.speaker}>
           <Speaker height={20} width={20} fill={Colors.black_01} />
         </TouchableOpacity>
-        <Text style={styles.text}>{text}</Text>
+          <Text style={styles.text}>
+          { stream ? <StreamingText text={text} /> : 
+            <Text>{text}</Text>
+          }
+        </Text>
       </View>
     </View>
+    }
+    </>
   );
 };
 

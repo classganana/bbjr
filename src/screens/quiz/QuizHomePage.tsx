@@ -7,7 +7,7 @@ import Tabs from '../../components/common/Tabs/Tabs';
 import { Card, CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepSubjects } from '../../components/quiz/ExamPrepSubjects';
 import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
@@ -30,6 +30,8 @@ export const QuizHomePage = () => {
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
 
+    // const route = useRoute();
+
     const selectSpecificSubject = () => { }
 
     const navigation = useNavigation();
@@ -40,6 +42,7 @@ export const QuizHomePage = () => {
         resetSelection();
         setMultiSelect(false);
     }, [tab, searchTerm])
+     
 
     const resetSelection = () => {
         let tempData = data;
@@ -102,7 +105,15 @@ export const QuizHomePage = () => {
         navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
     }
 
+    const setQuizFlow = async () => {
+        console.log(await AsyncStorage.getItem('quizFlow'));
+        const t:string | null = await AsyncStorage.getItem('quizFlow');
+        setTab(t as string)
+        return await AsyncStorage.getItem('quizFlow');
+    }
+
     useEffect(() => {
+        setQuizFlow();
         const s = {
             "schoolId": "default",
             "boardId": "CBSE",
@@ -216,7 +227,7 @@ export const QuizHomePage = () => {
     }, [tab])
 
     const onBack = () => {
-        navigation.navigate('QuizHomepage' as never)
+        navigation.navigate('DashboardNavigator' as never)
     }
 
     return (
@@ -240,12 +251,12 @@ export const QuizHomePage = () => {
             </View>
             <View style={styles.tabs}>
                 {tab == "Quizzes" && <>
-                    <Text style={styles.selectedOption}>{tab}</Text>
+                <Text style={styles.selectedOption}>{tab}</Text>
                     <FlatList
                         data={data}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                        <ExamPrepQuizCard title={selectedSubject.subjectName} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} score={10} />
+                        <ExamPrepQuizCard title={item.title} onCardClick={(i) => updateList(i)} id={item.id} infoText={''} imageUrl={'https://placehold.co/400'} noOfQuestions={0} done={false} score={10} />
                         )}
                     />
                 </>}
@@ -269,10 +280,7 @@ export const QuizHomePage = () => {
                     </View>
                     {/* <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={'https://placehold.co/400'} noOfQuestions={0} done={false} score={undefined} /> */}
                         <TouchableOpacity  >
-                            <Text>Change</Text>
-                            <View >
-                                <Pencil height={'20'} width={'20'} fill={Colors.black_01} />
-                            </View>
+
                         </TouchableOpacity>
                     {/* </View> */}
                     {/* <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} score={10} /> */}
@@ -282,7 +290,7 @@ export const QuizHomePage = () => {
                             {multiSelect && <View style={styles.crossMultiSelect} >
                                 <CrossIcon height={12} width={12} fill={Colors.black_01} />
                                 <Text>
-                                    12
+                                    1
                                 </Text>
                             </View>}
                             {!multiSelect && <Text>Select</Text>}

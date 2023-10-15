@@ -15,7 +15,8 @@ type Props = {
     noOfCorrectAnswers: number
 }
 
-export const QuizResult = (props: Props) => {
+export const QuizResult = () => {
+    const props: any = {};
     const imageRef = useRef();
     const [result, setResult] = useState([
         {

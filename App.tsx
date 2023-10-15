@@ -45,7 +45,7 @@ export default function App() {
         logoHeight={1000}
         logoWidth={500}
       >
-    {Platform.OS === "android" && (<StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />)}
+    {/* {Platform.OS === "android" && (<StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />)} */}
       {loading && isFontLoaded ? (
         <NavigationContainer>
           <AppNavigator />

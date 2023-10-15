@@ -10,14 +10,18 @@ import {
   Modal,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ResetPassword } from "../auth/CreateNewPasswordScreen";
-import { LoginScreen } from "../auth/LoginScreen/LoginScreen";
-import  StudentAssistantSetupScreen  from "../studentaiAssistant/StudentAssistantSetupScreen";
+import { BotScreen } from "../bot/BotScreen";
+import { Dashboard } from "../Home/Dashboard";
+import { QuizHomePage } from "../quiz/QuizHomePage";
+import { SettingsPage } from "../Profile/SettingsPage";
+import { useNavigation } from "@react-navigation/native";
+import { HomeIcon } from "../../components/common/SvgComponent/SvgComponent";
 const Tab = createBottomTabNavigator();
 const BottomTabSetup = () => {
   const [focusedTab, setFocusedTab] = useState<
     "FeedBackScreen" | "PasswordScreen" | "LoginScreen" | "PerformanceNavigator"
   >("FeedBackScreen");
+  const navigation = useNavigation();
   const [showPopup, setShowPopup] = useState(false);
   const scaleValues: { [key: string]: Animated.Value } = {
     FeedBackScreen: useRef(new Animated.Value(1)).current,
@@ -39,6 +43,7 @@ const BottomTabSetup = () => {
       useNativeDriver: true,
     }).start();
   };
+
   const handleTabPress = (tabName: keyof typeof scaleValues) => {
     // Duration of the vibration in milliseconds
     const vibration = 20;
@@ -46,6 +51,13 @@ const BottomTabSetup = () => {
     // Show the popup when the specific bottom tab is clicked
     setShowPopup(true);
   };
+
+  const handleStudentAssistantPress = () => {
+    // Navigate to the desired screen when clicking on the "StudentAI" tab
+    navigation.navigate('Bot' as never);
+    // navigation.navigate('BotScreen' as never);
+  };
+
   const handleClosePopup = () => {
     setShowPopup(false);
   };
@@ -70,8 +82,8 @@ const BottomTabSetup = () => {
       >
 
         <Tab.Screen
-          name="PasswordScreen"
-          component={ResetPassword}
+          name="Home"
+          component={Dashboard}
           options={{
             tabBarIcon: ({ focused }) => (
               <Animated.View
@@ -87,21 +99,21 @@ const BottomTabSetup = () => {
                 onTouchCancel={() => handlePressOut("PasswordScreen")}
               >
                 <Image
-                  source={require("../../../assets/png/ChatCenteredText.png")}
+                  source={require("../../../assets/png/home.png")}
                   resizeMode="contain"
                   style={{
                     width: 30,
                     height: 30,
-                    tintColor: focused ? "#E32F45" : "#748C94",
+                    tintColor: focused ? "black" : "#748C94",
                   }}
                 />
                 <Text
                   style={{
-                    color: focused ? "#E32F45" : "#748C94",
+                    color: focused ? "black" : "#748C94",
                     fontSize: 14,
                   }}
                 >
-                  Password
+                  Home
                 </Text>
               </Animated.View>
             ),
@@ -109,7 +121,7 @@ const BottomTabSetup = () => {
         />
         <Tab.Screen
           name="LoginScreen"
-          component={LoginScreen}
+          component={QuizHomePage}
           options={{
             tabBarIcon: ({ focused }) => (
               <Animated.View
@@ -123,17 +135,16 @@ const BottomTabSetup = () => {
                 onTouchCancel={() => handlePressOut("LoginScreen")}
               >
                 <Image
-                  source={require("../../../assets/png/ChatCenteredText.png")}
+                  source={require("../../../assets/png/quiz.png")}
                   resizeMode="contain"
                   style={{
                     width: 30,
                     height: 30,
-                    tintColor: focused ? "#E32F45" : "#748C94",
                   }}
                 />
                 <Text
                   style={{
-                    color: focused ? "#E32F45" : "#748C94",
+                    color: focused ? "black" : "#748C94",
                     fontSize: 14,
                   }}
                 >
@@ -141,30 +152,25 @@ const BottomTabSetup = () => {
                 </Text>
               </Animated.View>
             ),
+
           }}
         />
         <Tab.Screen
           name="StudentAssistantSetupScreen"
-          component={StudentAssistantSetupScreen}
+          component={BotScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Animated.View
+              <TouchableOpacity onPress={() => navigation.navigate('Bot' as never)}
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
-                  transform: [{ scale: focused ? scaleValues.LoginScreen : 1 }],
                 }}
-                onTouchStart={() => handlePressIn("LoginScreen")}
-                onTouchEnd={() => handlePressOut("LoginScreen")}
-                onTouchCancel={() => handlePressOut("LoginScreen")}
               >
-                <Image
-                  source={require("../../../assets/png/ChatCenteredText.png")}
-                  resizeMode="contain"
+            <Image
+                  source={require("../../../assets/png/botIcon.png")}
                   style={{
                     width: 30,
                     height: 30,
-                    tintColor: focused ? "#E32F45" : "#748C94",
                   }}
                 />
                 <Text
@@ -175,7 +181,39 @@ const BottomTabSetup = () => {
                 >
                   StudentAI
                 </Text>
-              </Animated.View>
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={SettingsPage}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <TouchableOpacity onPress={() => navigation.navigate('Profile' as never)}
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Image
+                  source={require("../../../assets/png/threelines.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: 30,
+                    height: 30,
+                    // tintColor: focused ? "#E32F45" : "#748C94",
+                  }}
+                />
+                <Text
+                  style={{
+                    color: focused ? "black" : "#748C94",
+                    fontSize: 14,
+                  }}
+                >
+                  Profile
+                </Text>
+              </TouchableOpacity>
             ),
           }}
         />

@@ -18,7 +18,7 @@ export const QuizNavigator = () => {
               <Stack.Screen name="QuizHomepage" component={QuizHomePage} options={{ headerShown: false }} /> 
               <Stack.Screen name="QuizFirstPage" component={QuizFirstPage} options={{ headerShown: false }} />
               <Stack.Screen name="QuizQuestionPages" component={QuizQuestionsPage} options={{ headerShown: false }} /> 
-              <Stack.Screen name="QuizResultPage" component={() => <QuizResult noOfQuestions={0} noOfCorrectAnswers={0} />} options={{ headerShown: false }} /> 
+              <Stack.Screen name="QuizResultPage" component={QuizResult} options={{ headerShown: false }} /> 
               <Stack.Screen name="QuizQuestionAnswersReview" component={QuizQuestionAnswerReview} options={{ headerShown: false }} />
           </Stack.Navigator>
     </View>

@@ -48,7 +48,7 @@ export const MessageContainer = ({ messages }: { messages: Chats[] }) => {
                     {message.source == "user" ? (
                       <User text={message.text}></User>
                     ) : (
-                      <Bot text={message.text}></Bot>
+                      <Bot text={message.text} stream={message.stream}></Bot>
                     )}
                   </React.Fragment>
                 );
