@@ -13,6 +13,8 @@ import { Description } from '../../components/feedback/Description/Description';
 import Popup from '../Popup/popup';
 import { QuizOverView } from '../../components/quiz/QuizOverView';
 import { httpClient } from '../../services/HttpServices';
+import { useUser } from '../../context/UserContext';
+
 
 export type Answers = Array<{
     mcqId?: string,
@@ -36,7 +38,8 @@ export const QuizQuestionsPage = () => {
     const [reqObject, setReqObject] = useState();
     const [quizType, setQuizType] = useState<string | null>('');
     const [quizFlow, setQuizFlow] = useState<string | null>('');
-    const [quizzId, setQuizzId] = useState<string | null>('')
+    const [quizzId, setQuizzId] = useState<string | null>('');
+    const {user} = useUser();
 
     const getQuizType = async () => {
         setQuizType(await AsyncStorage.getItem('quizType'));
@@ -51,10 +54,10 @@ export const QuizQuestionsPage = () => {
         getQuizFlow();
         const req = {
             "schoolId": "default",
-            "boardId": "CBSE",
             "subject": "string",
-            "className": 0,
-            "studentId": 0,
+            "boardId": user.board,
+            "className": user.class,
+            "studentId": user.userId,
             "chapterName": [
                 "string"
             ],

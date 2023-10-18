@@ -4,6 +4,8 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Button } from "../../common/ButttonComponent/Button";
 import { StartButton } from "../../common/ButttonComponent/ButtonStyles";
 import { Colors, SubjectColors } from "../../../styles/colors";
+import { UserType, useUser } from "../../../context/UserContext";
+import { httpClient } from "../../../services/HttpServices";
 
 interface ButtonData {
   text: string;
@@ -32,6 +34,7 @@ const ChipComponent: React.FC<ButtonProps> = ({
   isPressed,
   themeColor
 }) => {
+  const { user } = useUser()
   const textStyle:any=[
     {color: themeColor && isPressed && Colors.white},
   ]
@@ -69,6 +72,7 @@ export interface Props {
 
 // change component name from student to subject
 export const Student = ({ selectedSubject, themeColor }: Props) => {
+  const {user} = useUser();
   const [listOfSubjects, setListOfSubjects] = useState<Subject[]>([]);
   const [colorsMappedSubjectList, setColorsMappedSubjectList] = useState<
     SubjectWithColor[]
@@ -76,23 +80,23 @@ export const Student = ({ selectedSubject, themeColor }: Props) => {
   const [pressedSubject, setPressedSubject] = useState<number>(-1);
 
   const getSubjects = () => {
-    // some API call or data fetching
-    const result = [
-      { subjectName: "Science" },
-      { subjectName: "Maths" },
-      { subjectName: "Geography" },
-      { subjectName: "History" },
-      { subjectName: "English" },
-      { subjectName: "Geometry" },
-      { subjectName: "Hindi" },
-      { subjectName: "Marathi" },
-      { subjectName: "Biology" },
-      { subjectName: "Chemistry" },
-      { subjectName: "Sanskrit" },
-      // ... (add more subjects)
-    ];
+    const reqObj = {
+      "service": "ml_service",
+      // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
+      "endpoint": `/subjects?board_id=${user.board}&class_name=${user.class}&school_id=default`,
+      "requestMethod": "GET"
+  }
+
+  httpClient.post(`auth/c-auth`, reqObj).then((res) => {
+    const subjectList = res.data.data;
+    const result = subjectList.map((sub: any) => {
+      return {
+        subjectName: sub.subject
+      }
+    })
 
     setListOfSubjects(result);
+  })
   };
 
   const mapSubjectWithColors = (listOfSubject?: Subject[]) => {

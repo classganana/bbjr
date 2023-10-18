@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import { LoginScreenStyle } from "./LoginScreenStyle";
 import { Button } from "../../../components/common/ButttonComponent/Button";
@@ -18,6 +19,9 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from "firebase/compat/app"
 import OtpVerification from "../OtpVerificationScreen";
 import { httpClient } from "../../../services/HttpServices";
+import { useUser } from "../../../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export const LoginForm = () => {
   const navigation = useNavigation();
@@ -27,29 +31,14 @@ export const LoginForm = () => {
   const [verificationId, setVerificationId] = React.useState("");
   const [otp, setOtp] = useState("");
   const recaptchaVerifier = useRef(null);
+  const { setUser } = useUser();
 
   // Define a regular expression for a valid phone number pattern.
   const phoneRegex = /^\d{10}$/;
 
   useEffect(() => {
-    const data = {
-      "service": "ml_service",
-      "endpoint": "/data/mcq",
-      "requestMethod": "POST",
-      "requestBody": {
-        "schoolId": "101",
-        "boardId": "101",
-        "subject": "Science",
-        "className": 10,
-        "chapterName": "MATTER IN OUR SURROUNDINGS",
-        "studentId": 10,
-        "size": 10
-        }
-    }
-    
-    httpClient.post('auth/c-auth',data).then(() => {
-
-    })
+    // checkIfUserHasCompletedRegistraction("YQQiwfq2RdWqvJf6TxwwBXvl7VL2");
+    // checkIfUserHasCompletedRegistraction("johndoe123")
   },[])
 
   const sendVerification = () => {
@@ -74,7 +63,6 @@ export const LoginForm = () => {
 
   function moveToOtpScreen() {
     console.log(phoneNumber);
-    setPhoneNumber((prevPhoneNumber) => "+91" + prevPhoneNumber);
     sendVerification();
   }
 
@@ -90,30 +78,52 @@ export const LoginForm = () => {
     )
     firebase.auth().signInWithCredential(credential)
       .then((res: any) => {
-        console.log(res.additionalUserInfo.isNewUser);
+        console.log(res.user.uid);
         if(res.additionalUserInfo.isNewUser) {
           navigation.navigate('SignUp' as never);
         } else {
-          navigation.navigate('DashboardNavigator' as never);
+          checkIfUserHasCompletedRegistraction(res.user.uid)
         }
         console.log("logged in")
       })
       .catch(() => {
-        console.log("failed")
+        console.log("failed from firebase")
       })
   }
 
+  const checkIfUserHasCompletedRegistraction = (id: string) => {
+    httpClient.get(`users/${id}`).then((res) => {
+      setUser(res.data);
+      AsyncStorage.setItem('user',JSON.stringify(res.data));
+      // navigation.navigate('DashboardNavigator' as never);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'DashboardNavigator' } as never] // Replace 'Home' with the actual name of your main screen
+      });
+    
+    }).catch(() => {
+        const obj = {
+          uid: id,
+          phone: phoneNumber
+        }
+        navigation.navigate('SignUp' as never, obj as never );
+        console.log("User Not Found")
+    });
+  }
+
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust the behavior as needed
-    >
+      <KeyboardAvoidingView
+        style={{ flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+      <View style={{flex: 1}}>
       {otpScreen &&      
       <View>
         <Text style={LoginScreenStyle.loginHeading}>Log in</Text>
       </View>
       }
       {/* <ScrollView contentContainerStyle={{ flex: 1 }}> */}
+      <View style={{flex: 1}}>
       {!otpScreen && <ImageBackground style={[LoginScreenStyle.imageBlock]} source={require("../../../../assets/png/loginbg.png")}>
         {/* <View> */}
           <Text style={LoginScreenStyle.loginHeading}>Log in</Text>
@@ -137,17 +147,11 @@ export const LoginForm = () => {
             Please confirm your country code and enter your mobile number.
           </Text>
           <View style={styles.phoneContainer}>
-            <TextInput
-              style={styles.phoneCode}
-              placeholder="+91"
-              editable={false}
-              value="+91"
-              keyboardType="numeric"
-              onChangeText={(text) => {
-                setPhoneNumber(text);
-                validatePhoneNumber(text);
-              }}
-            />
+            <View>
+              <Text>
+                +91
+              </Text>
+            </View>
             <TextInput
               style={styles.input}
               placeholder="Enter phone number"
@@ -174,7 +178,8 @@ export const LoginForm = () => {
           </View>
         </View>
       )}
-      {/* </ScrollView> */}
+      </View>
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -193,6 +198,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    alignItems: 'center',
+    gap: 10
   },
   input: {
     flex: 6,

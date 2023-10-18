@@ -8,32 +8,34 @@ import { MessageContainer } from '../studentaiAssistant/MessageContainerScreen'
 import { httpClient } from '../../services/HttpServices'
 import { useNavigation } from '@react-navigation/native'
 import { Chats } from '../studentaiAssistant/Chats.interface'
+import { useUser } from '../../context/UserContext'
 
 export const BotScreen = () => {
   const [subject, setSubject] = useState("");
   const [messages, setMessages] = useState<any>([]);
   const navigation = useNavigation();
+  const {user} = useUser()
 
   useEffect(() => {
+    console.log(user)
     const req = {
       service: "ml_service",
-      endpoint: `/conversations?student_id=10&subject=${subject}&school_id=default`,
+      endpoint: `/conversations?student_id=${user.userId}&subject=${subject}&school_id=default`,
       requestMethod: "GET",
       requestBody: {
-        schoolId: "default",
-        boardId: "CBSE",
-        subject: subject,
-        className: 10,
-        studentName: "Trin",
-        studentId: 10
+
       }
     };
 
-    httpClient.post('auth/c-auth', req).then((res) => {
-      setMessages(() => res.data.data)
-      console.log(messages);
-    })
-
+    if(user.board && user.class && user.name, user.userId && subject) {
+      httpClient.post('auth/c-auth', req)
+      .then((res) => {
+        setMessages(() => res.data.data)
+      })
+      .catch((e) => {
+        console.log("Error => ",e);
+      })
+    }
   }, [subject])
 
   const pushMessageIntoQueue = (text: string) => {
@@ -80,35 +82,37 @@ export const BotScreen = () => {
       requestMethod: "POST",
       requestBody: {
         schoolId: 'default',
-        boardId: 'CBSE',
         subject: subject,
-        className: 10,
-        studentName: "Trin",
-        studentId: 10,
+        boardId: user.board,
+        className: user.class,
+        studentName: user.name,
+        studentId: user.userId,
         userMessage: text,
         chatHistory:  chat_history(),
       }
     };
   
-    httpClient.post('auth/c-auth', req).then((res) => {
-      const data = res.data.data;
-      const botmsg: Chats = {
-        source: data.source,
-        text: data.text,
-        timestamp: Date.now(),
-        stream: true
-      };
-  
-      // Replace the 'typing' message with the actual bot response
-      setMessages((prev: any) => {
-        const updatedMessages = [...prev];
-        const index = updatedMessages.findIndex((message) => message.source === 'bot' && message.text === 'typing');
-        if (index !== -1) {
-          updatedMessages[index] = botmsg;
-        }
-        return updatedMessages;
+    if(user.board && user.class && user.name, user.userId && subject) {
+      httpClient.post('auth/c-auth', req).then((res) => {
+        const data = res.data.data;
+        const botmsg: Chats = {
+          source: data.source,
+          text: data.text,
+          timestamp: Date.now(),
+          stream: true
+        };
+    
+        // Replace the 'typing' message with the actual bot response
+        setMessages((prev: any) => {
+          const updatedMessages = [...prev];
+          const index = updatedMessages.findIndex((message) => message.source === 'bot' && message.text === 'typing');
+          if (index !== -1) {
+            updatedMessages[index] = botmsg;
+          }
+          return updatedMessages;
+        });
       });
-    });
+    }
   };
   
 

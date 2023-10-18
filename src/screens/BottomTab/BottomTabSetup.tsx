@@ -16,6 +16,7 @@ import { QuizHomePage } from "../quiz/QuizHomePage";
 import { SettingsPage } from "../Profile/SettingsPage";
 import { useNavigation } from "@react-navigation/native";
 import { HomeIcon } from "../../components/common/SvgComponent/SvgComponent";
+import { UserProvider } from "../../context/UserContext";
 const Tab = createBottomTabNavigator();
 const BottomTabSetup = () => {
   const [focusedTab, setFocusedTab] = useState<

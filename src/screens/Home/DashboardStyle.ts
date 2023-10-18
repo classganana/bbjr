@@ -64,7 +64,7 @@ export const DashboardStyle = StyleSheet.create({
     body: {
         width: "100%",
         backgroundColor: Colors.white,
-        paddingHorizontal: 26,
+        paddingHorizontal: 20,
         paddingTop: 8,
         flex: 1,
         gap:10,
@@ -109,10 +109,12 @@ export const DashboardStyle = StyleSheet.create({
       fontWeight: "600"
     },
     options: {
-        height: 310,
+        // height: 330,
         backgroundColor: '#F0F2F580',
         paddingVertical: 12,
-        paddingHorizontal: 14
+        paddingHorizontal: 14,
+        borderRadius: 20,
+        marginBottom: 18
     },
     optionTitle: {
         flexDirection: 'row',
@@ -121,7 +123,7 @@ export const DashboardStyle = StyleSheet.create({
         paddingHorizontal: 5,
         borderBottomColor: Colors.primary,
         borderBottomWidth: 1/2,
-        marginBottom: 20
+        marginBottom: 10
     },
     viewAllBlock: {
       borderBlockColor: Colors.primary,
@@ -144,13 +146,11 @@ export const DashboardStyle = StyleSheet.create({
     },
     optionCard: {
       width: "47%",
-      height: 220,
     },
     optionCardHeading: {
       fontSize: 16,
       color: "#4E4E4E",
       fontWeight: '500',
-      marginBottom: 6
     },
     option: {
       width: "100%",
@@ -159,7 +159,7 @@ export const DashboardStyle = StyleSheet.create({
       display: 'flex',
       padding: 12,
       borderRadius:20,
-      gap: 25,
+      gap: 15,
       backgroundColor: 'white', // Set a non-transparent background color
       shadowColor: Colors.black_03,
       shadowOffset: { width: 0, height: 2 },
@@ -203,20 +203,34 @@ export const DashboardStyle = StyleSheet.create({
       fontSize: 18
     },
     botBlock: {
+      alignSelf: 'center',
       height: 140,
       padding: 14,
-      backgroundColor: '#F0F6F8', // You can adjust this background color if needed
-      shadowColor: Colors.black_03, // Use your shadow color
+      backgroundColor: '#F0F6F8',
+      shadowColor: Colors.black_03,
       shadowOffset: {
-        width: 0,
-        height: 0, // Adjust this value to control the shadow's vertical offset
+        width: 4,
+        height: 4, // Adjust this value to control the shadow's vertical offset
       },
-      shadowOpacity: 0.1,
-      shadowRadius: 4, // Adjust this value to control the shadow's spread
-      elevation: 4,
-      // height: 150,
-      width: '100%',
-      borderRadius: 12,
+      shadowOpacity: 0.5,
+      shadowRadius: 20, // Adjust this value to control the shadow's spread
+      elevation: 8,
+      width: '98%',
+      borderRadius: 4,
+      borderColor: Colors.white,
+      borderWidth: 0.5,
+      ...Platform.select({
+        ios: {
+          shadowColor: 'rgba(0, 0, 0, 0.15)',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 1,
+          shadowRadius: 8,
+        },
+        android: {
+          elevation: 4,
+        },
+      }),
+      
     },
     botBlockDesc: {
       flex: 1,
@@ -239,17 +253,11 @@ export const DashboardStyle = StyleSheet.create({
       color: "#E5FF7F"
     },
     leaderBoardSection: {
+      width: "100%",
       flexDirection: 'row',
       alignItems: "center",
       borderRadius: 6,
-      borderWidth: 0.5,
-      borderColor: 'rgba(0, 107, 127, 0.40)',
       backgroundColor: '#FFF',
-      shadowColor: 'rgba(0, 0, 0, 0.10)',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 1,
-      shadowRadius: 4,
-      elevation: 4,
       paddingHorizontal: 12,
       paddingVertical: 8,
       gap: 12
@@ -262,6 +270,10 @@ export const DashboardStyle = StyleSheet.create({
     explore: {
       color: Colors.primary,
       fontWeight: '500'
+    },
+    boostYourKnowledge : {
+        fontWeight: '500',
+        fontSize: 16
     }
 
 })

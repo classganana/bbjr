@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { AppNavigator } from './src/navigators/AppNavigator';
 import * as MediaLibrary from 'expo-media-library';
 import AnimatedSplash from "react-native-animated-splash-screen";
+import { UserProvider } from './src/context/UserContext';
 
 
 
@@ -35,6 +36,7 @@ export default function App() {
     loadFonts();
   }, []); // Run this effect only once on component mount
 
+
   return (
     <SafeAreaView style={styles.container}>
    <AnimatedSplash
@@ -48,7 +50,9 @@ export default function App() {
     {/* {Platform.OS === "android" && (<StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />)} */}
       {loading && isFontLoaded ? (
         <NavigationContainer>
-          <AppNavigator />
+          <UserProvider>
+            <AppNavigator />
+          </UserProvider>
         </NavigationContainer>
       ) : (
         <View style={styles.loadingContainer}>

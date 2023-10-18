@@ -7,6 +7,9 @@ import { Colors } from '../../../styles/colors';
 import { PrimaryDefaultButton } from '../../../components/common/ButttonComponent/ButtonStyles';
 import { Button } from "../../../components/common/ButttonComponent/Button";
 import { httpClient } from '../../../services/HttpServices';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useUser } from '../../../context/UserContext';
+
 
 export const SignUpScreen = () => {
     const [name, setName] = useState('');
@@ -16,23 +19,37 @@ export const SignUpScreen = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
     const [phoneNumberError, setPhoneNumberError] = useState("");
+    const route = useRoute();
+    const navigation = useNavigation();
+    const { setUser } = useUser();
 
     // Regular expression for a valid 10-digit phone number
     const phoneRegex = /^\d{10}$/;
 
 
     const handleSubmit = () => {
+        const userObj: any = route.params;
         const obj = {
             "name": name,
-            "phoneNumber": `+91${phoneNumber}`,
+            "phoneNumber": `+91${userObj.phone}`,
             "class": parseInt(classValue),
             "board": board,
-            "userId": "ayush_dixit",
-            "school": "XYZ High School"
+            "userId": userObj.uid,
+            "school": school
         }
+        console.log(obj);
         httpClient.post('auth/sign-up', obj)
             .then((response) => {
-                console.log(response);
+                if (response.status == 201) {
+                    setUser(obj);
+                    // navigation.navigate('DashboardNavigator' as never);
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'DashboardNavigator' } as never] // Replace 'Home' with the actual name of your main screen
+                      });
+                }
+            }).catch((err) => {
+                console.log("error while creating pending account",err);
             })
     };
 
@@ -61,7 +78,7 @@ export const SignUpScreen = () => {
         >
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={LoginScreenStyle.header}>
-                    <Image style={LoginScreenStyle.botIcon} source={require("../../../../assets/gifs/bot.gif")} />
+                    {/* <Image style={LoginScreenStyle.botIcon} source={require("../../../../assets/gifs/bot.gif")} /> */}
                     <Text style={LoginScreenStyle.headerText}>{Constants.BrandName}</Text>
                 </View>
 
@@ -121,23 +138,6 @@ export const SignUpScreen = () => {
                             <Picker.Item label="TELANGANA" value="TELANGANA" />
                         </Picker>
                     </View>
-
-                    {/* <Text style={styles.label}>Phone Number:</Text>
-                    <View style={styles.inputPhone}>
-                        <Text>+91</Text>
-                        <TextInput
-                            placeholder="Phone Number (+919999999999)"
-                            value={phoneNumber}
-                            onChangeText={text => {
-                                setPhoneNumber(text);
-                                checkFields();
-                                validatePhoneNumber(text);
-                            }}
-                        />
-                    </View>
-                    {phoneNumberError !== "" && (
-                        <Text style={styles.errorText}>{phoneNumberError}</Text>
-                    )} */}
                 </View>
 
                 {/* The submit button will appear at the bottom */}

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { LoginButton, RegisterButton, PrimaryDefaultButton, SubmitButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { Colors } from '../../styles/colors';
 
 type Props = {
@@ -70,7 +70,7 @@ const OtpVerification = (props: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>OTP Verification</Text>
-      <Text style={styles.title}>Enter the verification code we just sent to your email address.</Text>
+      <Text style={styles.title}>Enter the verification code we just sent to your phone number.</Text>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.inputContainer}>
@@ -90,7 +90,7 @@ const OtpVerification = (props: Props) => {
         <Button
           onPress={moveToResetPassword}
           label="Verify"
-          className={LoginButton}
+          className={SubmitButton}
           disabled={isButtonDisabled}
         />
       </TouchableOpacity>

@@ -1,32 +1,37 @@
 import React, { useState } from "react";
 import {
+  ScrollView,
   FlatList,
   Text,
   View,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import { Colors } from "../../../../styles/colors";
-
 
 type CustomDropdownProps = {
   label: string;
   dropdownPlaceholder: string;
-  list: { label: string }[];
+  list: { label: string | number }[];
+  defaultSelectedItem?: any;
 };
 
 export const CustomDropdown: React.FC<CustomDropdownProps> = ({
-  label,x
+  label,
   dropdownPlaceholder,
   list,
+  defaultSelectedItem,
 }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string>("");
-  const [inputValue, setInputValue] = useState<string>(dropdownPlaceholder);
+  const [selectedItem, setSelectedItem] = useState<string | number>(
+    defaultSelectedItem
+  );
+  const [inputValue, setInputValue] = useState<string | number>(
+    dropdownPlaceholder
+  );
 
-  const handleDropdownSelect = (itemLabel: string) => {
+  const handleDropdownSelect = (itemLabel: string | number) => {
     setSelectedItem(itemLabel);
     setInputValue(itemLabel);
     setDropdownVisible(false);
@@ -35,7 +40,6 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   const handleInputPress = () => {
     setDropdownVisible(!isDropdownVisible);
   };
-
 
   const handleDropdownClose = () => {
     setDropdownVisible(false);
@@ -49,29 +53,38 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         <TouchableOpacity onPress={handleInputPress}>
           <View>
             <View style={styles.label}>
-              <Text style={styles.labeltext}>{label}</Text>
-              {!HideStar && <Text style={styles.star}> *</Text>}
+              <Text style={styles.labeltext}>
+                {label}
+                {!HideStar && <Text style={styles.star}> *</Text>}
+              </Text>
             </View>
             <View style={styles.inputcontainer}>
               <Text style={styles.inputValue}>{inputValue}</Text>
-              <Text style={styles.icon}>{isDropdownVisible ? "▲" : "▼"}</Text>
+              <Text style={styles.icon}>
+                {isDropdownVisible ? "▲" : "▼"}
+              </Text>
             </View>
           </View>
         </TouchableOpacity>
 
         {isDropdownVisible && (
           <View style={styles.dropdowncontainer}>
-            <FlatList
-              data={list}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.dropdownOption}
-                  onPress={() => handleDropdownSelect(item.label)}
-                >
-                  <Text>{item.label}</Text>
-                </TouchableOpacity>
-              )}
-            />
+            {/* <View
+              style={{ maxHeight: 400 }} // Set a maximum height for scrolling
+            > */}
+              <FlatList
+                data={list}
+                keyExtractor={(item) => item.label.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.dropdownOption}
+                    onPress={() => handleDropdownSelect(item.label)}
+                  >
+                    <Text>{item.label}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            {/* </View> */}
           </View>
         )}
       </View>
@@ -81,30 +94,27 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-  },
-
-  inputcontainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    zIndex: 100,
     backgroundColor: Colors.white,
-    borderRadius: 10,
-    paddingLeft: 10,
-    top: 3,
-    padding: 10,
     elevation: 4,
     shadowColor: Colors.shadow_color,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
-    shadowRadius: 0.5
+    shadowRadius: 0.5,
+    borderRadius: 10,
+    display: "flex",
+  },
+
+  inputcontainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: 10,
+    padding: 10,
   },
 
   label: {
-    display: "flex",
     flexDirection: "row",
-
   },
 
   labeltext: {
@@ -131,7 +141,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     width: "100%",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.gray_01,
+    zIndex: 100,
+    height: 100
   },
 
   dropdownOption: {
@@ -140,5 +152,5 @@ const styles = StyleSheet.create({
 
   inputValue: {
     color: Colors.gray_09,
-  }
+  },
 });

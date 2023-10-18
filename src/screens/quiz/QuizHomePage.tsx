@@ -13,9 +13,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { CancelButton, EditButton, ExitButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { useUser } from '../../context/UserContext';
 
 export const QuizHomePage = () => {
-    const [tab, setTab] = useState('Exam Prep');
+    const [tab, setTab] = useState('Quizzes');
     const [data, setData] = useState<CardData[]>([]);
     const [options, setOptions] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -25,12 +26,11 @@ export const QuizHomePage = () => {
     const [totalQuestions, setTotalQuestions] = useState(0);
     // const [subject, setSubject] = useState()
     const [selectedQuiz, setSelectedQuiz] = useState<any[]>();
+    const {user} = useUser();
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
-
-    // const route = useRoute();
 
     const selectSpecificSubject = () => { }
 
@@ -116,9 +116,9 @@ export const QuizHomePage = () => {
         setQuizFlow();
         const s = {
             "schoolId": "default",
-            "boardId": "CBSE",
-            "className": 10,
-            "studentId": 10,
+            "boardId": user.board,
+            "className": user.class,
+            "studentId": user.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
             "subject": selectedSubject.subjectName
         }
@@ -154,9 +154,9 @@ export const QuizHomePage = () => {
     useEffect(() => {
         const s = {
             "schoolId": "default",
-            "boardId": "CBSE",
-            "className": 10,
-            "studentId": 10,
+            "boardId": user.board,
+            "className": user.class,
+            "studentId": user.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
             "subject": selectedSubject.subjectName
         }
@@ -191,9 +191,9 @@ export const QuizHomePage = () => {
     useEffect(() => {
         const req = {
             "schoolId": "default",
-            "boardId": "CBSE",
-            "className": 10,
-            "studentId": 10,
+            "boardId": user.board,
+            "className": user.class,
+            "studentId": user.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
             "subject": selectedSubject.subjectName
         }

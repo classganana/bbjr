@@ -88,12 +88,33 @@ export const PrimaryDefaultButton = StyleSheet.create<Style>({
   container: {
     height: 40,
     // flex: 1,
-    // width: "100%",
+    width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
     borderRadius: 8,
+    // paddingHorizontal: 12
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "400",
+    fontSize: 16,
+    fontFamily: "Inter-Regular",
+  },
+});
+
+export const PrimaryIconDefaultButton = StyleSheet.create<Style>({
+  container: {
+    height: 40,
+    // flex: 1,
+    width: "80%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 8,
+    gap: 10
     // paddingHorizontal: 12
   },
   title: {
@@ -114,7 +135,8 @@ export const LoginButton = StyleSheet.create<Style>({
     justifyContent: "center",
     backgroundColor: Colors.primary,
     borderRadius: 8,
-    padding: 12
+    // padding: 24,
+    paddingVertical: 22
   },
   title: {
     color: Colors.white,
@@ -234,7 +256,7 @@ export const SubmitButton = StyleSheet.create<Style>({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.Hawkes_Blue,
+    backgroundColor: Colors.primary,
     borderColor: Colors.Lavender_Pinocchio,
     borderRadius: 8,
     borderWidth: 0.5,
@@ -248,9 +270,9 @@ export const SubmitButton = StyleSheet.create<Style>({
     elevation: 4, // For Android
   },
   title: {
-    color: Colors.black_01,
+    color: Colors.white,
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 24,
     fontFamily: "Inter-Regular",
   },
 });
@@ -349,9 +371,10 @@ export const CancelButton = StyleSheet.create<Style>({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    borderWidth: 2/4,
-    borderColor: "rgba(0, 107, 127, 0.50)",
-    // padding: 12
+    borderWidth: 1/4,
+    borderColor: Colors.primary,
+    paddingVertical: 8,
+    backgroundColor: Colors.white
   },
   title: {
     // padding: 30,

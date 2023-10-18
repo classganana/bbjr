@@ -17,9 +17,14 @@ import {
 import { Colors } from '../../styles/colors';
 import { httpClient } from '../../services/HttpServices';
 import { useNavigation } from '@react-navigation/native';
+import { useUser } from '../../context/UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
+
 
 export const SettingsPage = () => {
-  const [user, setUser] = useState<any>();
+  // const [user, setUser] = useState<any>();
+  const {user, setUser} = useUser()
 
   const navigation = useNavigation();
 
@@ -35,12 +40,15 @@ export const SettingsPage = () => {
     navigation.navigate('Leaderboard' as never);
   };
 
+  const logout = () => {
+    // AsyncStorage.clear();
+    // navigation.navigate('Auth' as never);
+    // setUser({});
+    console.log("Loggin Out");
+
+  }
+
   useEffect(() => {
-    httpClient.get('users/johndoe123').then((res) => {
-      setUser(res.data);
-    }).catch(() => {
-      console.log('Something went wrong');
-    });
   }, []);
 
   const labels = [
@@ -66,8 +74,8 @@ export const SettingsPage = () => {
         </View>
       </View>
       <View style={styles.DetailContainer}>
-        <View style={styles.block1}>
-          <View style={styles.ProfileImage}></View>
+        <View style={styles.block1}>  
+         <CircleInitials name={user.name} size={100} />
           <View style={{ gap: 6 }}>
             <Text style={styles.name}>{user && user.name}</Text>
             <Text>{user && user.class}</Text>
@@ -97,7 +105,10 @@ export const SettingsPage = () => {
             onPress={() => {
               if (buttonLabel.title === 'View leaderboard') {
                 moveToLeaderboard();
-              } // You can add more conditions for other buttons
+              }
+              if(buttonLabel.title === 'Log Out') {
+                logout();
+              }
             }}
             style={{ flexDirection: 'row', alignItems: 'center', gap: 20, position: 'relative' }}>
             {buttonLabel.leftSvg}

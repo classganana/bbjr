@@ -32,7 +32,7 @@ export const LoginScreenStyle = StyleSheet.create({
         // paddingHorizontal: 25
     },
     imageBlock: {
-        height: 380,
+        height: "50%",
         width: "100%"
     },
     inputContainer: {

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -11,43 +12,56 @@ import {
 export interface Props {
   label: string | any;
   className?: {
-    container?: StyleProp<ViewStyle> | StyleProp<any>;
+    container?: StyleProp<ViewStyle>;
     title?: StyleProp<TextStyle>;
   };
   disabled: boolean;
   onPress: () => void;
-  styles?: StyleProp<any>;
+  styles?: StyleProp<ViewStyle>;
 }
 
 export const Button = (props: Props) => {
   return (
-    <>
-      <TouchableWithoutFeedback
+    <TouchableWithoutFeedback
+      onPress={props.disabled ? undefined : props.onPress}
+    >
+      <View
         style={[
+          styles.container,
           props.className?.container,
-          props.disabled
-            ? styles.disabledContainer
-            : props.className?.container,
+          props.disabled && styles.disabledContainer,
           props.styles,
         ]}
-        onPress={props.onPress}
       >
-        <View style={[props.className?.container, props.styles]}>
-          <Text style={props.className?.title}>{props.label}</Text>
-        </View>
-      </TouchableWithoutFeedback>
-    </>
+        <Text
+          style={[
+            styles.title,
+            props.className?.title,
+            props.disabled && styles.disabledTitle,
+          ]}
+        >
+          {props.label}
+        </Text>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  // Add your disabled styles here
+  container: {
+    padding: 10,
+    backgroundColor: "blue",
+    borderRadius: 5,
+  },
+  title: {
+    color: "white",
+    textAlign: "center",
+  },
   disabledContainer: {
-    opacity: 0.5,
-
-    // Add any other styles you want to apply to the disabled container
+    opacity: 0.6,
+    // backgroundColor: "gray",
   },
   disabledTitle: {
-    // Add any styles you want to apply to the text when the button is disabled
+    // You can add styles for the text when the button is disabled here
   },
 });

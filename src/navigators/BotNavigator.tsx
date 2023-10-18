@@ -2,6 +2,7 @@ import { View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { BotScreen } from '../screens/bot/BotScreen';
+import { UserProvider } from '../context/UserContext';
 
 export const BotNavigator = () => {
     const Stack = createNativeStackNavigator();

@@ -6,6 +6,9 @@ import { ArrowLeft, CameraIcon } from '../../components/common/SvgComponent/SvgC
 import { Picker } from '@react-native-picker/picker';
 import { CancelButton, EditButton, ExitButton, LoginButton, OutlineButton, SubmitButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { httpClient } from '../../services/HttpServices';
+import { useUser } from '../../context/UserContext';
+import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
+import { CustomDropdown } from '../../components/common/Performance/CustomDropdown/CustomDropdown';
 
 const EditProfile = () => {
     const [name, setName] = useState('');
@@ -16,6 +19,7 @@ const EditProfile = () => {
     const [GuardianName, setGuardianName] = useState('');
     const [GuardianEmail, setGuardianEmail] = useState('');
     const [userId, setUserId] = useState<any>('');
+    const {user, setUser} = useUser()
 
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -25,8 +29,6 @@ const EditProfile = () => {
 
 
     useEffect(() => {
-        httpClient.get('users/johndoe123').then((res) => {
-            const user = res.data;
             setName(user.name);
             setBoard(user.board);
             setClassValue(user.class);
@@ -35,10 +37,6 @@ const EditProfile = () => {
             setUserId(user.userId);
             user.guardianEmail && setGuardianEmail(user.guardianEmail);
             user.guardianName &&setGuardianName(user.guardianName);
-
-        }).catch(() => {
-            console.log("Something went wrong")
-        })
     }, [])
 
 
@@ -51,20 +49,40 @@ const EditProfile = () => {
             phoneNumber,
         };
 
+        updatedData.class = parseInt(updatedData.class);
+
         GuardianName? updatedData = {...updatedData, GuardianName}: ''
         GuardianEmail? updatedData = {...updatedData, GuardianEmail}: ''
 
         httpClient.patch(`users/${userId}`, {
             ...updatedData
         }).then((res) => {
-            (res.data.acknowledged) && toggleEditMode(); 
+            if(res.data.acknowledged) {
+                setUser({...updatedData, userId});
+                toggleEditMode();
+            }
         });
     }
+
+    const listOfClass = [
+        { label: 5 },
+        { label: 6 },
+        { label: 7 },
+        { label: 8 },
+        { label: 9 },
+        { label: 10 },
+    ]
+
+    const listOfBoards = [
+        { label: "CBSE" },
+        { label: "ICSE" },
+        { label: "Telangana Board" },
+    ]
 
 
     return (
 
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView style={{ flexGrow: 1 }}>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
@@ -76,11 +94,12 @@ const EditProfile = () => {
                 </View>
                 <View style={styles.DetailContainer}>
                     <View style={styles.ImageContainer}>
-                        <View style={styles.ProfileImage} >
-                            <View style={styles.CameraBorder}>
-                                <CameraIcon height={'50'} width={'50'} fill={'white'} />
-                            </View>
-                        </View>
+                        {/* <View style={styles.ProfileImage} > */}
+                            {/* <View style={styles.CameraBorder}> */}
+                                <CircleInitials name={user.name} size={150} />
+                                {/* <CameraIcon height={'50'} width={'50'} fill={'white'} /> */}
+                            {/* </View> */}
+                        {/* </View> */}
                     </View>
 
                     <Text style={styles.label}>Name</Text>
@@ -109,18 +128,22 @@ const EditProfile = () => {
 
                     <Text style={styles.label}>Class</Text>
                     <View style={styles.picker}>
-                        <Picker
-                            selectedValue={classValue}
+                    <Picker
                             enabled={isEditMode}
+                            selectedValue={classValue.toString()}
                             onValueChange={(itemValue) => {
                                 setClassValue(itemValue);
                                 // checkFields();
                             }}
                         >
-                            <Picker.Item label={(classValue) || "Select Class"} value={classValue} />
-                            {Array.from({ length: 10 }, (_, i) => i + 3).map((item) => (
-                                <Picker.Item label={item.toString()} value={item} key={item} />
-                            ))}
+                            <Picker.Item label="5" value="5"/>
+                            <Picker.Item label="6" value="6"/>
+                            <Picker.Item label="7" value="7"/>
+                            <Picker.Item label="8" value="8"/>
+                            <Picker.Item label="9" value="9"/>
+                            <Picker.Item label="10" value="10"/>
+                            <Picker.Item label="11" value="11"/>
+                            <Picker.Item label="12" value="12"/>
                         </Picker>
                     </View>
                     <Text style={styles.label}>School/College</Text>
@@ -260,6 +283,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     picker: {
+        zIndex: 100,
         borderBottomWidth: 2,
         borderColor: Colors.primary,
         backgroundColor: "#FFF",
