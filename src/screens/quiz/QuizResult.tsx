@@ -3,13 +3,15 @@ import { BackHandler, Image, ImageBackground, ScrollView, StyleSheet, Text, Touc
 import { Colors } from '../../styles/colors';
 import { ArrowLeft, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton , ShowAnswer, TryAgain} from '../../components/common/ButttonComponent/ButtonStyles';
+import { ShowAnswer, TryAgain} from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Answers, questionWithTime } from './QuizQuestionsPage';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { useUser } from '../../context/UserContext';
+import { httpClient } from '../../services/HttpServices';
+import { LeaderboardEntry } from '../Profile/viewLeadboard';
 
 
 type Props = {
@@ -47,16 +49,28 @@ export const QuizResult = () => {
     const route = useRoute()
     const navigator = useNavigation();
     const [status, requestPermission] = MediaLibrary.usePermissions();
+    const [userRankScore, setUserRankScore] = useState<LeaderboardEntry | undefined>();
 
     if (status === null) {
         requestPermission();
       }
     
-
     useEffect(() => {
         getData();
+        getUserRank();
     }, [])
 
+    const getUserRank = () => {
+        httpClient.get(`leaderboard/${user?.userId}`)
+        .then((response) => {
+            console.log(response.data);
+            const list: Array<LeaderboardEntry> = response.data;
+            setUserRankScore(list.find((item) =>  item.studentId == user?.userId)); 
+            console.log(userRankScore)
+        }).catch((err) => {
+            console.log("error while creating pending account",err);
+        })
+    }
 
     useEffect(() => {
         const backAction = () => {
@@ -150,8 +164,17 @@ export const QuizResult = () => {
             <ScrollView style={{flex: 1, paddingVertical: 2}}>
             <View style={styles.scoreContainer}>
                 <View style={styles.scoreCard}>
-                    <Text style={styles.userName}>{user?.name}</Text>
-                    <Text style={styles.userSchool}>{user?.school}</Text>
+                    <View style={{flex: 2}}>
+                        <Text style={styles.userRank}>#{userRankScore?.rank}</Text>
+                    </View>
+                    <View style={{flex: 8}}>
+                        <Text style={styles.userName}>{user?.name}</Text>
+                        <Text style={styles.userSchool}>{user?.school}</Text>
+                    </View>
+                    <View style={{flex: 4}}>
+                        <Text style={styles.score}>{userRankScore?.score}</Text>
+                        <Text style={styles.overAllScore}>Overall Score</Text>
+                    </View>
                 </View>
             </View>
             <View>
@@ -235,6 +258,8 @@ const styles = StyleSheet.create({
         borderColor: Colors.primary
     },
     scoreContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         marginTop: 12,
         alignSelf: 'center',
         width: "90%",
@@ -245,23 +270,40 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     scoreCard: {
+        flexDirection: 'row',
         backgroundColor: Colors.white,
         borderRadius: 20,
         transform: [{ rotate: '-3deg' }],
         flex: 1,
         borderColor: "#006B7F8F",
         borderWidth: 0.5,
-        // flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        padding: 4,
+        paddingHorizontal: 10,
+        alignItems: 'center'
+    },
+    userRank: {
+        fontSize: 18,
+        fontWeight: `600`,
+        fontStyle: 'italic'
     },
     userName: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: `400`
     },
     userSchool: {
         fontSize: 14,
         fontWeight: '400',
         color: "#626262"
+    },
+    score: {
+        textAlign: 'center',
+        fontSize: 22,
+        color: Colors.primary
+    },
+    overAllScore: {
+        fontSize: 16,
+        color: "#131313"
     },
     imageSection: {
         display: 'flex',

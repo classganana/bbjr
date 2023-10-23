@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { Colors } from '../../styles/colors';
 import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { ExploreButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { httpClient } from '../../services/HttpServices';
+import { useUser } from '../../context/UserContext';
+
+export interface LeaderboardEntry {
+    name: string;
+    rank: number;
+    score: number;
+    studentId: string;
+  }
+  
 
 const ViewLeadboard = () => {
+    const {user} = useUser()
     const HighScorelabels = Array.from({ length: 5 }, (_, index) => ({
         rollNumber: `#${index + 1}`,
         title: `Student Name`,
@@ -18,6 +29,34 @@ const ViewLeadboard = () => {
         school: `School/College Name`,
     }));
 
+    const [userRank, setUserRank] = useState<Array<LeaderboardEntry>>()
+    const [leaderBoard, setLeaderBoard] = useState<Array<LeaderboardEntry>>()
+
+    useEffect(() => {
+            getUserRank();
+            getLoeaderBoard();
+    },[])
+
+    const getUserRank = () => {
+        httpClient.get(`leaderboard/${user?.userId}`)
+        .then((response) => {
+            console.log(response.data);
+            setUserRank(response.data)
+        }).catch((err) => {
+            console.log("error while creating pending account",err);
+        })
+    }
+
+    const getLoeaderBoard = () => {
+        httpClient.get(`leaderboard`)
+        .then((response) => {
+            console.log(response.data);
+            setLeaderBoard(response.data);
+        }).catch((err) => {
+            console.log("error while creating pending account",err);
+        })
+    }
+
     return (
         <View style={styles.container}>
                 <View style={styles.header}>
@@ -25,10 +64,10 @@ const ViewLeadboard = () => {
                         <View style={styles.backButton}>
                         <ArrowLeft height={25} width={25} fill={'black'} />
                         </View>
-                        <Text style={styles.headingTitle}>view leaderboard</Text>
+                        <Text style={styles.headingTitle}>View leaderboard</Text>
                     </View>
                 </View>
-                <ScrollView>
+                <ScrollView style={styles.Body}>
                     <View style={styles.DetailContainer}>
                         <Text style={styles.BodyTitle}>Leaderboard</Text>
                         <View style={styles.BodyContainer}>
@@ -40,14 +79,14 @@ const ViewLeadboard = () => {
                                 <Text style={styles.Titlescore}># High Scores</Text>
                                 <Text style={styles.score}>Score</Text>
                             </View>
-                            {HighScorelabels.map((HighestScoreLabel, index) => (
+                            {leaderBoard?.map((HighestScoreLabel, index) => (
                                 <View key={index} style={styles.rankProfileCard}>
                                     <View style={styles.ScoreInnerCard}>
-                                        <Text style={styles.rollNumber}>{HighestScoreLabel.rollNumber}</Text>
+                                        <Text style={styles.rollNumber}>{HighestScoreLabel.rank}</Text>
                                         <View style={styles.ProfileImage} />
                                         <View>
-                                            <Text style={styles.StudCard}>{HighestScoreLabel.title}</Text>
-                                            <Text style={styles.SchoolCard}>{HighestScoreLabel.school}</Text>
+                                            <Text style={styles.StudCard}>{HighestScoreLabel.name}</Text>
+                                            <Text style={styles.SchoolCard}>{HighestScoreLabel.score}</Text>
                                         </View>
                                     </View>
                                     <Text>{HighestScoreLabel.score}</Text>
@@ -59,13 +98,13 @@ const ViewLeadboard = () => {
                                 <Text style={styles.Titlescore}>Rank</Text>
                                 <Text style={styles.score}>Score</Text>
                             </View>
-                            {Ranklabel.map((RankLabel, index) => (
+                            {userRank?.map((RankLabel, index) => (
                                 <View style={styles.rankScoreCard} key={index}>
                                     <View style={styles.ScoreInnerCard}>
                                         <View style={styles.ProfileImage} />
                                         <View>
-                                            <Text style={styles.StudCard}>{RankLabel.title}</Text>
-                                            <Text style={styles.SchoolCard}>{RankLabel.school}</Text>
+                                            <Text style={styles.StudCard}>{RankLabel.name}</Text>
+                                            <Text style={styles.SchoolCard}>{RankLabel.rank}</Text>
                                         </View>
                                     </View>
                                     <Text>{RankLabel.score}</Text>
@@ -109,6 +148,11 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         fontSize: 18,
     },
+    Body: {
+        flex: 1,
+        height: '100%',
+        backgroundColor: Colors.white    
+    },
     BodyTitle: {
         color: Colors.black_01,
         fontSize: 18,
@@ -117,6 +161,7 @@ const styles = StyleSheet.create({
         paddingVertical: 13,
     },
     DetailContainer: {
+        flex: 1,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         backgroundColor: Colors.white,
