@@ -25,7 +25,7 @@ interface ButtonProps {
   buttonData: ButtonData;
   onPress: (item: any) => void;
   isPressed: boolean;
-  themeColor: boolean
+  themeColor: boolean | undefined
 }
 
 const ChipComponent: React.FC<ButtonProps> = ({
@@ -67,7 +67,7 @@ const ChipComponent: React.FC<ButtonProps> = ({
 
 export interface Props {
   selectedSubject: (item: any) => void;
-  themeColor: boolean
+  themeColor?: boolean
 }
 
 // change component name from student to subject
@@ -83,7 +83,7 @@ export const Student = ({ selectedSubject, themeColor }: Props) => {
     const reqObj = {
       "service": "ml_service",
       // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
-      "endpoint": `/subjects?board_id=${user.board}&class_name=${user.class}&school_id=default`,
+      "endpoint": `/subjects?board_id=${user?.board}&class_name=${user?.class}&school_id=default`,
       "requestMethod": "GET"
   }
 

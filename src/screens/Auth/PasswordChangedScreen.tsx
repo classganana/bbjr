@@ -13,7 +13,6 @@ export const PasswordChangedScreen = () => {
 
   const moveToLogin = () => {
     navigation.navigate("Login" as never); // Specify type as 'never'
-    console.log('Back to login');
   };
 
   return (

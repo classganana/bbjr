@@ -203,7 +203,9 @@ export const DashboardStyle = StyleSheet.create({
       fontSize: 18
     },
     botBlock: {
+      marginBottom: 12,
       alignSelf: 'center',
+      width: '98%',
       height: 140,
       padding: 14,
       backgroundColor: '#F0F6F8',
@@ -215,7 +217,6 @@ export const DashboardStyle = StyleSheet.create({
       shadowOpacity: 0.5,
       shadowRadius: 20, // Adjust this value to control the shadow's spread
       elevation: 8,
-      width: '98%',
       borderRadius: 4,
       borderColor: Colors.white,
       borderWidth: 0.5,
@@ -274,6 +275,10 @@ export const DashboardStyle = StyleSheet.create({
     boostYourKnowledge : {
         fontWeight: '500',
         fontSize: 16
+    },
+    pendingQuizzesList : {
+      paddingHorizontal: 4,
+      paddingVertical: 4
     }
 
 })

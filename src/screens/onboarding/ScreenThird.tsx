@@ -64,11 +64,14 @@ export const ScreenThird = () => {
         fontWeight: "500"
     },
     buttonSection: {
+        width: "100%",
+        position: 'absolute',
         paddingHorizontal: 24,
         backgroundColor: Colors.white,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        bottom: 40,
+        alignSelf: 'center'
     }
 })

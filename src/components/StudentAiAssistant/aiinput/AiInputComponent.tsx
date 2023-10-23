@@ -43,6 +43,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
       (element: any) => element.name == "BottomSheetScreen"
     ) as any;
     setSelectedSubject(currentRouteObject?.params?.selectedSubject);
+    setBottomSheetVisible(true)
   }, []);
 
   const onChange = (text: string) => {
@@ -70,7 +71,8 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
             gap: 12,
             paddingVertical: 8,
             paddingHorizontal: 16,
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
+            backgroundColor: 'transparent'
           }}
         >
           <View style={styles.selectSubjectContainer}>

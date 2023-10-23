@@ -29,7 +29,6 @@ export const QuizQuestionAnswerReview = () => {
     }, [quizQuestionList, currentQuestionIndex]);
 
     const getData = async () => {
-        debugger
         try {
             const userAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) || '[]');
             setQuizQuestionList(userAnswerList.quizQuestionList);
@@ -56,7 +55,6 @@ export const QuizQuestionAnswerReview = () => {
             scrollToNextQuestion();
         } else {
             navigation.navigate('QuizHomepage' as never);
-            console.log("Quiz Ended");
         }
     };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { SetStateAction, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, CrossIcon, InfoIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import quizQuestions from '../../utils/responses/quizquestions';
@@ -40,9 +40,11 @@ export const QuizQuestionsPage = () => {
     const [quizFlow, setQuizFlow] = useState<string | null>('');
     const [quizzId, setQuizzId] = useState<string | null>('');
     const {user} = useUser();
+    const [subject, setSubject] = useState<string | null>('');
 
     const getQuizType = async () => {
         setQuizType(await AsyncStorage.getItem('quizType'));
+        setSubject(await AsyncStorage.getItem('subject'));
     }
 
     const getQuizFlow = async () => {
@@ -54,10 +56,10 @@ export const QuizQuestionsPage = () => {
         getQuizFlow();
         const req = {
             "schoolId": "default",
-            "subject": "string",
-            "boardId": user.board,
-            "className": user.class,
-            "studentId": user.userId,
+            "subject": subject,
+            "boardId": user?.board,
+            "className": user?.class,
+            "studentId": user?.userId,
             "chapterName": [
                 "string"
             ],
@@ -68,8 +70,10 @@ export const QuizQuestionsPage = () => {
         // add time score dataType screenpage
         setReqObject(route.params as any);
         setQuizQuestionList(route.params.mcqs);
+        AsyncStorage.removeItem('questions',);
         setTimer(route.params.time);
         setQuizzId(route.params.quizzId)
+        setQuestionsInLocal();
 
         // const reqObj = {
         //     "service": "ml_service",
@@ -95,6 +99,10 @@ export const QuizQuestionsPage = () => {
         //     // setQuizQuestionList(res.data.data.mcqs);
         // });
     }, [])
+
+    const setQuestionsInLocal = async () => {
+        AsyncStorage.setItem('questions', JSON.stringify(quizQuestionList));
+    }
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -190,7 +198,7 @@ export const QuizQuestionsPage = () => {
         }
     };
 
-    const submitQuiz = (answerList: questionWithTime) => {
+    const submitQuiz = async (answerList: questionWithTime) => {
         const questions = answerList.quizQuestionList.map((answer) => {
             return {
                 mcqId: answer.mcqId,
@@ -202,7 +210,7 @@ export const QuizQuestionsPage = () => {
         tempRequest.mcqs = questions;
         tempRequest.score = calculateScore(answerList);
         tempRequest.time = timer;
-        tempRequest.studentName = "Trin";
+        tempRequest.studentName = user?.name;
         tempRequest.screenPage = quizFlow != 'Quizzes' ? 'examPreparation' : `quizzes`
         if(quizFlow == 'Quizzes') delete tempRequest.chapterName;
 
@@ -226,6 +234,39 @@ export const QuizQuestionsPage = () => {
     const timerEnds = async () => {
         const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
         submitQuiz(UserAnswerList)
+    }
+
+    const userEndsThequiz = async () => {
+        const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
+        submitQuiz(UserAnswerList);
+    }
+
+    const reportQuestion = async (feedback: SetStateAction<string>) => {
+        const req = {
+            schoolId: "default",
+            boardId: user?.board,
+            subject: subject,
+            className: user?.class,
+            studentId: user?.userId,
+            feedbackOn: "mcqs",
+            msg: [
+                {"feedback": "negative"},
+                {"feedbackMessage": feedback},
+            ],
+            mcqId: currentQuestion.mcqId,
+          }
+          console.log(req);
+          const reqObj = {
+            "service": "ml_service",
+            "endpoint": `/feedback`,
+            "requestMethod": "POST",
+            "requestBody": req
+        }
+
+        const res = await httpClient.post(`auth/c-auth`, reqObj);
+        if (res.data.statusCode == 200) {
+            setBottomSheetVisible(false)
+        }
     }
 
 
@@ -314,30 +355,11 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                        <ReportComponent />
-                        <View style={{ paddingHorizontal: 20, paddingVertical: 20, }}>
-                            <Description placeholder={'Write your feedback'} title={''} />
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                gap: 5,
-                                position: "absolute",
-                                bottom: 0,
-                                // left:20,
-                                paddingHorizontal: 20,
-                                paddingVertical: 20,
-                                justifyContent: "space-between",
-                                width: '100%',
-
-                            }}
-
-                        >
-                            <Button label={'cancel'} disabled={false} className={OutlineButton} onPress={() => setBottomSheetVisible(false)}></Button>
-                            <Button label={'Report'} disabled={false} className={LoginButton} onPress={function (): void {
-                                throw new Error('Function not implemented.');
-                            }}></Button>
-                        </View>
+                        <ReportComponent report={(item) => {
+                            reportQuestion(item);
+                        } } closeModal={function (value: React.SetStateAction<boolean>): void {
+                            setBottomSheetVisible(false)
+                        } } />
                     </View>
                 </View>
             </Modal>
@@ -346,9 +368,11 @@ export const QuizQuestionsPage = () => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}>
-                <Popup setModalVisible={setModalVisible} />
+                <Popup setModalVisible={setModalVisible} exit={function (value: React.SetStateAction<string>): void {
+                        userEndsThequiz();
+                        setModalVisible(!modalVisible)
+                    } } />
             </Modal>
-
             <Modal
                 animationType="fade"
                 transparent={true}

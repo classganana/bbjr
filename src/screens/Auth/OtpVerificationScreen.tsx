@@ -62,7 +62,6 @@ const OtpVerification = (props: Props) => {
     const otp = inputRefs.map((ref) => ref.current?.value || '').join('');
     setOtp(otp);
     if (otp && otp.length === 6) {
-      console.log(otp);
       props.otpGiven(otp);
     }
   };

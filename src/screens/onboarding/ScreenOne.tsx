@@ -49,7 +49,7 @@ const ScreenOneStyle = StyleSheet.create({
         flexDirection: 'column',
     },
     gif: {
-        height: 500, 
+        height: 450, 
         width: "100%"
     },
     intro: {
@@ -64,11 +64,14 @@ const ScreenOneStyle = StyleSheet.create({
         fontWeight: "500"
     },
     buttonSection: {
+        width: "100%",
+        position: 'absolute',
         paddingHorizontal: 24,
         backgroundColor: Colors.white,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        bottom: 40,
+        alignSelf: 'center'
     }
 })

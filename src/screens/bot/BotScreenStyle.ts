@@ -38,5 +38,15 @@ export const BotStyle = StyleSheet.create({
     headerTitleInfo: {
         fontSize: 12,
         color: "#23AE00"
-    }
+    },
+    bottomSheetContainer: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        height: "75%",
+        backgroundColor: Colors.white,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+
+    },
 })

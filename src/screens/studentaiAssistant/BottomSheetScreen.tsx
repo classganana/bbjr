@@ -24,7 +24,6 @@ export const BottomSheetScreen: React.FC = () => {
     // /generate/conversations/{school_id}/{student_id}/{subject'}
     const customApiPath = `${apiPath}generate/conversations/101/10/${subject}`;
     httpClient.get(customApiPath).then((res) => {
-      console.log(res.data);
       setMessages(res.data.data);
     });
   }, [subject]);

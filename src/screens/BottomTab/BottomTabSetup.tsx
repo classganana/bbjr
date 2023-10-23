@@ -17,6 +17,8 @@ import { SettingsPage } from "../Profile/SettingsPage";
 import { useNavigation } from "@react-navigation/native";
 import { HomeIcon } from "../../components/common/SvgComponent/SvgComponent";
 import { UserProvider } from "../../context/UserContext";
+import { QuizNavigator } from "../../navigators/QuizNavigator";
+import { ProfileNavigator } from "../../navigators/ProfileNavigator";
 const Tab = createBottomTabNavigator();
 const BottomTabSetup = () => {
   const [focusedTab, setFocusedTab] = useState<
@@ -122,7 +124,7 @@ const BottomTabSetup = () => {
         />
         <Tab.Screen
           name="LoginScreen"
-          component={QuizHomePage}
+          component={QuizNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
               <Animated.View
@@ -149,7 +151,7 @@ const BottomTabSetup = () => {
                     fontSize: 14,
                   }}
                 >
-                  Login
+                  Quiz
                 </Text>
               </Animated.View>
             ),
@@ -188,15 +190,17 @@ const BottomTabSetup = () => {
         />
         <Tab.Screen
           name="Profile"
-          component={SettingsPage}
+          component={ProfileNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
-              <TouchableOpacity onPress={() => navigation.navigate('Profile' as never)}
+              <Animated.View
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
-                }}
-              >
+                  transform: [
+                    { scale: focused ? scaleValues.PasswordScreen : 1 },
+                  ],
+                }} >
                 <Image
                   source={require("../../../assets/png/threelines.png")}
                   resizeMode="contain"
@@ -214,7 +218,7 @@ const BottomTabSetup = () => {
                 >
                   Profile
                 </Text>
-              </TouchableOpacity>
+              </Animated.View>
             ),
           }}
         />

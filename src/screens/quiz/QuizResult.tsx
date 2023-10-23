@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { BackHandler, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
 import { ArrowLeft, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton, OutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { LoginButton , ShowAnswer, TryAgain} from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Answers, questionWithTime } from './QuizQuestionsPage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
+import { useUser } from '../../context/UserContext';
+
 
 type Props = {
     noOfQuestions: number,
@@ -16,8 +18,10 @@ type Props = {
 }
 
 export const QuizResult = () => {
+    const { user } = useUser();
     const props: any = {};
     const imageRef = useRef();
+    const [retryData, setRetryData] = useState({});
     const [result, setResult] = useState([
         {
             label: "Total Score",
@@ -28,33 +32,54 @@ export const QuizResult = () => {
             value: `${props.noOfQuestions}`
         },
         {
-            label: "Wrong Questions",
+            label: "Incorrect",
             value: `${props.noOfCorrectAnswers}`
         },
         {
-            label: "Right Questions",
+            label: "Correct",
             value: `${props.noOfQuestions - props.noOfCorrectAnswers}`
         },
         {
-            label: "Unanswered Questions",
+            label: "Unattempted",
             value: `${props.noOfQuestions - props.noOfCorrectAnswers}`
         }
     ]);
-
+    const route = useRoute()
     const navigator = useNavigation();
+    const [status, requestPermission] = MediaLibrary.usePermissions();
+
+    if (status === null) {
+        requestPermission();
+      }
+    
 
     useEffect(() => {
         getData();
     }, [])
 
+
+    useEffect(() => {
+        const backAction = () => {
+          if (navigator.isFocused()) {
+            console.log("back button");
+            return true; // Returning true prevents the default back action
+          }
+          return false; // Allow the default back action on other screens
+        };
+    
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    
+        return () => backHandler.remove(); // Remove the event listener when the component unmounts
+      }, [navigator]);
+
     async function getData() {
         try {
+            setRetryData(route?.params?.retryData)
             const data = JSON.parse((await AsyncStorage.getItem('questions')) as string); 
             const UserAnswerList = data && (data.quizQuestionList) ? data.quizQuestionList : []
             const score = calculateScore(UserAnswerList);
             const totalMarks = UserAnswerList.length * 10;
             const updatedResult = [...result];
-            console.log(UserAnswerList);
             const unanswered = calculateUnanswered(UserAnswerList);
 
             // Update specific values in the copied array
@@ -73,6 +98,10 @@ export const QuizResult = () => {
         navigator.navigate('QuizQuestionAnswersReview' as never)
     }
 
+    function retryQuiz() {
+        navigator.navigate('QuizQuestionPages' as never, retryData as never)
+    }
+
     const calculateUnanswered = (answerList: Answers) => {
         let unanswered = 0;
         answerList.forEach((answer) => {
@@ -81,9 +110,9 @@ export const QuizResult = () => {
         return unanswered;        
     }
 
-    const calculateScore = (answerList: questionWithTime) => {
+    const calculateScore = (answerList: Answers) => {
         let score = 0;
-        answerList && answerList.quizQuestionList && answerList.quizQuestionList.forEach((answer) => {
+        answerList && answerList.forEach((answer) => {
             if (answer.answer == answer.selectedAnswer)
                 score += 10;
         })
@@ -102,7 +131,6 @@ export const QuizResult = () => {
             alert("Saved!");
           }
         } catch (e) {
-          console.log(e);
         }
       };
 
@@ -113,48 +141,53 @@ export const QuizResult = () => {
                     <View style={styles.backButton}>
                         <ArrowLeft height={'30'} width={'30'} fill={'white'}></ArrowLeft>
                     </View>
+                    <Text style={styles.title}>Test Score</Text>
                     <TouchableOpacity onPress={onSaveImageAsync} style={[styles.shareButton, { position: "absolute", right: 10 }]}>
                         <ShareIcon height={'20'} width={'20'} fill={Colors.primary} />
                     </TouchableOpacity>
                 </View>
             </View>
+            <ScrollView style={{flex: 1, paddingVertical: 2}}>
             <View style={styles.scoreContainer}>
                 <View style={styles.scoreCard}>
-                    <Text>Ayush</Text>
+                    <Text style={styles.userName}>{user?.name}</Text>
+                    <Text style={styles.userSchool}>{user?.school}</Text>
                 </View>
             </View>
-            <ImageBackground source={require('../../../assets/gifs/celebrate.gif')} style={styles.imageSection}>
-                <Image style={styles.image} source={require('../../../assets/png/trophy.png')}></Image>
-            </ImageBackground>
+            <View>
+                <ImageBackground source={require('../../../assets/gifs/celebrate.gif')} style={styles.imageSection}>
+                    <Image style={styles.image} source={require('../../../assets/png/trophy.png')}></Image>
+                </ImageBackground>
+            </View>
             <View style={styles.cardsContainer}>
                 {result.slice(0,2).map((item, index) => (
                     <View style={styles.marksCards} key={index}>
-                        <Text style={styles.label}>{item.label}</Text>
                         <Text style={[
                             styles.values,
                             item.label === 'Wrong Questions' && styles.redText,
                             item.label === 'Right Questions' && styles.greenText
                         ]}>{item.value}</Text>
+                        <Text style={styles.label}>{item.label}</Text>
                     </View>
                 ))}
             </View>
-            <View style={styles.cardsContainerBottom}>
+            <View style={styles.cardsContainerBottom1}>
             {result.slice(2,5).map((item, index) => (
-                    <View style={styles.marksCards} key={index}>
-                        <Text style={styles.label}>{item.label}</Text>
+                    <View style={styles.marksCards1} key={index}>
                         <Text style={[
                             styles.values,
                             item.label === 'Wrong Questions' && styles.redText,
                             item.label === 'Right Questions' && styles.greenText
                         ]}>{item.value}</Text>
+                        <Text style={styles.label}>{item.label}</Text>
                     </View>
                 ))}                        
             </View>
             <View style={styles.buttonSection}>
-                <Button label={"Show Answers"} className={OutlineButton} disabled={false} onPress={showAnswersScreen} />
-                <Button label={"Play Again"} className={LoginButton} disabled={false} onPress={function (): void {}} />
+                <Button label={"View Solutions"} className={ShowAnswer} disabled={false} onPress={showAnswersScreen} />
+                <Button label={"Play Again"} className={TryAgain} disabled={false} onPress={retryQuiz} />
             </View>
-
+            </ScrollView>
         </View>
     )
 }
@@ -178,6 +211,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 28,
     },
+    title: {
+        fontSize: 22,
+        fontWeight: '500',
+        color: Colors.black_01
+    },
     backButton: {
         height: 45,
         width: 45,
@@ -197,6 +235,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.primary
     },
     scoreContainer: {
+        marginTop: 12,
         alignSelf: 'center',
         width: "90%",
         position: 'relative',
@@ -211,14 +250,24 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '-3deg' }],
         flex: 1,
         borderColor: "#006B7F8F",
-        borderWidth: 1/2
+        borderWidth: 0.5,
+        // flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    userName: {
+        fontSize: 14,
+        fontWeight: `400`
+    },
+    userSchool: {
+        fontSize: 14,
+        fontWeight: '400',
+        color: "#626262"
     },
     imageSection: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        height: 300,
-        // width: "100%"
+        height: 250,
     },
     image: {
         height: 200,
@@ -227,17 +276,24 @@ const styles = StyleSheet.create({
     cardsContainer: {
         gap: 10,
         paddingHorizontal: 20,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center'
     },
     cardsContainerBottom: {
         gap: 10,
         paddingHorizontal: 20,
-    },    
-    marksCards: {
-        display: 'flex',
-        padding: 24,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+    },
+    cardsContainerBottom1: {
+        marginTop: 18,
+        gap: 0,
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+    },
+    marksCards: {
+        width: "50%",
+        padding: 24,
+        justifyContent: 'center',
         borderRadius: 12,
         backgroundColor: '#F2F7F8',
         shadowColor: '#000',
@@ -249,15 +305,32 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 2
     },
+    marksCards1: {
+        width: "33%",
+        padding: 10,
+        justifyContent: 'center',
+        // borderRadius: 12,
+        backgroundColor: '#F2F7F8',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        elevation: 2
+    },
     label: {
-        color: "#757575",
+        color: "#131313",
         fontSize: 16,
-        fontWeight: '500'
+        fontWeight: '500',
+        textAlign: 'center'
     },
     values: {
         fontSize: 22,
         fontWeight: '500',
-        color: Colors.black_01
+        color: Colors.primary,
+        textAlign: 'center'
     },
     redText: {
         color: 'red'

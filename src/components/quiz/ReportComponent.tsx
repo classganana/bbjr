@@ -1,31 +1,63 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Colors } from '../../styles/colors';
 import { Button } from '../common/ButttonComponent/Button';
-import { OutlineButton } from '../common/ButttonComponent/ButtonStyles';
+import { LoginButton, OutlineButton } from '../common/ButttonComponent/ButtonStyles';
+import { Description } from '../feedback/Description/Description';
 
-function ReportComponent() {
+interface ReportProps {
+  report: React.Dispatch<React.SetStateAction<string>>;
+  closeModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function ReportComponent(props: ReportProps) {
   const buttons = ['Incorrect or incomplete question', 'Incorrect or incomplete Options', 'Formatting or image quality issue'];
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedButton, setSelectedButton] = useState('');
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(true);
 
   return (
     <>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.Text}> What seems to be the problem?</Text>
         <Text style={styles.text}>Your feedback will help us to improve your test-taking experience</Text>
         {buttons.map((buttonLabel, index) => (
-          <TouchableOpacity key={index} onPress={() => setSelectedButton(index)}>
+          <TouchableOpacity key={index} onPress={() => {
+            setSelectedButton(buttonLabel)
+          }}>
             <View style={styles.Button}>
               <Text>{buttonLabel}</Text>
               <View style={styles.optionMarker}>
-                {selectedButton === index && (
+                {selectedButton === buttonLabel && (
                   <View style={styles.markesign}></View>
                 )}
               </View>
             </View>
           </TouchableOpacity>
         ))}
-      </View>
+        <View style={{ paddingHorizontal: 20, paddingVertical: 20, }}>
+          <Description placeholder={'Write your feedback'} title={''} />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 5,
+            position: "absolute",
+            bottom: 0,
+            // left:20,
+            paddingHorizontal: 20,
+            paddingVertical: 20,
+            justifyContent: "space-between",
+            width: '100%',
+
+          }}
+        >
+          <Button label={'Cancel'} disabled={false} className={OutlineButton} onPress={() => props.closeModal(false)}></Button>
+          <Button label={'Report'} disabled={false}
+            className={LoginButton} onPress={() => {
+              props.report(selectedButton);
+            }}></Button>
+        </View>
+      </ScrollView>
     </>
   );
 }

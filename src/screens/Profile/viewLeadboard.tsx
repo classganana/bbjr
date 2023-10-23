@@ -19,8 +19,7 @@ const ViewLeadboard = () => {
     }));
 
     return (
-            <ScrollView>
-            <View style={styles.container}>
+        <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
                         <View style={styles.backButton}>
@@ -29,52 +28,53 @@ const ViewLeadboard = () => {
                         <Text style={styles.headingTitle}>view leaderboard</Text>
                     </View>
                 </View>
-                <View style={styles.DetailContainer}>
-                    <Text style={styles.BodyTitle}>Leaderboard</Text>
-                    <View style={styles.BodyContainer}>
-                        <Text style={styles.BodyText}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text>
-                        <Button label={'Explore'} className={ExploreButton} disabled={false} onPress={() => { }} />
-                    </View>
-                    <View style={styles.HighscoreCard}>
-                        <View style={styles.HighScoreTitle}>
-                            <Text style={styles.Titlescore}># High Scores</Text>
-                            <Text style={styles.score}>Score</Text>
+                <ScrollView>
+                    <View style={styles.DetailContainer}>
+                        <Text style={styles.BodyTitle}>Leaderboard</Text>
+                        <View style={styles.BodyContainer}>
+                            <Text style={styles.BodyText}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text>
+                            <Button label={'Explore'} className={ExploreButton} disabled={false} onPress={() => { }} />
                         </View>
-                        {HighScorelabels.map((HighestScoreLabel, index) => (
-                            <View key={index} style={styles.rankProfileCard}>
-                                <View style={styles.ScoreInnerCard}>
-                                    <Text style={styles.rollNumber}>{HighestScoreLabel.rollNumber}</Text>
-                                    <View style={styles.ProfileImage} />
-                                    <View>
-                                        <Text style={styles.StudCard}>{HighestScoreLabel.title}</Text>
-                                        <Text style={styles.SchoolCard}>{HighestScoreLabel.school}</Text>
-                                    </View>
-                                </View>
-                                <Text>{HighestScoreLabel.score}</Text>
+                        <View style={styles.HighscoreCard}>
+                            <View style={styles.HighScoreTitle}>
+                                <Text style={styles.Titlescore}># High Scores</Text>
+                                <Text style={styles.score}>Score</Text>
                             </View>
-                        ))}
-                    </View>
-                    <View style={styles.RankCard}>
-                        <View style={styles.HighScoreTitle}>
-                            <Text style={styles.Titlescore}>Rank</Text>
-                            <Text style={styles.score}>Score</Text>
+                            {HighScorelabels.map((HighestScoreLabel, index) => (
+                                <View key={index} style={styles.rankProfileCard}>
+                                    <View style={styles.ScoreInnerCard}>
+                                        <Text style={styles.rollNumber}>{HighestScoreLabel.rollNumber}</Text>
+                                        <View style={styles.ProfileImage} />
+                                        <View>
+                                            <Text style={styles.StudCard}>{HighestScoreLabel.title}</Text>
+                                            <Text style={styles.SchoolCard}>{HighestScoreLabel.school}</Text>
+                                        </View>
+                                    </View>
+                                    <Text>{HighestScoreLabel.score}</Text>
+                                </View>
+                            ))}
                         </View>
-                        {Ranklabel.map((RankLabel, index) => (
-                            <View style={styles.rankScoreCard} key={index}>
-                                <View style={styles.ScoreInnerCard}>
-                                    <View style={styles.ProfileImage} />
-                                    <View>
-                                        <Text style={styles.StudCard}>{RankLabel.title}</Text>
-                                        <Text style={styles.SchoolCard}>{RankLabel.school}</Text>
-                                    </View>
-                                </View>
-                                <Text>{RankLabel.score}</Text>
+                        <View style={styles.RankCard}>
+                            <View style={styles.HighScoreTitle}>
+                                <Text style={styles.Titlescore}>Rank</Text>
+                                <Text style={styles.score}>Score</Text>
                             </View>
-                        ))}
-                    </View>
-                </View >
+                            {Ranklabel.map((RankLabel, index) => (
+                                <View style={styles.rankScoreCard} key={index}>
+                                    <View style={styles.ScoreInnerCard}>
+                                        <View style={styles.ProfileImage} />
+                                        <View>
+                                            <Text style={styles.StudCard}>{RankLabel.title}</Text>
+                                            <Text style={styles.SchoolCard}>{RankLabel.school}</Text>
+                                        </View>
+                                    </View>
+                                    <Text>{RankLabel.score}</Text>
+                                </View>
+                            ))}
+                        </View>
+                    </View >
+                </ScrollView>
             </View>
-        </ScrollView>
     );
 };
 const styles = StyleSheet.create({
@@ -83,6 +83,9 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
     },
     header: {
+        height: 66,
+        flexDirection: 'row',
+        alignItems: 'center',
         paddingHorizontal: 20,
         paddingVertical: 10,
     },

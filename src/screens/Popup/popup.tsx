@@ -1,28 +1,38 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import {CancelButton, ExitButton} from '../../components/common/ButttonComponent/ButtonStyles';
+import {CancelButton, ExitButton, OutlineButton} from '../../components/common/ButttonComponent/ButtonStyles';
 import { Colors } from '../../styles/colors';
 
 interface PopupProps {
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  exit: React.Dispatch<React.SetStateAction<string>>;
 }
 function Popup(props: PopupProps) {
   const buttons = ['Questions are easy', 'Questions are tough', 'I want to attempt later', 'I am not prepared for the test','Other']
-  
+  const [review, setReview] = useState('');
+
+  const setOption = (text: string) => {
+    console.log(text);
+  }
   return (
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
         <Text style={styles.headerText}>Name, you’re leaving too soon ?</Text>
         <Text style={styles.text}>Can you tell us the reason</Text>
         {buttons.map((buttonLabel, index) => (
-          <View style={styles.OptButton}>
-            <Button styles={styles.text} label={buttonLabel} disabled={false} onPress={function (): void {} }/>
+          <View key={index} 
+          style={[styles.OptButton, buttonLabel == review && styles.selected]}>
+            <TouchableOpacity onPress={() => setReview(buttonLabel)}>
+                <Text style={buttonLabel == review && styles.selected}>
+                    {buttonLabel}
+                </Text >
+            </TouchableOpacity>
           </View>
         ))}
         <View style={styles.popupbtn}>
         <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={() => props.setModalVisible(false)}></Button>
-        <Button label={'Exit'} disabled={false} className={ExitButton} onPress={function (): void {} } ></Button>
+        <Button label={'Exit'} disabled={false} className={ExitButton} onPress={() => props.exit(review)} ></Button>
         </View>
       </View>
     </View>
@@ -71,7 +81,12 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     width:'100%',
     flex:1,
+  },
+  selected: {
+    backgroundColor: Colors.primary,
+    color: Colors.white,
   }
+
 });
 
 export default Popup;

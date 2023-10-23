@@ -9,10 +9,11 @@ import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
 import { CustomDropdown } from '../../components/common/Performance/CustomDropdown/CustomDropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfile = () => {
     const [name, setName] = useState('');
-    const [classValue, setClassValue] = useState(''); // No default class selected
+    const [classValue, setClassValue] = useState(0); // No default class selected
     const [school, setSchool] = useState('');
     const [board, setBoard] = useState(''); // No default board selected
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -29,6 +30,7 @@ const EditProfile = () => {
 
 
     useEffect(() => {
+        if(user){
             setName(user.name);
             setBoard(user.board);
             setClassValue(user.class);
@@ -36,7 +38,8 @@ const EditProfile = () => {
             setSchool(user.school);
             setUserId(user.userId);
             user.guardianEmail && setGuardianEmail(user.guardianEmail);
-            user.guardianName &&setGuardianName(user.guardianName);
+            user.guardianName && setGuardianName(user.guardianName);
+        }
     }, [])
 
 
@@ -59,6 +62,7 @@ const EditProfile = () => {
         }).then((res) => {
             if(res.data.acknowledged) {
                 setUser({...updatedData, userId});
+                AsyncStorage.setItem('user',JSON.stringify({...updatedData, userId}));
                 toggleEditMode();
             }
         });
@@ -96,7 +100,7 @@ const EditProfile = () => {
                     <View style={styles.ImageContainer}>
                         {/* <View style={styles.ProfileImage} > */}
                             {/* <View style={styles.CameraBorder}> */}
-                                <CircleInitials name={user.name} size={150} />
+                                <CircleInitials name={user?.name} size={150} />
                                 {/* <CameraIcon height={'50'} width={'50'} fill={'white'} /> */}
                             {/* </View> */}
                         {/* </View> */}
@@ -132,7 +136,7 @@ const EditProfile = () => {
                             enabled={isEditMode}
                             selectedValue={classValue.toString()}
                             onValueChange={(itemValue) => {
-                                setClassValue(itemValue);
+                                setClassValue(parseInt(itemValue));
                                 // checkFields();
                             }}
                         >

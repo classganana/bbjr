@@ -69,7 +69,6 @@ export const FeedbackList = ({ type }: any) => {
   function onFeedbackCardClick(item: any) {
     bottomDrawerRef.current?.open();
     setSelectedFeedback(item);
-    console.log(item);
   }
 
   return (

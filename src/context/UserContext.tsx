@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface UserContextType {
-  user: any; // Replace 'any' with the actual type of user data
+  user: UserType | null; // Replace 'any' with the actual type of user data
   setUser: React.Dispatch<React.SetStateAction<any>>; // Adjust the type accordingly
 }
 
@@ -13,7 +13,7 @@ interface UserProviderProps {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<any>(null); // Adjust the type accordingly
+  const [user, setUser] = useState<UserType | null>(null); // Adjust the type accordingly
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -36,5 +36,7 @@ export type UserType = {
     class: number,
     board: string,
     userId: string,
-    school: string
+    school: string,
+    guardianEmail?: string,
+    guardianName?: string,
 }

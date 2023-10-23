@@ -13,6 +13,7 @@ import { useUser } from '../../context/UserContext'
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials'
 import { IconButton } from '../../components/common/IconButtonComponent/IconButton'
 import { ContinutPractice } from '../../components/home/components/ContinutPractice'
+import { httpClient } from '../../services/HttpServices'
 
 
 export const Dashboard = () => {
@@ -35,16 +36,40 @@ export const Dashboard = () => {
     }
 
     const getPendingQuiz = async () => {
+        getDashboardData()
         const localQuiz = await AsyncStorage.getItem('localQuizzes');
         if (localQuiz) return JSON.parse(localQuiz);
+    }
+
+    const getDashboardData = () => {
+        const req = {
+            "schoolId": "default",
+            "boardId": user?.board,
+            "className": user?.class,
+            "studentId": user?.userId,
+        }
+
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint": `/main/data`,
+            "requestMethod": "POST",
+            "requestBody": req
+        }
+        httpClient.post(`auth/c-auth`, reqObj)
+        .then((res) => {
+            if(res.data.statusCode == 200) {
+                console.log(res.data.data);
+            } else {
+                console.log("main",res.data);
+            }
+        })
     }
 
 
     useEffect(() => {
         console.log(user);
         getPendingQuiz().then((list) => {
-            console.log(list);
-            if (list && list.lenght) {
+            if (list && list.length) {
                 list = list.map((item: any) => {
                     item.title = (item.screenPage == "examPreparation") ? item.chapterName : item.name;
                     return item;
@@ -66,16 +91,16 @@ export const Dashboard = () => {
             <ScrollView style={DashboardStyle.body}>
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>
-                        <CircleInitials name={user.name} size={30} />
+                        <CircleInitials name={user?.name} size={30} />
                         <View style={{ flex: 1 }}>
-                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user.name}</Text>
+                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
                         </View>
                     </View>
                 </View>
                 <View style={DashboardStyle.options}>
                     <View style={DashboardStyle.optionTitle}>
                         <Text style={DashboardStyle.boostYourKnowledge}>Boost Your Knowledge</Text>
-                        <TouchableOpacity style={DashboardStyle.viewAllBlock}>
+                        <TouchableOpacity style={DashboardStyle.viewAllBlock} onPress={moveToExploreQuizPage}>
                             <Text style={DashboardStyle.viewAllText}>Explore</Text>
                         </TouchableOpacity>
                     </View>
@@ -127,7 +152,7 @@ export const Dashboard = () => {
                     </View>
                 </View>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
-                {data && data.length > 0 && <View>
+                {data && data.length > 0 ? <View>
                     <View style={DashboardStyle.continuePractice}>
                         <Text>Continue practice </Text>
                         <TouchableOpacity>
@@ -136,15 +161,17 @@ export const Dashboard = () => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <View>
-                        <View>
+                    <View style={DashboardStyle.pendingQuizzesList}>
                             {data && data.map((item, index) => (
                                 <ExamPrepQuizCard key={index} {...item} onCardClick={(i) => { console.log(i) }} />
                             ))}
-                        </View>
                     </View>
-                </View>}
-                <ContinutPractice />
+                </View>
+                :
+                <ContinutPractice onPress={() => {
+                    moveToExploreExamPrepPage()
+                }} />
+                }
             </ScrollView>
         </View>
     )

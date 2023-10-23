@@ -1,40 +1,50 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native' // Import KeyboardAvoidingView
+import { Text, View, KeyboardAvoidingView, Platform, TouchableOpacity, Modal } from 'react-native' // Import KeyboardAvoidingView
 import { ArrowLeft, BotIcon } from '../../components/common/SvgComponent/SvgComponent'
 import { BotStyle } from './BotScreenStyle'
 import { BotIntroduction } from '../../components/bot/BotIntroduction'
 import { Aiinput } from '../../components/StudentAiAssistant/aiinput/AiInputComponent'
-import { MessageContainer } from '../studentaiAssistant/MessageContainerScreen'
+import { BotMessage, MessageContainer } from '../studentaiAssistant/MessageContainerScreen'
 import { httpClient } from '../../services/HttpServices'
 import { useNavigation } from '@react-navigation/native'
 import { Chats } from '../studentaiAssistant/Chats.interface'
 import { useUser } from '../../context/UserContext'
+import ReportComponent from '../../components/quiz/ReportComponent'
+import { ToastService } from '../../services/ToastService'
+
+interface BotMessageFeedback {
+  BotAnswer: string;
+  feedback: string
+}
 
 export const BotScreen = () => {
   const [subject, setSubject] = useState("");
   const [messages, setMessages] = useState<any>([]);
   const navigation = useNavigation();
-  const {user} = useUser()
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const { user } = useUser()
+  const [userFeedback, setUserFeedback] = useState('');
+  const [botMessage, setBotMessage] = useState<BotMessageFeedback>();
 
   useEffect(() => {
     console.log(user)
     const req = {
       service: "ml_service",
-      endpoint: `/conversations?student_id=${user.userId}&subject=${subject}&school_id=default`,
+      endpoint: `/conversations?student_id=${user?.userId}&subject=${subject}&school_id=default`,
       requestMethod: "GET",
       requestBody: {
 
       }
     };
 
-    if(user.board && user.class && user.name, user.userId && subject) {
+    if (user?.board && user?.class && user?.name, user?.userId && subject) {
       httpClient.post('auth/c-auth', req)
-      .then((res) => {
-        setMessages(() => res.data.data)
-      })
-      .catch((e) => {
-        console.log("Error => ",e);
-      })
+        .then((res) => {
+          setMessages(() => res.data.data)
+        })
+        .catch((e) => {
+          console.log("Error => ", e);
+        })
     }
   }, [subject])
 
@@ -45,14 +55,14 @@ export const BotScreen = () => {
       text: text,
       timestamp: Date.now(),
     };
-  
+
     // Create a 'typing' message for the bot
     const botTypingMessage = {
       source: "bot",
       text: 'typing',
       timestamp: Date.now(),
     };
-  
+
     // Add the user message and the 'typing' message
     setMessages((prev: any) => [...prev, userMessage, botTypingMessage]);
 
@@ -62,10 +72,9 @@ export const BotScreen = () => {
         Math.max(messages.length - 4, 0), // Ensure it starts at 0 or higher
         messages.length
       );
-    
+
       // Initialize history objects
       const historyObjects = [];
-    
       // Generate history objects for the available messages
       for (let i = 0; i < lastFourMessages.length - 1; i += 2) {
         historyObjects.push({
@@ -83,16 +92,16 @@ export const BotScreen = () => {
       requestBody: {
         schoolId: 'default',
         subject: subject,
-        boardId: user.board,
-        className: user.class,
-        studentName: user.name,
-        studentId: user.userId,
+        boardId: user?.board,
+        className: user?.class,
+        studentName: user?.name,
+        studentId: user?.userId,
         userMessage: text,
-        chatHistory:  chat_history(),
+        chatHistory: chat_history(),
       }
     };
-  
-    if(user.board && user.class && user.name, user.userId && subject) {
+
+    if (user?.board && user?.class && user?.name, user?.userId && subject) {
       httpClient.post('auth/c-auth', req).then((res) => {
         const data = res.data.data;
         const botmsg: Chats = {
@@ -101,7 +110,7 @@ export const BotScreen = () => {
           timestamp: Date.now(),
           stream: true
         };
-    
+
         // Replace the 'typing' message with the actual bot response
         setMessages((prev: any) => {
           const updatedMessages = [...prev];
@@ -114,11 +123,72 @@ export const BotScreen = () => {
       });
     }
   };
-  
 
   const onBackClick = () => {
-    navigation.navigate('DashboardNavigator' as never)
+    navigation.navigate('DashboardNavigator' as never);
   }
+
+  const submitFeedback = async (botFeedback: BotMessageFeedback | undefined) => {
+    const history = getChatHistoryForFeedback(botFeedback?.BotAnswer)
+    const localMessages = [...history];
+    console.log(localMessages);
+    const lastUserMessage = localMessages.reverse().find((message: any) => message.source === 'user');
+    const req = {
+      "schoolId": "default",
+      "boardId": user?.board,
+      "subject": subject,
+      "className": user?.class,
+      "studentId": user?.userId,
+      "feedbackOn": "chat",
+      "msg": {
+        "feedbackMessage": botFeedback?.feedback == 'negative' && userFeedback ? userFeedback: "liked",
+        "UserQuestion": lastUserMessage.text,
+        ...botFeedback
+      },
+      "chatHistory": history
+    }
+
+    const reqObj = {
+      "service": "ml_service",
+      "endpoint": `/feedback`,
+      "requestMethod": "POST",
+      "requestBody": req
+    }
+
+    console.log(req);
+    const res = await httpClient.post(`auth/c-auth`, reqObj);
+    if (res.data.statusCode == 200) {
+      setBottomSheetVisible(false);
+      ToastService('Thanks alot for the feedback');
+      console.log("Saved Successfully");
+    }
+  }
+
+  const getChatHistoryForFeedback = (botMsg: string | undefined) => {
+    const index = messages.findIndex((message: any) => message.source === 'bot' && message.text === botMsg);
+    if (index < 4) {
+      return messages;
+    } else {
+      const chatHistory = messages.slice(index - 4, index);
+      return chatHistory;
+    }
+  }
+
+  function reportQuestion(item: React.SetStateAction<string>) {
+      setUserFeedback(item);
+      submitFeedback(botMessage);
+      // submitFeedback(botMessage)
+  }
+
+  const startReportFlow = (message: BotMessageFeedback) => {
+    console.log(message);
+        if(message?.feedback == 'negative'){
+          setBottomSheetVisible(true);
+        } else {
+          submitFeedback(botMessage);
+        }
+    }
+  
 
   return (
     <KeyboardAvoidingView
@@ -139,14 +209,32 @@ export const BotScreen = () => {
         <View style={{ flex: 1 }}>
           {messages && messages.length == 0 || (subject == "")
             ? <BotIntroduction />
-            : <MessageContainer messages={messages} />
-          }
+            : <MessageContainer messages={messages} feedback={
+              function (message: BotMessageFeedback): void {
+                      setBotMessage(message);
+                      startReportFlow(message);
 
+            }} />
+          }
         </View>
         <View style={{ justifyContent: 'flex-end', width: "100%" }}>
           <Aiinput onSubjectChange={(item: any) => { setSubject(item.subjectName) }} onSendClick={(text: any) => pushMessageIntoQueue(text)} />
           {/* <Aiinput onsendclick={(text) => onMessageSent(text)} onSubjectChange={(sub: any) => { console.log(sub) }} /> */}
         </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={bottomSheetVisible}
+        // onRequestClose={() => setBottomSheetVisible(false)}
+      >
+        <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+          <View style={BotStyle.bottomSheetContainer}>
+            <ReportComponent 
+            report={(item) => {reportQuestion(item);}} 
+            closeModal={(item) =>  setBottomSheetVisible(item) } />
+          </View>
+        </View>
+      </Modal>
       </View>
     </KeyboardAvoidingView>
   )

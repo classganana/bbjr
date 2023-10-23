@@ -48,7 +48,6 @@ export const SearchDropdown: React.FC<Props> = ({
   }
 
   function removeItem(item: any) {
-    console.log(item);
     setSelectedItem((prev: any[]) => {
       return prev.filter((selectedItem) => selectedItem.name !== item.name);
     });

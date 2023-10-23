@@ -21,10 +21,10 @@ const MainScreen = () => {
 
   useEffect(() => {
     function handleResize() {
-      console.log("resized to: ", window.innerWidth, "x", window.innerHeight);
+
     }
     Platform.OS == "web" ? window.addEventListener("resize", handleResize) : "";
-    console.log(screenWidth);
+
   }, [Dimensions.get("window").width]);
   const moveToLogin = () => {
     navigation.navigate("Login" as never); // Specify type as 'never'

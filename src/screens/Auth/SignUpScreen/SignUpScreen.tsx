@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, KeyboardAvoidingView, ScrollView, Platform, Image, Text, StyleSheet } from 'react-native';
 import { LoginScreenStyle } from '../LoginScreen/LoginScreenStyle';
 import { Constants } from '../../../constants/constants';
@@ -9,6 +9,7 @@ import { Button } from "../../../components/common/ButttonComponent/Button";
 import { httpClient } from '../../../services/HttpServices';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useUser } from '../../../context/UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const SignUpScreen = () => {
@@ -25,7 +26,16 @@ export const SignUpScreen = () => {
 
     // Regular expression for a valid 10-digit phone number
     const phoneRegex = /^\d{10}$/;
+    const [phone, setPhone] = useState('');
 
+    useEffect(() => {
+        getUsersPhoneNumber();
+    },[])
+
+    const getUsersPhoneNumber = async () => {
+        const ph = await AsyncStorage.getItem('phone');
+        ph && setPhone(ph);
+    }
 
     const handleSubmit = () => {
         const userObj: any = route.params;
@@ -37,7 +47,6 @@ export const SignUpScreen = () => {
             "userId": userObj.uid,
             "school": school
         }
-        console.log(obj);
         httpClient.post('auth/sign-up', obj)
             .then((response) => {
                 if (response.status == 201) {

@@ -18,7 +18,6 @@ const Password: React.FC<PasswordProps> = ({ onFieldChange }) => {
   const handleSend = () => {
     if (emailIsValid(email)) {
       navigation.navigate('OtpVerificationScreen' as never); // Navigate to "otb" stack screen
-      console.log('Password Forgated');
     } else {
       setError(true);
     }

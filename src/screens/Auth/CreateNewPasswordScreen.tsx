@@ -16,7 +16,6 @@ export const ResetPassword = () => {
   const navigation = useNavigation();
 
   const handlePasswordChange = (data: any) => {
-    console.log(data?.target);
     setUserDetails({
       ...userDetails,
       password: data || userDetails.password,
@@ -31,7 +30,6 @@ export const ResetPassword = () => {
   };
 
   const moveToPasswordChangedScreen = () => {
-    console.log(userDetails.password, userDetails.confirmPassword);
     if (!userDetails.password || !userDetails.confirmPassword) {
       // Display a warning message if any input field is empty
       Alert.alert("Warning", "Please fill in all fields!");

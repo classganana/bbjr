@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Share } from 'react-native';
 import { IconButton } from '../../components/common/IconButtonComponent/IconButton';
 import { EditIconButton } from '../../components/common/IconButtonComponent/iconButtonStyle';
 import {
@@ -33,7 +33,23 @@ export const SettingsPage = () => {
     // navigation.navigate('Root' as never, { screen: 'EditProfile' } as never);
       // navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never); 
       navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never);
+  };
 
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message: "Challenge yourself with this exciting quiz on Brain Booster Junior. Can you beat the top score? Let's grind it. Here's the app link: https://itoniclabs.in",
+      });
+            
+      if (result.action === Share.sharedAction) {
+        // Content was successfully shared
+
+      } else if (result.action === Share.dismissedAction) {
+        // Sharing was dismissed
+      }
+    } catch (error: any) {
+      console.error('Error sharing content:', error.message);
+    }
   };
 
   const moveToLeaderboard = () => {
@@ -41,9 +57,9 @@ export const SettingsPage = () => {
   };
 
   const logout = () => {
-    // AsyncStorage.clear();
-    // navigation.navigate('Auth' as never);
-    // setUser({});
+    AsyncStorage.clear();
+    navigation.navigate('Auth' as never);
+    setUser({});
     console.log("Loggin Out");
 
   }
@@ -75,19 +91,19 @@ export const SettingsPage = () => {
       </View>
       <View style={styles.DetailContainer}>
         <View style={styles.block1}>  
-         <CircleInitials name={user.name} size={100} />
+         <CircleInitials name={user?.name} size={100} />
           <View style={{ gap: 6 }}>
             <Text style={styles.name}>{user && user.name}</Text>
-            <Text>{user && user.class}</Text>
+            <Text>{user && user.class} Class</Text>
             <Text>{user && user.school}</Text>
-            <Text>{user && user.board}</Text>
+            <Text>{user && user.board} Board</Text>
           </View>
         </View>
         <View style={styles.block2}>
-          <View style={styles.friend}>
+          <TouchableOpacity onPress={handleShare} style={styles.friend}>
             <ContactIcon height={15} width={16} fill={'black'} />
             <Text>Invite Friends</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.button}>
             <IconButton
               onPress={moveToEditProfile}

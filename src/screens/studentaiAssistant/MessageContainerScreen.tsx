@@ -14,12 +14,18 @@ import { User } from "../../components/StudentAiAssistant/messagecomponent/user"
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeft } from "../../components/common/SvgComponent/SvgComponent";
 
-export const MessageContainer = ({ messages }: { messages: Chats[] }) => {
+
+interface MessageContainerProps {
+  messages: Chats[];
+  feedback: (message: any) => void;
+}
+
+export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, feedback }) => {
+
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
   const moveToStudentAssistant = () => {
     navigation.navigate("StudentAssistantSetupScreen" as never);
-    console.log("StudentAssistantSetupScreen");
   };
 
   //   const messages: Chats[] = []
@@ -27,7 +33,6 @@ export const MessageContainer = ({ messages }: { messages: Chats[] }) => {
   return (
     <>
       <View style={style.container}>
-      
         <ScrollView
           contentContainerStyle={{
             display: "flex",
@@ -48,7 +53,8 @@ export const MessageContainer = ({ messages }: { messages: Chats[] }) => {
                     {message.source == "user" ? (
                       <User text={message.text}></User>
                     ) : (
-                      <Bot text={message.text} stream={message.stream}></Bot>
+                      <Bot text={message.text} stream={message.stream} 
+                      feedback={feedback}></Bot>
                     )}
                   </React.Fragment>
                 );

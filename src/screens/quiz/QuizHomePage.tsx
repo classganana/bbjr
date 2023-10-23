@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
 import { ClockIcon, CrossIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { SearchIcon } from '../../components/common/SvgComponent/SvgComponent';
@@ -14,6 +14,7 @@ import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subj
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { CancelButton, EditButton, ExitButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { useUser } from '../../context/UserContext';
+import { styles } from './QuizHomePageStyle';
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Quizzes');
@@ -26,7 +27,9 @@ export const QuizHomePage = () => {
     const [totalQuestions, setTotalQuestions] = useState(0);
     // const [subject, setSubject] = useState()
     const [selectedQuiz, setSelectedQuiz] = useState<any[]>();
+    const [loading, setLoading] = useState(true);
     const {user} = useUser();
+    const [loadingText, setLoadingText] = useState('');
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
@@ -43,30 +46,39 @@ export const QuizHomePage = () => {
         setMultiSelect(false);
     }, [tab, searchTerm])
      
+    useEffect(() => {
+        setOptions(false);
+        resetSelection();
+    },[multiSelect])
 
     const resetSelection = () => {
         let tempData = data;
-        tempData = tempData.map((temp) => {
-            temp.selected = false;
-            return temp;
-        });
-        setData(() => [...tempData]);
+        if(tempData && tempData.length) {
+            tempData = tempData.map((temp) => {
+                temp.selected = false;
+                return temp;
+            });
+            setData(() => [...tempData]);
+        }
+        setSelectedQuiz([]);
     }
 
     const updateList = (index: number) => {
         setOptions(true);
         let tempData = data;
-        tempData  = tempData.map((temp) => {
-            if (temp.id != (index)) {
-                !multiSelect && (temp.selected = false);
-            }
-            return temp;
-        });
-
-        tempData[index].selected = true;
-        tempData[index].subject = selectedSubject.subjectName;
-        setSelectedQuiz(() => [tempData.filter((item) => item.selected)]);
-        setData(() => [...tempData]);
+        if(tempData && tempData.length) {
+            tempData  = tempData.map((temp) => {
+                if (temp.id != (index)) {
+                    !multiSelect && (temp.selected = false);
+                }
+                return temp;
+            });
+    
+            tempData[index].selected = true;
+            tempData[index].subject = selectedSubject.subjectName;
+            setSelectedQuiz(() => [tempData.filter((item) => item.selected)]);
+            setData(() => [...tempData]);
+        }
     }
 
     const setSubjectAndCloseModal = (item: any) => {
@@ -78,19 +90,6 @@ export const QuizHomePage = () => {
     const [selectedSubject, setSelectedSubject] = useState<{
         subjectName: string;
     }>({subjectName:"Science"});
-
-    // useEffect(() => {
-    //     const reqObj = {
-    //         "service": "ml_service",
-    //         // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
-    //         "endpoint":  `/data/quizz/${board}/${className}/Science`,
-    //         "requestMethod": "GET",
-    //         "requestBody": {
-    //             "chapterName": "Chapter1 Chemical Reactions and Equations",
-    //             "questions": 346,
-    //             "time": 1038
-    //         }
-    //       }
 
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
@@ -105,37 +104,58 @@ export const QuizHomePage = () => {
         navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
     }
 
-    const setQuizFlow = async () => {
-        console.log(await AsyncStorage.getItem('quizFlow'));
-        const t:string | null = await AsyncStorage.getItem('quizFlow');
-        setTab(t as string)
-        return await AsyncStorage.getItem('quizFlow');
-    }
+    const setAvailableSubject = () => {
+        const reqObj = {
+          "service": "ml_service",
+          // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
+          "endpoint": `/subjects?board_id=${user?.board}&class_name=${user?.class}&school_id=default`,
+          "requestMethod": "GET"
+      }
+    
+      httpClient.post(`auth/c-auth`, reqObj).then((res) => {
+        const subjectList = res.data.data;
+        const result = subjectList.map((sub: any) => {
+          return {
+            subjectName: sub.subject
+          }
+        })
+        setSelectedSubject(result[0]);
+      })
+      
+    };
+    
 
     useEffect(() => {
-        setQuizFlow();
-        const s = {
-            "schoolId": "default",
-            "boardId": user.board,
-            "className": user.class,
-            "studentId": user.userId,
-            "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-            "subject": selectedSubject.subjectName
-        }
+        setAvailableSubject();
+        const fetchData = async () => {
+            try {
+                // You might want to set loading state here.
+                setLoading(true);
+                setLoadingText("Loading");
+                const s = {
+                    "schoolId": "default",
+                    "boardId": user?.board,
+                    "className": user?.class,
+                    "studentId": user?.userId,
+                    "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+                    "subject": selectedSubject.subjectName
+                }
 
-        const reqObj = {
-            "service": "ml_service",
-            "endpoint": `/explore_quizzes/data`,
-            "requestMethod": "POST",
-            "requestBody": s
-        }
-        httpClient.post(`auth/c-auth`, reqObj)
-            .then((res) => {
-                let list = res.data.data.quizzes
-                list = list.map((item: any, index: number) => {
-                    return {
+                const reqObj = {
+                    "service": "ml_service",
+                    "endpoint": `/explore_quizzes/data`,
+                    "requestMethod": "POST",
+                    "requestBody": s
+                }
+                
+                const response = await httpClient.post(`auth/c-auth`, reqObj);
+                
+                // Handle successful response
+                let list = response.data.data.quizzes;
+                if(list && list.map) {
+                    list = list.map((item: any, index: number) => ({
                         id: index,
-                        title: (tab == 'Quizzes') ? item.name : item.chapterName,
+                        title: (tab === 'Quizzes') ? item.name : item.chapterName,
                         infoText: 'Info about Card 1',
                         imageUrl: 'https://placehold.co/400',
                         done: false,
@@ -144,14 +164,26 @@ export const QuizHomePage = () => {
                         selected: false,
                         score: item.score,
                         subject: selectedSubject.subjectName
-                    }
-                })
-                console.log(list)
-                setData(list);
-            });
-    }, [])
+                    }));
+                    
+                    setData(list);
+                }
+            } catch (error) {
+                // Handle errors here. You can display a message to the user.
+                console.error("Error fetching data:", error);
+                setLoadingText("Something Went Wrong");
+            } finally {
+                setLoadingText("Data");
+                // Make sure to unset loading state.
+                setLoading(false);
+            }
+        };
+        
+        fetchData();
+    }, []);
 
     useEffect(() => {
+        setData([]);
         const s = {
             "schoolId": "default",
             "boardId": user.board,
@@ -170,30 +202,32 @@ export const QuizHomePage = () => {
         httpClient.post(`auth/c-auth`, reqObj)
             .then((res) => {
                 let list = res.data.data.quizzes
-                list = list.map((item: any, index: number) => {
-                    return {
-                        id: index,
-                        title: (tab == 'Quizzes') ? item.name : item.chapterName,
-                        infoText: 'Info about Card 1',
-                        imageUrl: 'https://placehold.co/400',
-                        done: false,
-                        noOfQuestions: item.totalQuestions,
-                        timeRequired: item.time,
-                        selected: false,
-                        score: item.score
-                    }
-                })
-                console.log(list)
-                setData(list);
+                if(list && list.map) {
+                    list = list.map((item: any, index: number) => {
+                        return {
+                            id: index,
+                            title: (tab == 'Quizzes') ? item.name : item.chapterName,
+                            infoText: 'Info about Card 1',
+                            imageUrl: 'https://placehold.co/400',
+                            done: false,
+                            noOfQuestions: item.totalQuestions,
+                            timeRequired: item.time,
+                            selected: false,
+                            score: item.score
+                        }
+                    })
+                    setData(list);
+                }
             });
     },[selectedSubject?.subjectName])
 
     useEffect(() => {
+        setData([]);
         const req = {
             "schoolId": "default",
-            "boardId": user.board,
-            "className": user.class,
-            "studentId": user.userId,
+            "boardId": user?.board,
+            "className": user?.class,
+            "studentId": user?.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
             "subject": selectedSubject.subjectName
         }
@@ -208,21 +242,23 @@ export const QuizHomePage = () => {
         httpClient.post(`auth/c-auth`, reqObj)
             .then((res) => {
                 let list = res.data.data.quizzes
-                list = list.map((item: any, index: number) => {
-                    return {
-                        id: index,
-                        title: (tab == "Exam Prep") ? item.chapterName: item.name,
-                        infoText: 'Info about Card 1',
-                        imageUrl: 'https://placehold.co/400',
-                        done: false,
-                        noOfQuestions: item.totalQuestions,
-                        timeRequired: item.time,
-                        selected: false,
-                        score: item.score,
-                        quizType: tab
-                    }
-                })
-                setData(list);
+                if(list && list.map) {
+                    list = list.map((item: any, index: number) => {
+                        return {
+                            id: index,
+                            title: (tab == "Exam Prep") ? item.chapterName: item.name,
+                            infoText: 'Info about Card 1',
+                            imageUrl: 'https://placehold.co/400',
+                            done: false,
+                            noOfQuestions: item.totalQuestions,
+                            timeRequired: item.time,
+                            selected: false,
+                            score: item.score,
+                            quizType: tab
+                        }
+                    })
+                    setData(list);
+                }
             })
     }, [tab])
 
@@ -239,297 +275,131 @@ export const QuizHomePage = () => {
                     </TouchableOpacity>
                     <Text style={styles.headingTitle}>Explore Quiz</Text>
                 </View>
-                <View style={styles.infoContainer}>
+                {/* <View style={styles.infoContainer}>
                     <SearchIcon height={'20'} width={'20'} fill={'#787878'} />
                     <TextInput style={styles.searchBox}
                         onChangeText={(text) => { setSearchTerm(text) }}
                         placeholderTextColor={"#808080"} placeholder='Seach Quizzes'></TextInput>
+                </View> */}
+            </View>
+            <View style={styles.body}>
+                <View style={styles.tabs}>
+                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => setTab(i)} ></Tabs>
                 </View>
-            </View>
-            <View style={styles.tabs}>
-                <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => setTab(i)} ></Tabs>
-            </View>
-            <View style={styles.tabs}>
-                {tab == "Quizzes" && <>
-                <Text style={styles.selectedOption}>{tab}</Text>
-                    <FlatList
-                        data={data}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) => (
-                        <ExamPrepQuizCard title={item.title} onCardClick={(i) => updateList(i)} id={item.id} infoText={''} imageUrl={'https://placehold.co/400'} noOfQuestions={0} done={false} score={10} />
-                        )}
-                    />
-                </>}
-                {tab == 'Exam Prep' && <>
-                    {/* <ExamPrepSubjects subjects={subjects} /> */}
-                    <View>
-                        <TouchableOpacity >
-                            <Text>Exam Preparation</Text>
-                        </TouchableOpacity>
-                        <View style={styles.buttoncontainer}>
-                        <Text style={styles.selectedSubject}>
-                            {selectedSubject?.subjectName}
-                        </Text>
-                        <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
-                            <Text>Change</Text>
-                            <View style={styles.pencil}>
-                                <Pencil height={'20'} width={'20'} fill={Colors.white} />
-                            </View>
-                        </TouchableOpacity>
-                        </View>
-                    </View>
-                    {/* <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={'https://placehold.co/400'} noOfQuestions={0} done={false} score={undefined} /> */}
-                        <TouchableOpacity  >
-
-                        </TouchableOpacity>
-                    {/* </View> */}
-                    {/* <ExamPrepQuizCard title={'Science'} onCardClick={(i) => updateList(i)} id={10000} infoText={''} imageUrl={''} noOfQuestions={0} done={false} score={10} /> */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Text>All Chapter Wise</Text>
-                        <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
-                            {multiSelect && <View style={styles.crossMultiSelect} >
-                                <CrossIcon height={12} width={12} fill={Colors.black_01} />
-                                <Text>
-                                    1
-                                </Text>
-                            </View>}
-                            {!multiSelect && <Text>Select</Text>}
-                        </TouchableOpacity>
-                    </View>
-                    <FlatList
-                        data={data}
-                        keyExtractor={(item) => item.id.toString()} // Assuming `id` is unique and of string type
-                        renderItem={({ item }) => (
-                            <ExamPrepQuizCard score={item.score} key={item.id} {...item} onCardClick={(i) => updateList(i)} />
-                        )}
-                    />
-                </>
-                }
-            </View>
-            {options && <View style={styles.floatingButtonContainer}>
-                <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
-                    <TestIcon height={'20'} width={'20'} fill={'black'} />
-                    <Text style={styles.floatingButtonText}>Practice</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
-                    <ClockIcon height={'20'} width={'20'} fill={'black'} />
-                    <Text style={styles.floatingButtonText}>Take a Test</Text>
-                </TouchableOpacity>
-            </View>}
-
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={bottomSheetVisible}
-                onRequestClose={() => setBottomSheetVisible(false)}
-            >
-                <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
-                    <View style={styles.bottomSheetContainer}>
-                        <Text style={styles.subjecttxt}>Subject</Text>
-                        <View style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05 }}>
-                            <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} />
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                gap: 5,
-                                position: "absolute",
-                                bottom: 0,
-                                paddingHorizontal: 20,
-                                paddingVertical: 20,
-                                width: '100%',
-
-                            }}
-
-                        >
-                            <Button
-                                label={'Continue'}
-                                disabled={false}
-                                className={EditButton}
-                                onPress={() => setBottomSheetVisible(false)}
+                <ScrollView style={styles.tabs}>
+                    {tab == "Quizzes" && <>
+                    <Text style={styles.selectedOption}>{tab}</Text>
+                    {data.map((item) => (
+                            <ExamPrepQuizCard
+                            key={item.id}
+                            score={item.score}
+                            {...item}
+                            onCardClick={(i) => updateList(i)}
                             />
+                        ))}
+                        <>
+                            {data && data.length == 0 && <>
+                                <Text style={{fontSize: 100}}>Loading</Text>
+                            </>}
+                        </>
+                    </>}
+                    {tab == 'Exam Prep' && <>
+                        {/* <ExamPrepSubjects subjects={subjects} /> */}
+                        <View>
+                            <TouchableOpacity >
+                                <Text style={styles.examPreparation}>Exam Preparation</Text>
+                            </TouchableOpacity>
+                            <Text>Selected Subject</Text>
+                            <View style={styles.buttoncontainer}>
+                            <Text style={styles.selectedSubject}>
+                                {selectedSubject?.subjectName}
+                            </Text>
+                            <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
+                                <Text>Change</Text>
+                                <View style={styles.pencil}>
+                                    <Pencil height={'20'} width={'20'} fill={Colors.white} />
+                                </View>
+                            </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Text>All Chapter Wise</Text>
+                            <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
+                                {multiSelect && <View style={styles.crossMultiSelect} >
+                                    <CrossIcon height={12} width={12} fill={Colors.black_01} />
+                                    <Text>
+                                        {(selectedQuiz && selectedQuiz[0]?.length)? selectedQuiz[0]?.length: 0}
+                                    </Text>
+                                </View>}
+                                {!multiSelect && <Text>Select</Text>}
+                            </TouchableOpacity>
+                        </View>
+
+                        {data && data.map((item) => (
+                            <ExamPrepQuizCard
+                            key={item.id}
+                            score={item.score}
+                            {...item}
+                            onCardClick={(i) => updateList(i)}
+                            />
+                        ))}
+                        {loading && <>
+                            <Text style={{fontSize: 100}}>{loadingText}</Text>
+                        </>
+                        }
+                        {!loading && data && data.length == 0 && <> 
+                            <Text style={{fontSize: 100}}>No Data</Text>
+                        </>}
+                    </>
+                    }
+                </ScrollView>
+                {options && <View style={styles.floatingButtonContainer}>
+                    <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
+                        <TestIcon height={'20'} width={'20'} fill={'black'} />
+                        <Text style={styles.floatingButtonText}>Practice</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
+                        <ClockIcon height={'20'} width={'20'} fill={'black'} />
+                        <Text style={styles.floatingButtonText}>Take a Test</Text>
+                    </TouchableOpacity>
+                </View>}
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={bottomSheetVisible}
+                    onRequestClose={() => setBottomSheetVisible(false)}
+                >
+                    <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+                        <View style={styles.bottomSheetContainer}>
+                            <Text style={styles.subjecttxt}>Subject</Text>
+                            <View style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05 }}>
+                                <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} />
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    gap: 5,
+                                    position: "absolute",
+                                    bottom: 0,
+                                    paddingHorizontal: 20,
+                                    paddingVertical: 20,
+                                    width: '100%',
+
+                                }}
+
+                            >
+                                <Button
+                                    label={'Continue'}
+                                    disabled={false}
+                                    className={EditButton}
+                                    onPress={() => setBottomSheetVisible(false)}
+                                />
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+            </View>
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    crossMultiSelect: {
-        borderColor: "#C5C5C5",
-        borderWidth: 1 / 2,
-        borderRadius: 20,
-        flexDirection: 'row',
-        gap: 8,
-        alignItems: 'center',
-        paddingVertical: 4,
-        paddingHorizontal: 10
-    },
-    container: {
-        margin: 0,
-        flex: 1,
-        backgroundColor: Colors.white,
-    },
-    header: {
-        paddingHorizontal: 24,
-        paddingVertical: 20,
-        height: 150,
-        flexShrink: 0,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 25,
-        borderBottomRightRadius: 25,
-        backgroundColor: Colors.primary,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.15,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    heading: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10
-    },
-    headingTitle: {
-        color: Colors.white,
-        fontWeight: "500",
-        fontSize: 20
-    },
-    backButton: {
-        height: 25,
-        width: 25,
-        borderRadius: 25,
-        backgroundColor: Colors.white,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    infoContainer: {
-        backgroundColor: Colors.white,
-        height: 44,
-        marginTop: 28,
-        display: 'flex',
-        flexDirection: 'row',
-        padding: 10,
-        borderRadius: 10,
-        alignItems: 'center'
-    },
-    searchBox: {
-        fontSize: 14,
-        color: '#787878'
-    },
-    tabs: {
-        paddingHorizontal: 16,
-    },
-    selectedOption: {
-        marginVertical: 18,
-        fontSize: 18,
-        fontWeight: '600',
-        color: Colors.black_03
-    },
-    floatingButtonContainer: {
-        position: 'absolute',
-        height: 46,
-        width: "80%",
-        bottom: 24,
-        alignSelf: 'center',
-        borderRadius: 25,
-        borderWidth: 0.5,
-        borderColor: '#B1B1B1',
-        backgroundColor: '#FFF',
-        shadowColor: 'rgba(0, 0, 0, 0.15)',
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 8,
-        elevation: 1,
-        flexDirection: 'row',
-        overflow: 'hidden'
-    },
-    floatingButton: {
-        flex: 1,
-        borderWidth: 1 / 4,
-        borderColor: "#C5C5C5",
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 8
-    },
-    floatingButtonText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: Colors.primary
-    },
-    bottomSheetContainer: {
-        position: "absolute",
-        bottom: 0,
-        width: "100%",
-        height: "75%",
-        backgroundColor: Colors.white,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-
-    },
-    subjecttxt: {
-        alignSelf: 'center',
-        paddingTop: 30,
-        paddingBottom: 10,
-        fontFamily: 'Inter-Bold',
-        fontSize: 18,
-        fontWeight: '500',
-        color: Colors.black_01,
-        borderTopWidth: 5,
-        marginTop: 5
-    },
-    selectedSubject: {
-        width:'40%',
-        textAlign:'center',
-        borderRadius: 25,
-        borderWidth:0.5,
-        backgroundColor:Colors.light_gray_05,
-        borderColor:Colors.primary,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-
-    },
-    changebutton:{ 
-        borderRadius: 25, 
-        backgroundColor: 'rgba(0, 107, 127, 0.08)',
-         width: '40%', 
-         justifyContent: 'center', 
-         alignItems: 'center', 
-         flexDirection: 'row', 
-         position: 'relative' 
-        },
-        pencil:{ 
-            width: 26.35, 
-            height: 26.35, 
-            borderRadius: 26.35, 
-            backgroundColor: Colors.primary, 
-            alignItems: 'center', 
-            position: 'absolute', 
-            right: 0, 
-        },
-        buttoncontainer:{
-            flexDirection:'row',
-            justifyContent:'space-between',
-            paddingHorizontal:20,
-            paddingVertical:20,
-            
-        }
-});

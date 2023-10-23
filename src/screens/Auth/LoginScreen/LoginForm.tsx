@@ -9,6 +9,7 @@ import {
   Platform,
   StyleSheet,
   ScrollView,
+  // ToastAndroid,
 } from "react-native";
 import { LoginScreenStyle } from "./LoginScreenStyle";
 import { Button } from "../../../components/common/ButttonComponent/Button";
@@ -21,6 +22,7 @@ import OtpVerification from "../OtpVerificationScreen";
 import { httpClient } from "../../../services/HttpServices";
 import { useUser } from "../../../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ToastService } from "../../../services/ToastService";
 
 
 export const LoginForm = () => {
@@ -44,6 +46,8 @@ export const LoginForm = () => {
   const sendVerification = () => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider.verifyPhoneNumber(`+91${phoneNumber}`, recaptchaVerifier.current).then((item) => {
+      // if (Platform.OS === "android") ToastAndroid.showWithGravity('Sending OTP', 3000, ToastAndroid.BOTTOM);
+      ToastService('Sending OTP');
       setOtpScreen(true)
       setVerificationId(item)
     }
@@ -61,8 +65,8 @@ export const LoginForm = () => {
     }
   };
 
-  function moveToOtpScreen() {
-    console.log(phoneNumber);
+  async function moveToOtpScreen() {
+    await AsyncStorage.setItem('phone', phoneNumber);
     sendVerification();
   }
 
@@ -78,13 +82,11 @@ export const LoginForm = () => {
     )
     firebase.auth().signInWithCredential(credential)
       .then((res: any) => {
-        console.log(res.user.uid);
         if(res.additionalUserInfo.isNewUser) {
           navigation.navigate('SignUp' as never);
         } else {
           checkIfUserHasCompletedRegistraction(res.user.uid)
         }
-        console.log("logged in")
       })
       .catch(() => {
         console.log("failed from firebase")
@@ -107,7 +109,6 @@ export const LoginForm = () => {
           phone: phoneNumber
         }
         navigation.navigate('SignUp' as never, obj as never );
-        console.log("User Not Found")
     });
   }
 

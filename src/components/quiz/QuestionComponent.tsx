@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   optionText: {
     width: "85%",
     fontSize: 16,
-    wordWrap: 'break-word'
+    // wordWrap: 'break-word'
   },
   selectedOptionText: {
     color: Colors.black_01, // Change to the desired text color

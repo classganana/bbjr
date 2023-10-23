@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Colors } from "../../../styles/colors";
 import * as Speech from 'expo-speech';
-import { Speaker } from "../../common/SvgComponent/SvgComponent";
+import { CopyIcon, Speaker, ThumsDown, ThumsUp } from "../../common/SvgComponent/SvgComponent";
+import * as Clipboard from 'expo-clipboard';
+import { ToastService } from "../../../services/ToastService";
 
 function StreamingText({ text }: any) {
   const [streamedText, setStreamedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
-
   useEffect(() => {
     const interval = setInterval(() => {
       if (currentIndex < text.length) {
@@ -26,11 +27,24 @@ function StreamingText({ text }: any) {
   return <>{streamedText}</>;
 }
 
-export const Bot = ({ text, stream }: any) => {
+type BotProps = {
+  text: string;
+  stream: boolean | undefined;
+  feedback: (message: any) => void;
+};
+
+export const Bot: React.FC<BotProps> = ({ text, stream, feedback }) => {
+  // const [copiedText, setCopiedText] = React.useState('');
+
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(text);
+    ToastService("Answer Copied.")
+  };
+
 
   const readTheMessage = async () => {
     const thingToSay = text;
-    if(await Speech.isSpeakingAsync()) {
+    if (await Speech.isSpeakingAsync()) {
       await Speech.stop();
     } else {
       Speech.speak(thingToSay);
@@ -40,21 +54,42 @@ export const Bot = ({ text, stream }: any) => {
 
   return (
     <>
-    { text == 'typing' ?
-    <Image style={{height: 60, width: 60}} source={require('../../../../assets/gifs/typing.gif')} /> :    
-    <View style={styles.rectangle}>
-      <View style={styles.msg}>
-        <TouchableOpacity onPress={readTheMessage} style={styles.speaker}>
-          <Speaker height={20} width={20} fill={Colors.black_01} />
-        </TouchableOpacity>
-          <Text style={styles.text}>
-          { stream ? <StreamingText text={text} /> : 
-            <Text>{text}</Text>
-          }
-        </Text>
-      </View>
-    </View>
-    }
+      {text == 'typing' ?
+        <Image style={{ height: 60, width: 60 }} source={require('../../../../assets/gifs/typing.gif')} /> :
+        <>
+          <View style={styles.rectangle}>
+            <View style={styles.msg}>
+              <TouchableOpacity onPress={readTheMessage} style={styles.speaker}>
+                <Speaker height={20} width={20} fill={Colors.black_01} />
+              </TouchableOpacity>
+              <Text style={styles.text}>
+                {stream ? <StreamingText text={text} /> :
+                  <Text>{text}</Text>
+                }
+              </Text>
+            </View>
+          </View>
+          <View style={styles.feedbackSection} >
+            <TouchableOpacity onPress={() => feedback({
+              BotAnswer: text,
+              feedback: 'positive'
+            })}>
+              <ThumsUp height={"20"} width={"20"} fill={"#969696"} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => feedback({
+              BotAnswer: text,
+              feedback: 'negative'
+            })}>
+              <ThumsDown height={"20"} width={"20"} fill={"#969696"} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => copyToClipboard()}>
+              <CopyIcon height={"20"} width={"20"} fill={"#969696"} />
+            </TouchableOpacity>
+          </View>
+        </>
+
+      }
     </>
   );
 };
@@ -95,5 +130,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: Colors.white,
     padding: 3,
+  },
+  feedbackSection: {
+    marginTop: 4,
+    flexDirection: 'row',
+    gap: 12
   }
 });

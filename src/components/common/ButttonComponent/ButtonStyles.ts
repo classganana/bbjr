@@ -125,6 +125,27 @@ export const PrimaryIconDefaultButton = StyleSheet.create<Style>({
   },
 });
 
+export const TryAgain = StyleSheet.create<Style>({
+  container: {
+    height: 50,
+    // flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 8,
+    // padding: 24,
+    // paddingVertical: 22
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "600",
+    fontSize: 20,
+    fontFamily: "Inter-Regular",
+  },
+});
+
 export const LoginButton = StyleSheet.create<Style>({
   container: {
     height: 56,
@@ -136,7 +157,7 @@ export const LoginButton = StyleSheet.create<Style>({
     backgroundColor: Colors.primary,
     borderRadius: 8,
     // padding: 24,
-    paddingVertical: 22
+    // paddingVertical: 22
   },
   title: {
     color: Colors.white,
@@ -149,7 +170,7 @@ export const LoginButton = StyleSheet.create<Style>({
 
 export const SmallOutlineButton = StyleSheet.create<Style>({
   container: {
-    height: 22,
+    // height: 22,
     // flex: 1,
     width: "100%",
     display: "flex",
@@ -159,6 +180,7 @@ export const SmallOutlineButton = StyleSheet.create<Style>({
     borderWidth: 1/4,
     borderColor: Colors.primary,
     paddingVertical: 8,
+    backgroundColor: Colors.white,
   },
   title: {
     color: Colors.primary,
@@ -191,21 +213,38 @@ export const PrimaryOutlineButton = StyleSheet.create<Style>({
   },
 });
 
-export const OutlineButton = StyleSheet.create<Style>({
+export const ShowAnswer = StyleSheet.create<Style>({
   container: {
-    height: 56,
-    flex: 1,
-    // width: "100%",
+    height: 50,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
     borderWidth: 1/4,
     borderColor: "rgba(0, 107, 127, 0.50)",
-    // padding: 12
+    backgroundColor: Colors.white,
   },
   title: {
-    padding: 12,
+    color: 'rgba(0, 107, 127, 0.80)',
+    fontWeight: "600",
+    fontSize: 18,
+    fontFamily: "Inter-Regular",
+  }
+
+})
+
+export const OutlineButton = StyleSheet.create<Style>({
+  container: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    borderWidth: 1/4,
+    borderColor: "rgba(0, 107, 127, 0.50)",
+    backgroundColor: Colors.white,
+  },
+  title: {
     color: 'rgba(0, 107, 127, 0.50)',
     fontWeight: "600",
     fontSize: 20,
@@ -384,6 +423,28 @@ export const CancelButton = StyleSheet.create<Style>({
     fontFamily: "Inter-Regular",
   }
 });
+
+export const StartExamPrep = StyleSheet.create<Style>({
+  container: {
+    height: 40,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    borderWidth: 1/4,
+    borderColor: Colors.primary,
+    paddingVertical: 8,
+    backgroundColor: Colors.white
+  },
+  title: {
+    // padding: 30,
+    color: Colors.primary,
+    fontWeight: "500",
+    fontSize: 12,
+    fontFamily: "Inter-Regular",
+  }
+});
+
 export const ExitButton = StyleSheet.create<Style>({
   container: {
     height: 40,

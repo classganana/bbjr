@@ -3,17 +3,25 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../../../styles/colors';
 
 interface CircleInitialsProps {
-  name: string;
+  name: string | undefined;
   size?: number;
 }
 
 const CircleInitials: React.FC<CircleInitialsProps> = ({ name, size = 50 }) => {
   // Function to extract initials from the name
-  const getInitials = (fullName: string): string => {
-    const words = fullName.split(' ');
-    const initials = words.map((word) => word[0].toUpperCase());
+  const getInitials = (fullName: string| undefined): string => {
+    if (typeof fullName !== 'string' || fullName.trim() === '') {
+        // Handle invalid input
+        return '';
+    }
+
+    const words = fullName.trim().split(' ');
+    const initials = words
+        .filter((word) => word) // Remove empty strings
+        .map((word) => word[0].toUpperCase());
+
     return initials.join('');
-  };
+};
 
   // Function to generate a contrasting text color based on the background color
   const getContrastingColor = (backgroundColor: string): string => {

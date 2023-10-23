@@ -4,7 +4,6 @@ import * as Font from 'expo-font';
 import { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { AppNavigator } from './src/navigators/AppNavigator';
-import * as MediaLibrary from 'expo-media-library';
 import AnimatedSplash from "react-native-animated-splash-screen";
 import { UserProvider } from './src/context/UserContext';
 
@@ -13,13 +12,6 @@ import { UserProvider } from './src/context/UserContext';
 export default function App() {
   const [isFontLoaded, setFontLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [status, requestPermission] = MediaLibrary.usePermissions();
-
-  if (status === null) {
-    requestPermission();
-  }
-
-
   async function loadFonts() {
     await Font.loadAsync({
       'Inter-Regular': require('./assets/fonts/Inter-Regular.ttf'),
@@ -29,7 +21,7 @@ export default function App() {
     setFontLoaded(true);
     setTimeout(() => {
       setLoading(true); // Set loading to true when fonts are loaded
-    }, 500);
+    }, 300);
   }
 
   useEffect(() => {

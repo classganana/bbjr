@@ -8,10 +8,14 @@ import { Button } from '../../components/common/ButttonComponent/Button'
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { httpClient } from '../../services/HttpServices'
+import { httpClient } from '../../services/HttpServices';
+import { useUser } from '../../context/UserContext';
+
+
 
 
 export const QuizFirstPage = () => {
+  const { user } = useUser();
   const navigation = useNavigation();
   const [quizType, setQuizType] = useState<string | null>();
 //   const [quizType, setQuizType] = useState<string | null>();
@@ -43,16 +47,18 @@ export const QuizFirstPage = () => {
     })
     setCurrentQuiz(() => route.params)
     const subject = route.params[0][0].subject;
+    AsyncStorage.setItem('subject', subject);
 
     const req = {
         "schoolId": "default",
-        "boardId": "CBSE",
+        "boardId": user?.board,
         "subject": subject,
-        "className": 10,
-        "studentId": 10,
+        "className": user?.class,
+        "studentId": user?.userId,
         "chapterName": listOfChapters,
         "dataType": "school",
-        "size": 1
+        // "size": 1,
+        "size": quizType == 'quiz'? listOfChapters.length * 10: 50,
       }
 
       if(quizType == 'quiz') delete req.chapterName
@@ -66,7 +72,6 @@ export const QuizFirstPage = () => {
     }
 
 
-    console.log(route.params);
 
     httpClient.post(`auth/c-auth`, reqObj)
         .then((res: any) => {
@@ -82,7 +87,7 @@ export const QuizFirstPage = () => {
                 ...res.data.data,
             }
             setQuizContent(quiz);
-            maintainQuizInLocal(quiz);
+            if(quizType != 'quiz') maintainQuizInLocal(quiz);
         })
   }
 
@@ -115,7 +120,6 @@ export const QuizFirstPage = () => {
     }
 
     await AsyncStorage.setItem('localQuizzes', JSON.stringify(quizList));
-    console.log(quizList);
 };
 
 
