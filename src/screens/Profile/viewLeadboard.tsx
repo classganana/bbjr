@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '../../styles/colors';
 import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { ExploreButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
+import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
+import { useNavigation } from '@react-navigation/native';
 
 export interface LeaderboardEntry {
     name: string;
@@ -17,20 +19,9 @@ export interface LeaderboardEntry {
 
 const ViewLeadboard = () => {
     const {user} = useUser()
-    const HighScorelabels = Array.from({ length: 5 }, (_, index) => ({
-        rollNumber: `#${index + 1}`,
-        title: `Student Name`,
-        score: 1523,
-        school: `School/College Name`,
-    }));
-    const Ranklabel = Array.from({ length: 5 }, () => ({
-        title: `Student Name`,
-        score: 300,
-        school: `School/College Name`,
-    }));
-
     const [userRank, setUserRank] = useState<Array<LeaderboardEntry>>()
     const [leaderBoard, setLeaderBoard] = useState<Array<LeaderboardEntry>>()
+    const navigation = useNavigation();
 
     useEffect(() => {
             getUserRank();
@@ -57,13 +48,17 @@ const ViewLeadboard = () => {
         })
     }
 
+    const goBack = () => {
+        navigation.navigate('Setting' as never)
+    }
+
     return (
         <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
-                        <View style={styles.backButton}>
+                        <TouchableOpacity onPress={() => goBack()} style={styles.backButton}>
                         <ArrowLeft height={25} width={25} fill={'black'} />
-                        </View>
+                        </TouchableOpacity>
                         <Text style={styles.headingTitle}>View leaderboard</Text>
                     </View>
                 </View>
@@ -80,10 +75,11 @@ const ViewLeadboard = () => {
                                 <Text style={styles.score}>Score</Text>
                             </View>
                             {leaderBoard?.map((HighestScoreLabel, index) => (
-                                <View key={index} style={styles.rankProfileCard}>
+                                <View key={index} style={[styles.rankProfileCard, HighestScoreLabel.studentId == user?.userId && styles.rankScoreCardHighlighted]}>
                                     <View style={styles.ScoreInnerCard}>
-                                        <Text style={styles.rollNumber}>{HighestScoreLabel.rank}</Text>
-                                        <View style={styles.ProfileImage} />
+                                        <Text style={styles.rollNumber}>#{HighestScoreLabel.rank}</Text>
+                                        {/* <View style={styles.ProfileImage} /> */}
+                                        <CircleInitials size={28} name={HighestScoreLabel.name} />
                                         <View>
                                             <Text style={styles.StudCard}>{HighestScoreLabel.name}</Text>
                                             <Text style={styles.SchoolCard}>{HighestScoreLabel.score}</Text>
@@ -99,9 +95,11 @@ const ViewLeadboard = () => {
                                 <Text style={styles.score}>Score</Text>
                             </View>
                             {userRank?.map((RankLabel, index) => (
-                                <View style={styles.rankScoreCard} key={index}>
+                                <View style={[styles.rankScoreCard,
+                                RankLabel.studentId == user?.userId && styles.rankScoreCardHighlighted]} key={index}>
                                     <View style={styles.ScoreInnerCard}>
-                                        <View style={styles.ProfileImage} />
+                                        {/* <View style={styles.ProfileImage} /> */}
+                                        <CircleInitials size={28} name={RankLabel.name} />
                                         <View>
                                             <Text style={styles.StudCard}>{RankLabel.name}</Text>
                                             <Text style={styles.SchoolCard}>{RankLabel.rank}</Text>
@@ -169,7 +167,7 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     BodyContainer: {
-        width: '100%',
+        // width: '100%',
         flexDirection: 'row',
         paddingHorizontal: 10,
         paddingVertical: 9,
@@ -259,6 +257,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    rankScoreCardHighlighted: {
+        borderWidth: 1,
+        borderColor: Colors.primary,
+        borderRadius: 10,
     },
     button: {
         color: Colors.white,

@@ -83,7 +83,11 @@ export const LoginForm = () => {
     firebase.auth().signInWithCredential(credential)
       .then((res: any) => {
         if(res.additionalUserInfo.isNewUser) {
-          navigation.navigate('SignUp' as never);
+          const obj = {
+            uid: res.user.uid,
+            phone: phoneNumber
+          }
+          navigation.navigate('SignUp' as never, obj as never);
         } else {
           checkIfUserHasCompletedRegistraction(res.user.uid)
         }
@@ -95,6 +99,7 @@ export const LoginForm = () => {
 
   const checkIfUserHasCompletedRegistraction = (id: string) => {
     httpClient.get(`users/${id}`).then((res) => {
+      console.log(res.data);
       setUser(res.data);
       AsyncStorage.setItem('user',JSON.stringify(res.data));
       // navigation.navigate('DashboardNavigator' as never);
@@ -108,6 +113,7 @@ export const LoginForm = () => {
           uid: id,
           phone: phoneNumber
         }
+        console.log(obj);
         navigation.navigate('SignUp' as never, obj as never );
     });
   }

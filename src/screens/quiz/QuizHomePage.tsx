@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
 import { ClockIcon, CrossIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
-import { SearchIcon } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
-import { Card, CardData } from '../../components/quiz/QuizCard';
-import { ExamPrepSubjects } from '../../components/quiz/ExamPrepSubjects';
+import { CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { CancelButton, EditButton, ExitButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { EditButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { useUser } from '../../context/UserContext';
 import { styles } from './QuizHomePageStyle';
+import { UtilService } from '../../services/UtilService';
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Quizzes');
@@ -34,8 +33,6 @@ export const QuizHomePage = () => {
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
-
-    const selectSpecificSubject = () => { }
 
     const navigation = useNavigation();
 
@@ -94,6 +91,8 @@ export const QuizHomePage = () => {
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
         await AsyncStorage.setItem('quizType', 'quiz');
+        UtilService.setQuizType('quiz');
+
         navigation.navigate('QuizFirstPage' as never, selectedQuiz  as never);
     }
 
@@ -101,6 +100,7 @@ export const QuizHomePage = () => {
         await AsyncStorage.removeItem('quizType');
         const item = data.filter((item) => item.selected == true)[0];
         await AsyncStorage.setItem('quizType', 'practice');
+        UtilService.setQuizType('practice');
         navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
     }
 
@@ -284,7 +284,9 @@ export const QuizHomePage = () => {
             </View>
             <View style={styles.body}>
                 <View style={styles.tabs}>
-                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => setTab(i)} ></Tabs>
+                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => {
+                        setTab(i)
+                        UtilService.setQuizFlow(i);}} ></Tabs>
                 </View>
                 <ScrollView style={styles.tabs}>
                     {tab == "Quizzes" && <>

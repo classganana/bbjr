@@ -148,13 +148,17 @@ export const QuizResult = () => {
         }
       };
 
+      const onBack = () => {
+        navigator.navigate('Quiz' as never)
+      }
+
     return (
         <View ref={imageRef} collapsable={false} style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.heading}>
-                    <View style={styles.backButton}>
+                    <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
                         <ArrowLeft height={'30'} width={'30'} fill={'white'}></ArrowLeft>
-                    </View>
+                    </TouchableOpacity>
                     <Text style={styles.title}>Test Score</Text>
                     <TouchableOpacity onPress={onSaveImageAsync} style={[styles.shareButton, { position: "absolute", right: 10 }]}>
                         <ShareIcon height={'20'} width={'20'} fill={Colors.primary} />

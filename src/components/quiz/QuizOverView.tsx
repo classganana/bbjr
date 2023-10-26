@@ -18,9 +18,9 @@ export const QuizOverView = ({onCloseSheet, time}: any) => {
 
   return (
     <View style={{flex: 1}}>
-        <View>
+        <View style={{paddingTop: 36, paddingLeft: 20, paddingBottom: 20}}>
             <Text>Practice : English Vocabulary Quiz </Text>
-            <Text>{time}</Text>
+            <Text>Time Left: {time}</Text>
         </View>
         <View style={{flex: 1}}>
             <Tabs activeTab={activeTab} tabs={tabs} 
@@ -30,7 +30,7 @@ export const QuizOverView = ({onCloseSheet, time}: any) => {
             { activeTab == 'Instructions' && 
                     <View style={{paddingHorizontal: 24, paddingVertical: 20}}>
                         <QuizInformation />
-                        <QuizIntoduction />
+                        <QuizIntoduction mcqs={0} time={0} />
                     </View>
             }
         </View>

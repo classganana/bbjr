@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   Image,
@@ -12,13 +11,10 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BotScreen } from "../bot/BotScreen";
 import { Dashboard } from "../Home/Dashboard";
-import { QuizHomePage } from "../quiz/QuizHomePage";
-import { SettingsPage } from "../Profile/SettingsPage";
 import { useNavigation } from "@react-navigation/native";
-import { HomeIcon } from "../../components/common/SvgComponent/SvgComponent";
-import { UserProvider } from "../../context/UserContext";
 import { QuizNavigator } from "../../navigators/QuizNavigator";
 import { ProfileNavigator } from "../../navigators/ProfileNavigator";
+import { styles } from "./BottomTabSetupStyle";
 const Tab = createBottomTabNavigator();
 const BottomTabSetup = () => {
   const [focusedTab, setFocusedTab] = useState<
@@ -45,20 +41,6 @@ const BottomTabSetup = () => {
       toValue: 1,
       useNativeDriver: true,
     }).start();
-  };
-
-  const handleTabPress = (tabName: keyof typeof scaleValues) => {
-    // Duration of the vibration in milliseconds
-    const vibration = 20;
-    Vibration.vibrate(vibration);
-    // Show the popup when the specific bottom tab is clicked
-    setShowPopup(true);
-  };
-
-  const handleStudentAssistantPress = () => {
-    // Navigate to the desired screen when clicking on the "StudentAI" tab
-    navigation.navigate('Bot' as never);
-    // navigation.navigate('BotScreen' as never);
   };
 
   const handleClosePopup = () => {
@@ -182,7 +164,7 @@ const BottomTabSetup = () => {
                     fontSize: 14,
                   }}
                 >
-                  StudentAI
+                  Zeal
                 </Text>
               </TouchableOpacity>
             ),
@@ -245,29 +227,4 @@ const BottomTabSetup = () => {
     </View>
   );
 };
-const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: "#7F5DF0",
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-  },
-  popupContainer: {
-    flex: 1,
-    justifyContent: "flex-end", // Place the popup at the bottom of the screen
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  popupContent: {
-    backgroundColor: "black",
-    padding: 16,
-    borderRadius: 8,
-  },
-  popupText: {
-    fontSize: 20,
-    color: "white",
-  },
-});
 export default BottomTabSetup;

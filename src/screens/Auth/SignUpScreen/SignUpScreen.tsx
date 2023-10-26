@@ -39,9 +39,10 @@ export const SignUpScreen = () => {
 
     const handleSubmit = () => {
         const userObj: any = route.params;
+        console.log(userObj);
         const obj = {
             "name": name,
-            "phoneNumber": `+91${userObj.phone}`,
+            "phoneNumber": `+91${phone}`,
             "class": parseInt(classValue),
             "board": board,
             "userId": userObj.uid,
@@ -49,6 +50,7 @@ export const SignUpScreen = () => {
         }
         httpClient.post('auth/sign-up', obj)
             .then((response) => {
+                console.log(response.data);
                 if (response.status == 201) {
                     setUser(obj);
                     // navigation.navigate('DashboardNavigator' as never);

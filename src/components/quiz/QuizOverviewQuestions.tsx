@@ -132,6 +132,7 @@ export const QuizOverviewQuestions = ({closeSheet}: any) => {
         "correctAnswer": "Mona Lisa"
     }
 ]   
+
     
   return (
     <View style={styles.container}>

@@ -11,7 +11,6 @@ const CircleInitials: React.FC<CircleInitialsProps> = ({ name, size = 50 }) => {
   // Function to extract initials from the name
   const getInitials = (fullName: string| undefined): string => {
     if (typeof fullName !== 'string' || fullName.trim() === '') {
-        // Handle invalid input
         return '';
     }
 
@@ -20,7 +19,7 @@ const CircleInitials: React.FC<CircleInitialsProps> = ({ name, size = 50 }) => {
         .filter((word) => word) // Remove empty strings
         .map((word) => word[0].toUpperCase());
 
-    return initials.join('');
+    return initials.join('').slice(0,2);
 };
 
   // Function to generate a contrasting text color based on the background color

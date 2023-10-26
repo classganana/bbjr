@@ -31,6 +31,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: 28,
+        flex: 1
+    },
+    headingLeft: {
+        flex: 7,
+        justifyContent: 'center',
+    },
+    headingRight: {
+        flex: 3,
     },
     headingTitle: {
         color: Colors.primary,

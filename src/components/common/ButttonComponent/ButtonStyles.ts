@@ -172,14 +172,13 @@ export const SmallOutlineButton = StyleSheet.create<Style>({
   container: {
     // height: 22,
     // flex: 1,
-    width: "100%",
+    // width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
     borderWidth: 1/4,
     borderColor: Colors.primary,
-    paddingVertical: 8,
     backgroundColor: Colors.white,
   },
   title: {
@@ -193,19 +192,17 @@ export const SmallOutlineButton = StyleSheet.create<Style>({
 
 export const PrimaryOutlineButton = StyleSheet.create<Style>({
   container: {
-    height: 56,
     // flex: 1,
-    width: "100%",
+    // width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
     borderWidth: 1/4,
-    borderColor: Colors.primary,
+    backgroundColor: Colors.white,
     // padding: 12
   },
   title: {
-    padding: 12,
     color: Colors.primary,
     fontWeight: "600",
     fontSize: 20,
@@ -489,13 +486,10 @@ export const EditButton = StyleSheet.create<Style>({
 });
 export const ExploreButton = StyleSheet.create<Style>({
   container: {
-    height: 30,
-    width:  80,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    // borderWidth: 4/4,
     backgroundColor:Colors.primary,
     borderColor:Colors.primary,
     paddingHorizontal:15,

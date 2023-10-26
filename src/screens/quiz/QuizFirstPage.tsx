@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { ArrowLeft } from '../../components/common/SvgComponent/SvgComponent'
+import { ArrowLeft, DownArrow } from '../../components/common/SvgComponent/SvgComponent'
 import { Colors } from '../../styles/colors'
 import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
 import { QuizInformation } from '../../components/quiz/QuizInformation'
@@ -10,150 +10,232 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
-
-
+import { UtilService } from '../../services/UtilService'
 
 
 export const QuizFirstPage = () => {
-  const { user } = useUser();
-  const navigation = useNavigation();
-  const [quizType, setQuizType] = useState<string | null>();
-//   const [quizType, setQuizType] = useState<string | null>();
-  const [quizContent, setQuizContent] = useState();
-  const startQuiz = () => {
+    const { user } = useUser();
+    const navigation = useNavigation();
+    const [quizFlow, setQuizFlow] = useState<string | null>('');
+    const [quizType, setQuizType] = useState<string | null>();
+    //   const [quizType, setQuizType] = useState<string | null>();
+    const [quizContent, setQuizContent] = useState<any>();
+    const [chapters, setChapters] = useState();
+    const startQuiz = () => {
         navigation.navigate('QuizQuestionPages' as never, quizContent as never);
-  };
+    };
 
-  const [currentQuiz, setCurrentQuiz] = useState<any>();
-  const route = useRoute();
-  useEffect(() => {
+    const [subject, setSubject] = useState();
+
+    const [currentQuiz, setCurrentQuiz] = useState<any>();
+    const route = useRoute();
+    useEffect(() => {
+        getQuizFlow();
         getQuizType();
         setCurrentQuiz(() => route.params)
-  },[])
+    }, [])
 
-  const getQuizType = () => {
-    AsyncStorage.getItem('quizType').then((q) => {
-        getQuizContent(q);
-    })
-  }
-  
-  const onBack = () => {
-    navigation.navigate('QuizHomepage' as never)
-  }
-
-  const getQuizContent = (quizType: string | null) => {    
-    const listOfChapters = route && route.params && route.params  && route.params[0].map((item: any) => {
-        return item.title;
-    })
-    setCurrentQuiz(() => route.params)
-    const subject = route.params[0][0].subject;
-    AsyncStorage.setItem('subject', subject);
-
-    const req = {
-        "schoolId": "default",
-        "boardId": user?.board,
-        "subject": subject,
-        "className": user?.class,
-        "studentId": user?.userId,
-        "chapterName": listOfChapters,
-        "dataType": "school",
-        // "size": 1,
-        "size": quizType == 'quiz'? listOfChapters.length * 10: 50,
-      }
-
-      if(quizType == 'quiz') delete req.chapterName
-
-      const endPoint = quizType == 'quiz'?'/data/quizz': '/data/mcq'; 
-      const reqObj = {
-        "service": "ml_service",
-        "endpoint":  endPoint,
-        "requestMethod": "POST",
-        "requestBody": req
+    const getQuizFlow = async () => {
+        setQuizType(await UtilService.getQuizType())
+        setQuizFlow(await AsyncStorage.getItem('quizFlow'));
+        return await AsyncStorage.getItem('quizFlow');
     }
 
-
-
-    httpClient.post(`auth/c-auth`, reqObj)
-        .then((res: any) => {
-            const quiz = {
-                schoolId: 'default',
-                chapterName: listOfChapters,
-                subject: subject,
-                boardId: "CBSE",
-                className: user?.class,
-                studentId: user?.userId,
-                quizzType: "chapter",
-                screenPage: "examPreparation",
-                ...res.data.data,
-            }
-            setQuizContent(quiz);
-            if(quizType != 'quiz') maintainQuizInLocal(quiz);
+    const getQuizType = () => {
+        AsyncStorage.getItem('quizType').then((q) => {
+            getQuizContent(q);
         })
-  }
-
-  const maintainQuizInLocal = async (selectedQuiz: any) => {
-    let quizList: any | null = await AsyncStorage.getItem('localQuizzes');
-    if (!quizList) {
-        // If no data is in local storage, create a new list with the selected quiz.
-        quizList = [selectedQuiz];
-    } else {
-        quizList = JSON.parse(quizList);
-
-        // Function to check if two arrays are equal
-        const arraysEqual = (arr1: any[], arr2: any[]) => {
-            return (
-                arr1.length === arr2.length &&
-                arr1.every((value, index) => value === arr2[index])
-            );
-        };
-
-        // Check if there's a quiz with the same chapterName (arraysEqual).
-        const index = quizList.findIndex((quiz: any) => arraysEqual(quiz.chapterName, selectedQuiz.chapterName));
-
-        if (index !== -1) {
-            // If a quiz with the same chapterName exists, replace it with the new selectedQuiz.
-            quizList[index] = selectedQuiz;
-        } else {
-            // If there's no quiz with the same chapterName, add the selectedQuiz to the list.
-            quizList.push(selectedQuiz);
-        }
+        return AsyncStorage.getItem('quizType');
     }
 
-    await AsyncStorage.setItem('localQuizzes', JSON.stringify(quizList));
-};
+    const onBack = () => {
+        navigation.navigate('QuizHomepage' as never)
+    }
+
+    const getQuizContent = async (quizType: string | null) => {
+        const listOfChapters = route && route.params && route.params && route.params[0].map((item: any) => {
+            return item.title;
+        })
+
+        setChapters(listOfChapters);
+        setCurrentQuiz(() => route.params)
+        const subject = route.params[0][0].subject;
+        setSubject(subject);
+        AsyncStorage.setItem('subject', subject);
+
+        const req = {
+            "schoolId": "default",
+            "boardId": user?.board,
+            "subject": subject,
+            "className": user?.class,
+            "studentId": user?.userId,
+            "chapterName": listOfChapters,
+            "dataType": "school",
+            // "size": 1,
+            "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
+        }
 
 
+        const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint": endPoint,
+            "requestMethod": "POST",
+            "requestBody": req
+        }
+        const quizFlows = await UtilService.getQuizFlow();
+        if (quizFlows == 'Quizzes') {
+            delete req.chapterName;
+            delete req.subject;
+        }
 
-  return (
-    <View style={styles.container}>
-        <View style={styles.header}>
-            <View style={styles.heading}>
-                <TouchableOpacity onPress={onBack} style={styles.backButton}>
-                    <ArrowLeft height={'25'} width={'25'} fill={'black'} />
+        httpClient.post(`auth/c-auth`, reqObj)
+            .then((res: any) => {
+                const quiz = {
+                    schoolId: 'default',
+                    chapterName: listOfChapters,
+                    subject: subject,
+                    boardId: user?.board,
+                    className: user?.class,
+                    studentId: user?.userId,
+                    ...res.data.data,
+                }
+                setQuizContent(quiz);
+                if (quizType != 'quiz') maintainQuizInLocal(quiz);
+            })
+    }
+
+    const maintainQuizInLocal = async (selectedQuiz: any) => {
+        let quizList: any | null = await AsyncStorage.getItem('localQuizzes');
+        if (!quizList) {
+            // If no data is in local storage, create a new list with the selected quiz.
+            quizList = [selectedQuiz];
+        } else {
+            quizList = JSON.parse(quizList);
+
+            // Function to check if two arrays are equal
+            const arraysEqual = (arr1: any[], arr2: any[]) => {
+                return (
+                    arr1.length === arr2.length &&
+                    arr1.every((value, index) => value === arr2[index])
+                );
+            };
+
+            // Check if there's a quiz with the same chapterName (arraysEqual).
+            const index = quizList.findIndex((quiz: any) => arraysEqual(quiz.chapterName, selectedQuiz.chapterName));
+
+            if (index !== -1) {
+                // If a quiz with the same chapterName exists, replace it with the new selectedQuiz.
+                quizList[index] = selectedQuiz;
+            } else {
+                // If there's no quiz with the same chapterName, add the selectedQuiz to the list.
+                quizList.push(selectedQuiz);
+            }
+        }
+
+        await AsyncStorage.setItem('localQuizzes', JSON.stringify(quizList));
+    };
+
+    const ChapterDropdown = () => {
+
+        const [show, setShow] = useState(false);
+
+        return (
+            <View style={styles.chapterList}>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={styles.infoContainerTextWidth}>
+                    {chapters}
+                </Text>
+                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setShow(!show)} >
+                    <Text>view more</Text>
+                    <DownArrow height={'20'} width={'20'} fill={Colors.black_01} />
                 </TouchableOpacity>
-                <Text style={styles.headingTitle}>{quizType} Details</Text>
+                {show && <View style={styles.dropdownContainer}>
+                    <View style={styles.dropdownHeading}>
+                        <Text>{subject} - Total Chapters {chapters?.length}</Text>
+                        <TouchableOpacity onPress={() => setShow(!show)} style={styles.reverseIcon}>
+                            <DownArrow height={'20'} width={'20'} fill={Colors.black_01} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.listOfChapters}>
+                        {chapters && chapters?.map((chapter: string) => {
+                            return <Text style={styles.chapterName}>{chapter}</Text>
+                        })}
+                    </View>
+                </View>}
             </View>
-            <View style={styles.infoContainer}>
-                <Text style={styles.infoContainerTitle}>
-                   {quizType}
-                </Text>
-                <Text style={styles.infoContainerText}>
-                    English Vocabulary Quiz
-                </Text>
+        )
+    }
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <View style={styles.heading}>
+                    <TouchableOpacity onPress={onBack} style={styles.backButton}>
+                        <ArrowLeft height={'25'} width={'25'} fill={'black'} />
+                    </TouchableOpacity>
+                    <Text style={styles.headingTitle}>{quizType} Details</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoContainerTitle}>
+                        {quizType}
+                    </Text>
+                    {chapters && chapters?.length ? <ChapterDropdown /> :
+                        <Text style={styles.infoContainerText}>
+                            {chapters}
+                        </Text>
+                    }
+                </View>
+            </View>
+            <View style={styles.quizInfo}>
+                <QuizIntoduction mcqs={quizContent?.mcqs?.length} time={quizContent?.time} />
+                <QuizInformation />
+            </View>
+            <View style={styles.startQuizButton}>
+                <Button label={"Start Quiz"} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
             </View>
         </View>
-        <View style={styles.quizInfo}>
-            <QuizIntoduction />
-            <QuizInformation />
-        </View>
-        <View style={styles.startQuizButton}>
-            <Button label={"Start Quiz"} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
-        </View>
-    </View>
-  )
+    )
 }
 
 const styles = StyleSheet.create({
+    chapterName: {
+        marginTop: 15
+    },
+    listOfChapters: {
+        marginTop: 24
+    },
+    dropdownContainer: {
+        borderWidth: 0.5,
+        borderColor: 'rgba(0, 107, 127, 0.24)',
+        width: "100%",
+        position: 'absolute',
+        backgroundColor: 'white',
+        top: 0,
+        paddingHorizontal: 18,
+        paddingVertical: 20,
+    },
+    dropdownHeading: {
+        zIndex: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    reverseIcon: {
+        transform: [{ rotate: '180deg' }]
+    },
+    infoContainerTextWidth: {
+        width: 200,
+        fontSize: 18,
+        fontWeight: "500",
+        color: Colors.black_01
+    },
+    chapterList: {
+        width: "100%",
+        borderRadius: 5,
+        zIndex: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        position: 'relative',
+    },
     container: {
         margin: 0,
         flex: 1,
@@ -162,7 +244,7 @@ const styles = StyleSheet.create({
     header: {
         paddingHorizontal: 24,
         paddingVertical: 26,
-        height: 150,
+        // height: 150,
         flexShrink: 0,
     },
     heading: {
@@ -210,8 +292,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 0,
+            width: 0,
+            height: 0,
         },
         shadowOpacity: 0.10,
         shadowRadius: 15,

@@ -7,7 +7,6 @@ import { Colors } from '../../styles/colors';
 import { FirstCorousel } from '../../components/common/SvgComponent/SvgComponent';
 
 export const ScreenOne = () => {
-
   const navigation = useNavigation();
 
   function moveToScreenTwo() {

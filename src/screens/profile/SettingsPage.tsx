@@ -29,11 +29,12 @@ export const SettingsPage = () => {
   const navigation = useNavigation();
 
   const moveToEditProfile = () => {
-    // navigation.navigate('EditProfile' as never);
-    // navigation.navigate('Root' as never, { screen: 'EditProfile' } as never);
-      // navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never); 
       navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never);
   };
+
+  const moveToQuizHistory = () => {
+    navigation.navigate('QuizHistory' as never);
+  }
 
   const handleShare = async () => {
     try {
@@ -124,6 +125,9 @@ export const SettingsPage = () => {
               }
               if(buttonLabel.title === 'Log Out') {
                 logout();
+              }
+              if (buttonLabel.title === 'Previous Test Scores') {
+                moveToQuizHistory();
               }
             }}
             style={{ flexDirection: 'row', alignItems: 'center', gap: 20, position: 'relative' }}>

@@ -14,6 +14,7 @@ import Popup from '../Popup/popup';
 import { QuizOverView } from '../../components/quiz/QuizOverView';
 import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
+import { UtilService } from '../../services/UtilService';
 
 
 export type Answers = Array<{
@@ -189,9 +190,14 @@ export const QuizQuestionsPage = () => {
             const list = JSON.stringify(quizDetails)
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-            if (currentQuestionIndex == quizQuestionList.length - 1) {
-                submitQuiz(UserAnswerList)
-                // navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
+            const quizType = await UtilService.getQuizType();
+            if(quizType == 'practice') {
+                submitPractice(UserAnswerList)
+            } else {
+                if (currentQuestionIndex == quizQuestionList.length - 1) {
+                    submitQuiz(UserAnswerList)
+                    // navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
+                }
             }
         } catch (error) {
             console.error('Error storing data:', error);
@@ -212,8 +218,43 @@ export const QuizQuestionsPage = () => {
         tempRequest.time = timer;
         tempRequest.studentName = user?.name;
         tempRequest.screenPage = quizFlow != 'Quizzes' ? 'examPreparation' : `quizzes`
+        tempRequest.quizzType = quizFlow == 'Quizzes' ? 'class' : `chapter`;
         if(quizFlow == 'Quizzes') delete tempRequest.chapterName;
 
+        setReqObject(tempRequest);
+        console.log(reqObject);
+        const reqObj = {
+            "service": "ml_service",
+            "endpoint": quizType == 'quiz' ? `/answered/quizz` : `/answered/mcq`,
+            "requestMethod": "POST",
+            "requestBody": reqObject
+        }
+
+        return httpClient.post(`auth/c-auth`, reqObj)
+            .then((res) => {
+                if (res.data.statusCode == 200) {
+                    navigation.navigate('QuizResultPage' as never, answerList as never);
+                }
+            });
+    }
+
+    const submitPractice = async (answerList: questionWithTime) => {
+        const questions = answerList.quizQuestionList.map((answer) => {
+            return {
+                mcqId: answer.mcqId,
+                selectedAnswer: answer.selectedAnswer ? answer.selectedAnswer : undefined
+            }
+        });
+
+        const tempRequest: any = reqObject;
+        tempRequest.mcqs = questions;
+        tempRequest.studentName = user?.name;
+        tempRequest.screenPage = quizFlow != 'Quizzes' ? 'examPreparation' : `quizzes`;
+        tempRequest.quizType = quizFlow == 'Quizzes' ? 'class' : `chapter`;
+        
+        if(quizFlow == 'Quizzes') delete tempRequest.chapterName;
+
+        tempRequest.dataType = tempRequest.chapterName;
         setReqObject(tempRequest);
         console.log(reqObject);
         const reqObj = {
@@ -269,7 +310,6 @@ export const QuizQuestionsPage = () => {
         }
     }
 
-
     const currentQuestion = quizQuestionList[currentQuestionIndex];
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
     const [questionInfoSheet, setQuestionInfoSheet] = useState(false);
@@ -278,17 +318,20 @@ export const QuizQuestionsPage = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.heading}>
-                    <View>
+                    <View style={styles.headingLeft}>
                         <Text style={styles.headingTitle}>Test</Text>
-                        <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.headingInfo}>{reqObject?.chapterName}</Text>
                     </View>
-                    {timer > 0 && <View style={{ display: 'flex', gap: 10 }}>
-                        <View style={styles.timerBlock}>
-                            <Text style={styles.timerText}>Time Left:</Text>
-                            <Text style={styles.timer}>{formatTime(timer)}</Text>
-                        </View>
-                        <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => setModalVisible(true)} />
-                    </View>}
+                    <View style={styles.headingRight}>
+                        {timer > 0 && 
+                        <View style={{ display: 'flex', gap: 4, flex: 1 }}>
+                            <View style={styles.timerBlock}>
+                                <Text style={styles.timerText}>Time Left:</Text>
+                                <Text style={styles.timer}>{formatTime(timer)}</Text>
+                            </View>
+                            <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => setModalVisible(true)} />
+                        </View>}
+                    </View>
                 </View>
             </View>
             <View style={styles.body}>

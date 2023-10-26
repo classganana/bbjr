@@ -4,6 +4,7 @@ import React from 'react';
 import { SettingsPage } from '../screens/Profile/SettingsPage';
 import ViewLeadboard from '../screens/Profile/viewLeadboard';
 import EditProfile from '../screens/Profile/EditProfile';
+import { QuizHistory } from '../screens/Profile/QuizHistory';
 
 
 export const ProfileNavigator = () => {
@@ -15,6 +16,7 @@ export const ProfileNavigator = () => {
                 <Stack.Screen name="Setting" component={SettingsPage} options={{ headerShown: false }} />
                 <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }} />
                 <Stack.Screen name="Leaderboard" component={ViewLeadboard} options={{ headerShown: false }} />
+                <Stack.Screen name="QuizHistory" component={QuizHistory} options={{ headerShown: false }} />
             </Stack.Navigator>
         </View>
     )

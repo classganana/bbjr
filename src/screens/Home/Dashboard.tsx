@@ -67,7 +67,7 @@ export const Dashboard = () => {
 
 
     useEffect(() => {
-        console.log(user);
+        AsyncStorage.setItem('user', JSON.stringify(user));
         getPendingQuiz().then((list) => {
             if (list && list.length) {
                 list = list.map((item: any) => {
@@ -80,7 +80,6 @@ export const Dashboard = () => {
     }, [])
 
     const [data, setData] = useState<ExamPrepQuizCardData[]>([]);
-
 
     return (
         <View style={DashboardStyle.container}>
