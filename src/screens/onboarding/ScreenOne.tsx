@@ -15,10 +15,10 @@ export const ScreenOne = () => {
 
   return (
     <View style={ScreenOneStyle.container}>
-        <View>
+        <View style={ScreenOneStyle.gifContainer}>
             <Image style={ScreenOneStyle.gif} source={require("../../../assets/gifs/first.gif")}></Image> 
         </View>
-        <View style={ScreenOneStyle.intro}>
+        <View style={ScreenOneStyle.introContainer}>
             <Text style={ScreenOneStyle.introHeading}>
                 Solve Instant Doubts
             </Text>
@@ -26,15 +26,13 @@ export const ScreenOne = () => {
                 Instantly conquer confusion! Get answers to your questions and overcome doubts in a snap 
             </Text>
         </View>
-        <View style={ScreenOneStyle.buttonSection}>
-            <View>
-                <FirstCorousel height={60} width={100} fill='green' />
+        <View style={ScreenOneStyle.buttonSectionContainer}>
+            <View style={ScreenOneStyle.buttonContainer}>
+                <FirstCorousel height={60} width={100} fill='limegreen' />
             </View>
-            <View style={{width: "50%"}}>
-                <Button label={"Next"} 
+            <Button label={"Next"} 
                 className={LoginButton}
                 disabled={false} onPress={moveToScreenTwo}></Button>
-            </View>
         </View>
     </View>
   )
@@ -42,35 +40,49 @@ export const ScreenOne = () => {
 
 const ScreenOneStyle = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 10,
         backgroundColor: Colors.white,
         display: 'flex',
         flexDirection: 'column',
+        paddingVertical: 40
+    },
+    gifContainer: {
+        flex: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     gif: {
-        height: 450, 
-        width: "100%"
+        height: '100%',
+        width: '100%',
     },
-    intro: {
-        paddingHorizontal: 24
+    introContainer: {
+        flex: 4,
+        paddingHorizontal: 24,
+        justifyContent: 'center'
     },
     introHeading: {
         fontSize: 24,
-        fontWeight: "600"
+        fontWeight: "600",
     },
     introDesc: {
         fontSize: 28,
-        fontWeight: "500"
+        fontWeight: "500",
     },
-    buttonSection: {
-        width: "100%",
-        position: 'absolute',
-        paddingHorizontal: 24,
-        backgroundColor: Colors.white,
-        display: 'flex',
+    buttonSectionContainer: {
+        flex: 2,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        bottom: 40,
-        alignSelf: 'center'
+        alignItems: 'flex-end',
+        paddingHorizontal: 24,
+        backgroundColor: Colors.white,
+    },
+    buttonContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    button: {
+        borderRadius: 10,
+        elevation: 5,
     }
 })

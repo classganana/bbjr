@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from "react-native";
 import { Colors } from "../../../styles/colors";
 import Student from "../subjectbuttons/Subject";
@@ -117,19 +118,20 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
         onRequestClose={() => setBottomSheetVisible(false)}
       >
         <View style={{backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1}}></View>
-        <View style={styles.bottomSheetContainer}>
+
+        <ScrollView style={styles.bottomSheetContainer}>
           <Student
             selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
           />
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: 'flex-end',
-              gap: 5,
+              // flexDirection: "row",
+              // justifyContent: 'flex-end',
+              // gap: 5,
               // position: "absolute",
-              bottom: 15,
-              right: 15,
-              flex: 1,
+              // bottom: 15,
+              // right: 15,
+              // flex: 1,
             }}
           >
             <View style={styles.closeButton}>
@@ -142,7 +144,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </Modal>
     </View>
   );
@@ -230,15 +232,16 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   bottomSheetContainer: {
-    position: "absolute",
+    // position: "absolute",
     bottom: 0,
-    width: "100%",
+    width: "99%",
     height: "50%",
     backgroundColor: Colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    overflow: 'hidden'
-    // padding: 20,
+    overflow: 'scroll',
+    scrollbarWidth: 'auto',
+    scrollbarStyle: 'continuous',
   },
   closeButton: {
     flexDirection: "row",
@@ -248,7 +251,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     gap: 10,
     alignItems: "center",
-    paddingLeft: 10
+    paddingLeft: 10,
+    zIndex: 1
   },
   text: {
     position: "absolute",

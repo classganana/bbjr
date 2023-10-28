@@ -14,9 +14,9 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   async function loadFonts() {
     await Font.loadAsync({
-      'Inter-Regular': require('./assets/fonts/Inter-Regular.ttf'),
-      'Inter-Bold': require('./assets/fonts/Inter-Bold.ttf'),
-      'Inter-ExtraBold': require('./assets/fonts/Inter-ExtraBold.ttf'),
+      'Inter-Regular': require('./assets/fonts/NunitoSans_10pt-Regular.ttf'),
+      'Inter-Bold': require('./assets/fonts/NunitoSans_10pt-Bold.ttf'),
+      'Inter-ExtraBold': require('./assets/fonts/NunitoSans_10pt-ExtraBold.ttf'),
     });
     setFontLoaded(true);
     setTimeout(() => {

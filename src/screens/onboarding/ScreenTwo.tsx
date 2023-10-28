@@ -4,7 +4,7 @@ import { Button } from '../../components/common/ButttonComponent/Button';
 import { useNavigation } from '@react-navigation/native';
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { Colors } from '../../styles/colors';
-import { SecondCorousel } from '../../components/common/SvgComponent/SvgComponent';
+import { SecondCorousel, ThirdCorousel } from '../../components/common/SvgComponent/SvgComponent';
 
 
 export const ScreenTwo = () => {
@@ -17,62 +17,75 @@ export const ScreenTwo = () => {
   
     return (
         <View style={ScreenOneStyle.container}>
-        <View>
-            <Image style={ScreenOneStyle.gif} source={require("../../../assets/gifs/second.gif")}></Image> 
-        </View>
-        <View style={ScreenOneStyle.intro}>
-            <Text style={ScreenOneStyle.introHeading}>
-                Solve Instant Doubts
-            </Text>
-            <Text style={ScreenOneStyle.introDesc}>
-                Instantly conquer confusion! Get answers to your questions and overcome doubts in a snap 
-            </Text>
-        </View>
-        <View style={ScreenOneStyle.buttonSection}>
-            <View>
-                <SecondCorousel height={60} width={100} fill='green' />
+            <View style={ScreenOneStyle.gifContainer}>
+                <Image style={ScreenOneStyle.gif} source={require("../../../assets/gifs/second.gif")}></Image> 
             </View>
-            <View style={{width: "50%"}}>
+            <View style={ScreenOneStyle.introContainer}>
+                <Text style={ScreenOneStyle.introHeading}>
+                    Solve Instant Doubts
+                </Text>
+                <Text style={ScreenOneStyle.introDesc}>
+                    Instantly conquer confusion! Get answers to your questions and overcome doubts in a snap 
+                </Text>
+            </View>
+            <View style={ScreenOneStyle.buttonSectionContainer}>
+                <View style={ScreenOneStyle.buttonContainer}>
+                    <ThirdCorousel height={60} width={100} fill='limegreen' />
+                </View>
                 <Button label={"Next"} 
-                className={LoginButton}
-                disabled={false} onPress={moveToScreenThird}></Button>
+                    className={LoginButton}
+                    disabled={false} onPress={moveToScreenThird}></Button>
             </View>
         </View>
-    </View>
-    )
-  }
-  
-  const ScreenOneStyle = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.white,
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    gif: {
-        height: 500, 
-        width: "100%"
-    },
-    intro: {
-        paddingHorizontal: 24
-    },
-    introHeading: {
-        fontSize: 24,
-        fontWeight: "600"
-    },
-    introDesc: {
-        fontSize: 28,
-        fontWeight: "500"
-    },
-    buttonSection: {
-        width: "100%",
-        position: 'absolute',
-        paddingHorizontal: 24,
-        backgroundColor: Colors.white,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        bottom: 40,
-        alignSelf: 'center'
+      )
     }
-})
+    
+    const ScreenOneStyle = StyleSheet.create({
+        container: {
+            flex: 10,
+            backgroundColor: Colors.white,
+            display: 'flex',
+            flexDirection: 'column',
+            paddingVertical: 40
+        },
+        gifContainer: {
+            flex: 4,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        gif: {
+            height: '80%',
+            width: '100%',
+        },
+        introContainer: {
+            flex: 4,
+            paddingHorizontal: 24,
+            justifyContent: 'center'
+        },
+        introHeading: {
+            fontSize: 24,
+            fontWeight: "600",
+        },
+        introDesc: {
+            fontSize: 28,
+            fontWeight: "500",
+        },
+        buttonSectionContainer: {
+            flex: 2,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            paddingHorizontal: 24,
+            backgroundColor: Colors.white,
+        },
+        buttonContainer: {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        button: {
+            borderRadius: 10,
+            elevation: 5,
+        }
+    })
+    

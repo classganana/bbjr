@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
 import { Button } from "../../common/ButttonComponent/Button";
 import { StartButton } from "../../common/ButttonComponent/ButtonStyles";
 import { Colors, SubjectColors } from "../../../styles/colors";
@@ -134,25 +134,24 @@ export const Student = ({ selectedSubject, themeColor }: Props) => {
   };
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.subjectcontainer}>
-          {colorsMappedSubjectList.map((subjectWithColor, index) => (
-            <ChipComponent
-              themeColor={themeColor}
-              key={index}
-              buttonData={{
-                text: subjectWithColor.subjectName,
-                color: subjectWithColor.color,
-              }}
-              isPressed={index === pressedSubject}
-              onPress={() => handlePressSubject(index)}
-            />
-          ))}
-        </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.subjectcontainer}>
+        {colorsMappedSubjectList.map((subjectWithColor, index) => (
+          <ChipComponent
+            themeColor={themeColor}
+            key={index}
+            buttonData={{
+              text: subjectWithColor.subjectName,
+              color: subjectWithColor.color,
+            }}
+            isPressed={index === pressedSubject}
+            onPress={() => handlePressSubject(index)}
+          />
+        ))}
       </View>
-    </>
-  );
+    </ScrollView>
+
+);
 };
 
 const styles = StyleSheet.create({

@@ -1,10 +1,8 @@
-import { BackHandler, Image, Text, TextInput, Touchable, TouchableNativeFeedback, View } from "react-native";
+import { BackHandler, Image, Text, View } from "react-native";
 import { LoginScreenStyle } from "./LoginScreenStyle"
 import { useEffect, useState } from "react";
-import OtpVerification from "../OtpVerificationScreen";
 import { LoginForm } from "./LoginForm";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Colors } from "../../../styles/colors";
 import { useNavigation } from "@react-navigation/native";
 import { Constants } from "../../../constants/constants";
 
@@ -22,9 +20,9 @@ export const LoginScreen = () => {
     const backAction = () => {
       if (navigation.isFocused()) {
         console.log("back button");
-        return true; // Returning true prevents the default back action
+        return true;
       }
-      return false; // Allow the default back action on other screens
+      return false;
     };
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);

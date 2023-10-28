@@ -52,7 +52,8 @@ export const LoginForm = () => {
       setVerificationId(item)
     }
     )
-      .catch(() => {
+      .catch((e) => {
+        console.log(e);
         setOtpScreen(false);
       })
   }
@@ -146,6 +147,11 @@ export const LoginForm = () => {
       {!otpScreen && (
         <View style={{ padding: 20 }}>
           <FirebaseRecaptchaVerifierModal
+            style={{flex: 1, alignSelf: 'center', 
+            justifyContent: 'center', 
+            alignItems: 'center', height: 100, width: 100, borderRadius: 10, borderWidth: 1, borderColor: 'gray', backgroundColor: 'white' }}
+            title="Phone Verification"
+            cancelLabel="Close"
             ref={recaptchaVerifier}
             firebaseConfig={firebaseConfig}
           />
