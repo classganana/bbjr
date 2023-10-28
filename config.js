@@ -10,7 +10,7 @@ import "firebase/compat/auth"
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 export const firebaseConfig = {
   apiKey: "AIzaSyD_4-oVzkSRlhkxam5AZzm8iSVCul-94Qo",
-  authDomain: "cg-app-b635a.firebaseapp.com",
+  authDomain: "eduzy.in",
   projectId: "cg-app-b635a",
   storageBucket: "cg-app-b635a.appspot.com",
   messagingSenderId: "1087987127518",
