@@ -134,7 +134,7 @@ export const Student = ({ selectedSubject, themeColor }: Props) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <View style={styles.subjectcontainer}>
         {colorsMappedSubjectList.map((subjectWithColor, index) => (
           <ChipComponent
@@ -149,8 +149,7 @@ export const Student = ({ selectedSubject, themeColor }: Props) => {
           />
         ))}
       </View>
-    </ScrollView>
-
+    </View>
 );
 };
 
@@ -159,13 +158,17 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    // flex: 1,
-    // height: 300,
+    flex: 1,
     width: "100%",
-    backgroundColor: Colors.white,
     // position: "relative",
+    height: "100%",
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
   },
   subjectcontainer: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    flex: 1,
     display: "flex",
     justifyContent: "center",
     flexDirection: "row",
@@ -174,9 +177,10 @@ const styles = StyleSheet.create({
     gap: 23,
     padding: 20,
     // height: 200,
-    paddingHorizontal: 30,
-    top: 36,
+    // paddingHorizontal: 30,
+    // top: 36,
     backgroundColor: Colors.white,
+    height: "100%"
   },
   child: {
     display: "flex",

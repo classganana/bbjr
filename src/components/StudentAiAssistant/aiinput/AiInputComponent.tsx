@@ -20,10 +20,11 @@ import { useNavigation } from "@react-navigation/native";
 type Props = {
   onSendClick: (selectedOption: string) => void;
   onSubjectChange: (selectedOption: any) => void;
+  disableSendButton: boolean
 }
 
 
-export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
+export const Aiinput = ({ onSendClick, onSubjectChange,disableSendButton }: Props ) => {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<{
     subjectName: string;
@@ -52,8 +53,10 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
   };
 
   const onSend = () => {
-    if (text) onSendClick(text);
-    setText("");
+    if (disableSendButton && text){
+      onSendClick(text);
+      setText("");
+    } 
   };
 
   function handleOnSubmitEditing(): void {
@@ -105,35 +108,25 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
             </View> */}
           </View>
           <TouchableOpacity onPress={onSend} style={styles.send}>
-            <Send height={"27"} width={"27"} fill={"green"} />
+            <Send height={"27"} width={"27"} fill={"red"} />
           </TouchableOpacity>
         </View>
       </View>
 
       <Modal
-        style={{borderRadius: 300}}
+        style={{borderRadius: 100}}
         animationType="fade"
         transparent={true}
         visible={bottomSheetVisible}
         onRequestClose={() => setBottomSheetVisible(false)}
       >
         <View style={{backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1}}></View>
-
         <ScrollView style={styles.bottomSheetContainer}>
           <Student
             selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
           />
-          <View
-            style={{
-              // flexDirection: "row",
-              // justifyContent: 'flex-end',
-              // gap: 5,
-              // position: "absolute",
-              // bottom: 15,
-              // right: 15,
-              // flex: 1,
-            }}
-          >
+        </ScrollView>
+          <View style={styles.closeButtonContainer}>
             <View style={styles.closeButton}>
               <Text>Cancle</Text>
               <TouchableOpacity
@@ -144,7 +137,6 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
       </Modal>
     </View>
   );
@@ -231,17 +223,25 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     gap: 14,
   },
-  bottomSheetContainer: {
-    // position: "absolute",
+ bottomSheetContainer: {
+    // flex: 1,
+    position: 'relative',
     bottom: 0,
-    width: "99%",
-    height: "50%",
-    backgroundColor: Colors.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    overflow: 'scroll',
+    width: '100%',
+    height: '40%',
+    borderRadius: 30,
+    // overflow: 'scroll',
     scrollbarWidth: 'auto',
     scrollbarStyle: 'continuous',
+  },
+  closeButtonContainer: {
+    flexDirection: "row",
+    justifyContent: 'flex-end',
+    gap: 5,
+    position: "absolute",
+    bottom: "5%",
+    height: 20,
+    right: 10
   },
   closeButton: {
     flexDirection: "row",

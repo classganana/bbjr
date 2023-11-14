@@ -6,15 +6,17 @@ import { CopyIcon, Speaker, ThumsDown, ThumsUp } from "../../common/SvgComponent
 import * as Clipboard from 'expo-clipboard';
 import { ToastService } from "../../../services/ToastService";
 
-function StreamingText({ text }: any) {
+function StreamingText({ text, isStreamingDone }: any) {
   const [streamedText, setStreamedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (currentIndex < text.length) {
         setStreamedText((prevText: string) => prevText + text[currentIndex]);
         setCurrentIndex(currentIndex + 1);
       } else {
+        isStreamingDone(true);
         clearInterval(interval);
       }
     }, 1); // Adjust the interval as needed (e.g., for faster or slower text rendering).
@@ -27,13 +29,15 @@ function StreamingText({ text }: any) {
   return <>{streamedText}</>;
 }
 
+
 type BotProps = {
   text: string;
   stream: boolean | undefined;
   feedback: (message: any) => void;
+  isStreamingDone: (message: any) => void;
 };
 
-export const Bot: React.FC<BotProps> = ({ text, stream, feedback }) => {
+export const Bot: React.FC<BotProps> = ({ text, stream, feedback, isStreamingDone}) => {
   // const [copiedText, setCopiedText] = React.useState('');
 
   const copyToClipboard = async () => {
@@ -63,7 +67,7 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback }) => {
                 <Speaker height={20} width={20} fill={Colors.black_01} />
               </TouchableOpacity>
               <Text style={styles.text}>
-                {stream ? <StreamingText text={text} /> :
+                {stream ? <StreamingText isStreamingDone={isStreamingDone} text={text} /> :
                   <Text>{text}</Text>
                 }
               </Text>

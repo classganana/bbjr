@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { QuizNavigator } from "../../navigators/QuizNavigator";
 import { ProfileNavigator } from "../../navigators/ProfileNavigator";
 import { styles } from "./BottomTabSetupStyle";
+import { BotNavigator } from "../../navigators/BotNavigator";
 const Tab = createBottomTabNavigator();
 const BottomTabSetup = () => {
   const [focusedTab, setFocusedTab] = useState<
@@ -142,15 +143,17 @@ const BottomTabSetup = () => {
         />
         <Tab.Screen
           name="StudentAssistantSetupScreen"
-          component={BotScreen}
+          component={BotNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
-              <TouchableOpacity onPress={() => navigation.navigate('Bot' as never)}
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+              <Animated.View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                transform: [
+                  { scale: focused ? scaleValues.PasswordScreen : 1 },
+                ],
+              }} >
             <Image
                   source={require("../../../assets/png/botIcon.png")}
                   style={{
@@ -166,7 +169,7 @@ const BottomTabSetup = () => {
                 >
                   Zeal
                 </Text>
-              </TouchableOpacity>
+              </Animated.View>
             ),
           }}
         />

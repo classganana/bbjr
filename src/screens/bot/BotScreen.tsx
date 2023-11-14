@@ -14,7 +14,7 @@ import { ToastService } from '../../services/ToastService'
 
 interface BotMessageFeedback {
   BotAnswer: string;
-  feedback: string
+  feedback: string;
 }
 
 export const BotScreen = () => {
@@ -25,9 +25,9 @@ export const BotScreen = () => {
   const { user } = useUser()
   const [userFeedback, setUserFeedback] = useState('');
   const [botMessage, setBotMessage] = useState<BotMessageFeedback>();
+  const [disableSend, setDisableSend] = useState(false);
 
   useEffect(() => {
-    console.log(user)
     const req = {
       service: "ml_service",
       endpoint: `/conversations?student_id=${user?.userId}&subject=${subject}&school_id=default`,
@@ -108,7 +108,8 @@ export const BotScreen = () => {
           source: data.source,
           text: data.text,
           timestamp: Date.now(),
-          stream: true
+          stream: true,
+          similar_questions: data.similar_questions
         };
 
         // Replace the 'typing' message with the actual bot response
@@ -209,16 +210,18 @@ export const BotScreen = () => {
         <View style={{ flex: 1 }}>
           {messages && messages.length == 0 || (subject == "")
             ? <BotIntroduction />
-            : <MessageContainer messages={messages} feedback={
-              function (message: BotMessageFeedback): void {
-                      setBotMessage(message);
-                      startReportFlow(message);
-
-            }} />
+            : <MessageContainer messages={messages} feedback={function (message: BotMessageFeedback): void {
+              setBotMessage(message)
+              startReportFlow(message)
+            } } selectedQuestion={(msg) => pushMessageIntoQueue(msg)}
+             isStreaming={function (b: boolean) {
+              setDisableSend(b)
+            } }/>
           }
         </View>
         <View style={{ justifyContent: 'flex-end', width: "100%" }}>
-          <Aiinput onSubjectChange={(item: any) => { setSubject(item.subjectName) }} onSendClick={(text: any) => pushMessageIntoQueue(text)} />
+          <Aiinput onSubjectChange={(item: any) => { setSubject(item.subjectName) } } onSendClick={(text: any) => pushMessageIntoQueue(text)}
+           disableSendButton={disableSend} />
           {/* <Aiinput onsendclick={(text) => onMessageSent(text)} onSubjectChange={(sub: any) => { console.log(sub) }} /> */}
         </View>
       <Modal

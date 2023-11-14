@@ -3,32 +3,38 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  Image,
   TouchableOpacity,
 } from "react-native";
 import { Colors } from "../../styles/colors";
 import { Chats } from "./Chats.interface";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Bot } from "../../components/StudentAiAssistant/messagecomponent/Bot";
 import { User } from "../../components/StudentAiAssistant/messagecomponent/user";
 import { useNavigation } from "@react-navigation/native";
-import { ArrowLeft } from "../../components/common/SvgComponent/SvgComponent";
-
 
 interface MessageContainerProps {
   messages: Chats[];
   feedback: (message: any) => void;
+  selectedQuestion: (question: string) => void;
+  isStreaming: (b: boolean) => void;
 }
 
-export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, feedback }) => {
+export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, feedback, selectedQuestion, isStreaming }) => {
 
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
   const moveToStudentAssistant = () => {
     navigation.navigate("StudentAssistantSetupScreen" as never);
   };
+  const [isStreamingDone, setIsStreamingDone] = useState(false);
 
-  //   const messages: Chats[] = []
+  useEffect(() => {
+    setIsStreamingDone(false);
+  }, [messages])
+
+  useEffect(() => {
+    isStreaming(isStreamingDone)
+  },[isStreamingDone])
 
   return (
     <>
@@ -53,8 +59,20 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, fe
                     {message.source == "user" ? (
                       <User text={message.text}></User>
                     ) : (
-                      <Bot text={message.text} stream={message.stream} 
-                      feedback={feedback}></Bot>
+                      <>
+                        <Bot text={message.text} stream={message.stream}
+                          feedback={feedback} isStreamingDone={setIsStreamingDone}></Bot>
+                        {
+                          (messages.length - 1) == index && isStreamingDone && message?.similar_questions?.map((item, index) => {
+                            return (<TouchableOpacity key={index} style={style.infoButton} onPress={() => { selectedQuestion(item) }}>
+                              <Text style={style.infoButtonText}>
+                                {item}
+                              </Text>
+                            </TouchableOpacity>)
+                          })
+                        }
+                      </>
+
                     )}
                   </React.Fragment>
                 );
@@ -203,4 +221,18 @@ const style = StyleSheet.create({
     borderRadius: 90,
     alignSelf: "center",
   },
+  infoButton: {
+    borderRadius: 8,
+    borderWidth: 0.5,
+    borderColor: 'rgba(0, 107, 127, 0.60)',
+    backgroundColor: '#FFF',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    width: "90%",
+    color: Colors.primary
+  },
+  infoButtonText: {
+    color: Colors.primary,
+    fontWeight: '500'
+  }
 });
