@@ -112,7 +112,6 @@ export const SettingsPage = () => {
               icon={<PencilIcon height={15} width={15} fill={'#fff'} />}
               label={'Edit Profile'}
               pos={'right'}
-              backgroundColor={'#006B7F'}
             />
           </View>
         </View>

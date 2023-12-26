@@ -17,7 +17,7 @@ interface Props {
     container?: StyleProp<ViewStyle> | StyleProp<any>;
     title?: StyleProp<TextStyle>;
   };
-  backgroundColor: string;
+  backgroundColor?: string;
   style?: StyleProp<ViewStyle>;
 }
 
