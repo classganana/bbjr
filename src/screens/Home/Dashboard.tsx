@@ -83,10 +83,10 @@ export const Dashboard = () => {
 
     return (
         <View style={DashboardStyle.container}>
-            <View style={DashboardStyle.header}>
+            {/* <View style={DashboardStyle.header}>
                 <Image style={{ height: 50, width: 50 }} source={require("../../../assets/gifs/bot.gif")}></Image>
                 <Text style={DashboardStyle.brand}>{Constants.BrandName}</Text>
-            </View>
+            </View> */}
             <ScrollView style={DashboardStyle.body}>
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>

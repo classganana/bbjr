@@ -238,11 +238,11 @@ export const OutlineButton = StyleSheet.create<Style>({
     justifyContent: "center",
     borderRadius: 5,
     borderWidth: 1/4,
-    borderColor: "rgba(0, 107, 127, 0.50)",
+    borderColor: Colors.primary,
     backgroundColor: Colors.white,
   },
   title: {
-    color: 'rgba(0, 107, 127, 0.50)',
+    color: Colors.primary,
     fontWeight: "600",
     fontSize: 20,
     fontFamily: "Inter-Regular",

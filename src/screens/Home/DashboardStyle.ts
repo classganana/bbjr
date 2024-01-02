@@ -3,9 +3,8 @@ import { Colors } from "../../styles/colors";
 
 export const DashboardStyle = StyleSheet.create({
     container: {
-
         flex: 1,
-        backgroundColor: Colors.primary,
+        // backgroundColor: Colors.primary,
     },
     header: {
         height: 66,
@@ -208,7 +207,7 @@ export const DashboardStyle = StyleSheet.create({
       width: '98%',
       height: 140,
       padding: 14,
-      backgroundColor: '#F0F6F8',
+      backgroundColor: "linear-gradient(100deg, #E3E8FF 1.64%, rgba(255, 255, 254, 0.27) 49.37%, #C8D2FF 100%)",
       shadowColor: Colors.black_03,
       shadowOffset: {
         width: 4,

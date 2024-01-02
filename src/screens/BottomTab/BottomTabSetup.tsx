@@ -145,14 +145,14 @@ const BottomTabSetup = () => {
           component={BotScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <TouchableOpacity onPress={() => navigation.navigate('Bot' as never)}
+              // <TouchableOpacity onPress={() => navigation.navigate('Bot' as never)}
+              <Animated.View
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-            <Image
-                  source={require("../../../assets/png/botIcon.png")}
+            <Image source={require("../../../assets/png/botIcon.png")}
                   style={{
                     width: 30,
                     height: 30,
@@ -166,7 +166,7 @@ const BottomTabSetup = () => {
                 >
                   Zeal
                 </Text>
-              </TouchableOpacity>
+              </Animated.View>
             ),
           }}
         />

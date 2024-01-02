@@ -21,7 +21,7 @@ export default function App() {
     setFontLoaded(true);
     setTimeout(() => {
       setLoading(true); // Set loading to true when fonts are loaded
-    }, 300);
+    }, 10);
   }
 
   useEffect(() => {
