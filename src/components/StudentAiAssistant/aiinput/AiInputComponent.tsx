@@ -6,12 +6,10 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
-  ScrollView,
 } from "react-native";
 import { Colors } from "../../../styles/colors";
 import Student from "../subjectbuttons/Subject";
 import {
-  CrossIcon,
   Pen,
   Send,
 } from "../../common/SvgComponent/SvgComponent";
@@ -20,10 +18,11 @@ import { useNavigation } from "@react-navigation/native";
 type Props = {
   onSendClick: (selectedOption: string) => void;
   onSubjectChange: (selectedOption: any) => void;
+  openPopUp: boolean
 }
 
 
-export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
+export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<{
     subjectName: string;
@@ -44,8 +43,12 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
       (element: any) => element.name == "BottomSheetScreen"
     ) as any;
     setSelectedSubject(currentRouteObject?.params?.selectedSubject);
-    setBottomSheetVisible(true)
+    // setBottomSheetVisible(true)
   }, []);
+
+  useEffect(() => {
+    setBottomSheetVisible(openPopUp)
+  },[openPopUp])
 
   const onChange = (text: string) => {
     setText(text);
@@ -100,13 +103,10 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
               onChangeText={(text) => onChange(text)}
               onSubmitEditing={handleOnSubmitEditing}
             />
-            {/* <View style={styles.svg}>
-              <MicroPhone height={28} width={28} fill="#AEAEAE" />
-            </View> */}
-          </View>
           <TouchableOpacity onPress={onSend} style={styles.send}>
             <Send height={"27"} width={"27"} fill={"green"} />
           </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -117,34 +117,28 @@ export const Aiinput = ({ onSendClick, onSubjectChange }: Props ) => {
         visible={bottomSheetVisible}
         onRequestClose={() => setBottomSheetVisible(false)}
       >
-        <View style={{backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1}}></View>
+        <View style={{backgroundColor: 'rgba(0, 0, 0,0.4)', flex: 1,}}></View>
 
-        <ScrollView style={styles.bottomSheetContainer}>
+        <View style={styles.bottomSheetContainer}>
           <Student
             selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
           />
           <View
             style={{
-              // flexDirection: "row",
-              // justifyContent: 'flex-end',
-              // gap: 5,
-              // position: "absolute",
-              // bottom: 15,
-              // right: 15,
-              // flex: 1,
+              height: 60 
             }}
           >
             <View style={styles.closeButton}>
-              <Text>Cancle</Text>
-              <TouchableOpacity
+              <Text style={styles.closeButtonText}>Continue</Text>
+              {/* <TouchableOpacity
                 style={styles.edit}
                 onPress={() => setBottomSheetVisible(false)}
               >
                 <CrossIcon height={20} width={32} fill={"white"} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
-        </ScrollView>
+        </View>
       </Modal>
     </View>
   );
@@ -177,12 +171,15 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 5,
     borderWidth: 1 / 2,
     borderColor: Colors.light_gray_02,
-    backgroundColor: Colors.light_gray_01,
+    // backgroundColor: Colors.light_gray_01,
     paddingVertical: 8,
     paddingHorizontal: 14,
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    border: "0.5px solid #D7D7D7",
+    boxShadow: "0px 0px 6px 0px rgba(0, 0, 0, 0.10)",
   },
   input: {
     flex: 1,
@@ -190,6 +187,7 @@ const styles = StyleSheet.create({
     color: Colors.dark_gray_03,
     fontSize: 16,
     fontWeight: "400",
+    backgroundColor: "#FFF",
   },
   rectangle: {
     // backgroundColor: Colors.white_01,
@@ -235,24 +233,35 @@ const styles = StyleSheet.create({
     // position: "absolute",
     bottom: 0,
     width: "99%",
-    height: "50%",
+    height: "39%",
     backgroundColor: Colors.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    overflow: 'scroll',
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
+    // overflow: 'scroll',
     scrollbarWidth: 'auto',
     scrollbarStyle: 'continuous',
   },
   closeButton: {
     flexDirection: "row",
     bottom: 10,
-    borderRadius: 25,
-    backgroundColor: "#006B7F14",
+    borderRadius: 8,
+    backgroundColor: Colors.primary,
     position: "absolute",
     gap: 10,
     alignItems: "center",
+    justifyContent: 'center',
     paddingLeft: 10,
-    zIndex: 1
+    zIndex: 1,
+    width: "95%",
+    height: 40,
+    textAlign: 'center',
+    alignSelf: 'center'
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 16,
+    textAlign: 'center'
   },
   text: {
     position: "absolute",

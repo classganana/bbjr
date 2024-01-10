@@ -1,4 +1,4 @@
-import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { ImageStyle, Platform, StyleSheet, TextStyle, ViewStyle } from "react-native";
 import { Colors } from "../../../styles/colors";
 
 export type Style = {
@@ -245,6 +245,31 @@ export const OutlineButton = StyleSheet.create<Style>({
     color: Colors.primary,
     fontWeight: "600",
     fontSize: 20,
+    fontFamily: "Inter-Regular",
+  },
+});
+
+export const OutlinePlaneButton = StyleSheet.create<Style>({
+  container: {
+    // flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    borderWidth: 1 / 4,
+    borderColor: "#FAFAFA",
+    backgroundColor: Colors.white,
+    padding: 8,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 }, // Adjust offset as needed
+    shadowOpacity: 0.25, // Increase opacity for better visibility
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  title: {
+    color: "#424242",
+    fontWeight: "600",
+    fontSize: 16,
     fontFamily: "Inter-Regular",
   },
 });

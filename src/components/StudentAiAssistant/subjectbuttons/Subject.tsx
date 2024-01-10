@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     // height: 300,
     width: "100%",
-    backgroundColor: Colors.white,
+    // backgroundColor: Colors.white,
     // position: "relative",
   },
   subjectcontainer: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 20,
     // height: 200,
     paddingHorizontal: 30,
-    top: 36,
+    // top: 36,
     backgroundColor: Colors.white,
   },
   child: {

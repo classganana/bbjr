@@ -1,5 +1,6 @@
-import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { ImageStyle, Platform, StyleSheet, TextStyle, ViewStyle } from "react-native";
 import { Colors } from "../../../styles/colors";
+import { Style } from "../ButttonComponent/ButtonStyles";
 
 export interface IconButtonStyle {
   container: ViewStyle;
@@ -70,5 +71,26 @@ export const backIconButton: IconButtonStyle =
     },
     title: {
       color: Colors.white,
+    },
+  });
+
+  export const OutlinePlaneButton = StyleSheet.create<Style>({
+    container: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-around",
+      borderColor: Colors.white,
+      backgroundColor: Colors.white,
+      padding: 6,
+      elevation: 1/4,
+      borderRadius: 2,
+      // borderColor: Colors.white,
+      // borderWidth: 0.5,
+     
+  },
+    title: {
+      color: "#424242",
+      fontSize: 12,
     },
   });

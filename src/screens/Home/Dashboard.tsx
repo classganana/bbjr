@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { DashboardStyle } from './DashboardStyle'
 import { Button } from '../../components/common/ButttonComponent/Button'
-import { Send, Sprit, Star } from '../../components/common/SvgComponent/SvgComponent'
+import { ArrowIcon, ArrowLeft, Send, Sprit, Star, StreakCircle } from '../../components/common/SvgComponent/SvgComponent'
 import { PrimaryDefaultButton, PrimaryIconDefaultButton, PrimarySmallButton, defaultButton } from '../../components/common/ButttonComponent/ButtonStyles'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 import { Constants } from '../../constants/constants'
 import { Colors } from '../../styles/colors'
 import { ExamPrepQuizCard, ExamPrepQuizCardData } from '../../components/quiz/ExamPrepQuizCard'
@@ -14,6 +14,8 @@ import CircleInitials from '../../components/common/CircleInitials/CircleInitial
 import { IconButton } from '../../components/common/IconButtonComponent/IconButton'
 import { ContinutPractice } from '../../components/home/components/ContinutPractice'
 import { httpClient } from '../../services/HttpServices'
+import { LinearGradient } from 'expo-linear-gradient';
+import { OutlinePlaneButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
 
 
 export const Dashboard = () => {
@@ -65,6 +67,10 @@ export const Dashboard = () => {
         })
     }
 
+    const streak = () => {
+        
+    }
+
 
     useEffect(() => {
         AsyncStorage.setItem('user', JSON.stringify(user));
@@ -90,10 +96,33 @@ export const Dashboard = () => {
             <ScrollView style={DashboardStyle.body}>
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>
-                        <CircleInitials name={user?.name} size={30} />
+                        <CircleInitials name={user?.name} size={32} />
                         <View style={{ flex: 1 }}>
                             <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
+                            <View style={{flexDirection: 'row', gap: 8}}>
+                                <StreakCircle height={15} width={15} fill={'green'} />
+                                <StreakCircle height={15} width={15} fill={'green'} />
+                                <StreakCircle height={15} width={15} fill={'green'} />
+                                <StreakCircle height={15} width={15} fill={'green'} />
+                                <StreakCircle height={15} width={15} fill={'green'} />
+                                <StreakCircle height={15} width={15} fill={'green'} />
+                                <StreakCircle height={15} width={15} fill={'green'} />
+                            </View>
                         </View>
+                    </View>
+                </View>
+                <View>
+                <View style={DashboardStyle.view1}>
+                    <View style={DashboardStyle.view2}>
+                        <Text>Bravo! Continue learning for 1 week!</Text>
+                    </View>
+                    <Image
+                        resizeMode="contain"
+                        source={{
+                        uri: "https://cdn.builder.io/api/v1/image/assets/TEMP/3f720f1b38ac36a936d549549b2ba726d1dbd9f00bf763f288cf2c8133b1ac44?",
+                        }}
+                        style={DashboardStyle.image1}
+                    />
                     </View>
                 </View>
                 <View style={DashboardStyle.options}>
@@ -105,51 +134,53 @@ export const Dashboard = () => {
                     </View>
                     <View style={DashboardStyle.optionsCard}>
                         <View style={DashboardStyle.option}>
-                            <Text style={DashboardStyle.optionCardHeading}>Quiz</Text>
                             <View style={DashboardStyle.optionHeader}>
                                 <Sprit height={'36'} width={'36'} fill={'red'} />
                                 <View>
                                     <Text style={DashboardStyle.optionHeaderText}>55</Text>
-                                    <Text style={DashboardStyle.optionHeaderInfoText}>Quizzes</Text>
+                                    {/* <Text style={DashboardStyle.optionHeaderInfoText}>Quizzes</Text> */}
                                 </View>
                             </View>
+                            <Text style={DashboardStyle.optionCardHeading}>Quiz</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
                                 You have played total 55 quizzes last month!
                             </Text>
-                            <Button label={"Take Quiz"} className={PrimaryDefaultButton} disabled={false} onPress={moveToExploreQuizPage}></Button>
-
+                            <IconButton className={OutlinePlaneButton} onPress={function (): void {
+                                throw new Error('Function not implemented.')
+                            } } icon={<ArrowLeft height={20} width={20} fill={'black'} />} label={'Take Quiz'} pos={'right'}></IconButton>
                         </View>
                         <View style={DashboardStyle.option}>
-                            <Text style={DashboardStyle.optionCardHeading}>Exam Prep</Text>
                             <View style={DashboardStyle.optionHeader}>
                                 <View style={{ height: 34, width: 34, borderRadius: 34, padding: 5, backgroundColor: '#D6E0FC' }}>
                                     <Image style={{ height: 25, width: 25, borderRadius: 34, padding: 10 }} source={require("../../../assets/svg/books.png")}></Image>
                                 </View>
                                 <View>
-                                    <Text style={DashboardStyle.optionHeaderText}>55</Text>
-                                    <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text>
+                                    <Text style={DashboardStyle.optionHeaderText}>18</Text>
+                                    {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
                                 </View>
                             </View>
+                            <Text style={DashboardStyle.optionCardHeading}>Exam Prep</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
                                 You have played total 55 quizzes last month!
                             </Text>
-                            <Button label={"Exam Prep"} className={PrimaryDefaultButton} disabled={false} onPress={() => moveToExploreExamPrepPage()}></Button>
+                            <IconButton className={OutlinePlaneButton} onPress={function (): void {
+                                moveToExploreExamPrepPage()
+                            } } icon={<ArrowLeft height={20} width={20} fill={'black'} />} label={'Exam Prep'} pos={'right'}></IconButton>
                         </View>
                     </View>
                 </View>
-
-
-                <View style={DashboardStyle.botBlock}>
+                <LinearGradient   start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }} colors={['#E3E8FF', 'rgba(255, 255, 254, 0.27)', '#C8D2FF']} style={DashboardStyle.botBlock}>
                     <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat 🚀</Text>
                     <Text>Your Personal Study Assistant</Text>
                     <View style={DashboardStyle.botBlockDesc}>
-                        <View>
+                        <View style={{flex: 8}}>
                             <IconButton className={PrimaryIconDefaultButton}
                                 onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={'Get Started'} pos={'right'} backgroundColor={Colors.primary} />
                         </View>
                         <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
                     </View>
-                </View>
+                </LinearGradient>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
                 {data && data.length > 0 ? <View>
                     <View style={DashboardStyle.continuePractice}>

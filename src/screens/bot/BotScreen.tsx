@@ -11,6 +11,7 @@ import { Chats } from '../studentaiAssistant/Chats.interface'
 import { useUser } from '../../context/UserContext'
 import ReportComponent from '../../components/quiz/ReportComponent'
 import { ToastService } from '../../services/ToastService'
+import { Colors } from '../../styles/colors'
 
 interface BotMessageFeedback {
   BotAnswer: string;
@@ -22,7 +23,7 @@ export const BotScreen = () => {
   const [messages, setMessages] = useState<any>([]);
   const navigation = useNavigation();
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const { user } = useUser()
+  const { user } = useUser();
   const [userFeedback, setUserFeedback] = useState('');
   const [botMessage, setBotMessage] = useState<BotMessageFeedback>();
 
@@ -141,7 +142,7 @@ export const BotScreen = () => {
       "studentId": user?.userId,
       "feedbackOn": "chat",
       "msg": {
-        "feedbackMessage": botFeedback?.feedback == 'negative' && userFeedback ? userFeedback: "liked",
+        "feedbackMessage": botFeedback?.feedback == 'negative' && userFeedback ? userFeedback : "liked",
         "UserQuestion": lastUserMessage.text,
         ...botFeedback
       },
@@ -175,20 +176,19 @@ export const BotScreen = () => {
   }
 
   function reportQuestion(item: React.SetStateAction<string>) {
-      setUserFeedback(item);
-      submitFeedback(botMessage);
-      // submitFeedback(botMessage)
+    setUserFeedback(item);
+    submitFeedback(botMessage);
+    // submitFeedback(botMessage)
   }
 
   const startReportFlow = (message: BotMessageFeedback) => {
     console.log(message);
-        if(message?.feedback == 'negative'){
-          setBottomSheetVisible(true);
-        } else {
-          submitFeedback(botMessage);
-        }
+    if (message?.feedback == 'negative') {
+      setBottomSheetVisible(true);
+    } else {
+      submitFeedback(botMessage);
     }
-  
+  }
 
   return (
     <KeyboardAvoidingView
@@ -197,13 +197,25 @@ export const BotScreen = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 30}>
       <View style={BotStyle.container}>
         <View style={BotStyle.header}>
-          <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
-            <ArrowLeft height={24} width={24} fill={'red'} />
-            <BotIcon height={32} width={32} fill={'red'} />
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
+              <ArrowLeft height={24} width={24} fill={'red'} />
+              <BotIcon height={32} width={32} fill={Colors.primary} />
+            </TouchableOpacity>
+            <View>
+              <Text style={BotStyle.headerTitle}>Zeal</Text>
+              <Text style={BotStyle.headerTitleInfo}>• online</Text>
+            </View>
+          </View>
           <View>
-            <Text style={BotStyle.headerTitle}>Zeal</Text>
-            <Text style={BotStyle.headerTitleInfo}>• online</Text>
+            {subject ? <Text>{subject}</Text> :
+              <TouchableOpacity onPress={() => { }}>
+                <Text>
+                  Select Subject
+                </Text>
+              </TouchableOpacity>
+            }
+
           </View>
         </View>
         <View style={{ flex: 1 }}>
@@ -211,30 +223,32 @@ export const BotScreen = () => {
             ? <BotIntroduction />
             : <MessageContainer messages={messages} feedback={
               function (message: BotMessageFeedback): void {
-                      setBotMessage(message);
-                      startReportFlow(message);
+                setBotMessage(message);
+                startReportFlow(message);
 
-            }} />
+              }} />
           }
         </View>
         <View style={{ justifyContent: 'flex-end', width: "100%" }}>
-          <Aiinput onSubjectChange={(item: any) => { setSubject(item.subjectName) }} onSendClick={(text: any) => pushMessageIntoQueue(text)} />
+          <Aiinput
+            onSubjectChange={(item: any) => { setSubject(item.subjectName) }} onSendClick={(text: any) => pushMessageIntoQueue(text)}
+            openPopUp={false} />
           {/* <Aiinput onsendclick={(text) => onMessageSent(text)} onSubjectChange={(sub: any) => { console.log(sub) }} /> */}
         </View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={bottomSheetVisible}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={bottomSheetVisible}
         // onRequestClose={() => setBottomSheetVisible(false)}
-      >
-        <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
-          <View style={BotStyle.bottomSheetContainer}>
-            <ReportComponent 
-            report={(item) => {reportQuestion(item);}} 
-            closeModal={(item) =>  setBottomSheetVisible(item) } />
+        >
+          <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+            <View style={BotStyle.bottomSheetContainer}>
+              <ReportComponent
+                report={(item) => { reportQuestion(item); }}
+                closeModal={(item) => setBottomSheetVisible(item)} />
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
       </View>
     </KeyboardAvoidingView>
   )

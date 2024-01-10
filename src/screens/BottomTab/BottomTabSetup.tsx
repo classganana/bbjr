@@ -65,7 +65,6 @@ const BottomTabSetup = () => {
           },
         }}
       >
-
         <Tab.Screen
           name="Home"
           component={Dashboard}
@@ -99,6 +98,36 @@ const BottomTabSetup = () => {
                   }}
                 >
                   Home
+                </Text>
+              </Animated.View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="StudentAssistantSetupScreen"
+          component={BotScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              // <TouchableOpacity onPress={() => navigation.navigate('Bot' as never)}
+              <Animated.View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Image source={require("../../../assets/png/botIcon.png")}
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+                <Text
+                  style={{
+                    color: focused ? "#E32F45" : "#748C94",
+                    fontSize: 14,
+                  }}
+                >
+                  Zeal
                 </Text>
               </Animated.View>
             ),
@@ -140,36 +169,7 @@ const BottomTabSetup = () => {
 
           }}
         />
-        <Tab.Screen
-          name="StudentAssistantSetupScreen"
-          component={BotScreen}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              // <TouchableOpacity onPress={() => navigation.navigate('Bot' as never)}
-              <Animated.View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-            <Image source={require("../../../assets/png/botIcon.png")}
-                  style={{
-                    width: 30,
-                    height: 30,
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? "#E32F45" : "#748C94",
-                    fontSize: 14,
-                  }}
-                >
-                  Zeal
-                </Text>
-              </Animated.View>
-            ),
-          }}
-        />
+
         <Tab.Screen
           name="Profile"
           component={ProfileNavigator}

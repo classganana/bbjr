@@ -11,11 +11,12 @@ export const BotStyle = StyleSheet.create({
         paddingHorizontal: 14,
         flexDirection: 'row',
         gap: 14,
+        justifyContent: 'space-between',
         height: 50,
         alignItems: 'center',
         borderWidth: 0.5,
         borderColor: '#DFDFDF',
-        backgroundColor: '#FFF',
+        backgroundColor: '#F0F2FC',
         shadowColor: 'rgba(0, 0, 0, 0.10)',
         shadowOffset: {
           width: 0,

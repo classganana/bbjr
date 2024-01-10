@@ -120,13 +120,14 @@ export const DashboardStyle = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 10,
         paddingHorizontal: 5,
-        borderBottomColor: Colors.primary,
-        borderBottomWidth: 1/2,
+        // borderBottomColor: Colors.primary,
+        // borderBottomWidth: 1/2,
         marginBottom: 10
     },
     viewAllBlock: {
       borderBlockColor: Colors.primary,
-      borderBottomWidth: 1
+      borderBottomWidth: 1,
+      filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.10))",
     },
     viewAllText: {
       fontWeight: '500',
@@ -153,17 +154,20 @@ export const DashboardStyle = StyleSheet.create({
     },
     option: {
       width: "100%",
-      height: 220,
+      // height: 180,
       flex: 1,
       display: 'flex',
       padding: 12,
-      borderRadius:20,
+      borderRadius:22,
       gap: 15,
       backgroundColor: 'white', // Set a non-transparent background color
       shadowColor: Colors.black_03,
-      shadowOffset: { width: 0, height: 2 },
+      shadowOffset: { width: 4, height: 4 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
+      borderWidth: 1/2,
+      justifyContent: 'space-evenly',
+      borderColor: Colors.primary,
       ...Platform.select({
         ios: {
           shadowColor: 'rgba(0, 0, 0, 0.15)',
@@ -202,10 +206,12 @@ export const DashboardStyle = StyleSheet.create({
       fontSize: 18
     },
     botBlock: {
+      // borderColor: "#DBE2FF",
       marginBottom: 12,
       alignSelf: 'center',
       width: '98%',
       height: 140,
+      boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.10)",
       padding: 14,
       backgroundColor: "linear-gradient(100deg, #E3E8FF 1.64%, rgba(255, 255, 254, 0.27) 49.37%, #C8D2FF 100%)",
       shadowColor: Colors.black_03,
@@ -233,7 +239,7 @@ export const DashboardStyle = StyleSheet.create({
       
     },
     botBlockDesc: {
-      flex: 1,
+      flex: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
@@ -243,6 +249,7 @@ export const DashboardStyle = StyleSheet.create({
       width: 100
     }, 
     botGif: {
+      flex: 2,
       position:"relative",
       bottom: -20,
       right: -20,
@@ -278,6 +285,38 @@ export const DashboardStyle = StyleSheet.create({
     pendingQuizzesList : {
       paddingHorizontal: 4,
       paddingVertical: 4
-    }
+    },
+    view1: {
+      alignItems: "stretch",
+      borderRadius: 8,
+      backgroundColor: "#EFF2FF",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      gap: 20,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      width: "100%",
+      marginBottom: 16,
+      marginTop: 16
+    },
+    view2: {
+      color: "#424242",
+      width: 256,
+      fontWeight: '400',
+    },
+    image1: {
+      overflow: "hidden",
+      alignSelf: "center",
+      position: "relative",
+      display: "flex",
+      width: 13,
+      flexShrink: 0,
+      maxWidth: "100%",
+      flexDirection: "column",
+      marginVertical: 'auto',
+      marginHorizontal: 0,
+      aspectRatio: "1.08",
+    },
 
 })
