@@ -79,7 +79,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
             backgroundColor: 'transparent'
           }}
         >
-          <View style={styles.selectSubjectContainer}>
+          {/* <View style={styles.selectSubjectContainer}>
             <Text style={styles.selectedSubject}> 
               {selectedSubject?.subjectName}
             </Text>
@@ -92,7 +92,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
             >
               <Pen height={"18"} width={"18"} fill={"white"} />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
         <View style={styles.content}>
           <View style={styles.inputContainer}>

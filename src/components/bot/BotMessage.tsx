@@ -1,13 +1,14 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { BotIcon } from '../common/SvgComponent/SvgComponent'
+import { Colors } from '../../styles/colors'
 
 export const BotMessage = ({text}: any) => {
 
   return (
     <View style={botMsg.container}>
         <View>
-            <BotIcon height={32} width={32} fill={'red'}  />
+            <BotIcon height={32} width={32} fill={Colors.primary}  />
         </View>
         <View style={botMsg.messageContainer}>
             <Text>

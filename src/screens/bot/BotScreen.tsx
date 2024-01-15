@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, KeyboardAvoidingView, Platform, TouchableOpacity, Modal } from 'react-native' // Import KeyboardAvoidingView
-import { ArrowLeft, BotIcon } from '../../components/common/SvgComponent/SvgComponent'
+import { ArrowLeft, BotIcon, Pen, ThreeDots } from '../../components/common/SvgComponent/SvgComponent'
 import { BotStyle } from './BotScreenStyle'
 import { BotIntroduction } from '../../components/bot/BotIntroduction'
 import { Aiinput } from '../../components/StudentAiAssistant/aiinput/AiInputComponent'
@@ -26,6 +26,7 @@ export const BotScreen = () => {
   const { user } = useUser();
   const [userFeedback, setUserFeedback] = useState('');
   const [botMessage, setBotMessage] = useState<BotMessageFeedback>();
+  const [subjectModal, setSubjectModal] = useState(false);
 
   useEffect(() => {
     console.log(user)
@@ -207,15 +208,37 @@ export const BotScreen = () => {
               <Text style={BotStyle.headerTitleInfo}>• online</Text>
             </View>
           </View>
-          <View>
-            {subject ? <Text>{subject}</Text> :
-              <TouchableOpacity onPress={() => { }}>
-                <Text>
-                  Select Subject
-                </Text>
-              </TouchableOpacity>
-            }
 
+          {/* <View style={styles.selectSubjectContainer}>
+            <Text style={styles.selectedSubject}> 
+              {selectedSubject?.subjectName}
+            </Text>
+            {!selectedSubject?.subjectName && <Text style={styles.selectedSubject}>
+              Select Subject
+            </Text>}
+            <TouchableOpacity
+              style={styles.edit}
+              onPress={() => setBottomSheetVisible(true)}
+            >
+              <Pen height={"18"} width={"18"} fill={"white"} />
+            </TouchableOpacity>
+          </View> */}
+
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={BotStyle.selectedSubject}>
+                <TouchableOpacity style={BotStyle.selectSubjectContainer} onPress={() => {
+                  setSubjectModal(true)
+                }}>
+                  {!subject ? <Text>
+                    Select Subject
+                  </Text >: <Text numberOfLines={1} ellipsizeMode="tail" 
+                  style={BotStyle.selectedSubjectText}>{subject}</Text>  }
+                  <Pen height={"18"} width={"18"} fill={Colors.primary} />
+                </TouchableOpacity>
+            </View>
+            <View style={BotStyle.menu}>
+              <ThreeDots height={16} width={4} fill={'#454545'} />
+            </View>
           </View>
         </View>
         <View style={{ flex: 1 }}>
@@ -231,8 +254,8 @@ export const BotScreen = () => {
         </View>
         <View style={{ justifyContent: 'flex-end', width: "100%" }}>
           <Aiinput
-            onSubjectChange={(item: any) => { setSubject(item.subjectName) }} onSendClick={(text: any) => pushMessageIntoQueue(text)}
-            openPopUp={false} />
+            onSubjectChange={(item: any) => {setSubject(item.subjectName); setSubjectModal(false) }} onSendClick={(text: any) => pushMessageIntoQueue(text)}
+            openPopUp={subjectModal} />
           {/* <Aiinput onsendclick={(text) => onMessageSent(text)} onSubjectChange={(sub: any) => { console.log(sub) }} /> */}
         </View>
         <Modal

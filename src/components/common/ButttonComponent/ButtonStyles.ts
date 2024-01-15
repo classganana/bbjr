@@ -108,7 +108,7 @@ export const PrimaryIconDefaultButton = StyleSheet.create<Style>({
   container: {
     height: 40,
     // flex: 1,
-    width: "80%",
+    // width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     maxWidth: "80%",
     minWidth: "20%",
-    backgroundColor: Colors.light_gray_01,
+    backgroundColor: Colors.bot_message_bg,
     //   borderWidth: 1,
     //   borderColor: Colors.blue_01,
     borderBottomLeftRadius: 0,

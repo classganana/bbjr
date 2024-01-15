@@ -138,7 +138,8 @@ export const QuizHomePage = () => {
                     "className": user?.class,
                     "studentId": user?.userId,
                     "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-                    "subject": selectedSubject.subjectName
+                    "subject": "Science"
+                    // "subject": selectedSubject.subjectName
                 }
 
                 const reqObj = {
@@ -163,6 +164,7 @@ export const QuizHomePage = () => {
                         timeRequired: item.time,
                         selected: false,
                         score: item.score,
+                        // subject: "Science"
                         subject: selectedSubject.subjectName
                     }));
                     
@@ -186,11 +188,12 @@ export const QuizHomePage = () => {
         setData([]);
         const s = {
             "schoolId": "default",
-            "boardId": user.board,
-            "className": user.class,
-            "studentId": user.userId,
+            "boardId": user?.board,
+            "className": user?.class,
+            "studentId": user?.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-            "subject": selectedSubject.subjectName
+            "subject": "Science"
+            // "subject": selectedSubject.subjectName
         }
 
         const reqObj = {
@@ -229,7 +232,8 @@ export const QuizHomePage = () => {
             "className": user?.class,
             "studentId": user?.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-            "subject": selectedSubject.subjectName
+            "subject": "Science"
+            // "subject": selectedSubject.subjectName
         }
 
         const reqObj = {
@@ -284,7 +288,7 @@ export const QuizHomePage = () => {
             </View>
             <View style={styles.body}>
                 <View style={styles.tabs}>
-                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => {
+                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Preparation']} onChangeTab={(i) => {
                         setTab(i)
                         UtilService.setQuizFlow(i);}} ></Tabs>
                 </View>
@@ -305,7 +309,7 @@ export const QuizHomePage = () => {
                             </>}
                         </>
                     </>}
-                    {tab == 'Exam Prep' && <>
+                    {tab == 'Exam Preparation' && <>
                         {/* <ExamPrepSubjects subjects={subjects} /> */}
                         <View>
                             <TouchableOpacity >

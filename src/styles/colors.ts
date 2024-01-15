@@ -36,6 +36,7 @@ export const Colors = {
   gray_16: "#959595",
   gray_17: "#BEBEBE",
   gray_18: "#727374",
+  gray_19: "#4E4E4E",
   dark_gray: "#E8ECF4",
   dark_gray_01: "#898989",
   light_gray_01: "#F5F5F5",
@@ -62,6 +63,7 @@ export const Colors = {
   shadow_color: "rgba(0, 0, 0, 0.10)",
   progressBar: "#E0DFF1" ,
   lemon_yellow: "#FFF7E3",
+  bot_message_bg : "#F1F3FF"
 };
 
 export const SubjectColors = [

@@ -203,7 +203,10 @@ export const DashboardStyle = StyleSheet.create({
     botHeading: {
       color: "#000",
       fontWeight: "500",
-      fontSize: 18
+      fontSize: 14
+    },
+    botheadingInfo: {
+      fontSize: 12
     },
     botBlock: {
       // borderColor: "#DBE2FF",
@@ -240,9 +243,11 @@ export const DashboardStyle = StyleSheet.create({
     },
     botBlockDesc: {
       flex: 10,
+      marginTop: "15%",
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'flex-end',
+      alignItems: 'center',
+      gap: 50
     },
     headerBotGif: {
       height: 150, 
@@ -250,11 +255,11 @@ export const DashboardStyle = StyleSheet.create({
     }, 
     botGif: {
       flex: 2,
-      position:"relative",
-      bottom: -20,
-      right: -20,
-      height: 110, 
-      width: 100
+      position: "absolute",
+      top: "0%",
+      right: "5%",
+      height: 80, 
+      width: 80
     },
     yourAssistant: {
       color: "#E5FF7F"
@@ -306,17 +311,18 @@ export const DashboardStyle = StyleSheet.create({
       fontWeight: '400',
     },
     image1: {
-      overflow: "hidden",
+      // overflow: "hidden",
       alignSelf: "center",
-      position: "relative",
-      display: "flex",
-      width: 13,
-      flexShrink: 0,
-      maxWidth: "100%",
-      flexDirection: "column",
-      marginVertical: 'auto',
-      marginHorizontal: 0,
-      aspectRatio: "1.08",
+      // position: "relative",
+      // display: "flex",
+      width: 14,
+      height:14,
+      // flexShrink: 0,
+      // maxWidth: "100%",
+      // flexDirection: "column",
+      // marginVertical: 'auto',
+      // marginHorizontal: 0,
+      // aspectRatio: "1.08",
     },
 
 })

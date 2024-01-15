@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     container: {
         margin: 0,
         flex: 1,
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.white_01,
     },
     header: {
         paddingHorizontal: 24,
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
         fontSize: 18
     },
     headingTitle: {
-        color: Colors.white,
+        color: Colors.black_05,
         fontWeight: "500",
         fontSize: 20
     },

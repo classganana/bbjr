@@ -43,8 +43,8 @@ const ProgressBarStyle = StyleSheet.create({
 
     },
     progress: {
-        opacity: 0.4,
-        backgroundColor: "#006B7F",
+        // opacity: 0.4,
+        backgroundColor: Colors.primary,
         height: '100%',
     },
     infoText: {

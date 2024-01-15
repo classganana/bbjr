@@ -40,6 +40,9 @@ export const BotStyle = StyleSheet.create({
         fontSize: 12,
         color: "#23AE00"
     },
+    headerButton: {
+
+    },
     bottomSheetContainer: {
         position: "absolute",
         bottom: 0,
@@ -50,4 +53,47 @@ export const BotStyle = StyleSheet.create({
         borderTopRightRadius: 20,
 
     },
+    selectSubjectContainer: {
+        borderRadius: 25,
+        // backgroundColor: "#006B7F14",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        borderColor: Colors.primary,
+        borderWidth: 1/2,
+        paddingHorizontal: 12,
+        paddingVertical: 1
+        // height: 28 
+    },
+    selectedSubject: {
+      // backgroundColor: Colors.primary,
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 20,
+    },
+    selectedSubjectText: {
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      color: Colors.primary,
+      overflow: 'hidden',
+      maxWidth: 200
+    },
+    edit: {
+        alignItems: "center",
+        justifyContent: "center",
+        width: 32,
+        height: 32,
+        backgroundColor: Colors.primary,
+        borderColor: Colors.skyblue,
+        borderWidth: 0.5,
+        borderRadius: 90,
+      },
+    menu: {
+        height: 28,
+        width: 28,
+        backgroundColor: "#D9D9D97A",
+        borderRadius: 28,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 })

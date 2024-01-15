@@ -58,17 +58,17 @@ export const Dashboard = () => {
             "requestBody": req
         }
         httpClient.post(`auth/c-auth`, reqObj)
-        .then((res) => {
-            if(res.data.statusCode == 200) {
-                console.log(res.data.data);
-            } else {
-                console.log("main",res.data);
-            }
-        })
+            .then((res) => {
+                if (res.data.statusCode == 200) {
+                    console.log(res.data.data);
+                } else {
+                    console.log("main", res.data);
+                }
+            })
     }
 
     const streak = () => {
-        
+
     }
 
 
@@ -99,7 +99,7 @@ export const Dashboard = () => {
                         <CircleInitials name={user?.name} size={32} />
                         <View style={{ flex: 1 }}>
                             <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
-                            <View style={{flexDirection: 'row', gap: 8}}>
+                            <View style={{ flexDirection: 'row', gap: 8 }}>
                                 <StreakCircle height={15} width={15} fill={'green'} />
                                 <StreakCircle height={15} width={15} fill={'green'} />
                                 <StreakCircle height={15} width={15} fill={'green'} />
@@ -112,17 +112,17 @@ export const Dashboard = () => {
                     </View>
                 </View>
                 <View>
-                <View style={DashboardStyle.view1}>
-                    <View style={DashboardStyle.view2}>
-                        <Text>Bravo! Continue learning for 1 week!</Text>
-                    </View>
-                    <Image
-                        resizeMode="contain"
-                        source={{
-                        uri: "https://cdn.builder.io/api/v1/image/assets/TEMP/3f720f1b38ac36a936d549549b2ba726d1dbd9f00bf763f288cf2c8133b1ac44?",
-                        }}
-                        style={DashboardStyle.image1}
-                    />
+                    <View style={DashboardStyle.view1}>
+                        <View style={DashboardStyle.view2}>
+                            <Text>Bravo! Continue learning for 1 week!</Text>
+                        </View>
+                        <Image
+                            // resizeMode="contain"
+                            source={{
+                                uri: "https://cdn.builder.io/api/v1/image/assets/TEMP/3f720f1b38ac36a936d549549b2ba726d1dbd9f00bf763f288cf2c8133b1ac44?",
+                            }}
+                            style={DashboardStyle.image1}
+                        />
                     </View>
                 </View>
                 <View style={DashboardStyle.options}>
@@ -147,7 +147,9 @@ export const Dashboard = () => {
                             </Text>
                             <IconButton className={OutlinePlaneButton} onPress={function (): void {
                                 throw new Error('Function not implemented.')
-                            } } icon={<ArrowLeft height={20} width={20} fill={'black'} />} label={'Take Quiz'} pos={'right'}></IconButton>
+                            }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
+                            <ArrowLeft height={20} width={20} fill={'black'} />
+                          </View>} label={'Take Quiz'} pos={'right'}></IconButton>
                         </View>
                         <View style={DashboardStyle.option}>
                             <View style={DashboardStyle.optionHeader}>
@@ -165,21 +167,24 @@ export const Dashboard = () => {
                             </Text>
                             <IconButton className={OutlinePlaneButton} onPress={function (): void {
                                 moveToExploreExamPrepPage()
-                            } } icon={<ArrowLeft height={20} width={20} fill={'black'} />} label={'Exam Prep'} pos={'right'}></IconButton>
+                            }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
+                            <ArrowLeft height={20} width={20} fill={'black'} />
+                          </View>} label={'Exam Prep'} pos={'right'}></IconButton>
                         </View>
                     </View>
                 </View>
-                <LinearGradient   start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }} colors={['#E3E8FF', 'rgba(255, 255, 254, 0.27)', '#C8D2FF']} style={DashboardStyle.botBlock}>
-                    <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat 🚀</Text>
-                    <Text>Your Personal Study Assistant</Text>
+                <LinearGradient start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }} colors={['#E3E8FF', 'rgba(255, 255, 254, 0.27)', '#C8D2FF']} style={DashboardStyle.botBlock}>
+                    <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat</Text>
+                    <Text style={DashboardStyle.botheadingInfo}>Your Personal Study Assistant 🚀</Text>
                     <View style={DashboardStyle.botBlockDesc}>
-                        <View style={{flex: 8}}>
+                        <Text>Chat With Ezy...</Text>
+                        <View style={{flex: 1}}>
                             <IconButton className={PrimaryIconDefaultButton}
                                 onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={'Get Started'} pos={'right'} backgroundColor={Colors.primary} />
                         </View>
-                        <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
                     </View>
+                        <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
                 </LinearGradient>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
                 {data && data.length > 0 ? <View>
@@ -192,15 +197,15 @@ export const Dashboard = () => {
                         </TouchableOpacity>
                     </View>
                     <View style={DashboardStyle.pendingQuizzesList}>
-                            {data && data.map((item, index) => (
-                                <ExamPrepQuizCard key={index} {...item} onCardClick={(i) => { console.log(i) }} />
-                            ))}
+                        {data && data.map((item, index) => (
+                            <ExamPrepQuizCard key={index} {...item} onCardClick={(i) => { console.log(i) }} />
+                        ))}
                     </View>
                 </View>
-                :
-                <ContinutPractice onPress={() => {
-                    moveToExploreExamPrepPage()
-                }} />
+                    :
+                    <ContinutPractice onPress={() => {
+                        moveToExploreExamPrepPage()
+                    }} />
                 }
             </ScrollView>
         </View>

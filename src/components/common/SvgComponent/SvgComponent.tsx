@@ -998,3 +998,20 @@ export const CopyIcon = (props: Props) => {
   </Svg>
   )
 }
+
+export const ThreeDots = (props: Props) => {
+  return (
+    <Svg
+      // xmlns="http://www.w3.org/2000/svg"
+      // width={4}
+      // height={17}
+      viewBox="0 0 4 17"
+      // fill="none"
+      {...props}
+    >
+      <Circle cx={2} cy={2} r={2} fill="#454545" />
+      <Ellipse cx={2} cy={8.5} rx={2} ry={2.5} fill="#454545" />
+      <Circle cx={2} cy={15} r={2} fill="#454545" />
+    </Svg>
+  )
+}
