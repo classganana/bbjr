@@ -28,10 +28,12 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
     subjectName: string;
   }>();
   const [text, setText] = useState("");
+  const [placeholder, setPlaceholder] = useState("Ask Anything...")
 
   const setSubjectAndCloseModal = (item: any) => {
     setBottomSheetVisible(false);
     setSelectedSubject(item);
+    setPlaceholder("Ask me anything related to " + item.subjectName)
     onSubjectChange(item);
   };
 
@@ -99,12 +101,12 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
             <TextInput
               style={styles.input}
               value={text}
-              placeholder="Ask me anything..."
+              placeholder={placeholder.length > 40 ? placeholder.substring(0, 37) + '...' : placeholder}
               onChangeText={(text) => onChange(text)}
               onSubmitEditing={handleOnSubmitEditing}
             />
           <TouchableOpacity onPress={onSend} style={styles.send}>
-            <Send height={"27"} width={"27"} fill={"green"} />
+            <Send height={"27"} width={"27"} fill={Colors.primary} />
           </TouchableOpacity>
           </View>
         </View>
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 40,
     height: 40,
-    backgroundColor: Colors.skyblue,
+    // backgroundColor: Colors.skyblue,
     borderRadius: 90,
   },
   svg: {

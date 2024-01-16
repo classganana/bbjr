@@ -115,7 +115,8 @@ export const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-
+        overflow: 'scroll',
+        paddingBottom: 50
     },
     subjecttxt: {
         alignSelf: 'center',
@@ -129,6 +130,7 @@ export const styles = StyleSheet.create({
         marginTop: 5
     },
     selectedSubject: {
+        width: 180,
         paddingVertical: 7,
         paddingHorizontal: 14,
         textAlign:'center',

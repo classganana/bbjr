@@ -15,6 +15,7 @@ import Svg, {
   Polygon,
 
 } from "react-native-svg";
+import { Colors } from "../../../styles/colors";
 
 export interface Props {
   height: number | string;
@@ -612,7 +613,7 @@ export function MicroPhone(props: Props) {
 export function Send(props: Props) {
   return (
     <Svg viewBox="0 0 27 27" {...props}>
-      <G fill="#fff">
+      <G fill={props.fill}>
         <Path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -874,7 +875,7 @@ export const LogoutIcon = (props: Props) => {
 export const PencilIcon = (props: Props) => {
   return (
     <Svg
-      viewBox="0 0 15 16"
+      viewBox="0 0 16 16"
       {...props}
     >
       <Path
@@ -883,7 +884,7 @@ export const PencilIcon = (props: Props) => {
       />
       <Path
         d="M9.75 3.5l3.75 3.75m1.731-1.769A2.625 2.625 0 0011.52 1.77l-9.74 9.704A2.65 2.65 0 001 13.35v0A2.65 2.65 0 003.65 16v0c.704 0 1.38-.28 1.877-.78l9.704-9.739z"
-        stroke="#006B7F"
+        stroke={Colors.primary}
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"

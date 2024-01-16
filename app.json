@@ -31,6 +31,14 @@
       "eas": {
         "projectId": "7d18d7de-e5cc-4a52-8967-dfa57e22a4a9"
       }
-    }
+    },
+    "plugins": [
+      [
+        "react-native-admob-native-ads",
+        {
+          "androidAppId":  "ca-app-pub-6786398034142164/5608551297"
+        }
+      ]
+    ]
   }
 }

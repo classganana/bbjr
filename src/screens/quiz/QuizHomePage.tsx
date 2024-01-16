@@ -138,8 +138,8 @@ export const QuizHomePage = () => {
                     "className": user?.class,
                     "studentId": user?.userId,
                     "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-                    "subject": "Science"
-                    // "subject": selectedSubject.subjectName
+                    // "subject": "Science"
+                    "subject": selectedSubject.subjectName
                 }
 
                 const reqObj = {
@@ -192,8 +192,8 @@ export const QuizHomePage = () => {
             "className": user?.class,
             "studentId": user?.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-            "subject": "Science"
-            // "subject": selectedSubject.subjectName
+            // "subject": "Science"
+            "subject": selectedSubject.subjectName
         }
 
         const reqObj = {
@@ -232,8 +232,8 @@ export const QuizHomePage = () => {
             "className": user?.class,
             "studentId": user?.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-            "subject": "Science"
-            // "subject": selectedSubject.subjectName
+            // "subject": "Science"
+            "subject": selectedSubject.subjectName
         }
 
         const reqObj = {
@@ -317,7 +317,7 @@ export const QuizHomePage = () => {
                             </TouchableOpacity>
                             <Text>Selected Subject</Text>
                             <View style={styles.buttoncontainer}>
-                            <Text style={styles.selectedSubject}>
+                            <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
                                 {selectedSubject?.subjectName}
                             </Text>
                             <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
@@ -379,9 +379,9 @@ export const QuizHomePage = () => {
                     <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                         <View style={styles.bottomSheetContainer}>
                             <Text style={styles.subjecttxt}>Subject</Text>
-                            <View style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05 }}>
+                            <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>
                                 <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} />
-                            </View>
+                            </ScrollView>
                             <View
                                 style={{
                                     flexDirection: "row",

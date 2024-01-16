@@ -50,7 +50,16 @@ export const BotScreen = () => {
     }
   }, [subject])
 
+
+  const deleteLastSuggestions = () => {
+    const lastMessages = messages;
+    lastMessages[messages.length-1].suggestions = [];
+    setMessages(lastMessages)
+  }
+
   const pushMessageIntoQueue = (text: string) => {
+    deleteLastSuggestions()
+
     // Create a new message object for the user
     const userMessage = {
       source: "user",
@@ -110,7 +119,8 @@ export const BotScreen = () => {
           source: data.source,
           text: data.text,
           timestamp: Date.now(),
-          stream: true
+          stream: true,
+          suggestions: data.similar_questions
         };
 
         // Replace the 'typing' message with the actual bot response
@@ -209,27 +219,12 @@ export const BotScreen = () => {
             </View>
           </View>
 
-          {/* <View style={styles.selectSubjectContainer}>
-            <Text style={styles.selectedSubject}> 
-              {selectedSubject?.subjectName}
-            </Text>
-            {!selectedSubject?.subjectName && <Text style={styles.selectedSubject}>
-              Select Subject
-            </Text>}
-            <TouchableOpacity
-              style={styles.edit}
-              onPress={() => setBottomSheetVisible(true)}
-            >
-              <Pen height={"18"} width={"18"} fill={"white"} />
-            </TouchableOpacity>
-          </View> */}
-
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={BotStyle.selectedSubject}>
                 <TouchableOpacity style={BotStyle.selectSubjectContainer} onPress={() => {
                   setSubjectModal(true)
                 }}>
-                  {!subject ? <Text>
+                  {!subject ? <Text style={BotStyle.selectedSubjectText}>
                     Select Subject
                   </Text >: <Text numberOfLines={1} ellipsizeMode="tail" 
                   style={BotStyle.selectedSubjectText}>{subject}</Text>  }
@@ -244,12 +239,13 @@ export const BotScreen = () => {
         <View style={{ flex: 1 }}>
           {messages && messages.length == 0 || (subject == "")
             ? <BotIntroduction />
-            : <MessageContainer messages={messages} feedback={
-              function (message: BotMessageFeedback): void {
-                setBotMessage(message);
-                startReportFlow(message);
+            : <MessageContainer messages={messages} feedback={function (message: BotMessageFeedback): void {
+              setBotMessage(message)
+              startReportFlow(message)
 
-              }} />
+            } } optionClicked={function (queestion: string): void {
+                pushMessageIntoQueue(queestion)
+            } } />
           }
         </View>
         <View style={{ justifyContent: 'flex-end', width: "100%" }}>

@@ -62,13 +62,13 @@ export const BotStyle = StyleSheet.create({
         borderColor: Colors.primary,
         borderWidth: 1/2,
         paddingHorizontal: 12,
-        paddingVertical: 1
+        paddingVertical: 2
         // height: 28 
     },
     selectedSubject: {
       // backgroundColor: Colors.primary,
       paddingHorizontal: 10,
-      paddingVertical: 4,
+    //   paddingVertical: 4,
       borderRadius: 20,
     },
     selectedSubjectText: {

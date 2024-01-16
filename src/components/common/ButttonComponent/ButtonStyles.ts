@@ -148,7 +148,7 @@ export const TryAgain = StyleSheet.create<Style>({
 
 export const LoginButton = StyleSheet.create<Style>({
   container: {
-    height: 56,
+    // height: 56,
     flex: 1,
     // width: "100%",
     display: "flex",
@@ -162,7 +162,7 @@ export const LoginButton = StyleSheet.create<Style>({
   title: {
     color: Colors.white,
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "Inter-Regular",
   },
 });
@@ -244,7 +244,7 @@ export const OutlineButton = StyleSheet.create<Style>({
   title: {
     color: Colors.primary,
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "Inter-Regular",
   },
 });
