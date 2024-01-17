@@ -34,7 +34,7 @@ export default function App() {
    <AnimatedSplash
         translucent={true}
         isLoaded={loading}
-        logoImage={require("./assets/gifs/two.gif")}
+        logoImage={require("./assets/gifs/splash.gif")}
         backgroundColor={"#262626"}
         logoHeight={1000}
         logoWidth={450}
