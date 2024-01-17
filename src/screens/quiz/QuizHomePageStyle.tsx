@@ -171,5 +171,12 @@ export const styles = StyleSheet.create({
             justifyContent:'space-between',
             paddingHorizontal:20,
             paddingVertical:20,
+        },
+        chapterWise: {
+            fontSize: 16,
+            fontWeight: '600'
+        },
+        select: {
+            
         }
 });

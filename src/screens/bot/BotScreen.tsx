@@ -53,7 +53,7 @@ export const BotScreen = () => {
 
   const deleteLastSuggestions = () => {
     const lastMessages = messages;
-    lastMessages[messages.length-1].suggestions = [];
+    lastMessages[messages.length-1]? lastMessages[messages.length-1].suggestions = []: '';
     setMessages(lastMessages)
   }
 
@@ -208,13 +208,13 @@ export const BotScreen = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 30}>
       <View style={BotStyle.container}>
         <View style={BotStyle.header}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
             <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
-              <ArrowLeft height={24} width={24} fill={'red'} />
+              <ArrowLeft height={24} width={24} fill={'black'} />
               <BotIcon height={32} width={32} fill={Colors.primary} />
             </TouchableOpacity>
             <View>
-              <Text style={BotStyle.headerTitle}>Zeal</Text>
+              <Text style={BotStyle.headerTitle}>Ezy..</Text>
               <Text style={BotStyle.headerTitleInfo}>• online</Text>
             </View>
           </View>

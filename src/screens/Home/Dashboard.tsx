@@ -99,7 +99,7 @@ export const Dashboard = () => {
                         <CircleInitials name={user?.name} size={32} />
                         <View style={{ flex: 1 }}>
                             <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
-                            <View style={{ flexDirection: 'row', gap: 8 }}>
+                            {/* <View style={{ flexDirection: 'row', gap: 8 }}>
                                 <StreakCircle height={15} width={15} fill={'green'} />
                                 <StreakCircle height={15} width={15} fill={'green'} />
                                 <StreakCircle height={15} width={15} fill={'green'} />
@@ -107,7 +107,7 @@ export const Dashboard = () => {
                                 <StreakCircle height={15} width={15} fill={'green'} />
                                 <StreakCircle height={15} width={15} fill={'green'} />
                                 <StreakCircle height={15} width={15} fill={'green'} />
-                            </View>
+                            </View> */}
                         </View>
                     </View>
                 </View>

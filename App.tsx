@@ -21,7 +21,7 @@ export default function App() {
     setFontLoaded(true);
     setTimeout(() => {
       setLoading(true); // Set loading to true when fonts are loaded
-    }, 300);
+    }, 3000);
   }
 
   useEffect(() => {
@@ -34,10 +34,10 @@ export default function App() {
    <AnimatedSplash
         translucent={true}
         isLoaded={loading}
-        logoImage={require("./assets/gifs/splash.gif")}
+        logoImage={require("./assets/gifs/two.gif")}
         backgroundColor={"#262626"}
         logoHeight={1000}
-        logoWidth={500}
+        logoWidth={450}
       >
     {/* {Platform.OS === "android" && (<StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />)} */}
       {loading && isFontLoaded ? (

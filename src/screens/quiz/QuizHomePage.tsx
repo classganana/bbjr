@@ -328,8 +328,8 @@ export const QuizHomePage = () => {
                             </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Text>All Chapter Wise</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10}}>
+                            <Text style={styles.chapterWise}>All Chapter Wise</Text>
                             <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
                                 {multiSelect && <View style={styles.crossMultiSelect} >
                                     <CrossIcon height={12} width={12} fill={Colors.black_01} />
@@ -337,7 +337,7 @@ export const QuizHomePage = () => {
                                         {(selectedQuiz && selectedQuiz[0]?.length)? selectedQuiz[0]?.length: 0}
                                     </Text>
                                 </View>}
-                                {!multiSelect && <Text>Select</Text>}
+                                {!multiSelect && <Text style={styles.crossMultiSelect}>Select</Text>}
                             </TouchableOpacity>
                         </View>
 
