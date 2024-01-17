@@ -31,11 +31,15 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
   const [placeholder, setPlaceholder] = useState("Ask Anything...")
 
   const setSubjectAndCloseModal = (item: any) => {
-    setBottomSheetVisible(false);
     setSelectedSubject(item);
     setPlaceholder("Ask me anything related to " + item.subjectName)
     onSubjectChange(item);
   };
+
+  const Continue = () => {
+    setBottomSheetVisible(false);
+    onSubjectChange(selectedSubject);
+  }
 
   const navigation = useNavigation();
 
@@ -119,28 +123,24 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
         visible={bottomSheetVisible}
         onRequestClose={() => setBottomSheetVisible(false)}
       >
-        <View style={{backgroundColor: 'rgba(0, 0, 0,0.4)', flex: 1,}}></View>
-
-        <View style={styles.bottomSheetContainer}>
-          <Student
-            selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
-          />
-          <View
-            style={{
-              height: 60 
-            }}
-          >
-            <View style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Continue</Text>
-              {/* <TouchableOpacity
-                style={styles.edit}
-                onPress={() => setBottomSheetVisible(false)}
+        {/* <View style={{backgroundColor: 'rgba(0, 0, 0,0.4)', flex: 1,}}></View> */}
+        <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+            <View style={styles.bottomSheetContainer}>
+              <Student
+              themeColor={true}
+                selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
+              />
+              <View
+                style={{
+                  height: 60 
+                }}
               >
-                <CrossIcon height={20} width={32} fill={"white"} />
-              </TouchableOpacity> */}
+                <View style={styles.closeButton}>
+                  <Text style={styles.closeButtonText}>Continue</Text>
+                </View>
+              </View>
             </View>
           </View>
-        </View>
       </Modal>
     </View>
   );
@@ -232,16 +232,15 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   bottomSheetContainer: {
-    // position: "absolute",
+    position: "absolute",
     bottom: 0,
-    width: "99%",
-    height: "39%",
+    width: "100%",
+    height: "75%",
     backgroundColor: Colors.white,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // overflow: 'scroll',
-    scrollbarWidth: 'auto',
-    scrollbarStyle: 'continuous',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: 'scroll',
+    paddingBottom: 0
   },
   closeButton: {
     flexDirection: "row",

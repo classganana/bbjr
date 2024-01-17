@@ -105,7 +105,11 @@ export const SettingsPage = () => {
             <ContactIcon height={15} width={16} fill={'black'} />
             <Text>Invite Friends</Text>
           </TouchableOpacity>
-            <IconButton
+          <TouchableOpacity onPress={moveToEditProfile} style={styles.editProfile}>
+          <PencilIcon height={18} width={28} fill={'#fff'} />
+            <Text style={{color: 'white'}}>Edit Profile</Text>
+          </TouchableOpacity>
+            {/* <IconButton
               onPress={moveToEditProfile}
               className={EditIconButton}
               icon={
@@ -113,7 +117,7 @@ export const SettingsPage = () => {
             }
               label={'Edit Profile'}
               pos={'right'}
-            />
+            /> */}
         </View>
         {labels.map((buttonLabel, index) => (
           <TouchableOpacity
@@ -200,6 +204,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 7,
   },
+  editProfile: {
+    backgroundColor: Colors.primary,
+    color: Colors.white,
+    display: 'flex',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
   block1: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -214,7 +227,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderColor: Colors.primary,
     alignItems: 'center',
-    // justifyContent:'space-between'
+    justifyContent:'space-between'
   },
   button: {
     // width: '50%',
