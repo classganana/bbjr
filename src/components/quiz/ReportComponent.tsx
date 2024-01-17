@@ -18,7 +18,7 @@ function ReportComponent(props: ReportProps) {
   return (
     <>
       <ScrollView style={styles.container}>
-        <Text style={styles.Text}> What seems to be the problem?</Text>
+        <Text style={styles.heading}> What seems to be the problem?</Text>
         <Text style={styles.text}>Your feedback will help us to improve your test-taking experience</Text>
         {buttons.map((buttonLabel, index) => (
           <TouchableOpacity key={index} onPress={() => {
@@ -34,23 +34,18 @@ function ReportComponent(props: ReportProps) {
             </View>
           </TouchableOpacity>
         ))}
-        <View style={{ paddingHorizontal: 20, paddingVertical: 20, }}>
+        <View style={{marginTop: -20}}>
           <Description placeholder={'Write your feedback'} title={''} />
         </View>
         <View
           style={{
             flexDirection: "row",
-            gap: 5,
-            position: "absolute",
-            bottom: 0,
-            // left:20,
-            paddingHorizontal: 20,
+            gap: 20,
+            paddingHorizontal: 10,
             paddingVertical: 20,
             justifyContent: "space-between",
-            width: '100%',
-
-          }}
-        >
+            width: '100%'
+            }}>
           <Button label={'Cancel'} disabled={false} className={OutlineButton} onPress={() => props.closeModal(false)}></Button>
           <Button label={'Report'} disabled={false}
             className={LoginButton} onPress={() => {
@@ -67,13 +62,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     paddingHorizontal: 20,
     paddingVertical: 20,
-    gap: 19,
   },
-  Text: {
+  heading: {
     color: Colors.black_01,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter-Bold',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
+    marginBottom: 16
   },
   text: {
     color: Colors.light_gray_04,
@@ -81,6 +76,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',
+    marginBottom: 20
   },
   Button: {
     flexDirection: 'row',
@@ -99,7 +95,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.10,
     shadowRadius: 4,
-    elevation: 2, // for Android shadow
+    // elevation: 2, // for Android shadow
   },
   optionMarker: {
     width: 14,
@@ -113,9 +109,9 @@ const styles = StyleSheet.create({
     borderColor: '#006B7F',
   },
   markesign: {
-    width: 10,
-    height: 10,
-    borderRadius: 6,
+    width: 9,
+    height: 9,
+    borderRadius: 5,
     backgroundColor: '#006B7F',
     justifyContent: 'center',
     alignItems: 'center',

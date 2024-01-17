@@ -8,7 +8,6 @@ interface TabsProps {
   onChangeTab: (tab: string) => void;
 }
 
-
 const Tabs: React.FC<TabsProps> = ({ activeTab, tabs, onChangeTab }) => {
   return (
     <View style={styles.container}>
@@ -34,6 +33,9 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, tabs, onChangeTab }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    backgroundColor: "#F0F2FC",
+    padding: 6,
+    borderRadius: 10
     // backgroundColor: "#f2f2f2",
   },
   tab: {
@@ -41,19 +43,21 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: "center",
     justifyContent: "center",
-    borderBottomWidth: 1/4,
-    borderBottomColor: Colors.gray_16,
+    borderRadius: 10,
+    overflow: 'hidden'
   },
   activeTab: {
-    borderBottomColor: Colors.primary,
+    backgroundColor: Colors.primary,
+    color: Colors.white,
+
   },
   tabText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.gray_16,
+    fontSize: 14,
+    fontWeight: "500",
+    color: Colors.gray_19
   },
   activeTabText: {
-    color: Colors.primary,
+    color: Colors.white
   },
   indicator: {
     position: "absolute",

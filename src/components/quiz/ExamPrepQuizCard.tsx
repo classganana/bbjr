@@ -26,9 +26,9 @@ export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id, title, in
         done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
         selected && multiSelect && styles.multiSelected,
         selected && styles.selected]}>
-            <View style={styles.imageContainer}>
+            {/* <View style={styles.imageContainer}>
                 <Image source={{ uri: imageUrl }} style={styles.image} />
-            </View>
+            </View> */}
             <View style={styles.textContainer}>
                 <View>
                     <Text style={styles.infoText}>{title}</Text>
@@ -44,6 +44,7 @@ export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id, title, in
 
 const styles = StyleSheet.create({
     card: {
+        marginHorizontal: 2,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 14,
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
         color: "#343434"
     },
     infoText: {
-        fontSize: 14,
+        fontSize: 16,
         color: '#000000',
         fontWeight: '600'
     },

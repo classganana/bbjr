@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, KeyboardAvoidingView, Platform, TouchableOpacity, Modal } from 'react-native' // Import KeyboardAvoidingView
-import { ArrowLeft, BotIcon } from '../../components/common/SvgComponent/SvgComponent'
+import { ArrowLeft, BotIcon, Pen, ThreeDots } from '../../components/common/SvgComponent/SvgComponent'
 import { BotStyle } from './BotScreenStyle'
 import { BotIntroduction } from '../../components/bot/BotIntroduction'
 import { Aiinput } from '../../components/StudentAiAssistant/aiinput/AiInputComponent'
@@ -11,6 +11,7 @@ import { Chats } from '../studentaiAssistant/Chats.interface'
 import { useUser } from '../../context/UserContext'
 import ReportComponent from '../../components/quiz/ReportComponent'
 import { ToastService } from '../../services/ToastService'
+import { Colors } from '../../styles/colors'
 
 interface BotMessageFeedback {
   BotAnswer: string;
@@ -22,9 +23,10 @@ export const BotScreen = () => {
   const [messages, setMessages] = useState<any>([]);
   const navigation = useNavigation();
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const { user } = useUser()
+  const { user } = useUser();
   const [userFeedback, setUserFeedback] = useState('');
   const [botMessage, setBotMessage] = useState<BotMessageFeedback>();
+  const [subjectModal, setSubjectModal] = useState(false);
 
   useEffect(() => {
     console.log(user)
@@ -48,7 +50,16 @@ export const BotScreen = () => {
     }
   }, [subject])
 
+
+  const deleteLastSuggestions = () => {
+    const lastMessages = messages;
+    lastMessages[messages.length-1]? lastMessages[messages.length-1].suggestions = []: '';
+    setMessages(lastMessages)
+  }
+
   const pushMessageIntoQueue = (text: string) => {
+    deleteLastSuggestions()
+
     // Create a new message object for the user
     const userMessage = {
       source: "user",
@@ -108,7 +119,8 @@ export const BotScreen = () => {
           source: data.source,
           text: data.text,
           timestamp: Date.now(),
-          stream: true
+          stream: true,
+          suggestions: data.similar_questions
         };
 
         // Replace the 'typing' message with the actual bot response
@@ -141,7 +153,7 @@ export const BotScreen = () => {
       "studentId": user?.userId,
       "feedbackOn": "chat",
       "msg": {
-        "feedbackMessage": botFeedback?.feedback == 'negative' && userFeedback ? userFeedback: "liked",
+        "feedbackMessage": botFeedback?.feedback == 'negative' && userFeedback ? userFeedback : "liked",
         "UserQuestion": lastUserMessage.text,
         ...botFeedback
       },
@@ -175,20 +187,19 @@ export const BotScreen = () => {
   }
 
   function reportQuestion(item: React.SetStateAction<string>) {
-      setUserFeedback(item);
-      submitFeedback(botMessage);
-      // submitFeedback(botMessage)
+    setUserFeedback(item);
+    submitFeedback(botMessage);
+    // submitFeedback(botMessage)
   }
 
   const startReportFlow = (message: BotMessageFeedback) => {
     console.log(message);
-        if(message?.feedback == 'negative'){
-          setBottomSheetVisible(true);
-        } else {
-          submitFeedback(botMessage);
-        }
+    if (message?.feedback == 'negative') {
+      setBottomSheetVisible(true);
+    } else {
+      submitFeedback(botMessage);
     }
-  
+  }
 
   return (
     <KeyboardAvoidingView
@@ -197,44 +208,66 @@ export const BotScreen = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 30}>
       <View style={BotStyle.container}>
         <View style={BotStyle.header}>
-          <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
-            <ArrowLeft height={24} width={24} fill={'red'} />
-            <BotIcon height={32} width={32} fill={'red'} />
-          </TouchableOpacity>
-          <View>
-            <Text style={BotStyle.headerTitle}>Zeal</Text>
-            <Text style={BotStyle.headerTitleInfo}>• online</Text>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
+              <ArrowLeft height={24} width={24} fill={'black'} />
+              <BotIcon height={32} width={32} fill={Colors.primary} />
+            </TouchableOpacity>
+            <View>
+              <Text style={BotStyle.headerTitle}>Ezy..</Text>
+              <Text style={BotStyle.headerTitleInfo}>• online</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={BotStyle.selectedSubject}>
+                <TouchableOpacity style={BotStyle.selectSubjectContainer} onPress={() => {
+                  setSubjectModal(true)
+                }}>
+                  {!subject ? <Text style={BotStyle.selectedSubjectText}>
+                    Select Subject
+                  </Text >: <Text numberOfLines={1} ellipsizeMode="tail" 
+                  style={BotStyle.selectedSubjectText}>{subject}</Text>  }
+                  <Pen height={"18"} width={"18"} fill={Colors.primary} />
+                </TouchableOpacity>
+            </View>
+            <View style={BotStyle.menu}>
+              <ThreeDots height={16} width={4} fill={'#454545'} />
+            </View>
           </View>
         </View>
         <View style={{ flex: 1 }}>
           {messages && messages.length == 0 || (subject == "")
             ? <BotIntroduction />
-            : <MessageContainer messages={messages} feedback={
-              function (message: BotMessageFeedback): void {
-                      setBotMessage(message);
-                      startReportFlow(message);
+            : <MessageContainer messages={messages} feedback={function (message: BotMessageFeedback): void {
+              setBotMessage(message)
+              startReportFlow(message)
 
-            }} />
+            } } optionClicked={function (queestion: string): void {
+                pushMessageIntoQueue(queestion)
+            } } />
           }
         </View>
         <View style={{ justifyContent: 'flex-end', width: "100%" }}>
-          <Aiinput onSubjectChange={(item: any) => { setSubject(item.subjectName) }} onSendClick={(text: any) => pushMessageIntoQueue(text)} />
+          <Aiinput
+            onSubjectChange={(item: any) => {setSubject(item.subjectName); setSubjectModal(false) }} onSendClick={(text: any) => pushMessageIntoQueue(text)}
+            openPopUp={subjectModal} />
           {/* <Aiinput onsendclick={(text) => onMessageSent(text)} onSubjectChange={(sub: any) => { console.log(sub) }} /> */}
         </View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={bottomSheetVisible}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={bottomSheetVisible}
         // onRequestClose={() => setBottomSheetVisible(false)}
-      >
-        <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
-          <View style={BotStyle.bottomSheetContainer}>
-            <ReportComponent 
-            report={(item) => {reportQuestion(item);}} 
-            closeModal={(item) =>  setBottomSheetVisible(item) } />
+        >
+          <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+            <View style={BotStyle.bottomSheetContainer}>
+              <ReportComponent
+                report={(item) => { reportQuestion(item); }}
+                closeModal={(item) => setBottomSheetVisible(item)} />
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
       </View>
     </KeyboardAvoidingView>
   )

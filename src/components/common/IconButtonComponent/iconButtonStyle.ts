@@ -1,5 +1,6 @@
-import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { ImageStyle, Platform, StyleSheet, TextStyle, ViewStyle } from "react-native";
 import { Colors } from "../../../styles/colors";
+import { Style } from "../ButttonComponent/ButtonStyles";
 
 export interface IconButtonStyle {
   container: ViewStyle;
@@ -54,21 +55,44 @@ export const backIconButton: IconButtonStyle =
   export const EditIconButton: IconButtonStyle =
   StyleSheet.create<IconButtonStyle>({
     container: {
-      width: "100%",
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "center",
-      backgroundColor: Colors.primary,
-      padding: 12,
-      fontSize: 18,
-      gap: 15,
-      borderRadius: 12,
-      shadowColor: Colors.black_03,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.8,
-      shadowRadius: 1,
+      width: 100,
+      height: 40,
+      flex: 1,
+      // display: "flex",
+      // flexDirection: "row",
+      // justifyContent: "center",
+      backgroundColor: 'red',
+      // padding: 12,
+      // fontSize: 18,
+      // gap: 15,
+      // borderRadius: 12,
+      // shadowColor: Colors.black_03,
+      // shadowOffset: { width: 0, height: 1 },
+      // shadowOpacity: 0.8,
+      // shadowRadius: 1,
     },
     title: {
       color: Colors.white,
+    },
+  });
+
+  export const OutlinePlaneButton = StyleSheet.create<Style>({
+    container: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-around",
+      borderColor: Colors.white,
+      backgroundColor: Colors.white,
+      padding: 6,
+      elevation: 1/4,
+      borderRadius: 2,
+      // borderColor: Colors.white,
+      // borderWidth: 0.5,
+     
+  },
+    title: {
+      color: "#424242",
+      fontSize: 12,
     },
   });

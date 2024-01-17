@@ -69,13 +69,13 @@ export const SettingsPage = () => {
   }, []);
 
   const labels = [
-    { title: 'View leaderboard', leftSvg: <LeaderIcon height={15} width={17} fill={'black'} /> },
-    { title: 'Previous Test Scores', leftSvg: <ScoreIcon height={13} width={13} fill={'black'} /> },
-    { title: 'Help and Support', leftSvg: <ContactIcon height={13} width={13} fill={'black'} /> },
-    { title: 'Privacy', leftSvg: <PrivacyIcon height={14} width={14} fill={'black'} /> },
-    { title: 'Terms and Conditions', leftSvg: <ConditionIcon height={14} width={11} fill={'black'} /> },
-    { title: 'About', leftSvg: <AboutIcon height={14} width={5} fill={'black'} /> },
-    { title: 'Log Out', leftSvg: <LogoutIcon height={15} width={14} fill={'black'} /> },
+    // { title: 'View leaderboard', leftSvg: <LeaderIcon height={15} width={17} fill={'black'} /> },
+    { title: 'Previous Test Scores', leftSvg: <ScoreIcon height={15} width={17} fill={'black'} /> },
+    { title: 'Help and Support', leftSvg: <ContactIcon height={15} width={17} fill={'black'} /> },
+    { title: 'Privacy', leftSvg: <PrivacyIcon height={15} width={17} fill={'black'} /> },
+    { title: 'Terms and Conditions', leftSvg: <ConditionIcon height={15} width={17} fill={'black'} /> },
+    { title: 'About', leftSvg: <AboutIcon height={15} width={17} fill={'black'} /> },
+    { title: 'Log Out', leftSvg: <LogoutIcon height={15} width={17} fill={'black'} /> },
   ];
 
   return (
@@ -105,15 +105,19 @@ export const SettingsPage = () => {
             <ContactIcon height={15} width={16} fill={'black'} />
             <Text>Invite Friends</Text>
           </TouchableOpacity>
-          <View style={styles.button}>
-            <IconButton
+          <TouchableOpacity onPress={moveToEditProfile} style={styles.editProfile}>
+          <PencilIcon height={18} width={28} fill={'#fff'} />
+            <Text style={{color: 'white'}}>Edit Profile</Text>
+          </TouchableOpacity>
+            {/* <IconButton
               onPress={moveToEditProfile}
               className={EditIconButton}
-              icon={<PencilIcon height={15} width={15} fill={'#fff'} />}
+              icon={
+              <PencilIcon height={18} width={28} fill={'#fff'} />
+            }
               label={'Edit Profile'}
               pos={'right'}
-            />
-          </View>
+            /> */}
         </View>
         {labels.map((buttonLabel, index) => (
           <TouchableOpacity
@@ -200,6 +204,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 7,
   },
+  editProfile: {
+    backgroundColor: Colors.primary,
+    color: Colors.white,
+    display: 'flex',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
   block1: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -210,14 +223,16 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    padding: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     borderColor: Colors.primary,
     alignItems: 'center',
+    justifyContent:'space-between'
   },
   button: {
-    width: '50%',
-    position: 'absolute',
-    right: 0,
+    // width: '50%',
+    // position: 'absolute',
+    // right: 0,
   },
   name: {
     color: '#2C2C2C',

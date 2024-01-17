@@ -1,4 +1,4 @@
-import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { ImageStyle, Platform, StyleSheet, TextStyle, ViewStyle } from "react-native";
 import { Colors } from "../../../styles/colors";
 
 export type Style = {
@@ -108,7 +108,7 @@ export const PrimaryIconDefaultButton = StyleSheet.create<Style>({
   container: {
     height: 40,
     // flex: 1,
-    width: "80%",
+    // width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -148,7 +148,7 @@ export const TryAgain = StyleSheet.create<Style>({
 
 export const LoginButton = StyleSheet.create<Style>({
   container: {
-    height: 56,
+    // height: 56,
     flex: 1,
     // width: "100%",
     display: "flex",
@@ -162,7 +162,7 @@ export const LoginButton = StyleSheet.create<Style>({
   title: {
     color: Colors.white,
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "Inter-Regular",
   },
 });
@@ -238,13 +238,38 @@ export const OutlineButton = StyleSheet.create<Style>({
     justifyContent: "center",
     borderRadius: 5,
     borderWidth: 1/4,
-    borderColor: "rgba(0, 107, 127, 0.50)",
+    borderColor: Colors.primary,
     backgroundColor: Colors.white,
   },
   title: {
-    color: 'rgba(0, 107, 127, 0.50)',
+    color: Colors.primary,
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 16,
+    fontFamily: "Inter-Regular",
+  },
+});
+
+export const OutlinePlaneButton = StyleSheet.create<Style>({
+  container: {
+    // flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    borderWidth: 1 / 4,
+    borderColor: "#FAFAFA",
+    backgroundColor: Colors.white,
+    padding: 8,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 }, // Adjust offset as needed
+    shadowOpacity: 0.25, // Increase opacity for better visibility
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  title: {
+    color: "#424242",
+    fontWeight: "600",
+    fontSize: 16,
     fontFamily: "Inter-Regular",
   },
 });

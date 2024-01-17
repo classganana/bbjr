@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     padding: 16,
     maxWidth: "80%",
     minWidth: "20%",
-    backgroundColor: Colors.skyblue,
+    backgroundColor: Colors.primary,
     // borderWidth: 1,
     // borderColor: Colors.blue_01,
     borderBottomRightRadius: 0,

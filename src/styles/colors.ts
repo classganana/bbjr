@@ -17,6 +17,7 @@ export const Colors = {
   black_05:"#212121",
   black_06:"#2D1C1C",
   black_07:"#333",
+  black_08: "#4B4B4B",
   gray_01: "#F7F8F9",
   gray_02: "#8391A1",
   gray_03: "#606060",
@@ -34,6 +35,8 @@ export const Colors = {
   gray_15:"#EAEAEA",
   gray_16: "#959595",
   gray_17: "#BEBEBE",
+  gray_18: "#727374",
+  gray_19: "#4E4E4E",
   dark_gray: "#E8ECF4",
   dark_gray_01: "#898989",
   light_gray_01: "#F5F5F5",
@@ -60,6 +63,7 @@ export const Colors = {
   shadow_color: "rgba(0, 0, 0, 0.10)",
   progressBar: "#E0DFF1" ,
   lemon_yellow: "#FFF7E3",
+  bot_message_bg : "#F1F3FF"
 };
 
 export const SubjectColors = [

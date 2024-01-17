@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     container: {
         margin: 0,
         flex: 1,
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.white_01,
     },
     header: {
         paddingHorizontal: 24,
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
         fontSize: 18
     },
     headingTitle: {
-        color: Colors.white,
+        color: Colors.black_05,
         fontWeight: "500",
         fontSize: 20
     },
@@ -115,7 +115,8 @@ export const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-
+        overflow: 'scroll',
+        paddingBottom: 50
     },
     subjecttxt: {
         alignSelf: 'center',
@@ -129,6 +130,7 @@ export const styles = StyleSheet.create({
         marginTop: 5
     },
     selectedSubject: {
+        width: 180,
         paddingVertical: 7,
         paddingHorizontal: 14,
         textAlign:'center',
@@ -169,5 +171,12 @@ export const styles = StyleSheet.create({
             justifyContent:'space-between',
             paddingHorizontal:20,
             paddingVertical:20,
+        },
+        chapterWise: {
+            fontSize: 16,
+            fontWeight: '600'
+        },
+        select: {
+            
         }
 });

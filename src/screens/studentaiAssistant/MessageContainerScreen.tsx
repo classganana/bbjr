@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Colors } from "../../styles/colors";
 import { Chats } from "./Chats.interface";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Bot } from "../../components/StudentAiAssistant/messagecomponent/Bot";
 import { User } from "../../components/StudentAiAssistant/messagecomponent/user";
 import { useNavigation } from "@react-navigation/native";
@@ -18,9 +18,10 @@ import { ArrowLeft } from "../../components/common/SvgComponent/SvgComponent";
 interface MessageContainerProps {
   messages: Chats[];
   feedback: (message: any) => void;
+  optionClicked: (queestion: string) => void;
 }
 
-export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, feedback }) => {
+export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, feedback, optionClicked }) => {
 
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
@@ -28,7 +29,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, fe
     navigation.navigate("StudentAssistantSetupScreen" as never);
   };
 
-  //   const messages: Chats[] = []
+  const [showOption, setShowOption] = useState(false);
 
   return (
     <>
@@ -53,9 +54,23 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, fe
                     {message.source == "user" ? (
                       <User text={message.text}></User>
                     ) : (
-                      <Bot text={message.text} stream={message.stream} 
-                      feedback={feedback}></Bot>
+                      <Bot text={message.text} stream={message.stream}
+                        feedback={feedback} streamDone={function (done: boolean): void {
+                          setShowOption(done);                        
+                        } }></Bot>
+
                     )}
+                    {message.suggestions && message.suggestions.map((suggestion, index) => {
+                      return (<>
+                          {showOption && <TouchableOpacity onPress={() => {
+                            optionClicked(suggestion)
+                            setShowOption(false)
+                            }} style={style.options}>
+                            <Text style={style.optionsText} key={index}>{suggestion}</Text>
+                          </TouchableOpacity>}
+                      </>
+                      )
+                    })}
                   </React.Fragment>
                 );
               })}
@@ -203,4 +218,24 @@ const style = StyleSheet.create({
     borderRadius: 90,
     alignSelf: "center",
   },
+  options: {
+    display: 'flex',
+    width: 288,
+    padding: 9, // Combine padding values for React Native
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+    flexWrap: 'wrap',
+    borderRadius: 12,
+    borderWidth: 1, // Use borderWidth for border
+    borderColor: Colors.primary,
+    shadowColor: 'rgba(0, 0, 0, 0.10)',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+  },
+  optionsText: {
+    color: Colors.primary,
+    fontWeight: "500"
+  }
 });

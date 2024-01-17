@@ -138,6 +138,7 @@ export const QuizHomePage = () => {
                     "className": user?.class,
                     "studentId": user?.userId,
                     "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+                    // "subject": "Science"
                     "subject": selectedSubject.subjectName
                 }
 
@@ -163,6 +164,7 @@ export const QuizHomePage = () => {
                         timeRequired: item.time,
                         selected: false,
                         score: item.score,
+                        // subject: "Science"
                         subject: selectedSubject.subjectName
                     }));
                     
@@ -186,10 +188,11 @@ export const QuizHomePage = () => {
         setData([]);
         const s = {
             "schoolId": "default",
-            "boardId": user.board,
-            "className": user.class,
-            "studentId": user.userId,
+            "boardId": user?.board,
+            "className": user?.class,
+            "studentId": user?.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+            // "subject": "Science"
             "subject": selectedSubject.subjectName
         }
 
@@ -229,6 +232,7 @@ export const QuizHomePage = () => {
             "className": user?.class,
             "studentId": user?.userId,
             "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+            // "subject": "Science"
             "subject": selectedSubject.subjectName
         }
 
@@ -284,7 +288,7 @@ export const QuizHomePage = () => {
             </View>
             <View style={styles.body}>
                 <View style={styles.tabs}>
-                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => {
+                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Preparation']} onChangeTab={(i) => {
                         setTab(i)
                         UtilService.setQuizFlow(i);}} ></Tabs>
                 </View>
@@ -305,7 +309,7 @@ export const QuizHomePage = () => {
                             </>}
                         </>
                     </>}
-                    {tab == 'Exam Prep' && <>
+                    {tab == 'Exam Preparation' && <>
                         {/* <ExamPrepSubjects subjects={subjects} /> */}
                         <View>
                             <TouchableOpacity >
@@ -313,7 +317,7 @@ export const QuizHomePage = () => {
                             </TouchableOpacity>
                             <Text>Selected Subject</Text>
                             <View style={styles.buttoncontainer}>
-                            <Text style={styles.selectedSubject}>
+                            <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
                                 {selectedSubject?.subjectName}
                             </Text>
                             <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
@@ -324,8 +328,8 @@ export const QuizHomePage = () => {
                             </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Text>All Chapter Wise</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10}}>
+                            <Text style={styles.chapterWise}>All Chapter Wise</Text>
                             <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
                                 {multiSelect && <View style={styles.crossMultiSelect} >
                                     <CrossIcon height={12} width={12} fill={Colors.black_01} />
@@ -333,7 +337,7 @@ export const QuizHomePage = () => {
                                         {(selectedQuiz && selectedQuiz[0]?.length)? selectedQuiz[0]?.length: 0}
                                     </Text>
                                 </View>}
-                                {!multiSelect && <Text>Select</Text>}
+                                {!multiSelect && <Text style={styles.crossMultiSelect}>Select</Text>}
                             </TouchableOpacity>
                         </View>
 
@@ -375,9 +379,9 @@ export const QuizHomePage = () => {
                     <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                         <View style={styles.bottomSheetContainer}>
                             <Text style={styles.subjecttxt}>Subject</Text>
-                            <View style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05 }}>
+                            <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>
                                 <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} />
-                            </View>
+                            </ScrollView>
                             <View
                                 style={{
                                     flexDirection: "row",

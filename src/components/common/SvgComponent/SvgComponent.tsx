@@ -15,6 +15,7 @@ import Svg, {
   Polygon,
 
 } from "react-native-svg";
+import { Colors } from "../../../styles/colors";
 
 export interface Props {
   height: number | string;
@@ -22,6 +23,31 @@ export interface Props {
   fill: string;
   style?: StyleProp<any>;
 }
+
+
+export const StreakCircle = (props: Props) => (
+  <Svg
+  viewBox="0 0 15 15"
+  {...props}
+>
+  <Circle cx={7.5} cy={7.5} r={7} fill="#fff" stroke="#2947D4" />
+  <Circle
+    cx={7.5}
+    cy={7.5}
+    r={5.75}
+    fill="#FFFDC4"
+    stroke="#E00"
+    strokeWidth={1.5}
+  />
+  <Circle
+    cx={7.49961}
+    cy={7.49961}
+    r={3.15}
+    stroke="#E00"
+    strokeWidth={1.5}
+  />
+  <Circle cx={7.5002} cy={7.49922} r={1.3} fill="#E00" />
+</Svg>)
 
 
 export const ReportIcon = (props: Props) => {
@@ -587,7 +613,7 @@ export function MicroPhone(props: Props) {
 export function Send(props: Props) {
   return (
     <Svg viewBox="0 0 27 27" {...props}>
-      <G fill="#fff">
+      <G fill={props.fill}>
         <Path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -693,7 +719,7 @@ export const BotIcon = (props: Props) => {
   >
     <Path
       d="M17.005 2.584c.752 0 1.472.272 2.004.756.531.485.83 1.142.83 1.827 0 .956-.567 1.795-1.417 2.235v1.64h1.416c2.63 0 5.153.953 7.013 2.648 1.86 1.696 2.904 3.996 2.904 6.394h1.417c.376 0 .736.136 1.002.378.265.242.415.57.415.913v3.875c0 .343-.15.672-.415.914a1.49 1.49 0 01-1.002.378h-1.417v1.292c0 .685-.298 1.342-.83 1.826a2.978 2.978 0 01-2.003.757H7.089a2.978 2.978 0 01-2.004-.757 2.473 2.473 0 01-.83-1.826v-1.292H2.84a1.49 1.49 0 01-1.002-.378 1.237 1.237 0 01-.415-.914v-3.875c0-.342.15-.67.415-.913a1.489 1.489 0 011.002-.378h1.416c0-2.398 1.045-4.698 2.905-6.394 1.86-1.695 4.382-2.648 7.012-2.648h1.416v-1.64c-.85-.44-1.416-1.28-1.416-2.235 0-.685.298-1.342.83-1.827a2.979 2.979 0 012.003-.756zM10.63 16.792c-.94 0-1.84.34-2.504.946-.664.605-1.037 1.427-1.037 2.283 0 .857.373 1.678 1.037 2.284a3.723 3.723 0 002.504.945c.94 0 1.84-.34 2.504-.945.665-.606 1.038-1.427 1.038-2.284 0-.856-.373-1.678-1.038-2.283a3.723 3.723 0 00-2.504-.946zm12.75 0c-.94 0-1.84.34-2.504.946-.664.605-1.038 1.427-1.038 2.283 0 .857.374 1.678 1.038 2.284a3.723 3.723 0 002.504.945c.94 0 1.84-.34 2.505-.945.664-.606 1.037-1.427 1.037-2.284 0-.856-.373-1.678-1.038-2.283a3.723 3.723 0 00-2.504-.946z"
-      fill="#006B7F"
+      fill={props.fill || '#006B7F'}
     />
   </Svg>
 }
@@ -849,16 +875,16 @@ export const LogoutIcon = (props: Props) => {
 export const PencilIcon = (props: Props) => {
   return (
     <Svg
-      viewBox="0 0 15 16"
+      viewBox="0 0 16 16"
       {...props}
     >
       <Path
         d="M15.231 5.481A2.625 2.625 0 0011.52 1.77l-9.74 9.704a2.65 2.65 0 103.748 3.748l9.704-9.74zM9.75 3.501l3.75 3.75L9.75 3.5z"
-        fill="#fff"
+        fill={Colors.primary}
       />
       <Path
         d="M9.75 3.5l3.75 3.75m1.731-1.769A2.625 2.625 0 0011.52 1.77l-9.74 9.704A2.65 2.65 0 001 13.35v0A2.65 2.65 0 003.65 16v0c.704 0 1.38-.28 1.877-.78l9.704-9.739z"
-        stroke="#006B7F"
+        stroke={Colors.primary}
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -971,5 +997,22 @@ export const CopyIcon = (props: Props) => {
       fill={props.fill}
     />
   </Svg>
+  )
+}
+
+export const ThreeDots = (props: Props) => {
+  return (
+    <Svg
+      // xmlns="http://www.w3.org/2000/svg"
+      // width={4}
+      // height={17}
+      viewBox="0 0 4 17"
+      // fill="none"
+      {...props}
+    >
+      <Circle cx={2} cy={2} r={2} fill="#454545" />
+      <Ellipse cx={2} cy={8.5} rx={2} ry={2.5} fill="#454545" />
+      <Circle cx={2} cy={15} r={2} fill="#454545" />
+    </Svg>
   )
 }
