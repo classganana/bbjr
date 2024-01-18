@@ -71,4 +71,5 @@ export const backIconButton: IconButtonStyle =
     title: {
       color: Colors.white,
     },
+    
   });
