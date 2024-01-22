@@ -129,7 +129,7 @@ export const TryAgain = StyleSheet.create<Style>({
   container: {
     height: 50,
     // flex: 1,
-    // width: "100%",
+    width: "90%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -427,7 +427,7 @@ export const StartButton = StyleSheet.create<Style>({
 export const CancelButton = StyleSheet.create<Style>({
   container: {
     height: 40,
-    width:130,
+    width: "90%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

@@ -14,7 +14,6 @@ import CircleInitials from '../../components/common/CircleInitials/CircleInitial
 import { IconButton } from '../../components/common/IconButtonComponent/IconButton'
 import { ContinutPractice } from '../../components/home/components/ContinutPractice'
 import { httpClient } from '../../services/HttpServices'
-import { LinearGradient } from 'expo-linear-gradient';
 import { OutlinePlaneButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
 
 
@@ -173,8 +172,7 @@ export const Dashboard = () => {
                         </View>
                     </View>
                 </View>
-                <LinearGradient start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }} colors={['#E3E8FF', 'rgba(255, 255, 254, 0.27)', '#C8D2FF']} style={DashboardStyle.botBlock}>
+                <View style={DashboardStyle.botBlock}>
                     <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat</Text>
                     <Text style={DashboardStyle.botheadingInfo}>Your Personal Study Assistant 🚀</Text>
                     <View style={DashboardStyle.botBlockDesc}>
@@ -185,7 +183,7 @@ export const Dashboard = () => {
                         </View>
                     </View>
                         <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
-                </LinearGradient>
+                </View>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
                 {data && data.length > 0 ? <View>
                     <View style={DashboardStyle.continuePractice}>

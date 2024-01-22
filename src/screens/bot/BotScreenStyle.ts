@@ -51,7 +51,6 @@ export const BotStyle = StyleSheet.create({
         backgroundColor: Colors.white,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-
     },
     selectSubjectContainer: {
         borderRadius: 25,
@@ -76,7 +75,7 @@ export const BotStyle = StyleSheet.create({
       paddingVertical: 4,
       color: Colors.primary,
       overflow: 'hidden',
-      maxWidth: 200
+      maxWidth: 140
     },
     edit: {
         alignItems: "center",

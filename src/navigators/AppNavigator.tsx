@@ -38,7 +38,7 @@ export const AppNavigator = () => {
 
         <View style={{ flex: 1, width: "100%", backgroundColor: 'white' }}>
             <Stack.Navigator>
-                {/* <Stack.Screen name='OnBoarding' component={OnBoardingNavigator} options={{ headerShown: false }}></Stack.Screen> */}
+                <Stack.Screen name='OnBoarding' component={OnBoardingNavigator} options={{ headerShown: false }}></Stack.Screen>
                 <Stack.Screen name="Auth" component={AuthNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name="DashboardNavigator" component={BottomTabSetup} options={{ headerShown: false }} />
                 <Stack.Screen name="Quiz" component={QuizNavigator} options={{ headerShown: false }}></Stack.Screen>

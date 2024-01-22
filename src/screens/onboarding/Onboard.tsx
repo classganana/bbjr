@@ -4,8 +4,10 @@ import { Colors } from '../../styles/colors';
 import { ArrowIcon, ArrowLeft, FirstCorousel } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { CancelButton, LoginButton, OutlineButton, TryAgain } from '../../components/common/ButttonComponent/ButtonStyles';
+import { useNavigation } from '@react-navigation/native';
 
 export const Onboard = () => {
+    const navigation = useNavigation();
     const [i, setI] = useState(0);
     const data = [
         {
@@ -44,12 +46,15 @@ export const Onboard = () => {
             <View style={[styles.footer, i == 2 && {gap: 16}]}>
                 {i < 2 && <><TouchableOpacity onPress={next} style={styles.next}>
                     <ArrowLeft height={24} width={24} fill={'white'} />
-                </TouchableOpacity><TouchableOpacity onPress={next}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={next}>
                         <Text style={styles.skip}>Skip</Text>
                     </TouchableOpacity></>}
                 { i == 2 && <>
-                    <Button label={"Get Started"} disabled={false} onPress={function (): void {} } className={TryAgain} />
-                    <Button label={"Get Started"} disabled={false} onPress={function (): void {} } className={CancelButton} />
+                    <Button label={"Let's Start"} disabled={false} onPress={function (): void {
+                        navigation.navigate('Auth' as never);
+                    } } className={TryAgain} />
+                    {/* <Button label={"I ALREADY HAVE AN ACCOUNT"} disabled={false} onPress={function (): void {} } className={CancelButton} /> */}
                 </>}    
             </View>
         </View>
@@ -74,10 +79,10 @@ const styles = StyleSheet.create({
         width: 288
     },
     dots: {
-        position: 'absolute',
+        // position: 'absolute',
         height: 8,
         width: 51,
-        top: "100%"
+        top: "5%"
     },
     heading: {
         color: Colors.black_08,
@@ -94,7 +99,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     footer: {
-        marginTop: 30,
+        // marginTop: 30,
         flex: 3,
         width: "100%",
         alignItems: 'center',
@@ -108,7 +113,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
         borderRadius: 56,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        transform: [{ rotate: '180deg' }]
     },
     skip: {
         fontSize: 16,

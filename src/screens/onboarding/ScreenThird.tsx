@@ -10,7 +10,7 @@ export const ScreenThird = () => {
     const navigation = useNavigation();
 
     function moveToScreenThird() {
-        navigation.navigate('Auth' as never);
+        I ALREADY HAVE AN ACCOUNT
     }
 
 
