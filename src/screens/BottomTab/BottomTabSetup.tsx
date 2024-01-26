@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { QuizNavigator } from "../../navigators/QuizNavigator";
 import { ProfileNavigator } from "../../navigators/ProfileNavigator";
 import { styles } from "./BottomTabSetupStyle";
+import { Colors } from "../../styles/colors";
 const Tab = createBottomTabNavigator();
 const BottomTabSetup = () => {
   const [focusedTab, setFocusedTab] = useState<
@@ -74,8 +75,11 @@ const BottomTabSetup = () => {
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
+                  borderTopWidth: focused ?  4:  1,
+                  borderTopColor: focused ?  Colors.primary:  "white",
                   transform: [
                     { scale: focused ? scaleValues.PasswordScreen : 1 },
+                    
                   ],
                 }}
                 onTouchStart={() => handlePressIn("PasswordScreen")}
@@ -88,7 +92,7 @@ const BottomTabSetup = () => {
                   style={{
                     width: 30,
                     height: 30,
-                    tintColor: focused ? "black" : "#748C94",
+                    tintColor: focused ? Colors.primary : "#748C94",
                   }}
                 />
                 <Text
@@ -113,6 +117,8 @@ const BottomTabSetup = () => {
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
+                  borderTopWidth: focused ?  4:  1,
+                  borderTopColor: focused ?  Colors.primary:  "white",
                 }}
               >
                 <Image source={require("../../../assets/png/botIcon.png")}
@@ -123,7 +129,7 @@ const BottomTabSetup = () => {
                 />
                 <Text
                   style={{
-                    color: focused ? "#E32F45" : "#748C94",
+                    color: focused ? Colors.primary : "#748C94",
                     fontSize: 14,
                   }}
                 >
@@ -143,6 +149,8 @@ const BottomTabSetup = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   transform: [{ scale: focused ? scaleValues.LoginScreen : 1 }],
+                  borderTopWidth: focused ?  4:  1,
+                  borderTopColor: focused ?  Colors.primary:  "white",
                 }}
                 onTouchStart={() => handlePressIn("LoginScreen")}
                 onTouchEnd={() => handlePressOut("LoginScreen")}
@@ -154,12 +162,14 @@ const BottomTabSetup = () => {
                   style={{
                     width: 30,
                     height: 30,
+                    
                   }}
                 />
                 <Text
                   style={{
-                    color: focused ? "black" : "#748C94",
+                    color: focused ? Colors.primary : "#748C94",
                     fontSize: 14,
+
                   }}
                 >
                   Quiz
@@ -179,6 +189,8 @@ const BottomTabSetup = () => {
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
+                  borderTopWidth: focused ?  4:  1,
+                  borderTopColor: focused ?  Colors.primary:  "white",
                   transform: [
                     { scale: focused ? scaleValues.PasswordScreen : 1 },
                   ],
@@ -194,8 +206,9 @@ const BottomTabSetup = () => {
                 />
                 <Text
                   style={{
-                    color: focused ? "black" : "#748C94",
+                    color: focused ? Colors.primary : "#748C94",
                     fontSize: 14,
+                    
                   }}
                 >
                   Profile

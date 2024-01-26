@@ -85,8 +85,8 @@ export const backIconButton: IconButtonStyle =
       borderColor: Colors.white,
       backgroundColor: Colors.white,
       padding: 6,
-      elevation: 1/4,
-      borderRadius: 2,
+      // elevation: 3,
+      // borderRadius: 1/2,
       // borderColor: Colors.white,
       // borderWidth: 0.5,
      

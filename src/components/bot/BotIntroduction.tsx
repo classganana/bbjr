@@ -3,17 +3,18 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors'
 import { BotMessage } from './BotMessage'
 import { Pen, QuestionMark } from '../common/SvgComponent/SvgComponent'
-import { Aiinput } from '../StudentAiAssistant/aiinput/AiInputComponent'
+import { useUser } from '../../context/UserContext'
 
 export const BotIntroduction = () => {
+  const [showOptions, setShowOptions] = useState(false);
+  const { user } = useUser()
 
-  const [showOptions, setShowOptions] = useState(false);  
 
   const basicInfoList: string[] = [
-    "Great choice! You've selected Class III. 📚",
-    "From now on, our answers and assistance will be tailored to Class III subjects and topics.",
-    "Feel free to ask questions related to your Class III curriculum, and we'll provide you with accurate and helpful information.",
-    "We're here to support your learning journey in Class III. Ask away!"
+    "Great choice! You've selected Class" + user?.class +" 📚",
+    "From now on, our answers and assistance will be tailored to Class " +user?.class +"  subjects and topics.",
+    "Feel free to ask questions related to your " +user?.class +" curriculum, and we'll provide you with accurate and helpful information.",
+    "We're here to support your learning journey in Class " + user?.class +" . Ask away!"
   ]  
   const [intromessages, setIntroMessages] = useState([
     { text: "Where should I begin to get started?" },
@@ -41,7 +42,7 @@ export const BotIntroduction = () => {
     <>
     <View style={BotIntroStyle.container}>
         <Text style={BotIntroStyle.title}>
-            Welcome to the Zeal!
+            Welcome to the Ezy!
         </Text>
         <Text style={BotIntroStyle.titleInfo}>
             Unlock the Power of AI to Find Solutions Tailored to Your Study Needs.
@@ -71,7 +72,7 @@ export const BotIntroduction = () => {
             <View style={{flexDirection: 'row', alignItems:"center", gap:12}}>
                 <QuestionMark height={'24'} width={'24'} fill={Colors.primary} />
                 <TouchableOpacity style={BotIntroStyle.infoButton} onPress={guideUser}>
-                    <Text>
+                    <Text style={BotIntroStyle.infoButtonText}>
                         Where should I begin to get started?
                     </Text>
                 </TouchableOpacity>
@@ -84,7 +85,7 @@ export const BotIntroduction = () => {
 
 const BotIntroStyle = StyleSheet.create({
     container: {
-        width: "90%",
+        width: "100%",
         paddingTop: 12,
         alignItems: 'center',
         flex: 1,
@@ -133,9 +134,12 @@ const BotIntroStyle = StyleSheet.create({
     infoButton: {
         borderRadius: 8,
         borderWidth: 0.5,
-        borderColor: 'rgba(0, 107, 127, 0.60)',
+        borderColor: Colors.primary,
         backgroundColor: '#FFF',
         paddingVertical: 10,
         paddingHorizontal: 14
+    },
+    infoButtonText: {
+        color: Colors.primary
     }
 });

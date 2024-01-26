@@ -12,8 +12,7 @@ export const LoginScreenStyle = StyleSheet.create({
         flexDirection: 'row',
         height: 80,
         alignItems: 'center',
-        paddingHorizontal: 30,
-        gap: 10
+        justifyContent: 'center'
     },
     botIcon: {
         height: 70,

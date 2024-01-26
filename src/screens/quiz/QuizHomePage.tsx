@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ClockIcon, CrossIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ClockIcon, CrossIcon, NewBackButton, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
@@ -24,7 +24,6 @@ export const QuizHomePage = () => {
     const [className, setClassName] = useState(10);
     const [multiSelect, setMultiSelect] = useState(false);
     const [totalQuestions, setTotalQuestions] = useState(0);
-    // const [subject, setSubject] = useState()
     const [selectedQuiz, setSelectedQuiz] = useState<any[]>();
     const [loading, setLoading] = useState(true);
     const {user} = useUser();
@@ -34,7 +33,16 @@ export const QuizHomePage = () => {
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
 
+    const [selectedSubject, setSelectedSubject] = useState<{
+        subjectName: string;
+    }>({subjectName:"Science"});
+
     const navigation = useNavigation();
+
+    useEffect(() => {
+        getSubjectFromLocal();
+        setLoading(false);
+    },[])
 
     useEffect(() => {
         AsyncStorage.removeItem('quizType');
@@ -47,6 +55,25 @@ export const QuizHomePage = () => {
         setOptions(false);
         resetSelection();
     },[multiSelect])
+
+    const setSubjectToLocal = async () => {
+        try {
+          await AsyncStorage.setItem('chatSubject', selectedSubject.subjectName);
+        } catch (e) {
+          console.log("Error => ", e);
+        }
+      }
+    
+      const getSubjectFromLocal = async () => {
+        try {
+          const subject = await AsyncStorage.getItem('chatSubject');
+          if (subject) {
+            setSelectedSubject({subjectName : subject});
+          }
+        } catch (e) {
+          console.log("Error => ", e);
+        }
+      }
 
     const resetSelection = () => {
         let tempData = data;
@@ -81,12 +108,10 @@ export const QuizHomePage = () => {
     const setSubjectAndCloseModal = (item: any) => {
         setBottomSheetVisible(false);
         setSelectedSubject(item);
+        setSubjectToLocal();
       };
 
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-    const [selectedSubject, setSelectedSubject] = useState<{
-        subjectName: string;
-    }>({subjectName:"Science"});
 
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
@@ -182,7 +207,17 @@ export const QuizHomePage = () => {
         };
         
         fetchData();
+        setScreen();
     }, []);
+
+    const setScreen = async () => {
+        const screen = await AsyncStorage.getItem('quizFlow');
+        if(screen == "Quizzes") {
+            setTab('Quizzes');
+        } else {
+            setTab('Exam Preparation')
+        }
+    }
 
     useEffect(() => {
         setData([]);
@@ -275,9 +310,9 @@ export const QuizHomePage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity style={styles.backButton} onPress={onBack}>
-                        <StrongBackButton height={'25'} width={'25'} fill={'black'} />
+                        <NewBackButton height={'18'} width={'25'} fill={'black'} />
                     </TouchableOpacity>
-                    <Text style={styles.headingTitle}>Explore Quiz</Text>
+                    <Text style={styles.headingTitle}>Boost Your Knowledge</Text>
                 </View>
                 {/* <View style={styles.infoContainer}>
                     <SearchIcon height={'20'} width={'20'} fill={'#787878'} />

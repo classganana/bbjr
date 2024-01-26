@@ -209,24 +209,15 @@ export const DashboardStyle = StyleSheet.create({
       fontSize: 12
     },
     botBlock: {
-      // borderColor: "#DBE2FF",
+      borderColor: "#DBE2FF",
       marginBottom: 12,
       alignSelf: 'center',
       width: '98%',
       height: 140,
-      boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.10)",
       padding: 14,
-      backgroundColor: "linear-gradient(100deg, #E3E8FF 1.64%, rgba(255, 255, 254, 0.27) 49.37%, #C8D2FF 100%)",
+      backgroundColor: "white",
       shadowColor: Colors.black_03,
-      shadowOffset: {
-        width: 4,
-        height: 4, // Adjust this value to control the shadow's vertical offset
-      },
-      shadowOpacity: 0.5,
-      shadowRadius: 20, // Adjust this value to control the shadow's spread
-      elevation: 8,
-      borderRadius: 4,
-      borderColor: Colors.white,
+      // borderColor: Colors.white,
       borderWidth: 0.5,
       ...Platform.select({
         ios: {

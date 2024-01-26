@@ -527,3 +527,21 @@ export const ExploreButton = StyleSheet.create<Style>({
     fontFamily: "Inter-Regular",
   }
 });
+
+export const ResendOtpButton = StyleSheet.create<Style>({
+  container: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    borderRadius: 5,
+    backgroundColor:Colors.white,
+    paddingHorizontal:15,
+    paddingVertical:5,
+  },
+  title: {
+    color: Colors.primary,
+    fontWeight: "500",
+    fontSize: 15,
+    fontFamily: "Inter-Regular",
+  }
+});

@@ -62,7 +62,7 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, fe
                     )}
                     {message.suggestions && message.suggestions.map((suggestion, index) => {
                       return (<>
-                          {showOption && <TouchableOpacity onPress={() => {
+                          {showOption && <TouchableOpacity key={index} onPress={() => {
                             optionClicked(suggestion)
                             setShowOption(false)
                             }} style={style.options}>

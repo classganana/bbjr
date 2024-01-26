@@ -35,6 +35,7 @@ export const LoginScreen = () => {
             <View style={LoginScreenStyle.header}>
               <Image style={LoginScreenStyle.botIcon} source={require("../../../../assets/gifs/bot.gif")}></Image>
               <Text style={LoginScreenStyle.headerText}>{Constants.BrandName}</Text>
+              {/* <Text style={LoginScreenStyle.headerText}>{Constants.BrandName}</Text> */}
             </View>
               <View style={LoginScreenStyle.body}>
                   <LoginForm />

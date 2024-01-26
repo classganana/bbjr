@@ -97,31 +97,8 @@ export const Dashboard = () => {
                     <View style={DashboardStyle.leaderBoardSection}>
                         <CircleInitials name={user?.name} size={32} />
                         <View style={{ flex: 1 }}>
-                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
-                            {/* <View style={{ flexDirection: 'row', gap: 8 }}>
-                                <StreakCircle height={15} width={15} fill={'green'} />
-                                <StreakCircle height={15} width={15} fill={'green'} />
-                                <StreakCircle height={15} width={15} fill={'green'} />
-                                <StreakCircle height={15} width={15} fill={'green'} />
-                                <StreakCircle height={15} width={15} fill={'green'} />
-                                <StreakCircle height={15} width={15} fill={'green'} />
-                                <StreakCircle height={15} width={15} fill={'green'} />
-                            </View> */}
+                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name} 😎</Text>
                         </View>
-                    </View>
-                </View>
-                <View>
-                    <View style={DashboardStyle.view1}>
-                        <View style={DashboardStyle.view2}>
-                            <Text>Bravo! Continue learning for 1 week!</Text>
-                        </View>
-                        <Image
-                            // resizeMode="contain"
-                            source={{
-                                uri: "https://cdn.builder.io/api/v1/image/assets/TEMP/3f720f1b38ac36a936d549549b2ba726d1dbd9f00bf763f288cf2c8133b1ac44?",
-                            }}
-                            style={DashboardStyle.image1}
-                        />
                     </View>
                 </View>
                 <View style={DashboardStyle.options}>
@@ -145,7 +122,7 @@ export const Dashboard = () => {
                                 You have played total 55 quizzes last month!
                             </Text>
                             <IconButton className={OutlinePlaneButton} onPress={function (): void {
-                                throw new Error('Function not implemented.')
+                                moveToExploreQuizPage()
                             }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
                             <ArrowLeft height={20} width={20} fill={'black'} />
                           </View>} label={'Take Quiz'} pos={'right'}></IconButton>

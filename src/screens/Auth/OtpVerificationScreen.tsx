@@ -2,19 +2,21 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { LoginButton, RegisterButton, PrimaryDefaultButton, SubmitButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { ResendOtpButton, PrimaryDefaultButton, SubmitButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { Colors } from '../../styles/colors';
 
 type Props = {
   phoneNumber: string,
-  otpGiven:(otp:string) => void,
+  otpGiven: (otp: string) => void,
   sendOtp: () => void
 }
 
 const OtpVerification = (props: Props) => {
   const inputRefs = Array.from({ length: 6 }, () => useRef<TextInput>(null));
-
+  const [timer, setTimer] = useState(10);
   const [isButtonDisabled, setButtonDisabled] = useState(true);
+  const [isResendOTPEnabled, setIsResendOTPEnabled] = useState(true);
+
   const [otp, setOtp] = useState<string>();
 
   const handleTextChange = useCallback((text: string, index: number) => {
@@ -41,8 +43,25 @@ const OtpVerification = (props: Props) => {
     }
   }, [inputRefs]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timer > 0) {
+        setTimer(timer - 1);
+      } else {
+        clearInterval(interval);
+      }
+    }, 1000); // Update the timer every second
+
+    if (timer == 0) {
+      timerEnds()
+    };
+    return () => {
+      clearInterval(interval); // Clear the interval on component unmount
+    };
+  }, [timer])
+
   const focusNextInput = (currentIndex: number) => {
-    if (inputRefs &&  currentIndex < inputRefs.length - 1) {
+    if (inputRefs && currentIndex < inputRefs.length - 1) {
       inputRefs[currentIndex + 1].current?.focus();
     }
     moveToResetPassword();
@@ -56,8 +75,6 @@ const OtpVerification = (props: Props) => {
     moveToResetPassword();
   };
 
-  const navigation = useNavigation();
-
   const moveToResetPassword = () => {
     const otp = inputRefs.map((ref) => ref.current?.value || '').join('');
     setOtp(otp);
@@ -65,6 +82,17 @@ const OtpVerification = (props: Props) => {
       props.otpGiven(otp);
     }
   };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
+  const timerEnds = () => {
+    setIsResendOTPEnabled(false)
+  }
+
 
   return (
     <View style={styles.container}>
@@ -86,6 +114,13 @@ const OtpVerification = (props: Props) => {
         </View>
       </KeyboardAvoidingView>
       <TouchableOpacity style={styles.button}>
+        {isResendOTPEnabled && <Text>Resend otp in {formatTime(timer)}</Text>}
+        {!isResendOTPEnabled && <Button
+          onPress={() => props.sendOtp()}
+          label="Resend OTP"
+          className={ResendOtpButton}
+          disabled={isResendOTPEnabled}
+        />}
         <Button
           onPress={moveToResetPassword}
           label="Verify"
@@ -126,8 +161,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'red'
   },
   button: {
-    marginTop: 70,
-    width: "90%"
+    marginTop: 10,
+    width: "90%",
+    gap: 10
   },
   text: {
     width: "90%",

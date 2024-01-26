@@ -6,26 +6,39 @@ import { NavigationContainer } from '@react-navigation/native';
 import { AppNavigator } from './src/navigators/AppNavigator';
 import AnimatedSplash from "react-native-animated-splash-screen";
 import { UserProvider } from './src/context/UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 export default function App() {
   const [isFontLoaded, setFontLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [splashTime, setSplashTime] = useState(3000); // Set the splash screen time in milliseconds (3 seconds by default)
   async function loadFonts() {
+
+
     await Font.loadAsync({
       'Inter-Regular': require('./assets/fonts/NunitoSans_10pt-Regular.ttf'),
       'Inter-Bold': require('./assets/fonts/NunitoSans_10pt-Bold.ttf'),
       'Inter-ExtraBold': require('./assets/fonts/NunitoSans_10pt-ExtraBold.ttf'),
     });
     setFontLoaded(true);
+
     setTimeout(() => {
       setLoading(true); // Set loading to true when fonts are loaded
-    }, 3000);
+    }, splashTime);
+  }
+
+  const splastScreenControl = async () => {
+    const isItFirstTime = await AsyncStorage.getItem('user');
+    if(isItFirstTime != null){
+        setSplashTime(0);
+    }
+    loadFonts();
   }
 
   useEffect(() => {
-    loadFonts();
+    splastScreenControl();
   }, []); // Run this effect only once on component mount
 
 

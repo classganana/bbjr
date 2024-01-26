@@ -42,6 +42,9 @@ type BotProps = {
 export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) => {
   // const [copiedText, setCopiedText] = React.useState('');
 
+  const [copyButtonColor, setCopyButtonColor] = useState("#969696");
+  const [likeButtonColor, setLikeButtonColor] = useState("#969696");
+
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(text);
     ToastService("Answer Copied.")
@@ -55,6 +58,20 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) 
     } else {
       Speech.speak(thingToSay);
     }
+  }
+
+  const setCopyButtonDark = () => {
+    setCopyButtonColor(Colors.black_01);
+    setTimeout(() => {
+      setCopyButtonColor("#969696");
+    }, 1500)
+  }
+
+  const setLikeButtonDark = () => {
+    setLikeButtonColor(Colors.black_01);
+    setTimeout(() => {
+      setLikeButtonColor("#969696");
+    }, 1500)
   }
 
 
@@ -76,21 +93,24 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) 
             </View>
           </View>
           <View style={styles.feedbackSection} >
-            <TouchableOpacity onPress={() => feedback({
-              BotAnswer: text,
-              feedback: 'positive'
-            })}>
-              <ThumsUp height={"20"} width={"20"} fill={"#969696"} />
+            <TouchableOpacity onPress={() => {
+              feedback({BotAnswer: text,feedback: 'positive'});
+              setLikeButtonDark();
+              }}>
+              <ThumsUp height={"20"} width={"20"} fill={likeButtonColor} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => feedback({
-              BotAnswer: text,
-              feedback: 'negative'
-            })}>
+            <TouchableOpacity onPress={() =>{ 
+              feedback({BotAnswer: text,feedback: 'negative'})
+              }}>
               <ThumsDown height={"20"} width={"20"} fill={"#969696"} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => copyToClipboard()}>
-              <CopyIcon height={"20"} width={"20"} fill={"#969696"} />
+
+            <TouchableOpacity onPress={() => {
+              copyToClipboard();
+              setCopyButtonDark();
+              }}>
+              <CopyIcon height={"20"} width={"20"} fill={copyButtonColor} />
             </TouchableOpacity>
           </View>
         </>

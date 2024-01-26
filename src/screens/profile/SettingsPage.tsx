@@ -10,6 +10,7 @@ import {
   ContactIcon,
   LeaderIcon,
   LogoutIcon,
+  NewBackButton,
   PencilIcon,
   PrivacyIcon,
   ScoreIcon,
@@ -83,7 +84,7 @@ export const SettingsPage = () => {
       <View style={styles.header}>
         <View style={styles.heading}>
           <View style={styles.backButton}>
-            <ArrowLeft height={25} width={25} fill={'black'} />
+            <NewBackButton height={18} width={25} fill={'black'} />
           </View>
           <View>
             <Text style={styles.headingTitle}>Settings</Text>
@@ -107,7 +108,7 @@ export const SettingsPage = () => {
           </TouchableOpacity>
           <TouchableOpacity onPress={moveToEditProfile} style={styles.editProfile}>
           <PencilIcon height={18} width={28} fill={'#fff'} />
-            <Text style={{color: 'white'}}>Edit Profile</Text>
+            <Text style={{color: 'white'}}>View Complete Profile</Text>
           </TouchableOpacity>
             {/* <IconButton
               onPress={moveToEditProfile}
@@ -150,7 +151,7 @@ export const SettingsPage = () => {
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.white,
     flex: 1,
 
   },
@@ -166,9 +167,9 @@ const styles = StyleSheet.create({
 
   },
   headingTitle: {
-    color: Colors.white,
+    color: Colors.black_05,
     fontWeight: "500",
-    fontSize: 14,
+    fontSize: 20
   },
   headingInfo: {
     fontWeight: '500',
@@ -185,12 +186,13 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    height: 40,
-    width: 40,
-    borderRadius: 45,
+    height: 25,
+    width: 25,
+    borderRadius: 25,
     backgroundColor: Colors.white,
+    display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   ProfileImage: {
     height: 125,
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingVertical: 8,
     borderRadius: 8,
   },
   block1: {

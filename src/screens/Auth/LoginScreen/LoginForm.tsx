@@ -48,6 +48,7 @@ export const LoginForm = () => {
     phoneProvider.verifyPhoneNumber(`+91${phoneNumber}`, recaptchaVerifier.current).then((item) => {
       // if (Platform.OS === "android") ToastAndroid.showWithGravity('Sending OTP', 3000, ToastAndroid.BOTTOM);
       ToastService('Sending OTP');
+      console.log("Sending OTP");
       setOtpScreen(true)
       setVerificationId(item)
     }
@@ -114,7 +115,6 @@ export const LoginForm = () => {
           uid: id,
           phone: phoneNumber
         }
-        console.log(obj);
         navigation.navigate('SignUp' as never, obj as never );
     });
   }

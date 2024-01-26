@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, KeyboardAvoidingView, Platform, TouchableOpacity, Modal } from 'react-native' // Import KeyboardAvoidingView
-import { ArrowLeft, BotIcon, Pen, ThreeDots } from '../../components/common/SvgComponent/SvgComponent'
+import { ArrowLeft, BotIcon, NewBackButton, Pen, ThreeDots } from '../../components/common/SvgComponent/SvgComponent'
 import { BotStyle } from './BotScreenStyle'
 import { BotIntroduction } from '../../components/bot/BotIntroduction'
 import { Aiinput } from '../../components/StudentAiAssistant/aiinput/AiInputComponent'
@@ -12,6 +12,7 @@ import { useUser } from '../../context/UserContext'
 import ReportComponent from '../../components/quiz/ReportComponent'
 import { ToastService } from '../../services/ToastService'
 import { Colors } from '../../styles/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface BotMessageFeedback {
   BotAnswer: string;
@@ -27,6 +28,11 @@ export const BotScreen = () => {
   const [userFeedback, setUserFeedback] = useState('');
   const [botMessage, setBotMessage] = useState<BotMessageFeedback>();
   const [subjectModal, setSubjectModal] = useState(false);
+
+  useEffect(() => {
+    getSubjectFromLocal()
+  },[])
+
 
   useEffect(() => {
     console.log(user)
@@ -48,7 +54,28 @@ export const BotScreen = () => {
           console.log("Error => ", e);
         })
     }
+    setSubjectToLocal()
   }, [subject])
+
+
+  const setSubjectToLocal = async () => {
+    try {
+      await AsyncStorage.setItem('chatSubject', subject);
+    } catch (e) {
+      console.log("Error => ", e);
+    }
+  }
+
+  const getSubjectFromLocal = async () => {
+    try {
+      const subject = await AsyncStorage.getItem('chatSubject');
+      if (subject) {
+        setSubject(subject);
+      }
+    } catch (e) {
+      console.log("Error => ", e);
+    }
+  }
 
 
   const deleteLastSuggestions = () => {
@@ -210,7 +237,7 @@ export const BotScreen = () => {
         <View style={BotStyle.header}>
           <View style={{ flexDirection: 'row', gap: 10 }}>
             <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
-              <ArrowLeft height={24} width={24} fill={'black'} />
+              <NewBackButton height={18} width={24} fill={'black'} />
               <BotIcon height={32} width={32} fill={Colors.primary} />
             </TouchableOpacity>
             <View>
