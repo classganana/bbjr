@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
-import { Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import Tabs from '../common/Tabs/Tabs'
 import { QuizOverviewQuestions } from './QuizOverviewQuestions'
 import { QuizIntoduction } from './QuizIntoduction'
 import { QuizInformation } from './QuizInformation'
+import { Answers } from '../../screens/quiz/QuizQuestionsPage'
 
 type Props = {
-    timeLeft: string,
-    questions: any
+    time: string,
+    questions: Answers,
+    onCloseSheet: () => void
 }
 
-export const QuizOverView = ({onCloseSheet, time}: any) => {
-
+export const QuizOverView = ({onCloseSheet, time, questions}: Props) => {
   const tabs: string[]= ['Overview', 'Instructions']  
-
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
@@ -25,12 +25,15 @@ export const QuizOverView = ({onCloseSheet, time}: any) => {
         <View style={{flex: 1}}>
             <Tabs activeTab={activeTab} tabs={tabs} 
             onChangeTab={function (tab: string): void { setActiveTab(tab) } } />
-            { activeTab == 'Overview' &&  
-            <QuizOverviewQuestions  closeSheet={() => { onCloseSheet() }}/> }
+            { activeTab == 'Overview' && 
+            <View style={{paddingHorizontal: 24, paddingVertical: 20, flex: 1}}> 
+            <QuizOverviewQuestions questionList={questions}  
+            closeSheet={() => { onCloseSheet() }}/> 
+            </View> }
             { activeTab == 'Instructions' && 
                     <View style={{paddingHorizontal: 24, paddingVertical: 20}}>
                         <QuizInformation />
-                        <QuizIntoduction mcqs={0} time={0} />
+                        <QuizIntoduction mcqs={questions.length}  time={questions.length * 15} />
                     </View>
             }
         </View>

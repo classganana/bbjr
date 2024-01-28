@@ -18,7 +18,7 @@ import { UtilService } from '../../services/UtilService';
 
 
 export type Answers = Array<{
-    mcqId?: string,
+    mcqId: string,
     question: string;
     options: string[];
     answer: string;
@@ -73,6 +73,7 @@ export const QuizQuestionsPage = () => {
         setQuizQuestionList(route.params.mcqs);
         AsyncStorage.removeItem('questions',);
         setTimer(route.params.time);
+        // setTimer(10000);
         setQuizzId(route.params.quizzId)
         setQuestionsInLocal();
 
@@ -141,6 +142,7 @@ export const QuizQuestionsPage = () => {
 
     const navigateToQuestion = (index: number) => {
         setCurrentQuestionIndex(index);
+        console.log(currentQuestion);
     };
 
     const navigateToNextQuestion = () => {
@@ -155,6 +157,7 @@ export const QuizQuestionsPage = () => {
             setCurrentQuestionIndex(currentQuestionIndex - 1);
         }
         scrollToPrevQuestion();
+        console.log(currentQuestion);
     };
 
     const calculateScore = (answerList: questionWithTime) => {
@@ -191,6 +194,7 @@ export const QuizQuestionsPage = () => {
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
             const quizType = await UtilService.getQuizType();
+            console.log(list);
             if(quizType == 'practice') {
                 submitPractice(UserAnswerList)
             } else {
@@ -366,8 +370,9 @@ export const QuizQuestionsPage = () => {
                 </ScrollView>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
                     {currentQuestion && currentQuestion.question && <QuestionComponent
-                        question={currentQuestion.question}
-                        options={currentQuestion.options}
+                        question={quizQuestionList[currentQuestionIndex].question}
+                        options={quizQuestionList[currentQuestionIndex].options}
+                        selectedAnswer={quizQuestionList[currentQuestionIndex].selectedAnswer}
                         onSelectOption={handleSelectOption} isResult={false}
                     />
                     }
@@ -424,7 +429,7 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                        <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false) }} />
+                        <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false); } } questions={quizQuestionList} />
                     </View>
                 </View>
             </Modal>

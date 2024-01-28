@@ -1,10 +1,17 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, FlatList } from 'react-native'
 import { Colors } from '../../styles/colors'
 import { Button } from '../common/ButttonComponent/Button'
-import { PrimaryOutlineButton, SmallOutlineButton, SubmitButton } from '../common/ButttonComponent/ButtonStyles'
+import { PrimaryOutlineButton } from '../common/ButttonComponent/ButtonStyles'
+import { Answers } from '../../screens/quiz/QuizQuestionsPage'
 
-export const QuizOverviewQuestions = ({closeSheet}: any) => {
+type Props = {
+    questionList: Answers,
+    closeSheet: () => void
+}
+
+
+export const QuizOverviewQuestions = ({closeSheet, questionList}: Props) => {
  
   const questions = [
     {
@@ -150,7 +157,7 @@ export const QuizOverviewQuestions = ({closeSheet}: any) => {
             </View>
         </View>
         <View style={styles.questionsBody}>
-            { questions.map((question, index) => {
+            { questionList.map((question, index) => {
                 return <View key={index} style={[(question.selectedAnswer)?styles.answeredCircle: styles.unansweredCircle]}>
                     <Text style={[(question.selectedAnswer)?styles.answeredCircleText: styles.unansweredCircleText]}> {index+1} </Text>
                 </View>
@@ -234,10 +241,11 @@ const styles = StyleSheet.create({
         color: Colors.primary
     },
     footer: {
-        position: 'absolute',
-        bottom: 30,
+        // position: 'absolute',
+        bottom: 0,
         width: "90%",
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginTop: 30
     }
 
 })

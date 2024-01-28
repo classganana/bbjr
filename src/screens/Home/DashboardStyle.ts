@@ -134,6 +134,7 @@ export const DashboardStyle = StyleSheet.create({
       color: Colors.primary
     },
     optionsCard: {
+      // background: "linearGradient(180deg, #FFF 0%, #4BAE4F 100%)",
       width: "100%",
       flex: 1,
       display: 'flex',

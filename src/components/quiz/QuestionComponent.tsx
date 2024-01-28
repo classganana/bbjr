@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Colors } from '../../styles/colors';
 import { BasicCheck, Cross } from '../common/SvgComponent/SvgComponent';
+import { UtilService } from '../../services/UtilService';
+
 
 type QuestionProps = {
   question: string;
@@ -21,22 +23,32 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   onSelectOption,
 }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [quizType, setQuizType] = useState<string | null>('');
 
   useEffect(() => {
-    console.log(correctAnswer, selectedAnswer)
+    console.log(correctAnswer, selectedAnswer);
+    getQuizType();
   }, [])
+
+  const getQuizType = async () => {
+    const quizType = await UtilService.getQuizType();
+    setQuizType(quizType);
+    console.log(quizType)
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.question}>{question}</Text>
+      <Text style={styles.question}>{selectedAnswer}</Text>
       {options.map((option, index) => (
         <TouchableOpacity
           key={index}
           style={[
             styles.optionButton,
             selectedOption === option && styles.selectedOptionButton,
-            correctAnswer === option && styles.correct,
-            (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrong,
+            selectedAnswer == option && styles.selectedOptionButton,
+            isResult && correctAnswer === option && styles.correct,
+            isResult &&  (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrong,
           ]}
           onPress={() => {
             if (!isResult) {
@@ -45,6 +57,22 @@ const QuestionComponent: React.FC<QuestionProps> = ({
             }
           }}
         >
+
+          { !isResult ? <>
+            <View style={styles.optionButtonContainer}>
+            <View style={[styles.optionMarker, selectedAnswer === option && styles.optionMarkerSelected]}>
+              <Text style={[styles.optionMarkerText, selectedAnswer === option && styles.selectedOptionMarkerText]}>
+                {String.fromCharCode(65 + index)}
+              </Text>
+            </View>
+            <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
+              {option}
+            </Text>
+          </View>
+
+          <View>
+          </View>
+          </> : <>
           <View style={styles.optionButtonContainer}>
             <View style={[styles.optionMarker, selectedOption === option && styles.optionMarkerSelected,
             correctAnswer === option && styles.correctCircle, (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrongCircle]}>
@@ -68,9 +96,10 @@ const QuestionComponent: React.FC<QuestionProps> = ({
                   <View style={[styles.wrongCircle, { borderRadius: 32, padding: 0 }]}>
                     <Cross height={'22'} width={'22'} fill={'white'} />
                   </View> : <></>
-
             }
           </View>
+          
+          </>}
         </TouchableOpacity>
       ))}
     </View>

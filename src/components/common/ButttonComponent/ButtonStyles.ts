@@ -427,7 +427,8 @@ export const StartButton = StyleSheet.create<Style>({
 export const CancelButton = StyleSheet.create<Style>({
   container: {
     height: 40,
-    width: "90%",
+    flex: 1,
+    // width: "90%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -435,7 +436,8 @@ export const CancelButton = StyleSheet.create<Style>({
     borderWidth: 1/4,
     borderColor: Colors.primary,
     paddingVertical: 8,
-    backgroundColor: Colors.white
+    backgroundColor: Colors.white,
+
   },
   title: {
     // padding: 30,
