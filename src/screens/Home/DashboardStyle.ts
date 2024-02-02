@@ -218,7 +218,6 @@ export const DashboardStyle = StyleSheet.create({
       padding: 14,
       backgroundColor: "white",
       shadowColor: Colors.black_03,
-      // borderColor: Colors.white,
       borderWidth: 0.5,
       ...Platform.select({
         ios: {

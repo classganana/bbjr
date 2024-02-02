@@ -39,7 +39,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   return (
     <View style={styles.container}>
       <Text style={styles.question}>{question}</Text>
-      <Text style={styles.question}>{selectedAnswer}</Text>
+      {/* <Text style={styles.question}>{selectedAnswer}</Text> */}
       {options.map((option, index) => (
         <TouchableOpacity
           key={index}

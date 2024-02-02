@@ -62,47 +62,62 @@ export const QuizFirstPage = () => {
         const subject = route.params[0][0].subject;
         setSubject(subject);
         AsyncStorage.setItem('subject', subject);
-
-        const req = {
-            "schoolId": "default",
-            "boardId": user?.board,
-            "subject": subject,
-            "className": user?.class,
-            "studentId": user?.userId,
-            "chapterName": listOfChapters,
-            "dataType": "school",
-            // "size": 1,
-            "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
+        if(quizType != 'quiz') {
+            try {
+                const matchingQuizzes = await UtilService.getMatchingQuizzes(listOfChapters);
+                // Assuming setCurrentQuiz expects a value:
+                setCurrentQuiz(matchingQuizzes);
+                console.log(currentQuiz)
+              } catch (error) {
+                console.error('Error fetching or setting quizzes:', error);
+                // Handle the error appropriately, e.g., display a user-friendly message.
+              }
+        } else {
+            const req = {
+                "schoolId": "default",
+                "boardId": user?.board,
+                "subject": subject,
+                "className": user?.class,
+                "studentId": user?.userId,
+                "chapterName": listOfChapters,
+                "dataType": "school",
+                // "size": 1,
+                "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
+            }
+    
+            const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
+            const reqObj = {
+                "service": "ml_service",
+                "endpoint": endPoint,
+                "requestMethod": "POST",
+                "requestBody": req
+            }
+            const quizFlows = await UtilService.getQuizFlow();
+            if (quizFlows == 'Quizzes') {
+                delete req.chapterName;
+                delete req.subject;
+            }
+    
+            httpClient.post(`auth/c-auth`, reqObj)
+                .then((res: any) => {
+                    const quiz = {
+                        schoolId: 'default',
+                        chapterName: listOfChapters,
+                        subject: subject,
+                        boardId: user?.board,
+                        className: user?.class,
+                        studentId: user?.userId,
+                        ...res.data.data,
+                    }
+                    setQuizContent(quiz);
+                    if (quizType != 'quiz') maintainQuizInLocal(quiz);
+                })
         }
+    }
 
 
-        const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
-        const reqObj = {
-            "service": "ml_service",
-            "endpoint": endPoint,
-            "requestMethod": "POST",
-            "requestBody": req
-        }
-        const quizFlows = await UtilService.getQuizFlow();
-        if (quizFlows == 'Quizzes') {
-            delete req.chapterName;
-            delete req.subject;
-        }
-
-        httpClient.post(`auth/c-auth`, reqObj)
-            .then((res: any) => {
-                const quiz = {
-                    schoolId: 'default',
-                    chapterName: listOfChapters,
-                    subject: subject,
-                    boardId: user?.board,
-                    className: user?.class,
-                    studentId: user?.userId,
-                    ...res.data.data,
-                }
-                setQuizContent(quiz);
-                if (quizType != 'quiz') maintainQuizInLocal(quiz);
-            })
+    const setupPracticeSession = () => {
+        navigation.navigate('PracticeSession' as never, currentQuiz as never);
     }
 
     const maintainQuizInLocal = async (selectedQuiz: any) => {
@@ -120,7 +135,6 @@ export const QuizFirstPage = () => {
                     arr1.every((value, index) => value === arr2[index])
                 );
             };
-
             // Check if there's a quiz with the same chapterName (arraysEqual).
             const index = quizList.findIndex((quiz: any) => arraysEqual(quiz.chapterName, selectedQuiz.chapterName));
 
@@ -286,6 +300,7 @@ const styles = StyleSheet.create({
         color: Colors.black_01
     },
     quizInfo: {
+        zIndex: -1,
         flex: 1,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,

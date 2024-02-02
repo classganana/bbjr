@@ -14,7 +14,7 @@ export const ExamPrepProgressBar = (props: Props) => {
         <View style={{width: "100%"}}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={ProgressBarStyle.infoText}>{props.label} </Text>
-                <Text style={ProgressBarStyle.infoText}>{props.perc}%</Text>
+                <Text style={ProgressBarStyle.infoText}>{props.perc? props.perc: 0}%</Text>
             </View>
         <View style={ProgressBarStyle.container}>
             <View style={[ProgressBarStyle.progress, { width: `${props.perc}%` }]}></View>

@@ -11,7 +11,7 @@ export interface ExamPrepQuizCardData {
     timeRequired?: number,
     prevTestScore?: number,
     done: boolean,
-    practiceProgress?: number,
+    practiceProgress: number,
     selected?: boolean,
     multiSelect?: boolean,
     score: number | undefined,
@@ -20,7 +20,7 @@ export interface ExamPrepQuizCardData {
 }
 
 
-export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id, title, infoText, score, imageUrl, done, noOfQuestions, timeRequired, selected, multiSelect ,onCardClick }) => (
+export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id,practiceProgress ,title, infoText, score, imageUrl, done, noOfQuestions, timeRequired, selected, multiSelect ,onCardClick }) => (
     <TouchableWithoutFeedback onPress={() => onCardClick && onCardClick(id)}>
         <View style={[styles.card,
         done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
@@ -35,7 +35,7 @@ export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id, title, in
                     <Text style={styles.title}>Recent Test score - {score ? score : 0}/100</Text>
                 </View>
                 <View style={styles.quizInfo}>
-                    <ExamPrepProgressBar perc={30} label={"Practice"} />
+                    <ExamPrepProgressBar perc={practiceProgress? practiceProgress : 0} label={"Practice"} />
                 </View>
             </View>
         </View>

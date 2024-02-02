@@ -15,7 +15,7 @@ import { IconButton } from '../../components/common/IconButtonComponent/IconButt
 import { ContinutPractice } from '../../components/home/components/ContinutPractice'
 import { httpClient } from '../../services/HttpServices'
 import { OutlinePlaneButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
-
+import { LinearGradient } from 'expo-linear-gradient';
 
 export const Dashboard = () => {
     const navigator = useNavigation();
@@ -149,7 +149,12 @@ export const Dashboard = () => {
                         </View>
                     </View>
                 </View>
-                <View style={DashboardStyle.botBlock}>
+                <LinearGradient
+                    colors={['#E3E8FF', 'rgba(255, 255, 254, 0.27)', '#C8D2FF']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: Math.cos(100 * Math.PI / 180), y: Math.sin(100 * Math.PI / 180) }}
+                    locations={[0.0164, 0.4937, 1]}
+                    style={DashboardStyle.botBlock}>
                     <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat</Text>
                     <Text style={DashboardStyle.botheadingInfo}>Your Personal Study Assistant 🚀</Text>
                     <View style={DashboardStyle.botBlockDesc}>
@@ -160,7 +165,7 @@ export const Dashboard = () => {
                         </View>
                     </View>
                         <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
-                </View>
+                </LinearGradient>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
                 {data && data.length > 0 ? <View>
                     <View style={DashboardStyle.continuePractice}>
