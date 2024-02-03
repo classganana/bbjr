@@ -19,10 +19,10 @@ export const QuizInformation = () => {
         setData(fetchedData);
     }, []);
 
-    const renderItem = ({ item }: { item: Item }) => (
-        <View style={styles.item}>
-            <Text style={{fontSize: 40}}>•</Text>
-            <Text>{item.title}</Text>
+    const RenderItem = ({ item }: { item: Item }) => (
+        <View key={item.id} style={styles.item}>
+            <Text key={item.id+1} style={{fontSize: 40}}>•</Text>
+            <Text key={item.id+2}>{item.title}</Text>
         </View>
     );
 
@@ -31,11 +31,9 @@ export const QuizInformation = () => {
             <Text style={styles.heading}>
                 Please read the text below carefully so you can understand it
             </Text>
-            <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-            />
+            {data && data.map((item, index) => {
+                return <RenderItem key={index} item={item} />
+            })}
         </View>
     )
 }

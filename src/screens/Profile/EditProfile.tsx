@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, ScrollView, Platform, Image, Text, StyleSheet } from 'react-native';
+import { View, TextInput, ScrollView, Platform, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { Colors } from '../../styles/colors';
 import { ArrowLeft, CameraIcon } from '../../components/common/SvgComponent/SvgComponent';
@@ -10,6 +10,7 @@ import { useUser } from '../../context/UserContext';
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
 import { CustomDropdown } from '../../components/common/Performance/CustomDropdown/CustomDropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const EditProfile = () => {
     const [name, setName] = useState('');
@@ -21,6 +22,7 @@ const EditProfile = () => {
     const [GuardianEmail, setGuardianEmail] = useState('');
     const [userId, setUserId] = useState<any>('');
     const {user, setUser} = useUser()
+    const navigation = useNavigation();
 
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -83,6 +85,12 @@ const EditProfile = () => {
         { label: "Telangana Board" },
     ]
 
+    const onBack = () => {
+        navigation.navigate('Setting' as never)
+    }
+
+
+
 
     return (
 
@@ -90,9 +98,9 @@ const EditProfile = () => {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
-                        <View style={styles.backButton}>
+                        <TouchableOpacity style={styles.backButton} onPress={() => onBack()}>
                             <ArrowLeft height={'25'} width={'25'} fill={'black'} />
-                        </View>
+                        </TouchableOpacity>
                         <Text style={styles.headingTitle}>Profile</Text>
                     </View>
                 </View>

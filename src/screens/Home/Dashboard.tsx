@@ -17,6 +17,15 @@ import { httpClient } from '../../services/HttpServices'
 import { OutlinePlaneButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
 import { LinearGradient } from 'expo-linear-gradient';
 
+interface mcqType {
+    mcqId: number,
+    question: string,
+    options: Array<string>,
+    answer: string,
+    explanation: string,
+    selectedAnswer?: string 
+}
+
 export const Dashboard = () => {
     const navigator = useNavigation();
     const { user } = useUser();
@@ -70,13 +79,21 @@ export const Dashboard = () => {
 
     }
 
+    const getPracticePercentage = (mcqIds: mcqType[]) => {
+        let total = 0;
+        mcqIds.forEach((item) => {
+            if(item.selectedAnswer) total++;
+        })
+        return (total / mcqIds.length) * 100;
+    }
 
     useEffect(() => {
         AsyncStorage.setItem('user', JSON.stringify(user));
         getPendingQuiz().then((list) => {
             if (list && list.length) {
                 list = list.map((item: any) => {
-                    item.title = (item.screenPage == "examPreparation") ? item.chapterName : item.name;
+                    item.title =  item.chapterName;
+                    item.practiceProgress = getPracticePercentage(item.mcqs)
                     return item;
                 })
                 setData(list)
@@ -170,11 +187,6 @@ export const Dashboard = () => {
                 {data && data.length > 0 ? <View>
                     <View style={DashboardStyle.continuePractice}>
                         <Text>Continue practice </Text>
-                        <TouchableOpacity>
-                            <Text style={DashboardStyle.explore}>
-                                Explore
-                            </Text>
-                        </TouchableOpacity>
                     </View>
                     <View style={DashboardStyle.pendingQuizzesList}>
                         {data && data.map((item, index) => (

@@ -30,6 +30,12 @@ const QuestionComponent: React.FC<QuestionProps> = ({
     getQuizType();
   }, [])
 
+  useEffect(() => {
+    console.log(correctAnswer, selectedAnswer);
+    getQuizType();
+  }, [selectedAnswer])
+
+
   const getQuizType = async () => {
     const quizType = await UtilService.getQuizType();
     setQuizType(quizType);
@@ -47,58 +53,63 @@ const QuestionComponent: React.FC<QuestionProps> = ({
             styles.optionButton,
             selectedOption === option && styles.selectedOptionButton,
             selectedAnswer == option && styles.selectedOptionButton,
-            isResult && correctAnswer === option && styles.correct,
-            isResult &&  (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrong,
+            selectedAnswer == option && isResult && correctAnswer === option && styles.correct,
+            isResult && (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrong,
           ]}
           onPress={() => {
-            if (!isResult) {
-              onSelectOption(option);
-              setSelectedOption(option);
-            }
+            console.log("Ayush");
+            // if (!isResult) {
+            onSelectOption(option);
+            setSelectedOption(option);
+            // }
           }}
         >
 
-          { !isResult ? <>
+          {!isResult ? <>
             <View style={styles.optionButtonContainer}>
-            <View style={[styles.optionMarker, selectedAnswer === option && styles.optionMarkerSelected]}>
-              <Text style={[styles.optionMarkerText, selectedAnswer === option && styles.selectedOptionMarkerText]}>
-                {String.fromCharCode(65 + index)}
+              <View style={[styles.optionMarker, selectedAnswer === option && styles.optionMarkerSelected]}>
+                <Text style={[styles.optionMarkerText, selectedAnswer === option && styles.selectedOptionMarkerText]}>
+                  {String.fromCharCode(65 + index)}
+                </Text>
+              </View>
+              <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
+                {option}
               </Text>
             </View>
-            <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
-              {option}
-            </Text>
-          </View>
 
-          <View>
-          </View>
+            <View>
+            </View>
           </> : <>
-          <View style={styles.optionButtonContainer}>
-            <View style={[styles.optionMarker, selectedOption === option && styles.optionMarkerSelected,
-            correctAnswer === option && styles.correctCircle, (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrongCircle]}>
-              <Text style={[styles.optionMarkerText, selectedOption === option && styles.selectedOptionMarkerText,
-              correctAnswer === option && { color: Colors.white }, (selectedAnswer === option && selectedAnswer !== correctAnswer) && { color: Colors.white }]}>
-                {String.fromCharCode(65 + index)}
+            <View style={styles.optionButtonContainer}>
+              <View style={[styles.optionMarker, selectedOption === option && styles.optionMarkerSelected,
+              selectedAnswer == option && (correctAnswer === option) && styles.correctCircle,
+              (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrongCircle,
+
+              ]}
+              >
+                <Text style={[styles.optionMarkerText, selectedOption === option && styles.selectedOptionMarkerText,
+                selectedAnswer === option && correctAnswer === option && { color: Colors.white }, (selectedAnswer === option && selectedAnswer !== correctAnswer) && { color: Colors.white }]}>
+                  {String.fromCharCode(65 + index)}
+                </Text>
+              </View>
+              <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
+                {option}
               </Text>
             </View>
-            <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
-              {option}
-            </Text>
-          </View>
 
-          <View>
-            {
-              (correctAnswer === option) ?
-                <View style={[styles.correctCircle, { borderRadius: 32, padding: 2 }]}>
-                  <BasicCheck height={'18'} width={'18'} fill={'white'} />
-                </View>
-                : (selectedAnswer === option && selectedAnswer !== correctAnswer) ?
-                  <View style={[styles.wrongCircle, { borderRadius: 32, padding: 0 }]}>
-                    <Cross height={'22'} width={'22'} fill={'white'} />
-                  </View> : <></>
-            }
-          </View>
-          
+            <View>
+              {
+                (selectedAnswer == option && correctAnswer === option) ?
+                  <View style={[styles.correctCircle, { borderRadius: 32, padding: 2 }]}>
+                    <BasicCheck height={'18'} width={'18'} fill={'white'} />
+                  </View>
+                  : (selectedAnswer === option && selectedAnswer !== correctAnswer) ?
+                    <View style={[styles.wrongCircle, { borderRadius: 32, padding: 0 }]}>
+                      <Cross height={'22'} width={'22'} fill={'white'} />
+                    </View> : <></>
+              }
+            </View>
+
           </>}
         </TouchableOpacity>
       ))}

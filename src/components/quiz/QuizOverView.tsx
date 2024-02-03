@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, Touchable, TouchableOpacity, View } from 'react-native'
 import Tabs from '../common/Tabs/Tabs'
 import { QuizOverviewQuestions } from './QuizOverviewQuestions'
 import { QuizIntoduction } from './QuizIntoduction'
 import { QuizInformation } from './QuizInformation'
 import { Answers } from '../../screens/quiz/QuizQuestionsPage'
+import { StyleSheet } from 'react-native'
+import { Colors } from '../../styles/colors'
+import { CrossIcon } from '../common/SvgComponent/SvgComponent'
 
 type Props = {
     time: string,
@@ -17,10 +20,13 @@ export const QuizOverView = ({onCloseSheet, time, questions}: Props) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
-    <View style={{flex: 1}}>
-        <View style={{paddingTop: 36, paddingLeft: 20, paddingBottom: 20}}>
+    <ScrollView style={style.container}>
+        <View style={style.header}>
             <Text>Practice : English Vocabulary Quiz </Text>
             <Text>Time Left: {time}</Text>
+            <TouchableOpacity style={style.closeIcon} onPress={() => { onCloseSheet() }}>
+                <CrossIcon height={18} width={18} fill={Colors.black_01} />
+            </TouchableOpacity>
         </View>
         <View style={{flex: 1}}>
             <Tabs activeTab={activeTab} tabs={tabs} 
@@ -37,6 +43,25 @@ export const QuizOverView = ({onCloseSheet, time, questions}: Props) => {
                     </View>
             }
         </View>
-    </View>
+    </ScrollView>
   )
 }
+
+const style = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    header: {
+        paddingTop: 30, 
+        paddingLeft: 20, 
+        paddingBottom: 20,
+        position: 'relative',
+    },
+    closeIcon: {
+        position: 'absolute',
+        top: "70%",
+        right: "10%"
+    }
+
+
+})

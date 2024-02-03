@@ -18,7 +18,7 @@ import { UtilService } from '../../services/UtilService';
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Quizzes');
     const [data, setData] = useState<CardData[]>([]);
-    const [options, setOptions] = useState(false);
+    const [options, setOptions] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [board, setBoard] = useState("CBSE");
     const [className, setClassName] = useState(10);
@@ -211,9 +211,13 @@ export const QuizHomePage = () => {
         resetSelection();
     },[multiSelect])
 
-    const setSubjectToLocal = async () => {
+    // useEffect(() => {
+    //     resetSelection();
+    // },[options])
+
+    const setSubjectToLocal = async (item: {subjectName: string}) => {
         try {
-          await AsyncStorage.setItem('quizSubject', selectedSubject.subjectName);
+          await AsyncStorage.setItem('quizSubject', item.subjectName);
         } catch (e) {
           console.log("Error => ", e);
         }
@@ -243,22 +247,41 @@ export const QuizHomePage = () => {
     }
 
     const updateList = (index: number) => {
-        setOptions(true);
-        let tempData = data;
-        if(tempData && tempData.length) {
-            tempData  = tempData.map((temp) => {
+        // let tempData = data;
+        // if(tempData && tempData.length) {
+        //     tempData  = tempData.map((temp) => {
+        //         if (temp.id != (index)) {
+        //             !multiSelect && (temp.selected = false);
+        //         } 
+        //         return temp;
+        //     });    
+        // }
+        // if(tempData[index].selected) tempData[index].selected = false;
+        // else tempData[index].selected = true
+        // tempData[index].subject = selectedSubject.subjectName;
+
+        setData((prev) => {
+            let tem = prev;
+            tem  = tem.map((temp) => {
                 if (temp.id != (index)) {
                     !multiSelect && (temp.selected = false);
-                }
+                } 
                 return temp;
             });
-    
-            tempData[index].selected = true;
-            tempData[index].subject = selectedSubject.subjectName;
-            setSelectedQuiz(() => [tempData.filter((item) => item.selected)]);
-            setData(() => [...tempData]);
-        }
+            if(tem[index].selected) tem[index].selected = false;
+            else tem[index].selected = true;
+            tem[index].subject = selectedSubject.subjectName;
+            console.log(tem);
+            setOptions(true);
+            return tem;
+        })
+
+        console.log(data);
+        setSelectedQuiz(() => [data.filter((item) => item.selected)]);
+        // setData(() => [...tempData]);
     }
+
+
     const getSelectedChapters = (data: CardData[]) => {
         // Filter the array to include only objects where selected is true
         const selectedChapters = data.filter(item => item.selected);
@@ -276,10 +299,9 @@ export const QuizHomePage = () => {
     const setSubjectAndCloseModal = (item: any) => {
         setBottomSheetVisible(false);
         setSelectedSubject(item);
-        setSubjectToLocal();
+        setSubjectToLocal(item);
       };
 
-    
 
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
@@ -422,7 +444,11 @@ export const QuizHomePage = () => {
                     <Text>
                         Which one do you want to explore?
                     </Text>
-                    {getSelectedChapters(data).length ? <Text>Selected Chapters</Text>: ''}
+                    <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { setOptions(!options) }}>
+                            <CrossIcon height={18} width={18} fill={Colors.black_01} />
+                    </TouchableOpacity>
+                    {multiSelect &&  getSelectedChapters(data).length ? 
+                     <Text>Selected Chapters</Text>: <Text></Text>}
                     <View style={styles.selectedChapterContainer}>
                     {
                         multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
@@ -455,7 +481,7 @@ export const QuizHomePage = () => {
                         <View style={styles.bottomSheetContainer}>
                             <Text style={styles.subjecttxt}>Subject</Text>
                             <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>
-                                <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} />
+                                <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} subject={selectedSubject.subjectName} />
                             </ScrollView>
                             <View
                                 style={{
@@ -466,7 +492,6 @@ export const QuizHomePage = () => {
                                     paddingHorizontal: 20,
                                     paddingVertical: 20,
                                     width: '100%',
-
                                 }}
 
                             >

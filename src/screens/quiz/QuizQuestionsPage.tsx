@@ -76,7 +76,7 @@ export const QuizQuestionsPage = () => {
     useEffect(() => {
         getQuizType();
         getQuizFlow();
-        findQuizForPracticeNUpdateByChapterName()
+        // findQuizForPracticeNUpdateByChapterName()
         const req = {
             "schoolId": "default",
             "subject": subject,
@@ -220,6 +220,7 @@ export const QuizQuestionsPage = () => {
             const quizType = await UtilService.getQuizType();
             console.log(list);
             if(quizType == 'practice') {
+                UtilService.updateLocalPracticeMcqs(reqObject?.chapterName, quizQuestionList)
                 submitPractice(UserAnswerList)
             } else {
                 if (currentQuestionIndex == quizQuestionList.length - 1) {
@@ -257,12 +258,16 @@ export const QuizQuestionsPage = () => {
             "requestBody": reqObject
         }
 
-        return httpClient.post(`auth/c-auth`, reqObj)
-            .then((res) => {
-                if (res.data.statusCode == 200) {
-                    navigation.navigate('QuizResultPage' as never, answerList as never);
-                }
-            });
+        if(quizType != 'practice') {
+            return httpClient.post(`auth/c-auth`, reqObj)
+                .then((res) => {
+                    if (res.data.statusCode == 200) {
+                        navigation.navigate('QuizResultPage' as never, answerList as never);
+                    }
+                });
+        } else {
+
+        }
     }
 
     const submitPractice = async (answerList: questionWithTime) => {
@@ -315,7 +320,11 @@ export const QuizQuestionsPage = () => {
 
     const userEndsThequiz = async () => {
         const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-        submitQuiz(UserAnswerList);
+        if(quizType != 'practice') {
+            submitQuiz(UserAnswerList);
+        } else {
+            navigation.navigate('QuizHomepage' as never, { replace: true } as never);
+        }
     }
 
     const reportQuestion = async (feedback: SetStateAction<string>) => {
@@ -369,7 +378,9 @@ export const QuizQuestionsPage = () => {
                             </View>}
                             <Button className={SmallOutlineButton} 
                             label={quizType == 'practice' ? 'Finish Practice': 'Finish Test'} 
-                            disabled={false} onPress={() => setModalVisible(true)} />
+                            disabled={false} onPress={() => {
+                                setModalVisible(true)
+                                }} />
                         </View>
                     </View>
                 </View>
@@ -396,6 +407,8 @@ export const QuizQuestionsPage = () => {
                                 style={[
                                     styles.questionNumber,
                                     currentQuestionIndex === index && styles.activeQuestion,
+                                    quizQuestionList[index].answer == quizQuestionList[index].selectedAnswer  && { backgroundColor: '#4BAE4F'},
+                                    quizQuestionList[index].selectedAnswer && quizQuestionList[index].answer != quizQuestionList[index].selectedAnswer  && { backgroundColor: 'red'},
                                 ]}
                                 onPress={() => navigateToQuestion(index)}
                             >
@@ -409,7 +422,9 @@ export const QuizQuestionsPage = () => {
                         question={quizQuestionList[currentQuestionIndex].question}
                         options={quizQuestionList[currentQuestionIndex].options}
                         selectedAnswer={quizQuestionList[currentQuestionIndex].selectedAnswer}
-                        onSelectOption={handleSelectOption} isResult={false}
+                        onSelectOption={handleSelectOption} 
+                        correctAnswer={quizQuestionList[currentQuestionIndex].answer}
+                        isResult={quizType == 'practice'}
                     />
                     }
                 </ScrollView>

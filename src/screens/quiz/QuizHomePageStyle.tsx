@@ -16,9 +16,10 @@ export const styles = StyleSheet.create({
     container: {
         margin: 0,
         flex: 1,
-        backgroundColor: Colors.white_01,
+        backgroundColor: Colors.white,
     },
     header: {
+        backgroundColor: Colors.white,
         paddingHorizontal: 24,
         paddingVertical: 20,
         height: 70,
@@ -111,6 +112,13 @@ export const styles = StyleSheet.create({
         paddingVertical: 4,
         paddingHorizontal: 10,
         backgroundColor: "#2947D41C",      
+    },
+    crossfloatingButton: {
+        position: "absolute",
+        right: 20,
+        top: 15,
+        width: 30,
+        padding: 8,
     },
     floatingButton: {
         padding: 8,

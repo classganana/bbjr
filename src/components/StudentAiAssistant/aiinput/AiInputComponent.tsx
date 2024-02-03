@@ -128,8 +128,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
             <View style={styles.bottomSheetContainer}>
               <Student
               themeColor={true}
-                selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
-              />
+              selectedSubject={(item: any) => setSubjectAndCloseModal(item)} subject={selectedSubject?.subjectName}              />
               <View
                 style={{
                   height: 60 

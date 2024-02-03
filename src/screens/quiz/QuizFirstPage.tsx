@@ -19,7 +19,7 @@ export const QuizFirstPage = () => {
     const [quizFlow, setQuizFlow] = useState<string | null>('');
     const [quizType, setQuizType] = useState<string | null>();
     //   const [quizType, setQuizType] = useState<string | null>();
-    const [quizContent, setQuizContent] = useState<any>();
+    const [quizContent, setQuizContent] = useState<any>(null);
     const [chapters, setChapters] = useState();
     const startQuiz = () => {
         navigation.navigate('QuizQuestionPages' as never, quizContent as never);
@@ -27,13 +27,17 @@ export const QuizFirstPage = () => {
 
     const [subject, setSubject] = useState();
 
-    const [currentQuiz, setCurrentQuiz] = useState<any>();
+    const [currentQuiz, setCurrentQuiz] = useState<any>(null);
     const route = useRoute();
     useEffect(() => {
         getQuizFlow();
         getQuizType();
         setCurrentQuiz(() => route.params)
     }, [])
+
+    useEffect(() => {
+        console.log(currentQuiz, quizContent);
+    }, [currentQuiz, quizContent]);
 
     const getQuizFlow = async () => {
         setQuizType(await UtilService.getQuizType())
@@ -63,15 +67,7 @@ export const QuizFirstPage = () => {
         setSubject(subject);
         AsyncStorage.setItem('subject', subject);
         if(quizType != 'quiz') {
-            try {
-                const matchingQuizzes = await UtilService.getMatchingQuizzes(listOfChapters);
-                // Assuming setCurrentQuiz expects a value:
-                setCurrentQuiz(matchingQuizzes);
-                console.log(currentQuiz)
-              } catch (error) {
-                console.error('Error fetching or setting quizzes:', error);
-                // Handle the error appropriately, e.g., display a user-friendly message.
-              }
+            setupPracticeSession(listOfChapters)
         } else {
             const req = {
                 "schoolId": "default",
@@ -116,8 +112,61 @@ export const QuizFirstPage = () => {
     }
 
 
-    const setupPracticeSession = () => {
-        navigation.navigate('PracticeSession' as never, currentQuiz as never);
+    const setupPracticeSession = async (listOfChapters: string[]) => {
+        try {
+            const matchingQuizzes = await UtilService.getMatchingQuizzes(listOfChapters);
+            // Assuming setCurrentQuiz expects a value:
+            if(matchingQuizzes && matchingQuizzes.mcqs){
+                setCurrentQuiz(matchingQuizzes);
+                setQuizContent(matchingQuizzes);
+                console.log(currentQuiz, quizContent);
+            } else {
+                // getting content from API
+                console.log("getting practive questions from api");
+                const req = {
+                    "schoolId": "default",
+                    "boardId": user?.board,
+                    "subject": subject,
+                    "className": user?.class,
+                    "studentId": user?.userId,
+                    "chapterName": listOfChapters,
+                    "dataType": "school",
+                    // "size": 1,
+                    "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
+                }
+        
+                const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
+                const reqObj = {
+                    "service": "ml_service",
+                    "endpoint": endPoint,
+                    "requestMethod": "POST",
+                    "requestBody": req
+                }
+                const quizFlows = await UtilService.getQuizFlow();
+                if (quizFlows == 'Quizzes') {
+                    delete req.chapterName;
+                    delete req.subject;
+                }
+        
+                httpClient.post(`auth/c-auth`, reqObj)
+                    .then((res: any) => {
+                        const quiz = {
+                            schoolId: 'default',
+                            chapterName: listOfChapters,
+                            subject: subject,
+                            boardId: user?.board,
+                            className: user?.class,
+                            studentId: user?.userId,
+                            ...res.data.data,
+                        }
+                        setQuizContent(quiz);
+                        if (quizType != 'quiz') maintainQuizInLocal(quiz);
+                    })
+            }
+          } catch (error) {
+            console.error('Error fetching or setting quizzes:', error);
+            // Handle the error appropriately, e.g., display a user-friendly message.
+          }
     }
 
     const maintainQuizInLocal = async (selectedQuiz: any) => {
@@ -171,8 +220,8 @@ export const QuizFirstPage = () => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.listOfChapters}>
-                        {chapters && chapters?.map((chapter: string) => {
-                            return <Text style={styles.chapterName}>{chapter}</Text>
+                        {chapters && chapters?.map((chapter: string, index: number) => {
+                            return <Text key={index} style={styles.chapterName}>{chapter}</Text>
                         })}
                     </View>
                 </View>}
