@@ -19,8 +19,10 @@
     "@svgr/cli": "^8.0.1",
     "axios": "^1.5.1",
     "expo": "~48.0.18",
+    "expo-analytics": "^1.0.18",
     "expo-clipboard": "~4.1.2",
     "expo-constants": "~14.2.1",
+    "expo-dev-client": "~2.2.1",
     "expo-device": "~5.2.1",
     "expo-firebase-core": "^6.0.0",
     "expo-firebase-recaptcha": "^2.3.1",
@@ -40,8 +42,7 @@
     "react-native-svg-transformer": "^1.0.0",
     "react-native-view-shot": "3.5.0",
     "react-native-web": "^0.19.9",
-    "react-native-webview": "^13.6.0",
-    "expo-dev-client": "~2.2.1"
+    "react-native-webview": "^13.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

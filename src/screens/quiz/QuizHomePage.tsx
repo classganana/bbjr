@@ -14,6 +14,7 @@ import { EditButton } from '../../components/common/ButttonComponent/ButtonStyle
 import { useUser } from '../../context/UserContext';
 import { styles } from './QuizHomePageStyle';
 import { UtilService } from '../../services/UtilService';
+import { ExamPrepAllChapter } from '../../components/quiz/ExamPrepAllChapter';
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Quizzes');
@@ -37,6 +38,8 @@ export const QuizHomePage = () => {
     const [selectedSubject, setSelectedSubject] = useState<{
         subjectName: string;
     }>({subjectName:"Science"});
+
+    const [allChapterSelected, setAllChapterSelected] = useState(false);
 
     const navigation = useNavigation();
 
@@ -211,9 +214,15 @@ export const QuizHomePage = () => {
         resetSelection();
     },[multiSelect])
 
-    // useEffect(() => {
-    //     resetSelection();
-    // },[options])
+    useEffect(() => {
+        if(allChapterSelected){
+            setOptions(allChapterSelected);
+            resetSelection();
+        } else {
+            setOptions(allChapterSelected);
+        }
+        setSelectedQuiz(() => []);    
+    },[allChapterSelected])
 
     const setSubjectToLocal = async (item: {subjectName: string}) => {
         try {
@@ -275,8 +284,7 @@ export const QuizHomePage = () => {
             setOptions(true);
             return tem;
         })
-
-        console.log(data);
+        setAllChapterSelected(false)
         setSelectedQuiz(() => [data.filter((item) => item.selected)]);
         // setData(() => [...tempData]);
     }
@@ -348,6 +356,10 @@ export const QuizHomePage = () => {
         }
     }
 
+    const allChapterCardClick = async () => {
+        setAllChapterSelected(prevState => !prevState);
+    }
+
     const onBack = () => {
         navigation.navigate('DashboardNavigator' as never)
     }
@@ -393,10 +405,12 @@ export const QuizHomePage = () => {
                     {tab == 'Exam Preparation' && <>
                         {/* <ExamPrepSubjects subjects={subjects} /> */}
                         <View>
-                            <TouchableOpacity >
+                            {/* <TouchableOpacity >
                                 <Text style={styles.examPreparation}>Exam Preparation</Text>
-                            </TouchableOpacity>
-                            <Text>Selected Subject</Text>
+                            </TouchableOpacity> */}
+                            {/* <Text>Selected Subject</Text> */}
+
+
                             <View style={styles.buttoncontainer}>
                             <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
                                 {selectedSubject?.subjectName}
@@ -404,10 +418,12 @@ export const QuizHomePage = () => {
                             <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
                                 <Text>Change</Text>
                                 <View style={styles.pencil}>
-                                    <Pencil height={'20'} width={'20'} fill={Colors.white} />
+                                    <NewBackButton height={'12'} width={'12'} fill={Colors.white} />
                                 </View>
                             </TouchableOpacity>
                             </View>
+                            <ExamPrepAllChapter selected={allChapterSelected} onCardClick={() => { allChapterCardClick ()}}
+                            id={0} title={'All Chapters'} infoText={''} imageUrl={'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10}}>
                             <Text style={styles.chapterWise}>All Chapter Wise</Text>

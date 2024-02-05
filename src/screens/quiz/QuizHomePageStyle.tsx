@@ -165,7 +165,7 @@ export const styles = StyleSheet.create({
         borderRadius: 25,
         borderWidth: 0.5,
         borderColor: '#DFE4FF',
-        backgroundColor: '#DFE4FF',
+        backgroundColor: Colors.primary,
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
@@ -174,30 +174,30 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 4, // This property adds shadow on Android
-
+        color: Colors.white,
     },
     changebutton:{ 
-        borderRadius: 25, 
-        backgroundColor: '#DFE4FF',
+        borderRadius: 10, 
+        backgroundColor: '#F0F2FC',
          width: '40%', 
-         justifyContent: 'center', 
+        //  justifyContent: 'center', 
          alignItems: 'center', 
          flexDirection: 'row', 
-         position: 'relative' 
+         justifyContent: 'space-around',
+        //  position: 'relative' 
         },
         pencil:{ 
-            width: 26.35, 
-            height: 26.35, 
-            borderRadius: 26.35, 
-            backgroundColor: Colors.primary, 
+            // borderRadius: 26.35, 
+            // backgroundColor: Colors.primary, 
             alignItems: 'center', 
-            position: 'absolute', 
-            right: 0, 
+            // position: 'absolute', 
+            // right: 5, 
+            transform: [{ rotate: '270deg' }]
         },
         buttoncontainer:{
             flexDirection:'row',
             justifyContent:'space-between',
-            paddingHorizontal:20,
+            paddingHorizontal:10,
             paddingVertical:20,
         },
         chapterWise: {
