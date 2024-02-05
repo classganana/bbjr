@@ -204,7 +204,8 @@ export const DashboardStyle = StyleSheet.create({
     botHeading: {
       color: "#000",
       fontWeight: "500",
-      fontSize: 14
+      fontSize: 14,
+      marginBottom: 12,
     },
     botheadingInfo: {
       fontSize: 12
@@ -214,7 +215,7 @@ export const DashboardStyle = StyleSheet.create({
       marginBottom: 12,
       alignSelf: 'center',
       width: '98%',
-      height: 140,
+      minHeight: 140,
       padding: 14,
       backgroundColor: "white",
       shadowColor: Colors.black_03,
@@ -234,7 +235,7 @@ export const DashboardStyle = StyleSheet.create({
     },
     botBlockDesc: {
       flex: 10,
-      marginTop: "15%",
+      marginTop: "10%",
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -315,5 +316,10 @@ export const DashboardStyle = StyleSheet.create({
       // marginHorizontal: 0,
       // aspectRatio: "1.08",
     },
+    promptText: {
+      fontSize: 14,
+      fontWeight: "600",
+      top: 10 
+    }
 
 })

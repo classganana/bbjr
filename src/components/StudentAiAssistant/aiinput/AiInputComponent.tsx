@@ -14,6 +14,7 @@ import {
   Send,
 } from "../../common/SvgComponent/SvgComponent";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
   onSendClick: (selectedOption: string) => void;
@@ -29,6 +30,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
   }>();
   const [text, setText] = useState("");
   const [placeholder, setPlaceholder] = useState("Ask Anything...")
+  const [lastQuestion, setLastQuestion] = useState('');
 
   const setSubjectAndCloseModal = (item: any) => {
     setSelectedSubject(item);
@@ -60,13 +62,21 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
     setText(text);
   };
 
-  const onSend = () => {
-    if (text) onSendClick(text);
+  const onSend = async () => {
+    if (text) {
+      onSendClick(text);
+      setLastQuestion(text)
+      AsyncStorage.setItem('lastChatQuestion', text)
+    }
     setText("");
   };
 
   function handleOnSubmitEditing(): void {
-    if (text) onSendClick(text);
+    if (text) {
+      onSendClick(text);
+      setLastQuestion(text)
+      AsyncStorage.setItem('lastChatQuestion', text)
+    }
     setText("");
   }
 

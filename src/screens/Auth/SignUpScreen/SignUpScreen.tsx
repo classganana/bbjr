@@ -144,9 +144,9 @@ export const SignUpScreen = () => {
                             }}
                         >
                             <Picker.Item label="Select Board" value="" />
-                            <Picker.Item label="ICSE" value="ICSE" />
+                            {/* <Picker.Item label="ICSE" value="ICSE" /> */}
                             <Picker.Item label="CBSE" value="CBSE" />
-                            <Picker.Item label="TELANGANA" value="TELANGANA" />
+                            {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
                         </Picker>
                     </View>
                 </View>

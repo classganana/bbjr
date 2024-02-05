@@ -111,7 +111,6 @@ export const QuizFirstPage = () => {
         }
     }
 
-
     const setupPracticeSession = async (listOfChapters: string[]) => {
         try {
             const matchingQuizzes = await UtilService.getMatchingQuizzes(listOfChapters);

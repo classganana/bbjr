@@ -54,6 +54,7 @@ const BottomTabSetup = () => {
     elevation: 1,
     ...styles.shadow,
   };
+
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
@@ -162,6 +163,7 @@ const BottomTabSetup = () => {
                   style={{
                     width: 30,
                     height: 30,
+                    tintColor: focused ? Colors.primary : "#748C94",
                     
                   }}
                 />
@@ -211,7 +213,7 @@ const BottomTabSetup = () => {
                     
                   }}
                 >
-                  Profile
+                  Settings
                 </Text>
               </Animated.View>
             ),

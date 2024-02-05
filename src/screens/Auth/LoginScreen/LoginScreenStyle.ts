@@ -5,7 +5,7 @@ import { Colors } from "../../../styles/colors";
 export const LoginScreenStyle = StyleSheet.create({
     container : {
         flex: 1,
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.white,
         width: "100%",
     },
     header: {
@@ -46,7 +46,6 @@ export const LoginScreenStyle = StyleSheet.create({
         gap: 10,
         borderRadius: 12,
       },
-      title: {},
     input: {
         fontSize: 15,
         ...(Platform.OS === "web" ? { outlineStyle: "none" } : {}),
@@ -56,9 +55,20 @@ export const LoginScreenStyle = StyleSheet.create({
         // backgroundColor: Colors.gray_01,
       },
     loginHeading: {
-        top: 20,
-        left: 30,
-        fontSize: 20,
-        fontWeight: '600'
-    }  
+        top: 40,
+        fontSize: 22,
+        fontWeight: '600',
+        color: "#212121",
+        textAlign: 'center'
+    },
+    backButton: {
+        top: "5%",
+        left: "5%",
+        width: 43,
+        height: 40,
+        backgroundColor: "#E9EDFB",
+        borderRadius: 50,
+        justifyContent: "center",
+        alignItems: "center"
+    }
 })

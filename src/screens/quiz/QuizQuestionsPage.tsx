@@ -323,7 +323,11 @@ export const QuizQuestionsPage = () => {
         if(quizType != 'practice') {
             submitQuiz(UserAnswerList);
         } else {
-            navigation.navigate('QuizHomepage' as never, { replace: true } as never);
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'QuizHomepage' } as never] // Replace 'Home' with the actual name of your main screen
+              });
+            // navigation.navigate('QuizHomepage' as never, { replace: true } as never);
         }
     }
 

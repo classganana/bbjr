@@ -84,7 +84,8 @@ export const BotScreen = () => {
     setMessages(lastMessages)
   }
 
-  const pushMessageIntoQueue = (text: string) => {
+  const pushMessageIntoQueue = async (text: string) => {
+    AsyncStorage.setItem('lastChatQuestion', text)
     deleteLastSuggestions()
 
     // Create a new message object for the user
@@ -240,9 +241,9 @@ export const BotScreen = () => {
               <NewBackButton height={18} width={24} fill={'black'} />
               <BotIcon height={32} width={32} fill={Colors.primary} />
             </TouchableOpacity>
-            <View>
+            <View style={{justifyContent: 'center'}}>
               <Text style={BotStyle.headerTitle}>Ezy..</Text>
-              <Text style={BotStyle.headerTitleInfo}>• online</Text>
+              {/* <Text style={BotStyle.headerTitleInfo}>• online</Text> */}
             </View>
           </View>
 
