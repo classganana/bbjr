@@ -193,7 +193,9 @@ export const Dashboard = () => {
                                 <IconButton className={OutlinePlaneButton} onPress={function (): void {
                                     moveToExploreQuizPage()
                                 }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
+                                   <View style={DashboardStyle.circularDiv}>
                                     <ArrowLeft height={20} width={20} fill={'black'} />
+                                </View>
                                 </View>} label={'Take Quiz'} pos={'right'}></IconButton>                                
                             </View>}
                         </View>
@@ -215,7 +217,9 @@ export const Dashboard = () => {
                             {<View style={{marginLeft: 30}}><IconButton className={OutlinePlaneButton} onPress={function (): void {
                                 moveToExploreExamPrepPage()
                             }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
-                                <ArrowLeft height={20} width={20} fill={'black'} />
+                                <View style={DashboardStyle.circularDiv}>
+                                    <ArrowLeft height={20} width={20} fill={'black'} />
+                                </View>
                             </View>} label={'Exam Prep'} pos={'right'}></IconButton>
                             </View>}
                         </View>
