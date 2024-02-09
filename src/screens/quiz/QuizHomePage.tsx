@@ -303,6 +303,7 @@ export const QuizHomePage = () => {
 
     const onBack = () => {
         navigation.navigate('DashboardNavigator' as never)
+        console.log("bluuuuuuue");
     }
 
     return (

@@ -97,7 +97,7 @@ export const Dashboard = () => {
                     <View style={DashboardStyle.leaderBoardSection}>
                         <CircleInitials name={user?.name} size={32} />
                         <View style={{ flex: 1 }}>
-                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name} 😎</Text>
+                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
                         </View>
                     </View>
                 </View>
@@ -124,7 +124,9 @@ export const Dashboard = () => {
                             <IconButton className={OutlinePlaneButton} onPress={function (): void {
                                 moveToExploreQuizPage()
                             }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
+                                <View style={DashboardStyle.circularDiv}>
                             <ArrowLeft height={20} width={20} fill={'black'} />
+                            </View>
                           </View>} label={'Take Quiz'} pos={'right'}></IconButton>
                         </View>
                         <View style={DashboardStyle.option}>
@@ -137,18 +139,25 @@ export const Dashboard = () => {
                                     {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
                                 </View>
                             </View>
-                            <Text style={DashboardStyle.optionCardHeading}>Exam Prep</Text>
+                            <Text style={DashboardStyle.optionCardHeading}>Exam Preparation</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
                                 You have played total 55 quizzes last month!
                             </Text>
+                            
+      
+    
                             <IconButton className={OutlinePlaneButton} onPress={function (): void {
                                 moveToExploreExamPrepPage()
                             }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
+                                <View style={DashboardStyle.circularDiv}>
                             <ArrowLeft height={20} width={20} fill={'black'} />
+                            </View>
                           </View>} label={'Exam Prep'} pos={'right'}></IconButton>
+                          
                         </View>
                     </View>
                 </View>
+                <Text style={DashboardStyle.solveAnyDoubts}>Solve Any Doubts</Text>
                 <View style={DashboardStyle.botBlock}>
                     <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat</Text>
                     <Text style={DashboardStyle.botheadingInfo}>Your Personal Study Assistant 🚀</Text>
