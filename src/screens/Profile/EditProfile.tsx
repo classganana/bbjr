@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, ScrollView, Platform, Image, Text, StyleSheet } from 'react-native';
+import { View, TextInput, ScrollView, Platform, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { Colors } from '../../styles/colors';
-import { ArrowLeft, CameraIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, CameraIcon, NewBackButton } from '../../components/common/SvgComponent/SvgComponent';
 import { Picker } from '@react-native-picker/picker';
 import { CancelButton, EditButton, ExitButton, LoginButton, OutlineButton, SubmitButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { httpClient } from '../../services/HttpServices';
@@ -10,6 +10,7 @@ import { useUser } from '../../context/UserContext';
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
 import { CustomDropdown } from '../../components/common/Performance/CustomDropdown/CustomDropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const EditProfile = () => {
     const [name, setName] = useState('');
@@ -21,6 +22,7 @@ const EditProfile = () => {
     const [GuardianEmail, setGuardianEmail] = useState('');
     const [userId, setUserId] = useState<any>('');
     const {user, setUser} = useUser()
+    const navigation = useNavigation();
 
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -83,6 +85,12 @@ const EditProfile = () => {
         { label: "Telangana Board" },
     ]
 
+    const onBack = () => {
+        navigation.navigate('Setting' as never)
+    }
+
+
+
 
     return (
 
@@ -90,9 +98,9 @@ const EditProfile = () => {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
-                        <View style={styles.backButton}>
-                            <ArrowLeft height={'25'} width={'25'} fill={'black'} />
-                        </View>
+                        <TouchableOpacity style={styles.backButton} onPress={() => onBack()}>
+                            <NewBackButton height={'18'} width={'25'} fill={'black'} />
+                        </TouchableOpacity>
                         <Text style={styles.headingTitle}>Profile</Text>
                     </View>
                 </View>
@@ -173,9 +181,9 @@ const EditProfile = () => {
                             }}
                         >
                             <Picker.Item label="Select Board" value=""/>
-                            <Picker.Item label="ICSE" value="ICSE" />
+                            {/* <Picker.Item label="ICSE" value="ICSE" /> */}
                             <Picker.Item label="CBSE" value="CBSE" />
-                            <Picker.Item label="TELANGANA" value="TELANGANA" />
+                            {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
                         </Picker>
                     </View>
                     <Text style={styles.label}>Guardian’s Name</Text>
@@ -211,7 +219,7 @@ const EditProfile = () => {
                         ) : (
                             <>
                                 <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={toggleEditMode} />
-                                <Button label={'Submit'} disabled={false} className={ExitButton} onPress={updateProfile} />
+                                <Button label={'Submit'} disabled={false} className={LoginButton} onPress={updateProfile} />
                             </>
                         )}
                     </View>
@@ -223,7 +231,7 @@ const EditProfile = () => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.primary
+        backgroundColor: Colors.white
     },
     header: {
         paddingHorizontal: 20,
@@ -237,7 +245,6 @@ const styles = StyleSheet.create({
         gap: 10
     },
     headingTitle: {
-        color: Colors.white,
         fontWeight: "500",
         fontSize: 18,
     },
@@ -297,6 +304,7 @@ const styles = StyleSheet.create({
     btn: {
         display: 'flex',
         margin: 30,
+        gap: 20,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignSelf: 'center',

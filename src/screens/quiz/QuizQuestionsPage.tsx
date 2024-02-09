@@ -1,5 +1,5 @@
 import React, { SetStateAction, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, CrossIcon, InfoIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, CrossIcon, InfoIcon, NewBackButton, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
@@ -15,10 +15,12 @@ import { QuizOverView } from '../../components/quiz/QuizOverView';
 import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
 import { UtilService } from '../../services/UtilService';
+import { ExamPrepProgressBar } from '../../components/quiz/ExamPrepProgressBar';
+import { Colors } from '../../styles/colors';
 
 
 export type Answers = Array<{
-    mcqId?: string,
+    mcqId: string,
     question: string;
     options: string[];
     answer: string;
@@ -52,9 +54,29 @@ export const QuizQuestionsPage = () => {
         setQuizFlow(await AsyncStorage.getItem('quizFlow'));
     }
 
+    const findQuizForPracticeNUpdateByChapterName = async () => {
+        let quizList: any | null = await AsyncStorage.getItem('localQuizzes');
+        if (quizList) {
+            quizList = JSON.parse(quizList);
+            const matchingQuizzes = quizList.filter((quiz: any) => {
+                if (!Array.isArray(quiz.chapterName) || !Array.isArray(route?.params?.chapterName)) {
+                  return false; // Handle cases where either value is not an array
+                }
+            
+                const setA = new Set(quiz.chapterName);
+                const setB = new Set(route?.params?.chapterName);
+            
+                return setA.size === setB.size &&
+                       [...setA].every((item) => setB.has(item))
+              }); 
+              console.log(matchingQuizzes);
+        }
+    }
+
     useEffect(() => {
         getQuizType();
         getQuizFlow();
+        // findQuizForPracticeNUpdateByChapterName()
         const req = {
             "schoolId": "default",
             "subject": subject,
@@ -64,6 +86,7 @@ export const QuizQuestionsPage = () => {
             "chapterName": [
                 "string"
             ],
+            // fix it
             "dataType": "school",
             "size": 0
         }
@@ -73,6 +96,7 @@ export const QuizQuestionsPage = () => {
         setQuizQuestionList(route.params.mcqs);
         AsyncStorage.removeItem('questions',);
         setTimer(route.params.time);
+        // setTimer(10000);
         setQuizzId(route.params.quizzId)
         setQuestionsInLocal();
 
@@ -141,9 +165,11 @@ export const QuizQuestionsPage = () => {
 
     const navigateToQuestion = (index: number) => {
         setCurrentQuestionIndex(index);
+        console.log(currentQuestion);
     };
 
     const navigateToNextQuestion = () => {
+        setHideHintText(false);
         if (currentQuestionIndex < quizQuestionList.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
@@ -155,6 +181,7 @@ export const QuizQuestionsPage = () => {
             setCurrentQuestionIndex(currentQuestionIndex - 1);
         }
         scrollToPrevQuestion();
+        console.log(currentQuestion);
     };
 
     const calculateScore = (answerList: questionWithTime) => {
@@ -191,12 +218,14 @@ export const QuizQuestionsPage = () => {
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
             const quizType = await UtilService.getQuizType();
+            console.log(list);
             if(quizType == 'practice') {
+                UtilService.updateLocalPracticeMcqs(reqObject?.chapterName, quizQuestionList)
                 submitPractice(UserAnswerList)
             } else {
                 if (currentQuestionIndex == quizQuestionList.length - 1) {
                     submitQuiz(UserAnswerList)
-                    // navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
+                    navigation.navigate('QuizResultPage' as never, UserAnswerList as never);
                 }
             }
         } catch (error) {
@@ -222,7 +251,6 @@ export const QuizQuestionsPage = () => {
         if(quizFlow == 'Quizzes') delete tempRequest.chapterName;
 
         setReqObject(tempRequest);
-        console.log(reqObject);
         const reqObj = {
             "service": "ml_service",
             "endpoint": quizType == 'quiz' ? `/answered/quizz` : `/answered/mcq`,
@@ -230,15 +258,24 @@ export const QuizQuestionsPage = () => {
             "requestBody": reqObject
         }
 
-        return httpClient.post(`auth/c-auth`, reqObj)
-            .then((res) => {
-                if (res.data.statusCode == 200) {
-                    navigation.navigate('QuizResultPage' as never, answerList as never);
-                }
-            });
+        if(quizType != 'practice') {
+            return httpClient.post(`auth/c-auth`, reqObj)
+                .then((res) => {
+                    if (res.data.statusCode == 200) {
+                        navigation.navigate('QuizResultPage' as never, answerList as never);
+                    }
+                });
+        } else {
+
+        }
     }
 
     const submitPractice = async (answerList: questionWithTime) => {
+        const q = {
+            mcqId : currentQuestion.mcqId,
+            selectedAnswer: currentQuestion.selectedAnswer
+        }
+
         const questions = answerList.quizQuestionList.map((answer) => {
             return {
                 mcqId: answer.mcqId,
@@ -247,14 +284,14 @@ export const QuizQuestionsPage = () => {
         });
 
         const tempRequest: any = reqObject;
-        tempRequest.mcqs = questions;
+        tempRequest.mcqs = [q];
         tempRequest.studentName = user?.name;
         tempRequest.screenPage = quizFlow != 'Quizzes' ? 'examPreparation' : `quizzes`;
-        tempRequest.quizType = quizFlow == 'Quizzes' ? 'class' : `chapter`;
+        tempRequest.quizzType = quizFlow == 'Quizzes' ? 'class' : `chapter`;
         
         if(quizFlow == 'Quizzes') delete tempRequest.chapterName;
 
-        tempRequest.dataType = tempRequest.chapterName;
+        tempRequest.dataType = "school";
         setReqObject(tempRequest);
         console.log(reqObject);
         const reqObj = {
@@ -267,7 +304,11 @@ export const QuizQuestionsPage = () => {
         return httpClient.post(`auth/c-auth`, reqObj)
             .then((res) => {
                 if (res.data.statusCode == 200) {
-                    navigation.navigate('QuizResultPage' as never, answerList as never);
+                    if(currentQuestionIndex === quizQuestionList.length - 1){
+                        navigation.navigate('QuizResultPage' as never, answerList as never);
+                    } else {
+                        setCurrentQuestionIndex(currentQuestionIndex + 1);
+                    }
                 }
             });
     }
@@ -279,7 +320,15 @@ export const QuizQuestionsPage = () => {
 
     const userEndsThequiz = async () => {
         const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-        submitQuiz(UserAnswerList);
+        if(quizType != 'practice') {
+            submitQuiz(UserAnswerList);
+        } else {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'QuizHomepage' } as never] // Replace 'Home' with the actual name of your main screen
+              });
+            // navigation.navigate('QuizHomepage' as never, { replace: true } as never);
+        }
     }
 
     const reportQuestion = async (feedback: SetStateAction<string>) => {
@@ -314,6 +363,8 @@ export const QuizQuestionsPage = () => {
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
     const [questionInfoSheet, setQuestionInfoSheet] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+    const [hintVisibility, setHintVisibility] = useState(false);
+    const [hideHintText, setHideHintText] = useState(false)
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -323,14 +374,18 @@ export const QuizQuestionsPage = () => {
                         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.headingInfo}>{reqObject?.chapterName}</Text>
                     </View>
                     <View style={styles.headingRight}>
-                        {timer > 0 && 
                         <View style={{ display: 'flex', gap: 4, flex: 1 }}>
+                        {timer > 0 && 
                             <View style={styles.timerBlock}>
                                 <Text style={styles.timerText}>Time Left:</Text>
                                 <Text style={styles.timer}>{formatTime(timer)}</Text>
-                            </View>
-                            <Button className={SmallOutlineButton} label={'Finish Test'} disabled={false} onPress={() => setModalVisible(true)} />
-                        </View>}
+                            </View>}
+                            <Button className={SmallOutlineButton} 
+                            label={quizType == 'practice' ? 'Finish Practice': 'Finish Test'} 
+                            disabled={false} onPress={() => {
+                                setModalVisible(true)
+                                }} />
+                        </View>
                     </View>
                 </View>
             </View>
@@ -356,6 +411,8 @@ export const QuizQuestionsPage = () => {
                                 style={[
                                     styles.questionNumber,
                                     currentQuestionIndex === index && styles.activeQuestion,
+                                    quizQuestionList[index].answer == quizQuestionList[index].selectedAnswer  && { backgroundColor: '#4BAE4F'},
+                                    quizQuestionList[index].selectedAnswer && quizQuestionList[index].answer != quizQuestionList[index].selectedAnswer  && { backgroundColor: 'red'},
                                 ]}
                                 onPress={() => navigateToQuestion(index)}
                             >
@@ -366,27 +423,58 @@ export const QuizQuestionsPage = () => {
                 </ScrollView>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
                     {currentQuestion && currentQuestion.question && <QuestionComponent
-                        question={currentQuestion.question}
-                        options={currentQuestion.options}
-                        onSelectOption={handleSelectOption} isResult={false}
+                        question={quizQuestionList[currentQuestionIndex].question}
+                        options={quizQuestionList[currentQuestionIndex].options}
+                        selectedAnswer={quizQuestionList[currentQuestionIndex].selectedAnswer}
+                        onSelectOption={handleSelectOption} 
+                        correctAnswer={quizQuestionList[currentQuestionIndex].answer}
+                        isResult={quizType == 'practice'}
                     />
                     }
                 </ScrollView>
-                <View style={styles.nextQuizButton}>
-                    {
-                        currentQuestionIndex != 0 && <Button
-                            label={'Previous'}
-                            className={OutlineButton}
-                            disabled={false}
-                            onPress={navigateToPrevQuestion}
-                        />
+                {
+                    //    quizQuestionList[currentQuestionIndex] && quizQuestionList[currentQuestionIndex].selectedAnswer && quizType == 'practice' && <View style={styles.hintSheetContainer}>
+                    quizQuestionList[currentQuestionIndex] && quizQuestionList[currentQuestionIndex].selectedAnswer && quizType == 'practice' && <View style={styles.hintSheetContainer}>
+                            <View style={styles.hintSheetContainerHeader}>
+                                <View style={styles.hintSheetContainerHeaderLeft}>
+                                    <Text style={styles.hintSheetContainerHeaderLeftText}>
+                                        Explanation
+                                    </Text>
+                                    <View style={styles.aiGeneratedCircle}>
+                                        <Text style={{color: Colors.primary }}>
+                                            AI Generated
+                                        </Text>
+                                    </View>                                
+                                </View>
+                                <TouchableOpacity onPress={() => {setHideHintText(!hideHintText)}} 
+                                style={[styles.hintTextButton, hideHintText && {transform: [{rotate: '90deg'}]} ]}>
+                                    <NewBackButton height={18} width={18} fill={Colors.black_01} />
+                                </TouchableOpacity>
+                            </View>
+                            {hideHintText && 
+                                <View style={styles.hintAnswer}>
+                                    <Text style={styles.hintAnswerText}>{quizQuestionList[currentQuestionIndex].explanation}</Text>
+                                </View>
+                            }
+                    </View>
                     }
-                    <Button
-                        label={currentQuestionIndex === quizQuestionList.length - 1 ? 'Submit' : 'Save & Next'}
-                        className={LoginButton}
-                        disabled={false}
-                        onPress={navigateToNextQuestion}
-                    />
+                <View> 
+                    <View style={styles.nextQuizButton}>
+                        {
+                            currentQuestionIndex != 0 && <Button
+                                label={'Previous'}
+                                className={OutlineButton}
+                                disabled={false}
+                                onPress={navigateToPrevQuestion}
+                            />
+                        }
+                        <Button
+                            label={currentQuestionIndex === quizQuestionList.length - 1 ? 'Submit' : 'Save & Next'}
+                            className={LoginButton}
+                            disabled={false}
+                            onPress={navigateToNextQuestion}
+                        />
+                    </View>
                 </View>
             </View>
 
@@ -424,7 +512,7 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                        <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false) }} />
+                        <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false); } } questions={quizQuestionList} />
                     </View>
                 </View>
             </Modal>

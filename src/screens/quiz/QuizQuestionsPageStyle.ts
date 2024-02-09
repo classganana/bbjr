@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { Colors } from "../../styles/colors";
 
 const styles = StyleSheet.create({
@@ -108,6 +108,10 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary, // Change to your active question color
         color: Colors.white,
     },
+    quizButtonContainer: {
+        minHeight: "15%",
+        maxHeight: "30%",
+    },
     nextQuizButton: {
         flex: 1,
         width: "90%",
@@ -160,7 +164,62 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-
+    },
+    hintSheetContainer : {
+        position: "absolute",
+        width: "100%",
+        bottom: "12%",
+        backgroundColor: Colors.white,
+        alignSelf: 'center',
+    },
+    hintSheetContainerHeader: {
+        paddingVertical: 16,
+        paddingHorizontal: 20,
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+        backgroundColor: "white",
+        shadowColor: Colors.black_03,
+        borderWidth: 0.5,
+        borderBottomColor: "white",
+        ...Platform.select({
+          ios: {
+            shadowColor: 'rgba(0, 0, 0, 0.15)',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 1,
+            shadowRadius: 8,
+          },
+          android: {
+            elevation: 4,
+          },
+        })
+    },
+    hintSheetContainerHeaderLeft: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        // gap: 10
+    },
+    hintSheetContainerHeaderLeftText: {
+        fontSize: 18,
+        fontWeight: '500',
+    },
+    aiGeneratedCircle: {
+        borderColor: "#2947D41A",
+        borderWidth: 1,
+        borderRadius: 25,
+        paddingVertical:5,
+        paddingHorizontal:10, 
+    },
+    hintTextButton: {
+        transform: [{rotate: '-90deg'}]
+    },
+    hintAnswer: {
+        paddingVertical: 16,
+        paddingHorizontal: 20,  
+    },
+    hintAnswerText: {
+        fontSize: 16,
+        color: "#454545"
     },
     closeButton: {
         flexDirection: "row",

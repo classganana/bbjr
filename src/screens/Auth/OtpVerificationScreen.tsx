@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 0,
     borderRadius: 10,
-    backgroundColor: "rgba(0, 107, 127, 0.10)",
+    backgroundColor: "#E9EDFB",
     margin: 5,
     textAlign: 'center',
     fontFamily: 'Inter-Bold',

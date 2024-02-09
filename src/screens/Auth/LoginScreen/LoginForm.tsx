@@ -9,6 +9,7 @@ import {
   Platform,
   StyleSheet,
   ScrollView,
+  TouchableOpacity,
   // ToastAndroid,
 } from "react-native";
 import { LoginScreenStyle } from "./LoginScreenStyle";
@@ -23,6 +24,7 @@ import { httpClient } from "../../../services/HttpServices";
 import { useUser } from "../../../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ToastService } from "../../../services/ToastService";
+import { NewBackButton } from "../../../components/common/SvgComponent/SvgComponent";
 
 
 export const LoginForm = () => {
@@ -35,7 +37,6 @@ export const LoginForm = () => {
   const recaptchaVerifier = useRef(null);
   const { setUser } = useUser();
 
-  // Define a regular expression for a valid phone number pattern.
   const phoneRegex = /^\d{10}$/;
 
   useEffect(() => {
@@ -109,6 +110,7 @@ export const LoginForm = () => {
         index: 0,
         routes: [{ name: 'DashboardNavigator' } as never] // Replace 'Home' with the actual name of your main screen
       });
+      ToastService('Logged in successfully.');
     
     }).catch(() => {
         const obj = {
@@ -125,22 +127,23 @@ export const LoginForm = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
       <View style={{flex: 1}}>
-      {otpScreen &&      
-      <View>
-        <Text style={LoginScreenStyle.loginHeading}>Log in</Text>
-      </View>
+      {otpScreen &&     
+      <TouchableOpacity style={LoginScreenStyle.backButton} onPress={() => setOtpScreen(false)}>
+        <NewBackButton height={20} width={20} fill={"black"} />
+        {/* <Text style={LoginScreenStyle.loginHeading}>Log in</Text> */}
+      </TouchableOpacity>
       }
       {/* <ScrollView contentContainerStyle={{ flex: 1 }}> */}
       <View style={{flex: 1}}>
-      {!otpScreen && <ImageBackground style={[LoginScreenStyle.imageBlock]} source={require("../../../../assets/png/loginbg.png")}>
+      {!otpScreen && <View style={[LoginScreenStyle.imageBlock]}>
         {/* <View> */}
-          <Text style={LoginScreenStyle.loginHeading}>Log in</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-            <Image style={{ height: "70%", width: "70%" }} source={require('../../../../assets/gifs/logingif.gif')} />
+          <Text style={LoginScreenStyle.loginHeading}>Eduzy</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, marginTop: "10%" }}>
+            <Image style={{ height: "70%", width: "50%", resizeMode: 'contain'}} source={require('../../../../assets/png/loginbot.png')} />
           {/* </View> */}
         </View>
-      </ImageBackground> }
-      {otpScreen &&  <View style={{ marginTop: 90, height: 600 }}>
+      </View> }
+      {otpScreen &&  <View style={{ marginTop: "30%", height: 600 }}>
           <OtpVerification phoneNumber={""} otpGiven={(otp: string) => otpGiven(otp)}
             sendOtp={() => sendVerification()} />
         </View>}

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Colors } from '../../styles/colors';
 import { BasicCheck, Cross } from '../common/SvgComponent/SvgComponent';
+import { UtilService } from '../../services/UtilService';
+
 
 type QuestionProps = {
   question: string;
@@ -21,56 +23,94 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   onSelectOption,
 }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [quizType, setQuizType] = useState<string | null>('');
 
   useEffect(() => {
-    console.log(correctAnswer, selectedAnswer)
+    console.log(correctAnswer, selectedAnswer);
+    getQuizType();
   }, [])
+
+  useEffect(() => {
+    console.log(correctAnswer, selectedAnswer);
+    getQuizType();
+  }, [selectedAnswer])
+
+
+  const getQuizType = async () => {
+    const quizType = await UtilService.getQuizType();
+    setQuizType(quizType);
+    console.log(quizType)
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.question}>{question}</Text>
+      {/* <Text style={styles.question}>{selectedAnswer}</Text> */}
       {options.map((option, index) => (
         <TouchableOpacity
           key={index}
           style={[
             styles.optionButton,
             selectedOption === option && styles.selectedOptionButton,
-            correctAnswer === option && styles.correct,
-            (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrong,
+            selectedAnswer == option && styles.selectedOptionButton,
+            selectedAnswer == option && isResult && correctAnswer === option && styles.correct,
+            isResult && (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrong,
           ]}
           onPress={() => {
-            if (!isResult) {
-              onSelectOption(option);
-              setSelectedOption(option);
-            }
+            console.log("Ayush");
+            // if (!isResult) {
+            onSelectOption(option);
+            setSelectedOption(option);
+            // }
           }}
         >
-          <View style={styles.optionButtonContainer}>
-            <View style={[styles.optionMarker, selectedOption === option && styles.optionMarkerSelected,
-            correctAnswer === option && styles.correctCircle, (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrongCircle]}>
-              <Text style={[styles.optionMarkerText, selectedOption === option && styles.selectedOptionMarkerText,
-              correctAnswer === option && { color: Colors.white }, (selectedAnswer === option && selectedAnswer !== correctAnswer) && { color: Colors.white }]}>
-                {String.fromCharCode(65 + index)}
+
+          {!isResult ? <>
+            <View style={styles.optionButtonContainer}>
+              <View style={[styles.optionMarker, selectedAnswer === option && styles.optionMarkerSelected]}>
+                <Text style={[styles.optionMarkerText, selectedAnswer === option && styles.selectedOptionMarkerText]}>
+                  {String.fromCharCode(65 + index)}
+                </Text>
+              </View>
+              <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
+                {option}
               </Text>
             </View>
-            <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
-              {option}
-            </Text>
-          </View>
 
-          <View>
-            {
-              (correctAnswer === option) ?
-                <View style={[styles.correctCircle, { borderRadius: 32, padding: 2 }]}>
-                  <BasicCheck height={'18'} width={'18'} fill={'white'} />
-                </View>
-                : (selectedAnswer === option && selectedAnswer !== correctAnswer) ?
-                  <View style={[styles.wrongCircle, { borderRadius: 32, padding: 0 }]}>
-                    <Cross height={'22'} width={'22'} fill={'white'} />
-                  </View> : <></>
+            <View>
+            </View>
+          </> : <>
+            <View style={styles.optionButtonContainer}>
+              <View style={[styles.optionMarker, selectedOption === option && styles.optionMarkerSelected,
+              selectedAnswer == option && (correctAnswer === option) && styles.correctCircle,
+              (selectedAnswer === option && selectedAnswer !== correctAnswer) && styles.wrongCircle,
 
-            }
-          </View>
+              ]}
+              >
+                <Text style={[styles.optionMarkerText, selectedOption === option && styles.selectedOptionMarkerText,
+                selectedAnswer === option && correctAnswer === option && { color: Colors.white }, (selectedAnswer === option && selectedAnswer !== correctAnswer) && { color: Colors.white }]}>
+                  {String.fromCharCode(65 + index)}
+                </Text>
+              </View>
+              <Text style={[styles.optionText, selectedOption === option && styles.selectedOptionText]}>
+                {option}
+              </Text>
+            </View>
+
+            <View>
+              {
+                (selectedAnswer == option && correctAnswer === option) ?
+                  <View style={[styles.correctCircle, { borderRadius: 32, padding: 2 }]}>
+                    <BasicCheck height={'18'} width={'18'} fill={'white'} />
+                  </View>
+                  : (selectedAnswer === option && selectedAnswer !== correctAnswer) ?
+                    <View style={[styles.wrongCircle, { borderRadius: 32, padding: 0 }]}>
+                      <Cross height={'22'} width={'22'} fill={'white'} />
+                    </View> : <></>
+              }
+            </View>
+
+          </>}
         </TouchableOpacity>
       ))}
     </View>

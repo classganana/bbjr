@@ -19,7 +19,7 @@ export const QuizFirstPage = () => {
     const [quizFlow, setQuizFlow] = useState<string | null>('');
     const [quizType, setQuizType] = useState<string | null>();
     //   const [quizType, setQuizType] = useState<string | null>();
-    const [quizContent, setQuizContent] = useState<any>();
+    const [quizContent, setQuizContent] = useState<any>(null);
     const [chapters, setChapters] = useState();
     const startQuiz = () => {
         navigation.navigate('QuizQuestionPages' as never, quizContent as never);
@@ -27,13 +27,17 @@ export const QuizFirstPage = () => {
 
     const [subject, setSubject] = useState();
 
-    const [currentQuiz, setCurrentQuiz] = useState<any>();
+    const [currentQuiz, setCurrentQuiz] = useState<any>(null);
     const route = useRoute();
     useEffect(() => {
         getQuizFlow();
         getQuizType();
         setCurrentQuiz(() => route.params)
     }, [])
+
+    useEffect(() => {
+        console.log(currentQuiz, quizContent);
+    }, [currentQuiz, quizContent]);
 
     const getQuizFlow = async () => {
         setQuizType(await UtilService.getQuizType())
@@ -62,47 +66,111 @@ export const QuizFirstPage = () => {
         const subject = route.params[0][0].subject;
         setSubject(subject);
         AsyncStorage.setItem('subject', subject);
+        if(quizType != 'quiz') {
+            setupPracticeSession(listOfChapters)
+        } else {
+            const req = {
+                "schoolId": "default",
+                "boardId": user?.board,
+                "subject": subject,
+                "className": user?.class,
+                "studentId": user?.userId,
+                "chapterName": listOfChapters,
+                "dataType": "school",
+                // "size": 1,
+                "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
+            }
 
-        const req = {
-            "schoolId": "default",
-            "boardId": user?.board,
-            "subject": subject,
-            "className": user?.class,
-            "studentId": user?.userId,
-            "chapterName": listOfChapters,
-            "dataType": "school",
-            // "size": 1,
-            "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
+            // adding this so that quiz for all the chapters can be fetched
+            route.params[0][0].allChapter && delete req.chapterName;
+
+            const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
+            const reqObj = {
+                "service": "ml_service",
+                "endpoint": endPoint,
+                "requestMethod": "POST",
+                "requestBody": req
+            }
+            const quizFlows = await UtilService.getQuizFlow();
+            if (quizFlows == 'Quizzes') {
+                delete req.chapterName;
+                delete req.subject;
+            }
+    
+            httpClient.post(`auth/c-auth`, reqObj)
+                .then((res: any) => {
+                    const quiz = {
+                        schoolId: 'default',
+                        chapterName: listOfChapters,
+                        subject: subject,
+                        boardId: user?.board,
+                        className: user?.class,
+                        studentId: user?.userId,
+                        ...res.data.data,
+                    }
+                    setQuizContent(quiz);
+                    if (quizType != 'quiz') maintainQuizInLocal(quiz);
+                })
         }
+    }
 
-
-        const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
-        const reqObj = {
-            "service": "ml_service",
-            "endpoint": endPoint,
-            "requestMethod": "POST",
-            "requestBody": req
-        }
-        const quizFlows = await UtilService.getQuizFlow();
-        if (quizFlows == 'Quizzes') {
-            delete req.chapterName;
-            delete req.subject;
-        }
-
-        httpClient.post(`auth/c-auth`, reqObj)
-            .then((res: any) => {
-                const quiz = {
-                    schoolId: 'default',
-                    chapterName: listOfChapters,
-                    subject: subject,
-                    boardId: user?.board,
-                    className: user?.class,
-                    studentId: user?.userId,
-                    ...res.data.data,
+    const setupPracticeSession = async (listOfChapters: string[]) => {
+        try {
+            const matchingQuizzes = await UtilService.getMatchingQuizzes(listOfChapters);
+            // Assuming setCurrentQuiz expects a value:
+            if(matchingQuizzes && matchingQuizzes.mcqs){
+                setCurrentQuiz(matchingQuizzes);
+                setQuizContent(matchingQuizzes);
+                console.log(currentQuiz, quizContent);
+            } else {
+                // getting content from API
+                console.log("getting practive questions from api");
+                const req = {
+                    "schoolId": "default",
+                    "boardId": user?.board,
+                    "subject": subject,
+                    "className": user?.class,
+                    "studentId": user?.userId,
+                    "chapterName": listOfChapters,
+                    "dataType": "school",
+                    // "size": 1,
+                    "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
                 }
-                setQuizContent(quiz);
-                if (quizType != 'quiz') maintainQuizInLocal(quiz);
-            })
+                
+                const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
+                const reqObj = {
+                    "service": "ml_service",
+                    "endpoint": endPoint,
+                    "requestMethod": "POST",
+                    "requestBody": req
+                }
+                const quizFlows = await UtilService.getQuizFlow();
+                if (quizFlows == 'Quizzes') {
+                    delete req.chapterName;
+                    delete req.subject;
+                }
+
+                route?.params[0][0].allChapter ? delete req.chapterName: ''
+        
+                httpClient.post(`auth/c-auth`, reqObj)
+                    .then((res: any) => {
+                        const quiz = {
+                            schoolId: 'default',
+                            chapterName: listOfChapters,
+                            subject: subject,
+                            boardId: user?.board,
+                            className: user?.class,
+                            studentId: user?.userId,
+                            ...res.data.data,
+                        }
+                        setQuizContent(quiz);
+                        if (quizType != 'quiz') maintainQuizInLocal(quiz);
+                    })
+            }
+          } catch (error) {
+            console.error('Error fetching or setting quizzes:', error);
+            // Handle the error appropriately, e.g., display a user-friendly message.
+          }
     }
 
     const maintainQuizInLocal = async (selectedQuiz: any) => {
@@ -120,7 +188,6 @@ export const QuizFirstPage = () => {
                     arr1.every((value, index) => value === arr2[index])
                 );
             };
-
             // Check if there's a quiz with the same chapterName (arraysEqual).
             const index = quizList.findIndex((quiz: any) => arraysEqual(quiz.chapterName, selectedQuiz.chapterName));
 
@@ -157,8 +224,8 @@ export const QuizFirstPage = () => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.listOfChapters}>
-                        {chapters && chapters?.map((chapter: string) => {
-                            return <Text style={styles.chapterName}>{chapter}</Text>
+                        {chapters && chapters?.map((chapter: string, index: number) => {
+                            return <Text key={index} style={styles.chapterName}>{chapter}</Text>
                         })}
                     </View>
                 </View>}
@@ -184,6 +251,11 @@ export const QuizFirstPage = () => {
                             {chapters}
                         </Text>
                     }
+                    {!chapters ? <ChapterDropdown /> :
+                        <Text style={styles.infoContainerText}>
+                          {route.params[0][0].subject} - All Chapters
+                        </Text>
+                    }
                 </View>
             </View>
             <View style={styles.quizInfo}>
@@ -191,7 +263,7 @@ export const QuizFirstPage = () => {
                 <QuizInformation />
             </View>
             <View style={styles.startQuizButton}>
-                <Button label={"Start Quiz"} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
+                <Button label={"Start " + quizType} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
             </View>
         </View>
     )
@@ -286,6 +358,7 @@ const styles = StyleSheet.create({
         color: Colors.black_01
     },
     quizInfo: {
+        zIndex: -1,
         flex: 1,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,

@@ -13,6 +13,7 @@ export interface CardData {
     selected?: boolean,
     score?: number,
     subject?: string,
+    practiceProgress: number,
     onCardClick?: (selectedOption: number) => void;
 }
 

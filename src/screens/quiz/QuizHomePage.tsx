@@ -10,15 +10,17 @@ import { httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { EditButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { EditButton, LoginButton, TakeTest } from '../../components/common/ButttonComponent/ButtonStyles';
 import { useUser } from '../../context/UserContext';
 import { styles } from './QuizHomePageStyle';
 import { UtilService } from '../../services/UtilService';
+import { ExamPrepAllChapter } from '../../components/quiz/ExamPrepAllChapter';
+import { Image } from 'react-native';
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Quizzes');
     const [data, setData] = useState<CardData[]>([]);
-    const [options, setOptions] = useState(false);
+    const [options, setOptions] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [board, setBoard] = useState("CBSE");
     const [className, setClassName] = useState(10);
@@ -28,52 +30,182 @@ export const QuizHomePage = () => {
     const [loading, setLoading] = useState(true);
     const {user} = useUser();
     const [loadingText, setLoadingText] = useState('');
+    const [subjectUrl, setSubjectUrl] = useState('');
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     const [selectedSubject, setSelectedSubject] = useState<{
         subjectName: string;
     }>({subjectName:"Science"});
 
+    const [allChapterSelected, setAllChapterSelected] = useState(false);
+
     const navigation = useNavigation();
 
-    useEffect(() => {
-        getSubjectFromLocal();
-        setLoading(false);
-    },[])
-
-    useEffect(() => {
-        AsyncStorage.removeItem('quizType');
-        setOptions(false);
-        resetSelection();
-        setMultiSelect(false);
-    }, [tab, searchTerm])
-     
     useEffect(() => {
         setOptions(false);
         resetSelection();
     },[multiSelect])
 
-    const setSubjectToLocal = async () => {
+    useEffect(() => {
+        setData([]);
+        setScreen();
+        UtilService.checkIfCDNHasTheImage(selectedSubject.subjectName).then((item) => {
+            console.log("here is URL => ", selectedSubject.subjectName);
+            setSubjectUrl(item+ "?v="+ Date.now());
+        }).catch((err) => {
+            console.log("here is error => ", err, selectedSubject.subjectName);
+        })
+
+        fetchData();
+        // const s = {
+        //     "schoolId": "default",
+        //     "boardId": user?.board,
+        //     "className": user?.class,
+        //     "studentId": user?.userId,
+        //     "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
+        //     // "subject": "Science"
+        //     "subject": selectedSubject.subjectName
+        // }
+
+        // const reqObj = {
+        //     "service": "ml_service",
+        //     "endpoint": `/explore_quizzes/data`,
+        //     "requestMethod": "POST",
+        //     "requestBody": s
+        // }
+        // httpClient.post(`auth/c-auth`, reqObj)
+        //     .then((res) => {
+        //         let list = res.data.data.quizzes
+        //         if(list && list.map) {
+        //             list = list.map((item: any, index: number) => {
+        //                 return {
+        //                     id: index,
+        //                     title: (tab == 'Quizzes') ? item.name : item.chapterName,
+        //                     infoText: 'Info about Card 1',
+        //                     imageUrl: 'https://placehold.co/400',
+        //                     done: false,
+        //                     noOfQuestions: item.totalQuestions,
+        //                     timeRequired: item.time,
+        //                     selected: false,
+        //                     score: item.score,
+        //                     practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
+        //                 }
+        //             })
+        //             setData(list);
+        //         }
+        //     });
+    },[selectedSubject?.subjectName, tab])
+
+    // useEffect(() => {
+    //     setOptions(false);
+    //     setData([]);
+    //     AsyncStorage.removeItem('quizType');
+    //     fetchData();
+    // }, [tab])
+
+    useEffect(() => {
+        // setAvailableSubject();
+        getSubjectFromLocal();
+        setLoading(false); 
+    }, []);
+
+    const fetchData = async () => {
         try {
-          await AsyncStorage.setItem('chatSubject', selectedSubject.subjectName);
+            // You might want to set loading state here.
+            setLoading(true);
+            setLoadingText("Loading");
+            const currentTab = await AsyncStorage.getItem('quizFlow');
+            const s = {
+                "schoolId": "default",
+                "boardId": user?.board,
+                "className": user?.class,
+                "studentId": user?.userId,
+                "screenPage": (currentTab == 'Quizzes') ? "quizzes" : "examPreparation",
+                // "subject": "Science"
+                "subject": selectedSubject.subjectName
+            }
+
+            const reqObj = {
+                "service": "ml_service",
+                "endpoint": `/explore_quizzes/data`,
+                "requestMethod": "POST",
+                "requestBody": s
+            }
+            
+            const response = await httpClient.post(`auth/c-auth`, reqObj);
+            
+            // Handle successful response
+            let list = response.data.data.quizzes;
+            if(list && list.map) {
+                list = list.map((item: any, index: number) => ({
+                    id: index,
+                    title: (tab === 'Quizzes') ? item.name : item.chapterName,
+                    infoText: 'Info about Card 1',
+                    imageUrl: 'https://placehold.co/400',
+                    done: false,
+                    noOfQuestions: item.totalQuestions,
+                    timeRequired: item.time,
+                    selected: false,
+                    score: item.score,
+                    // subject: "Science"
+                    subject: selectedSubject.subjectName,
+                    practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
+                }));
+                setData(list);
+            }
+        } catch (error) {
+            // Handle errors here. You can display a message to the user.
+            console.error("Error fetching data:", error);
+            setLoadingText("Something Went Wrong");
+        } finally {
+            setLoadingText("Data");
+            // Make sure to unset loading state.
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        setOptions(false);
+        resetSelection();
+    },[multiSelect])
+
+    useEffect(() => {
+        if(allChapterSelected){
+            setOptions(true);
+            resetSelection();
+        } else {
+            setOptions(allChapterSelected);
+        }
+        setSelectedQuiz(() => []);
+    },[allChapterSelected]);
+
+    useEffect(() => {
+        console.log("New Su",subjectUrl)
+    }, [subjectUrl])
+
+
+    const setSubjectToLocal = async (item: {subjectName: string}) => {
+        try {
+          await AsyncStorage.setItem('quizSubject', item.subjectName);
         } catch (e) {
           console.log("Error => ", e);
         }
       }
     
-      const getSubjectFromLocal = async () => {
+    const getSubjectFromLocal = async () => {
         try {
-          const subject = await AsyncStorage.getItem('chatSubject');
-          if (subject) {
-            setSelectedSubject({subjectName : subject});
-          }
+            const subject = await AsyncStorage.getItem('quizSubject');
+            if (subject) {
+                setSelectedSubject({subjectName : subject});
+            }
         } catch (e) {
-          console.log("Error => ", e);
+            console.log("Error => ", e);
         }
-      }
+    }
 
     const resetSelection = () => {
         let tempData = data;
@@ -85,40 +217,61 @@ export const QuizHomePage = () => {
             setData(() => [...tempData]);
         }
         setSelectedQuiz([]);
+        setOptions(false);
     }
 
     const updateList = (index: number) => {
-        setOptions(true);
-        let tempData = data;
-        if(tempData && tempData.length) {
-            tempData  = tempData.map((temp) => {
+
+        setData((prev) => {
+            let tem = prev;
+            tem  = tem.map((temp) => {
                 if (temp.id != (index)) {
                     !multiSelect && (temp.selected = false);
-                }
+                } 
                 return temp;
             });
-    
-            tempData[index].selected = true;
-            tempData[index].subject = selectedSubject.subjectName;
-            setSelectedQuiz(() => [tempData.filter((item) => item.selected)]);
-            setData(() => [...tempData]);
-        }
+            if(tem[index].selected) tem[index].selected = false;
+            else tem[index].selected = true;
+            tem[index].subject = selectedSubject.subjectName;
+            setOptions(true);
+            return tem;
+        })
+        setAllChapterSelected(false)
+        setSelectedQuiz(() => [data.filter((item) => item.selected)]);
+        // setData(() => [...tempData]);
     }
+
+
+    const getSelectedChapters = (data: CardData[]) => {
+        // Filter the array to include only objects where selected is true
+        const selectedChapters = data.filter(item => item.selected);
+      
+        // Map the filtered array to extract the chapter number from the title
+        const chapters = selectedChapters.map(item => {
+          // Extract the chapter number from the title
+          const chapterNumber = parseInt(item?.title?.match(/\d+/)[0]);
+          return { chapterNo: chapterNumber };
+        });
+      
+        return chapters;
+      }
 
     const setSubjectAndCloseModal = (item: any) => {
         setBottomSheetVisible(false);
         setSelectedSubject(item);
-        setSubjectToLocal();
+        setSubjectToLocal(item);
       };
 
-    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
         await AsyncStorage.setItem('quizType', 'quiz');
         UtilService.setQuizType('quiz');
-
-        navigation.navigate('QuizFirstPage' as never, selectedQuiz  as never);
+        if(!allChapterSelected) {
+            navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
+        } else {
+            allChapterNavigate()
+        }
     }
 
     const startThePractice = async () => {
@@ -126,7 +279,11 @@ export const QuizHomePage = () => {
         const item = data.filter((item) => item.selected == true)[0];
         await AsyncStorage.setItem('quizType', 'practice');
         UtilService.setQuizType('practice');
-        navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
+        if(!allChapterSelected) {
+            navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
+        } else {
+            allChapterNavigate()
+        }
     }
 
     const setAvailableSubject = () => {
@@ -149,67 +306,6 @@ export const QuizHomePage = () => {
       
     };
     
-
-    useEffect(() => {
-        setAvailableSubject();
-        const fetchData = async () => {
-            try {
-                // You might want to set loading state here.
-                setLoading(true);
-                setLoadingText("Loading");
-                const s = {
-                    "schoolId": "default",
-                    "boardId": user?.board,
-                    "className": user?.class,
-                    "studentId": user?.userId,
-                    "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-                    // "subject": "Science"
-                    "subject": selectedSubject.subjectName
-                }
-
-                const reqObj = {
-                    "service": "ml_service",
-                    "endpoint": `/explore_quizzes/data`,
-                    "requestMethod": "POST",
-                    "requestBody": s
-                }
-                
-                const response = await httpClient.post(`auth/c-auth`, reqObj);
-                
-                // Handle successful response
-                let list = response.data.data.quizzes;
-                if(list && list.map) {
-                    list = list.map((item: any, index: number) => ({
-                        id: index,
-                        title: (tab === 'Quizzes') ? item.name : item.chapterName,
-                        infoText: 'Info about Card 1',
-                        imageUrl: 'https://placehold.co/400',
-                        done: false,
-                        noOfQuestions: item.totalQuestions,
-                        timeRequired: item.time,
-                        selected: false,
-                        score: item.score,
-                        // subject: "Science"
-                        subject: selectedSubject.subjectName
-                    }));
-                    
-                    setData(list);
-                }
-            } catch (error) {
-                // Handle errors here. You can display a message to the user.
-                console.error("Error fetching data:", error);
-                setLoadingText("Something Went Wrong");
-            } finally {
-                setLoadingText("Data");
-                // Make sure to unset loading state.
-                setLoading(false);
-            }
-        };
-        
-        fetchData();
-        setScreen();
-    }, []);
-
     const setScreen = async () => {
         const screen = await AsyncStorage.getItem('quizFlow');
         if(screen == "Quizzes") {
@@ -219,91 +315,53 @@ export const QuizHomePage = () => {
         }
     }
 
-    useEffect(() => {
-        setData([]);
-        const s = {
-            "schoolId": "default",
-            "boardId": user?.board,
-            "className": user?.class,
-            "studentId": user?.userId,
-            "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-            // "subject": "Science"
-            "subject": selectedSubject.subjectName
-        }
-
-        const reqObj = {
-            "service": "ml_service",
-            "endpoint": `/explore_quizzes/data`,
-            "requestMethod": "POST",
-            "requestBody": s
-        }
-        httpClient.post(`auth/c-auth`, reqObj)
-            .then((res) => {
-                let list = res.data.data.quizzes
-                if(list && list.map) {
-                    list = list.map((item: any, index: number) => {
-                        return {
-                            id: index,
-                            title: (tab == 'Quizzes') ? item.name : item.chapterName,
-                            infoText: 'Info about Card 1',
-                            imageUrl: 'https://placehold.co/400',
-                            done: false,
-                            noOfQuestions: item.totalQuestions,
-                            timeRequired: item.time,
-                            selected: false,
-                            score: item.score
-                        }
-                    })
-                    setData(list);
-                }
-            });
-    },[selectedSubject?.subjectName])
-
-    useEffect(() => {
-        setData([]);
-        const req = {
-            "schoolId": "default",
-            "boardId": user?.board,
-            "className": user?.class,
-            "studentId": user?.userId,
-            "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-            // "subject": "Science"
-            "subject": selectedSubject.subjectName
-        }
-
-        const reqObj = {
-            "service": "ml_service",
-            "endpoint": `/explore_quizzes/data`,
-            "requestMethod": "POST",
-            "requestBody": req
-        }
-
-        httpClient.post(`auth/c-auth`, reqObj)
-            .then((res) => {
-                let list = res.data.data.quizzes
-                if(list && list.map) {
-                    list = list.map((item: any, index: number) => {
-                        return {
-                            id: index,
-                            title: (tab == "Exam Prep") ? item.chapterName: item.name,
-                            infoText: 'Info about Card 1',
-                            imageUrl: 'https://placehold.co/400',
-                            done: false,
-                            noOfQuestions: item.totalQuestions,
-                            timeRequired: item.time,
-                            selected: false,
-                            score: item.score,
-                            quizType: tab
-                        }
-                    })
-                    setData(list);
-                }
-            })
-    }, [tab])
+    const allChapterCardClick = async () => {
+        setAllChapterSelected(prevState => !prevState);
+        // allChapterNavigate();
+    }
 
     const onBack = () => {
         navigation.navigate('DashboardNavigator' as never)
-        console.log("bluuuuuuue");
+    }
+
+    const allChapterNavigate = () => {
+        const a = [[{
+                    subject: selectedSubject.subjectName,
+                    allChapter: true,
+                    title: [""]
+                }]]
+        navigation.navigate('QuizFirstPage' as never, a as never);       
+    }
+
+    const DynamicRenderingSubjectCardorAllChapterCard = () => {
+        // console.log("selectedQuiz");
+        // selectedQuiz && console.log(selectedQuiz[0][0]);
+        console.log("Subject URL", subjectUrl);
+        if(!multiSelect && selectedQuiz &&  selectedQuiz[0] && selectedQuiz[0].length > 0) {
+            const selectedItem = selectedQuiz[0][0]; 
+            return <>
+            {data.map((item, key) => (
+                    item.selected && <ExamPrepQuizCard
+                    key={key}
+                    score={item.score}
+                    {...item}
+                    onCardClick={(i) => {}}/>
+            ))}
+            </> 
+        } else {
+            return ( 
+                <View style={styles.allChapterCard}>
+                    <View style={{height: 180, borderRadius: 10, overflow: 'hidden',}}>
+                        <Image 
+                            source={{ uri: subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400' }} 
+                            resizeMode="cover" 
+                            style={{ height: 200, width: "100%" }} 
+                            />
+                    </View>
+                    <Text style={styles.allChapterCardtext}>{selectedSubject.subjectName} - All Chapters</Text>
+                </View>
+                )
+        }
     }
 
     return (
@@ -331,13 +389,12 @@ export const QuizHomePage = () => {
                 <ScrollView style={styles.tabs}>
                     {tab == "Quizzes" && <>
                     <Text style={styles.selectedOption}>{tab}</Text>
-                    {data.map((item) => (
+                    {data.map((item, key) => (
                             <ExamPrepQuizCard
-                            key={item.id}
+                            practiceProgress={item.practiceProgress} key={key}
                             score={item.score}
                             {...item}
-                            onCardClick={(i) => updateList(i)}
-                            />
+                            onCardClick={(i) => updateList(i)}                            />
                         ))}
                         <>
                             {data && data.length == 0 && <>
@@ -348,10 +405,12 @@ export const QuizHomePage = () => {
                     {tab == 'Exam Preparation' && <>
                         {/* <ExamPrepSubjects subjects={subjects} /> */}
                         <View>
-                            <TouchableOpacity >
+                            {/* <TouchableOpacity >
                                 <Text style={styles.examPreparation}>Exam Preparation</Text>
-                            </TouchableOpacity>
-                            <Text>Selected Subject</Text>
+                            </TouchableOpacity> */}
+                            {/* <Text>Selected Subject</Text> */}
+
+
                             <View style={styles.buttoncontainer}>
                             <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
                                 {selectedSubject?.subjectName}
@@ -359,10 +418,12 @@ export const QuizHomePage = () => {
                             <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
                                 <Text>Change</Text>
                                 <View style={styles.pencil}>
-                                    <Pencil height={'20'} width={'20'} fill={Colors.white} />
+                                    <NewBackButton height={'12'} width={'12'} fill={Colors.white} />
                                 </View>
                             </TouchableOpacity>
                             </View>
+                            <ExamPrepAllChapter selected={allChapterSelected} onCardClick={() => { allChapterCardClick ()}}
+                            id={0} title={'All Chapters'} infoText={''} imageUrl={subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10}}>
                             <Text style={styles.chapterWise}>All Chapter Wise</Text>
@@ -395,15 +456,34 @@ export const QuizHomePage = () => {
                     </>
                     }
                 </ScrollView>
-                {options && <View style={styles.floatingButtonContainer}>
+                {(allChapterSelected || options && getSelectedChapters(data).length > 0) && <View style={styles.floatingButtonContainer}>
+                <DynamicRenderingSubjectCardorAllChapterCard />
+                    <Text>
+                        Which one do you want to explore?
+                    </Text>
+                    <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
+                            <CrossIcon height={18} width={18} fill={Colors.black_01} />
+                    </TouchableOpacity>
+                    {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
+                    {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
+                        {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
+                            return (
+                                <View key={index} style={styles.selectedChapters}>
+                                    <Text key={index}>{item.chapterNo}</Text>
+                                </View>    
+                            )
+                        })}
+                    </View>    
+                    }
                     <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
-                        <TestIcon height={'20'} width={'20'} fill={'black'} />
+                        {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
                         <Text style={styles.floatingButtonText}>Practice</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
+                    <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
+                    {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
                         <ClockIcon height={'20'} width={'20'} fill={'black'} />
                         <Text style={styles.floatingButtonText}>Take a Test</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>}
 
                 <Modal
@@ -416,7 +496,7 @@ export const QuizHomePage = () => {
                         <View style={styles.bottomSheetContainer}>
                             <Text style={styles.subjecttxt}>Subject</Text>
                             <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>
-                                <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} />
+                                <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} subject={selectedSubject.subjectName} />
                             </ScrollView>
                             <View
                                 style={{
@@ -427,7 +507,6 @@ export const QuizHomePage = () => {
                                     paddingHorizontal: 20,
                                     paddingVertical: 20,
                                     width: '100%',
-
                                 }}
 
                             >

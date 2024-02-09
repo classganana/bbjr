@@ -61,14 +61,14 @@ export const MessageContainer: React.FC<MessageContainerProps> = ({ messages, fe
 
                     )}
                     {message.suggestions && message.suggestions.map((suggestion, index) => {
-                      return (<>
+                      return (<View key={index+101}>
                           {showOption && <TouchableOpacity key={index} onPress={() => {
                             optionClicked(suggestion)
                             setShowOption(false)
                             }} style={style.options}>
                             <Text style={style.optionsText} key={index}>{suggestion}</Text>
                           </TouchableOpacity>}
-                      </>
+                      </View>
                       )
                     })}
                   </React.Fragment>

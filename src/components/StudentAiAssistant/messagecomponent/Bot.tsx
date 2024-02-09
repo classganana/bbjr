@@ -44,10 +44,12 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) 
 
   const [copyButtonColor, setCopyButtonColor] = useState("#969696");
   const [likeButtonColor, setLikeButtonColor] = useState("#969696");
+  const [speakerButtonColor, setSpeakerButtonColor] = useState("#969696");
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(text);
-    ToastService("Answer Copied.")
+    // ToastService("Answer Copied.")
+    ToastService("Answer Copied")
   };
 
 
@@ -70,7 +72,7 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) 
   const setLikeButtonDark = () => {
     setLikeButtonColor(Colors.black_01);
     setTimeout(() => {
-      setLikeButtonColor("#969696");
+      setLikeButtonColor(Colors.gray_10);
     }, 1500)
   }
 
@@ -83,7 +85,7 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) 
           <View style={styles.rectangle}>
             <View style={styles.msg}>
               <TouchableOpacity onPress={readTheMessage} style={styles.speaker}>
-                <Speaker height={20} width={20} fill={Colors.black_01} />
+                <Speaker height={20} width={20} fill={speakerButtonColor} />
               </TouchableOpacity>
               <Text style={styles.text}>
                 {stream ? <StreamingText streamDone={() => {streamDone(true)}} text={text} /> :

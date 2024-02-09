@@ -52,8 +52,8 @@ export const BotIntroduction = () => {
                 {
                     basicInfoList.map((item, index) => {
                         return <View key={index} style={BotIntroStyle.listItem}>
-                            <Text style={{color: "#6C6C6C"}}>
                             <View style={BotIntroStyle.bullet}></View>
+                            <Text style={{color: "#6C6C6C"}}>
                                 {item}
                             </Text>
                         </View>
@@ -115,7 +115,8 @@ const BotIntroStyle = StyleSheet.create({
     listItem: {
         flexDirection: 'row',
         alignItems:"flex-start",
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
+        
     },
     bullet: {
         width: 4, // Adjust the size of the bullet point
@@ -124,12 +125,13 @@ const BotIntroStyle = StyleSheet.create({
         backgroundColor: '#6C6C6C', // Adjust the bullet point color
         marginRight: 10, // Adjust the spacing between the bullet and text
         marginBottom: 2,
+        marginTop: 8,
     },
     infoblock: {
         width: "100%",
         paddingHorizontal: 12,
         marginTop: 28,
-        gap: 12
+        gap: 12,
     },
     infoButton: {
         borderRadius: 8,

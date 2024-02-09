@@ -84,8 +84,7 @@ export const QuizHistory = () => {
     }, [tab])
 
     const onBack = () => {
-        navigation.navigate('DashboardNavigator' as never)
-        console.log("bluuuuuuue");
+        navigation.navigate('Setting' as never)
     }
 
     return (

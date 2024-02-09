@@ -134,6 +134,7 @@ export const DashboardStyle = StyleSheet.create({
       color: Colors.primary
     },
     optionsCard: {
+      // background: "linearGradient(180deg, #FFF 0%, #4BAE4F 100%)",
       width: "100%",
       flex: 1,
       display: 'flex',
@@ -203,7 +204,8 @@ export const DashboardStyle = StyleSheet.create({
     botHeading: {
       color: "#000",
       fontWeight: "500",
-      fontSize: 14
+      fontSize: 14,
+      marginBottom: 12,
     },
     botheadingInfo: {
       fontSize: 12
@@ -213,11 +215,10 @@ export const DashboardStyle = StyleSheet.create({
       marginBottom: 12,
       alignSelf: 'center',
       width: '98%',
-      height: 140,
+      minHeight: 140,
       padding: 14,
       backgroundColor: "white",
       shadowColor: Colors.black_03,
-      // borderColor: Colors.white,
       borderWidth: 0.5,
       ...Platform.select({
         ios: {
@@ -234,7 +235,7 @@ export const DashboardStyle = StyleSheet.create({
     },
     botBlockDesc: {
       flex: 10,
-      marginTop: "15%",
+      marginTop: "5%",
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -338,5 +339,10 @@ export const DashboardStyle = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, // Elevation (for Android)
   },
+    promptText: {
+      fontSize: 14,
+      fontWeight: "600",
+      top: 10 
+    }
 
 })

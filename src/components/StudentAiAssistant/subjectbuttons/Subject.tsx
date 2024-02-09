@@ -67,11 +67,12 @@ const ChipComponent: React.FC<ButtonProps> = ({
 
 export interface Props {
   selectedSubject: (item: any) => void;
-  themeColor?: boolean
+  themeColor?: boolean,
+  subject?: string
 }
 
 // change component name from student to subject
-export const Student = ({ selectedSubject, themeColor }: Props) => {
+export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
   const {user} = useUser();
   const [listOfSubjects, setListOfSubjects] = useState<Subject[]>([]);
   const [colorsMappedSubjectList, setColorsMappedSubjectList] = useState<

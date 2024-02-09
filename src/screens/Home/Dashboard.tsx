@@ -15,11 +15,47 @@ import { IconButton } from '../../components/common/IconButtonComponent/IconButt
 import { ContinutPractice } from '../../components/home/components/ContinutPractice'
 import { httpClient } from '../../services/HttpServices'
 import { OutlinePlaneButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
+import { LinearGradient } from 'expo-linear-gradient';
 
+interface mcqType {
+    mcqId: number,
+    question: string,
+    options: Array<string>,
+    answer: string,
+    explanation: string,
+    selectedAnswer?: string
+}
+
+interface quizResponse {
+    quizzes: [string],
+    class: string
+}
 
 export const Dashboard = () => {
     const navigator = useNavigation();
+    const [data, setData] = useState<ExamPrepQuizCardData[]>([]);
     const { user } = useUser();
+    const [noOfQuiz, setNoOfQuiz] = useState(0);
+    const [noOfExamPrep, setNoOfExamPrep] = useState(0);
+    const [promptsForRepeatUser, setPromptsForRepeatUser] = useState<any>(null)
+    const [lastChatQuestion, setLastChatQuestion] = useState("");
+
+    useEffect(() => {
+        AsyncStorage.setItem('user', JSON.stringify(user));
+        getPendingQuiz().then((list) => {
+            if (list && list.length) {
+                list = list.map((item: any, index: number) => {
+                    item.id = index;
+                    item.title = item.chapterName;
+                    item.practiceProgress = getPracticePercentage(item.mcqs)
+                    return item;
+                })
+                setData(list)
+            }
+        })
+        botTextForRepititiveUser();
+    }, [])
+
 
 
     const moveToExploreQuizPage = async () => {
@@ -56,35 +92,66 @@ export const Dashboard = () => {
             "requestMethod": "POST",
             "requestBody": req
         }
+
         httpClient.post(`auth/c-auth`, reqObj)
             .then((res) => {
                 if (res.data.statusCode == 200) {
                     console.log(res.data.data);
+                    const response: quizResponse[] = res.data.data;
+                    response.map((exam: quizResponse) => {
+                        if (exam.class == 'examPreparation') {
+                            setNoOfExamPrep(exam.quizzes.length);
+                        } else {
+                            setNoOfQuiz(exam.quizzes.length);
+                        }
+                        return exam;
+                    })
                 } else {
                     console.log("main", res.data);
                 }
             })
     }
+    const streak = () => { }
 
-    const streak = () => {
-
+    const getPracticePercentage = (mcqIds: mcqType[]) => {
+        let total = 0;
+        mcqIds.forEach((item) => {
+            if (item.selectedAnswer) total++;
+        })
+        return (total / mcqIds.length) * 100;
     }
 
+    const moveToPracticeFlow = async (i: number) => {
+        await AsyncStorage.setItem('quizType', 'practice');
+        const quiz = data[i];
+        navigator.navigate('Quiz' as never, { screen: 'QuizQuestionPages', params: quiz } as never);
+    }
 
-    useEffect(() => {
-        AsyncStorage.setItem('user', JSON.stringify(user));
-        getPendingQuiz().then((list) => {
-            if (list && list.length) {
-                list = list.map((item: any) => {
-                    item.title = (item.screenPage == "examPreparation") ? item.chapterName : item.name;
-                    return item;
-                })
-                setData(list)
-            }
-        })
-    }, [])
+    const botTextForRepititiveUser = async () => {
+        const lastQuestion = await AsyncStorage.getItem('lastChatQuestion')
+        const lastChatSubject = await AsyncStorage.getItem('chatSubject');
+        if (lastQuestion) setLastChatQuestion(lastQuestion);
 
-    const [data, setData] = useState<ExamPrepQuizCardData[]>([]);
+        const RenderLastQuestion = () => {
+            return (<>
+                <Text style={{ display: 'flex' }}>Your last question to Ezy was</Text>
+                <Text style={DashboardStyle.promptText}>{lastQuestion}</Text>
+            </>
+            )
+        }
+
+        const RenderLastSubject = () => {
+
+        }
+
+        const arr = [
+            RenderLastQuestion,
+            "You talked about {chapter name} in" + lastChatSubject + " with Ezy during your last chat."
+        ]
+        setPromptsForRepeatUser(arr[0])
+        return arr;
+    }
+
 
     return (
         <View style={DashboardStyle.container}>
@@ -113,21 +180,22 @@ export const Dashboard = () => {
                             <View style={DashboardStyle.optionHeader}>
                                 <Sprit height={'36'} width={'36'} fill={'red'} />
                                 <View>
-                                    <Text style={DashboardStyle.optionHeaderText}>55</Text>
+                                    {noOfQuiz != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfQuiz}</Text>}
                                     {/* <Text style={DashboardStyle.optionHeaderInfoText}>Quizzes</Text> */}
                                 </View>
                             </View>
-                            <Text style={DashboardStyle.optionCardHeading}>Quiz</Text>
+                            <Text style={DashboardStyle.optionCardHeading}>Quizzes</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
-                                You have played total 55 quizzes last month!
+                                {noOfQuiz == 0 ? "Fortify your knowledge with our quizzes!" :
+                                    "You have played total " + { noOfQuiz } + "quizzes last month!"}
                             </Text>
-                            <IconButton className={OutlinePlaneButton} onPress={function (): void {
-                                moveToExploreQuizPage()
-                            }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
-                                <View style={DashboardStyle.circularDiv}>
-                            <ArrowLeft height={20} width={20} fill={'black'} />
-                            </View>
-                          </View>} label={'Take Quiz'} pos={'right'}></IconButton>
+                            {<View style={{marginLeft: 30}}>
+                                <IconButton className={OutlinePlaneButton} onPress={function (): void {
+                                    moveToExploreQuizPage()
+                                }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
+                                    <ArrowLeft height={20} width={20} fill={'black'} />
+                                </View>} label={'Take Quiz'} pos={'right'}></IconButton>                                
+                            </View>}
                         </View>
                         <View style={DashboardStyle.option}>
                             <View style={DashboardStyle.optionHeader}>
@@ -135,54 +203,59 @@ export const Dashboard = () => {
                                     <Image style={{ height: 25, width: 25, borderRadius: 34, padding: 10 }} source={require("../../../assets/svg/books.png")}></Image>
                                 </View>
                                 <View>
-                                    <Text style={DashboardStyle.optionHeaderText}>18</Text>
+                                    <Text style={DashboardStyle.optionHeaderText}>{noOfExamPrep}</Text>
                                     {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
                                 </View>
                             </View>
                             <Text style={DashboardStyle.optionCardHeading}>Exam Preparation</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
-                                You have played total 55 quizzes last month!
+                                {noOfExamPrep == 0 ? "Reinforce your learning with our chapter wise quizzes!" :
+                                    "Keep Going! You're Doing Great!"}
                             </Text>
-                            
-      
-    
-                            <IconButton className={OutlinePlaneButton} onPress={function (): void {
+                            {<View style={{marginLeft: 30}}><IconButton className={OutlinePlaneButton} onPress={function (): void {
                                 moveToExploreExamPrepPage()
                             }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
-                                <View style={DashboardStyle.circularDiv}>
-                            <ArrowLeft height={20} width={20} fill={'black'} />
-                            </View>
-                          </View>} label={'Exam Prep'} pos={'right'}></IconButton>
-                          
+                                <ArrowLeft height={20} width={20} fill={'black'} />
+                            </View>} label={'Exam Prep'} pos={'right'}></IconButton>
+                            </View>}
                         </View>
                     </View>
                 </View>
-                <Text style={DashboardStyle.solveAnyDoubts}>Solve Any Doubts</Text>
-                <View style={DashboardStyle.botBlock}>
-                    <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat</Text>
-                    <Text style={DashboardStyle.botheadingInfo}>Your Personal Study Assistant 🚀</Text>
+                <LinearGradient
+                    colors={['#E3E8FF', 'rgba(255, 255, 254, 0.27)', '#C8D2FF']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: Math.cos(100 * Math.PI / 180), y: Math.sin(100 * Math.PI / 180) }}
+                    locations={[0.0164, 0.4937, 1]}
+                    style={DashboardStyle.botBlock}>
+                    <View style={{ width: "80%" }}>
+                        {!lastChatQuestion.length && <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat</Text>}
+                        {!lastChatQuestion.length && <Text style={DashboardStyle.botheadingInfo}>
+                            Introducing to you - {"\n"}
+                            Ezy Your Personal Study Buddy 🚀 
+                        </Text>}
+                    </View>
+                        {lastChatQuestion && lastChatQuestion.length && <View style={{ width: "80%" }}>
+                        <Text>
+                            {promptsForRepeatUser}
+                        </Text>
+                    </View>}
                     <View style={DashboardStyle.botBlockDesc}>
-                        <Text>Chat With Ezy...</Text>
-                        <View style={{flex: 1}}>
+                         <Text>Chat With Ezy...</Text>
+                        <View style={{ flex: 1 }}>
                             <IconButton className={PrimaryIconDefaultButton}
-                                onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={'Get Started'} pos={'right'} backgroundColor={Colors.primary} />
+                                onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={lastChatQuestion.length ? "Let's Continue " : 'Get Started'} pos={'right'} backgroundColor={Colors.primary} />
                         </View>
                     </View>
-                        <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
-                </View>
+                    <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
+                </LinearGradient>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
                 {data && data.length > 0 ? <View>
                     <View style={DashboardStyle.continuePractice}>
                         <Text>Continue practice </Text>
-                        <TouchableOpacity>
-                            <Text style={DashboardStyle.explore}>
-                                Explore
-                            </Text>
-                        </TouchableOpacity>
                     </View>
                     <View style={DashboardStyle.pendingQuizzesList}>
                         {data && data.map((item, index) => (
-                            <ExamPrepQuizCard key={index} {...item} onCardClick={(i) => { console.log(i) }} />
+                            <ExamPrepQuizCard key={index} {...item} onCardClick={(i) => { moveToPracticeFlow(i) }} />
                         ))}
                     </View>
                 </View>

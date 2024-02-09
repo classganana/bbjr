@@ -7,6 +7,7 @@ import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useNavigation } from '@react-navigation/native';
+import QuestionReviewComponent from '../../components/quiz/QuestionReviewComponent';
 
 type Question = {
     question: string;
@@ -112,7 +113,7 @@ export const QuizQuestionAnswerReview = () => {
                 </ScrollView>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
                 {currentQuestion && (
-                    <QuestionComponent
+                    <QuestionReviewComponent
                         isResult={true}
                         question={currentQuestion.question}
                         options={currentQuestion.options}

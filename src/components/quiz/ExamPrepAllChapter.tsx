@@ -20,15 +20,15 @@ export interface ExamPrepQuizCardData {
 }
 
 
-export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id,practiceProgress ,title, infoText, score, imageUrl, done, noOfQuestions, timeRequired, selected, multiSelect ,onCardClick }) => (
+export const ExamPrepAllChapter: React.FC<ExamPrepQuizCardData> = ({ id,practiceProgress ,title, infoText, score, imageUrl, done, noOfQuestions, timeRequired, selected, multiSelect ,onCardClick }) => (
     <TouchableWithoutFeedback onPress={() => onCardClick && onCardClick(id)}>
         <View style={[styles.card,
         done && { backgroundColor: 'rgba(0, 107, 127, 0.08)' },
         selected && multiSelect && styles.multiSelected,
         selected && styles.selected]}>
-            {/* <View style={styles.imageContainer}>
-                <Image source={{ uri: imageUrl }} style={styles.image} />
-            </View> */}
+            <View style={styles.imageContainer}>
+                <Image source={{ uri: imageUrl }} resizeMode="contain" height={64} width={64} style={styles.image} />
+            </View>
             <View style={styles.textContainer}>
                 <View>
                     <Text style={styles.infoText}>{title}</Text>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         flex: 1,
-        gap: 18,
+        gap: 4,
         width: "100%"
     },
     title: {

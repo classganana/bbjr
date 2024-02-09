@@ -68,7 +68,7 @@ export const QuizResult = () => {
             setUserRankScore(list.find((item) =>  item.studentId == user?.userId)); 
             console.log(userRankScore)
         }).catch((err) => {
-            console.log("error while creating pending account",err);
+            console.log("error ",err);
         })
     }
 
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: "90%",
         position: 'relative',
-        backgroundColor: '#006B7F8F',
+        backgroundColor: Colors.primary,
         transform: [{ rotate: '3deg' }],
         height: 54,
         borderRadius: 20
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
         padding: 24,
         justifyContent: 'center',
         borderRadius: 12,
-        backgroundColor: '#F2F7F8',
+        backgroundColor: Colors.secondary,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: 'center',
         // borderRadius: 12,
-        backgroundColor: '#F2F7F8',
+        backgroundColor: Colors.secondary,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,

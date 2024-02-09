@@ -16,9 +16,10 @@ export const styles = StyleSheet.create({
     container: {
         margin: 0,
         flex: 1,
-        backgroundColor: Colors.white_01,
+        backgroundColor: Colors.white,
     },
     header: {
+        backgroundColor: Colors.white,
         paddingHorizontal: 24,
         paddingVertical: 20,
         height: 70,
@@ -73,15 +74,20 @@ export const styles = StyleSheet.create({
         color: Colors.black_03
     },
     floatingButtonContainer: {
+        paddingTop: 40,
+        paddingBottom: 10,
         position: 'absolute',
-        height: 46,
-        width: "80%",
-        bottom: 24,
+        // height: 46,
+        paddingHorizontal: 32,
+        gap: 14,
+        width: "100%",
+        bottom: 0,
         alignSelf: 'center',
         borderRadius: 25,
         borderWidth: 0.5,
         borderColor: '#B1B1B1',
-        backgroundColor: '#FFF',
+        boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.25)",
+        backgroundColor: "#FFF",
         shadowColor: 'rgba(0, 0, 0, 0.15)',
         shadowOffset: {
             width: 0,
@@ -90,10 +96,32 @@ export const styles = StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 8,
         elevation: 1,
-        flexDirection: 'row',
+        // flexDirection: 'row',
         overflow: 'hidden'
     },
+    selectedChapterContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 8,
+    },
+    selectedChapters: {
+        minWidth: 28,
+        maxWidth: 50,
+        fontSize: 14,
+        fontWeight: '600',
+        paddingVertical: 4,
+        paddingHorizontal: 10,
+        backgroundColor: "#2947D41C",      
+    },
+    crossfloatingButton: {
+        position: "absolute",
+        right: 20,
+        top: 4,
+        width: 30,
+        padding: 8,
+    },
     floatingButton: {
+        padding: 8,
         flex: 1,
         borderWidth: 1 / 4,
         borderColor: "#C5C5C5",
@@ -136,8 +164,8 @@ export const styles = StyleSheet.create({
         textAlign:'center',
         borderRadius: 25,
         borderWidth: 0.5,
-        borderColor: '#006B7F',
-        backgroundColor: '#DFEEEF',
+        borderColor: '#DFE4FF',
+        backgroundColor: Colors.primary,
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
@@ -146,37 +174,56 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 4, // This property adds shadow on Android
-
+        color: Colors.white,
     },
     changebutton:{ 
-        borderRadius: 25, 
-        backgroundColor: 'rgba(0, 107, 127, 0.08)',
+        borderRadius: 10, 
+        backgroundColor: '#F0F2FC',
          width: '40%', 
-         justifyContent: 'center', 
+        //  justifyContent: 'center', 
          alignItems: 'center', 
          flexDirection: 'row', 
-         position: 'relative' 
+         justifyContent: 'space-around',
+        //  position: 'relative' 
         },
         pencil:{ 
-            width: 26.35, 
-            height: 26.35, 
-            borderRadius: 26.35, 
-            backgroundColor: Colors.primary, 
+            // borderRadius: 26.35, 
+            // backgroundColor: Colors.primary, 
             alignItems: 'center', 
-            position: 'absolute', 
-            right: 0, 
+            // position: 'absolute', 
+            // right: 5, 
+            transform: [{ rotate: '270deg' }]
         },
         buttoncontainer:{
             flexDirection:'row',
             justifyContent:'space-between',
-            paddingHorizontal:20,
+            paddingHorizontal:10,
             paddingVertical:20,
         },
         chapterWise: {
             fontSize: 16,
             fontWeight: '600'
         },
-        select: {
-            
+        allChapterCard: {
+            paddingTop: 10,
+            paddingHorizontal: 15,
+            height: 300, 
+            borderRadius: 30, 
+            overflow: 'hidden',
+            backgroundColor: Colors.white,
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 1,
+            shadowRadius: 4,
+            elevation: 1,
+        },
+        allChapterCardtext: {
+            marginTop: "5%",
+            fontSize: 16,
+            fontWeight: '500',
+
         }
 });
