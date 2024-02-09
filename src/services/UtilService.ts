@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CDN } from "./HttpServices";
 
 export const UtilService = {
     setQuizFlow: async (flow: string) => {
@@ -72,5 +73,17 @@ export const UtilService = {
         } catch(err){
             console.log(err)
         }
-      }
+      },
+      checkIfCDNHasTheImage: async (subjectName: string) => {
+        // Extract the first part of the subject name before the hyphen
+        const firstPart = subjectName.split('-')[0].trim();
+        
+        // Convert the first part to uppercase and replace spaces with underscores
+        const formattedPart = firstPart.toUpperCase().replace(/\s+/g, '_');
+        
+        const cdnUrl = CDN;
+        const imageName = `${formattedPart}.png`;
+        const imageUrl = `${cdnUrl}${imageName}`;
+        return imageUrl;
+    }        
 };

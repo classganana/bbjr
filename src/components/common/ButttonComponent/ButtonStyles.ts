@@ -128,8 +128,8 @@ export const PrimaryIconDefaultButton = StyleSheet.create<Style>({
 export const TryAgain = StyleSheet.create<Style>({
   container: {
     height: 50,
-    // flex: 1,
-    width: "90%",
+    flex: 1,
+    width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -155,6 +155,27 @@ export const LoginButton = StyleSheet.create<Style>({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
+    borderRadius: 8,
+    // padding: 24,
+    // paddingVertical: 22
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "600",
+    fontSize: 16,
+    fontFamily: "Inter-Regular",
+  },
+});
+
+export const TakeTest = StyleSheet.create<Style>({
+  container: {
+    // height: 56,
+    flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#2F50EB",
     borderRadius: 8,
     // padding: 24,
     // paddingVertical: 22
@@ -218,11 +239,11 @@ export const ShowAnswer = StyleSheet.create<Style>({
     justifyContent: "center",
     borderRadius: 5,
     borderWidth: 1/4,
-    borderColor: "rgba(0, 107, 127, 0.50)",
+    borderColor: Colors.primary,
     backgroundColor: Colors.white,
   },
   title: {
-    color: 'rgba(0, 107, 127, 0.80)',
+    color: Colors.primary,
     fontWeight: "600",
     fontSize: 18,
     fontFamily: "Inter-Regular",

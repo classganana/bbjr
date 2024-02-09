@@ -234,11 +234,11 @@ export const Dashboard = () => {
                             Ezy Your Personal Study Buddy 🚀 
                         </Text>}
                     </View>
-                    <View style={{ width: "80%" }}>
+                        {lastChatQuestion && lastChatQuestion.length && <View style={{ width: "80%" }}>
                         <Text>
                             {promptsForRepeatUser}
                         </Text>
-                    </View>
+                    </View>}
                     <View style={DashboardStyle.botBlockDesc}>
                          <Text>Chat With Ezy...</Text>
                         <View style={{ flex: 1 }}>

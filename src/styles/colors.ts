@@ -63,7 +63,8 @@ export const Colors = {
   shadow_color: "rgba(0, 0, 0, 0.10)",
   progressBar: "#E0DFF1" ,
   lemon_yellow: "#FFF7E3",
-  bot_message_bg : "#F1F3FF"
+  bot_message_bg : "#F1F3FF",
+  secondary: "#F0F2FC"
 };
 
 export const SubjectColors = [

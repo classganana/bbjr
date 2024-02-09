@@ -5,6 +5,7 @@ const BASE_URL_STAGE = process.env.REACT_APP_STAGING_API_ENDPOINT;
 const BASE_URL_PROD = process.env.REACT_APP_PRODUCTION_API_ENDPOINT;
 const BASE_URL_LOCAL = process.env.REACT_APP_LOCAL_API_ENDPOINT;
 const AUTH_API = "http://3.108.255.68:3000";
+export const CDN = "https://d1n3r5qejwo9yi.cloudfront.net/subject/";
 
 let BASE_URL = BASE_URL_STAGE;
 

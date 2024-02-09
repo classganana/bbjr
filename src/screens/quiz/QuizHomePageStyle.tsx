@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
         color: Colors.black_03
     },
     floatingButtonContainer: {
-        paddingTop: 20,
+        paddingTop: 40,
         paddingBottom: 10,
         position: 'absolute',
         // height: 46,
@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
     },
     selectedChapters: {
         minWidth: 28,
-        maxWidth: 30,
+        maxWidth: 50,
         fontSize: 14,
         fontWeight: '600',
         paddingVertical: 4,
@@ -116,7 +116,7 @@ export const styles = StyleSheet.create({
     crossfloatingButton: {
         position: "absolute",
         right: 20,
-        top: 15,
+        top: 4,
         width: 30,
         padding: 8,
     },
@@ -204,7 +204,26 @@ export const styles = StyleSheet.create({
             fontSize: 16,
             fontWeight: '600'
         },
-        select: {
-            
+        allChapterCard: {
+            paddingTop: 10,
+            paddingHorizontal: 15,
+            height: 300, 
+            borderRadius: 30, 
+            overflow: 'hidden',
+            backgroundColor: Colors.white,
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 1,
+            shadowRadius: 4,
+            elevation: 1,
+        },
+        allChapterCardtext: {
+            marginTop: "5%",
+            fontSize: 16,
+            fontWeight: '500',
+
         }
 });

@@ -80,7 +80,10 @@ export const QuizFirstPage = () => {
                 // "size": 1,
                 "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
             }
-    
+
+            // adding this so that quiz for all the chapters can be fetched
+            route.params[0][0].allChapter && delete req.chapterName;
+
             const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
             const reqObj = {
                 "service": "ml_service",
@@ -133,7 +136,7 @@ export const QuizFirstPage = () => {
                     // "size": 1,
                     "size": quizType == 'quiz' ? listOfChapters.length * 10 : 50,
                 }
-        
+                
                 const endPoint = quizType == 'quiz' ? '/data/quizz' : '/data/mcq';
                 const reqObj = {
                     "service": "ml_service",
@@ -146,6 +149,8 @@ export const QuizFirstPage = () => {
                     delete req.chapterName;
                     delete req.subject;
                 }
+
+                route?.params[0][0].allChapter ? delete req.chapterName: ''
         
                 httpClient.post(`auth/c-auth`, reqObj)
                     .then((res: any) => {
@@ -246,6 +251,11 @@ export const QuizFirstPage = () => {
                             {chapters}
                         </Text>
                     }
+                    {!chapters ? <ChapterDropdown /> :
+                        <Text style={styles.infoContainerText}>
+                          {route.params[0][0].subject} - All Chapters
+                        </Text>
+                    }
                 </View>
             </View>
             <View style={styles.quizInfo}>
@@ -253,7 +263,7 @@ export const QuizFirstPage = () => {
                 <QuizInformation />
             </View>
             <View style={styles.startQuizButton}>
-                <Button label={"Start Quiz"} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
+                <Button label={"Start " + quizType} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
             </View>
         </View>
     )

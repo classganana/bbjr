@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../../styles/colors';
 import { ArrowIcon, ArrowLeft, FirstCorousel } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { CancelButton, LoginButton, OutlineButton, TryAgain } from '../../components/common/ButttonComponent/ButtonStyles';
+import { CancelButton, LoginButton, OutlineButton, PrimaryDefaultButton, TryAgain } from '../../components/common/ButttonComponent/ButtonStyles';
 import { useNavigation } from '@react-navigation/native';
 
 export const Onboard = () => {
@@ -47,15 +47,17 @@ export const Onboard = () => {
                 {i < 2 && <><TouchableOpacity onPress={next} style={styles.next}>
                     <ArrowLeft height={24} width={24} fill={'white'} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={next}>
+                <TouchableOpacity onPress={function (): void {
+                        navigation.navigate('Auth' as never);
+                    } }>
                         <Text style={styles.skip}>Skip</Text>
                     </TouchableOpacity></>}
-                { i == 2 && <>
+                { i == 2 && <View style={{width: "80%"}}>
                     <Button label={"Let's Start"} disabled={false} onPress={function (): void {
                         navigation.navigate('Auth' as never);
-                    } } className={TryAgain} />
+                    } } className={PrimaryDefaultButton} />
                     {/* <Button label={"I ALREADY HAVE AN ACCOUNT"} disabled={false} onPress={function (): void {} } className={CancelButton} /> */}
-                </>}    
+                </View>}    
             </View>
         </View>
     );

@@ -110,6 +110,7 @@ export const LoginForm = () => {
         index: 0,
         routes: [{ name: 'DashboardNavigator' } as never] // Replace 'Home' with the actual name of your main screen
       });
+      ToastService('Logged in successfully.');
     
     }).catch(() => {
         const obj = {

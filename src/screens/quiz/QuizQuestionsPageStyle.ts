@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 10
+        // gap: 10
     },
     hintSheetContainerHeaderLeftText: {
         fontSize: 18,

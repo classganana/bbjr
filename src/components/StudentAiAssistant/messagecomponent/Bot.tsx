@@ -48,7 +48,8 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) 
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(text);
-    ToastService("Answer Copied.")
+    // ToastService("Answer Copied.")
+    ToastService("Answer Copied")
   };
 
 

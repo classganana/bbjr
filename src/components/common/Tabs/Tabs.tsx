@@ -33,7 +33,7 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, tabs, onChangeTab }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#F0F2FC",
+    backgroundColor: Colors.secondary,
     padding: 6,
     borderRadius: 10
     // backgroundColor: "#f2f2f2",
