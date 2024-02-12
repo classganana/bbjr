@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, Text, Touchable, TouchableOpacity, View } from 'react-native'
 import Tabs from '../common/Tabs/Tabs'
 import { QuizOverviewQuestions } from './QuizOverviewQuestions'
@@ -8,22 +8,46 @@ import { Answers } from '../../screens/quiz/QuizQuestionsPage'
 import { StyleSheet } from 'react-native'
 import { Colors } from '../../styles/colors'
 import { CrossIcon } from '../common/SvgComponent/SvgComponent'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type Props = {
     time: string,
     questions: Answers,
-    onCloseSheet: () => void
+    onCloseSheet: () => void,
+    chapterNames: string[]
 }
 
-export const QuizOverView = ({onCloseSheet, time, questions}: Props) => {
+export const QuizOverView = ({onCloseSheet, time, questions, chapterNames}: Props) => {
   const tabs: string[]= ['Overview', 'Instructions']  
   const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  const [quizType, setQuizType] = useState<string | null>('');
+
+  const getQuizType = async () => {
+    setQuizType(await AsyncStorage.getItem('quizType'));
+  }
+
+  useEffect(() => {
+    getQuizType();
+  },[])
 
   return (
     <ScrollView style={style.container}>
         <View style={style.header}>
-            <Text>Practice : English Vocabulary Quiz </Text>
-            <Text>Time Left: {time}</Text>
+            <View><Text>Practice : </Text>
+            {chapterNames.map((chapterName: string, index: number) => {
+                // Check if it's the last chapterName
+                const isLast = index === chapterNames.length - 1;
+                // If it's not the last one, render the comma after the chapterName
+                return (
+                    <React.Fragment key={index}>
+                        <Text>{chapterName}</Text>
+                        {!isLast && <Text>, </Text>}
+                    </React.Fragment>
+                );
+            })}</View>
+
+            {quizType != 'practice' && <Text>Time Left: {time}</Text>}
             <TouchableOpacity style={style.closeIcon} onPress={() => { onCloseSheet() }}>
                 <CrossIcon height={18} width={18} fill={Colors.black_01} />
             </TouchableOpacity>

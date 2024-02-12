@@ -33,10 +33,11 @@ export const QuizFirstPage = () => {
         getQuizFlow();
         getQuizType();
         setCurrentQuiz(() => route.params)
+        console.log(route.params)
     }, [])
 
     useEffect(() => {
-        console.log(currentQuiz, quizContent);
+        console.debug(currentQuiz, quizContent);
     }, [currentQuiz, quizContent]);
 
     const getQuizFlow = async () => {
@@ -213,7 +214,7 @@ export const QuizFirstPage = () => {
                     {chapters}
                 </Text>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setShow(!show)} >
-                    <Text>view more</Text>
+                    <Text>View more</Text>
                     <DownArrow height={'20'} width={'20'} fill={Colors.black_01} />
                 </TouchableOpacity>
                 {show && <View style={styles.dropdownContainer}>
@@ -240,7 +241,8 @@ export const QuizFirstPage = () => {
                     <TouchableOpacity onPress={onBack} style={styles.backButton}>
                         <ArrowLeft height={'25'} width={'25'} fill={'black'} />
                     </TouchableOpacity>
-                    <Text style={styles.headingTitle}>{quizType} Details</Text>
+                    <Text style={styles.headingTitle}>
+                        {quizType} Details</Text>
                 </View>
                 <View style={styles.infoContainer}>
                     <Text style={styles.infoContainerTitle}>
@@ -251,7 +253,7 @@ export const QuizFirstPage = () => {
                             {chapters}
                         </Text>
                     }
-                    {!chapters ? <ChapterDropdown /> :
+                    {!!route?.params[0][0].allChapter &&
                         <Text style={styles.infoContainerText}>
                           {route.params[0][0].subject} - All Chapters
                         </Text>

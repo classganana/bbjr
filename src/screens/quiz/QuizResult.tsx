@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BackHandler, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ArrowLeft, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, NewBackButton, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { ShowAnswer, TryAgain} from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -23,7 +23,7 @@ export const QuizResult = () => {
     const { user } = useUser();
     const props: any = {};
     const imageRef = useRef();
-    const [retryData, setRetryData] = useState({});
+    const [retryData, setRetryData] = useState();
     const [result, setResult] = useState([
         {
             label: "Total Score",
@@ -88,7 +88,10 @@ export const QuizResult = () => {
 
     async function getData() {
         try {
-            setRetryData(route?.params?.retryData)
+            let r: any = route.params;
+            if(r) r.time = r.quizQuestionList.length * 15;
+            setRetryData(r);
+
             const data = JSON.parse((await AsyncStorage.getItem('questions')) as string); 
             const UserAnswerList = data && (data.quizQuestionList) ? data.quizQuestionList : []
             const score = calculateScore(UserAnswerList);
@@ -113,6 +116,7 @@ export const QuizResult = () => {
     }
 
     function retryQuiz() {
+        console.log(retryData);
         navigator.navigate('QuizQuestionPages' as never, retryData as never)
     }
 
@@ -149,7 +153,10 @@ export const QuizResult = () => {
       };
 
       const onBack = () => {
-        navigator.navigate('Quiz' as never)
+        navigator.reset({
+            index: 0,
+            routes: [{ name: 'QuizHomepage' } as never] // Replace 'Home' with the actual name of your main screen
+          });
       }
 
     return (
@@ -157,7 +164,7 @@ export const QuizResult = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
-                        <ArrowLeft height={'30'} width={'30'} fill={'white'}></ArrowLeft>
+                        <NewBackButton height={'30'} width={'30'} fill={'white'} />
                     </TouchableOpacity>
                     <Text style={styles.title}>Test Score</Text>
                     <TouchableOpacity onPress={onSaveImageAsync} style={[styles.shareButton, { position: "absolute", right: 10 }]}>
@@ -212,7 +219,7 @@ export const QuizResult = () => {
             </View>
             <View style={styles.buttonSection}>
                 <Button label={"View Solutions"} className={ShowAnswer} disabled={false} onPress={showAnswersScreen} />
-                <Button label={"Play Again"} className={TryAgain} disabled={false} onPress={retryQuiz} />
+                <Button label={"Try Again"} className={TryAgain} disabled={false} onPress={retryQuiz} />
             </View>
             </ScrollView>
         </View>
@@ -247,7 +254,7 @@ const styles = StyleSheet.create({
         height: 45,
         width: 45,
         borderRadius: 45,
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.white,
         justifyContent: 'center',
         alignItems: 'center',
     },

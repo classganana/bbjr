@@ -114,7 +114,7 @@ const OtpVerification = (props: Props) => {
         </View>
       </KeyboardAvoidingView>
       <TouchableOpacity style={styles.button}>
-        {isResendOTPEnabled && <Text>Resend otp in {formatTime(timer)}</Text>}
+        {isResendOTPEnabled && <Text>Resend OTP in {formatTime(timer)}</Text>}
         {!isResendOTPEnabled && <Button
           onPress={() => props.sendOtp()}
           label="Resend OTP"

@@ -96,11 +96,11 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         borderRadius: 15,
-        backgroundColor: '#D4D4D4',
+        backgroundColor: 'rgba(41, 71, 212, 0.1)',
         marginHorizontal: 5,
     },
     questionNumberText: {
-        color: Colors.white,
+        color: Colors.black_01,
         fontSize: 16,
         fontWeight: '700',
     },
@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'center',
         paddingHorizontal: 16,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        gap: 10
     },
     body: {
         flex: 1,

@@ -192,7 +192,7 @@ export const TakeTest = StyleSheet.create<Style>({
 export const SmallOutlineButton = StyleSheet.create<Style>({
   container: {
     // height: 22,
-    // flex: 1,
+    flex: 1,
     // width: "100%",
     display: "flex",
     alignItems: "center",
@@ -204,8 +204,8 @@ export const SmallOutlineButton = StyleSheet.create<Style>({
   },
   title: {
     color: Colors.primary,
-    fontWeight: "500",
-    fontSize: 10,
+    fontWeight: "400",
+    fontSize: 14,
     fontFamily: "Inter-Regular",
   },
 });

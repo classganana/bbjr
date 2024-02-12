@@ -114,50 +114,58 @@ const EditProfile = () => {
                         {/* </View> */}
                     </View>
 
-                    <Text style={styles.label}>Name</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Student Name"
-                        editable={isEditMode}
-                        value={name}
-                        onChangeText={text => {
-                            setName(() => text);
-                            // checkFields();
-                        }}
-                    />
 
-                    <Text style={styles.label}>Phone Number</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Phone number"
-                        value={phoneNumber}
-                        editable={isEditMode}
-                        onChangeText={text => {
-                            setPhoneNumber(text);
-                            // checkFields();
-                        }}
-                    />
-
-                    <Text style={styles.label}>Class</Text>
-                    <View style={styles.picker}>
-                    <Picker
-                            enabled={isEditMode}
-                            selectedValue={classValue.toString()}
-                            onValueChange={(itemValue) => {
-                                setClassValue(parseInt(itemValue));
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Student Name"
+                            editable={isEditMode}
+                            value={name}
+                            onChangeText={text => {
+                                setName(() => text);
                                 // checkFields();
                             }}
-                        >
-                            <Picker.Item label="5" value="5"/>
-                            <Picker.Item label="6" value="6"/>
-                            <Picker.Item label="7" value="7"/>
-                            <Picker.Item label="8" value="8"/>
-                            <Picker.Item label="9" value="9"/>
-                            <Picker.Item label="10" value="10"/>
-                            <Picker.Item label="11" value="11"/>
-                            <Picker.Item label="12" value="12"/>
-                        </Picker>
+                        />
                     </View>
+
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Phone Number</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Phone number"
+                            value={phoneNumber}
+                            editable={isEditMode}
+                            onChangeText={text => {
+                                setPhoneNumber(text);
+                                // checkFields();
+                            }}
+                        />
+                    </View>
+
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Class</Text>
+                        <View style={styles.picker}>
+                        <Picker 
+                                enabled={isEditMode}
+                                selectedValue={classValue.toString()}
+                                onValueChange={(itemValue) => {
+                                    setClassValue(parseInt(itemValue));
+                                    // checkFields();
+                                }}
+                            >
+                                <Picker.Item style={styles.pickerItem} label="5" value="5"/>
+                                <Picker.Item style={styles.pickerItem} label="6" value="6"/>
+                                <Picker.Item label="7" value="7"/>
+                                <Picker.Item label="8" value="8"/>
+                                <Picker.Item label="9" value="9"/>
+                                <Picker.Item label="10" value="10"/>
+                                <Picker.Item label="11" value="11"/>
+                                <Picker.Item label="12" value="12"/>
+                            </Picker>
+                        </View>
+                    </View>
+
                     <Text style={styles.label}>School/College</Text>
                     <TextInput
                         style={styles.input}
@@ -181,11 +189,11 @@ const EditProfile = () => {
                             }}
                         >
                             <Picker.Item label="Select Board" value=""/>
-                            {/* <Picker.Item label="ICSE" value="ICSE" /> */}
                             <Picker.Item label="CBSE" value="CBSE" />
-                            {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
                         </Picker>
                     </View>
+                            {/* <Picker.Item label="ICSE" value="ICSE" /> */}
+                            {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
                     <Text style={styles.label}>Guardian’s Name</Text>
                     <TextInput
                         style={styles.input}
@@ -283,23 +291,31 @@ const styles = StyleSheet.create({
         bottom: 0,
         right: 0
     },
+    inputBlocks: {
+        paddingVertical: 0,
+    },
     label: {
         fontSize: 16,
         fontWeight: '400',
     },
     input: {
-        borderBottomWidth: 2,
+        padding: 0,
+        borderBottomWidth: 1,
         borderColor: Colors.primary,
-        height: 50, // Set the height as needed
-        marginBottom: 10,
+        // height: 35, // Set the height as needed
+        // marginBottom: 10,
     },
     picker: {
         zIndex: 100,
-        borderBottomWidth: 2,
+        borderBottomWidth: 1,
         borderColor: Colors.primary,
-        backgroundColor: "#FFF",
+        // backgroundColor: "#FFF",
         height: 40, // Set the height as needed
-        marginBottom: 10,
+        // marginBottom: 0,
+        margin: 0,
+        top: -15,
+        width: "100%",
+        padding: 0
     },
     btn: {
         display: 'flex',
@@ -314,6 +330,13 @@ const styles = StyleSheet.create({
         margin: 50,
         justifyContent: 'center',
         alignSelf: 'center',
-    }
+    },
+    pickerItem: {
+        paddingVertical: 0, // Remove vertical padding
+        paddingHorizontal: 0, // Remove horizontal padding
+        margin: 0, // Remove margin
+        padding: 0
+    },
+
 });
 export default EditProfile;

@@ -1,7 +1,6 @@
 import React, { SetStateAction, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, CrossIcon, InfoIcon, NewBackButton, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import quizQuestions from '../../utils/responses/quizquestions';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
@@ -15,7 +14,6 @@ import { QuizOverView } from '../../components/quiz/QuizOverView';
 import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
 import { UtilService } from '../../services/UtilService';
-import { ExamPrepProgressBar } from '../../components/quiz/ExamPrepProgressBar';
 import { Colors } from '../../styles/colors';
 
 
@@ -35,7 +33,7 @@ export type questionWithTime = {
 export const QuizQuestionsPage = () => {
     const [timer, setTimer] = useState(100);
     const questionScrollViewRef = useRef<ScrollView | null>(null);;
-    const [quizQuestionList, setQuizQuestionList] = useState<any>(quizQuestions);
+    const [quizQuestionList, setQuizQuestionList] = useState<any>([]);
     const navigation = useNavigation();
     const route = useRoute();
     const [reqObject, setReqObject] = useState();
@@ -44,6 +42,7 @@ export const QuizQuestionsPage = () => {
     const [quizzId, setQuizzId] = useState<string | null>('');
     const {user} = useUser();
     const [subject, setSubject] = useState<string | null>('');
+    const reportOptions = ['Incorrect or incomplete question', 'Wrong Question', 'Formatting or image quality issue'];
 
     const getQuizType = async () => {
         setQuizType(await AsyncStorage.getItem('quizType'));
@@ -96,7 +95,6 @@ export const QuizQuestionsPage = () => {
         setQuizQuestionList(route.params.mcqs);
         AsyncStorage.removeItem('questions',);
         setTimer(route.params.time);
-        // setTimer(10000);
         setQuizzId(route.params.quizzId)
         setQuestionsInLocal();
 
@@ -126,7 +124,11 @@ export const QuizQuestionsPage = () => {
     }, [])
 
     const setQuestionsInLocal = async () => {
-        AsyncStorage.setItem('questions', JSON.stringify(quizQuestionList));
+        const quizDetails = {
+            timeTaken: timer,
+            quizQuestionList
+        }
+        AsyncStorage.setItem('questions', JSON.stringify(quizDetails));
     }
 
     useEffect(() => {
@@ -146,6 +148,10 @@ export const QuizQuestionsPage = () => {
             clearInterval(interval); // Clear the interval on component unmount
         };
     }, [timer]);
+
+    useEffect(() => {
+        setQuestionsInLocal();
+    },[quizQuestionList])
 
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds / 60);
@@ -305,7 +311,7 @@ export const QuizQuestionsPage = () => {
             .then((res) => {
                 if (res.data.statusCode == 200) {
                     if(currentQuestionIndex === quizQuestionList.length - 1){
-                        navigation.navigate('QuizResultPage' as never, answerList as never);
+                        userEndsThequiz();
                     } else {
                         setCurrentQuestionIndex(currentQuestionIndex + 1);
                     }
@@ -370,7 +376,7 @@ export const QuizQuestionsPage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <View style={styles.headingLeft}>
-                        <Text style={styles.headingTitle}>Test</Text>
+                        <Text style={styles.headingTitle}>{quizType == 'practice' ? 'Practice': 'Test'}</Text>
                         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.headingInfo}>{reqObject?.chapterName}</Text>
                     </View>
                     <View style={styles.headingRight}>
@@ -381,7 +387,7 @@ export const QuizQuestionsPage = () => {
                                 <Text style={styles.timer}>{formatTime(timer)}</Text>
                             </View>}
                             <Button className={SmallOutlineButton} 
-                            label={quizType == 'practice' ? 'Finish Practice': 'Finish Test'} 
+                            label={quizType == 'practice' ? 'Finish': 'Finish'} 
                             disabled={false} onPress={() => {
                                 setModalVisible(true)
                                 }} />
@@ -411,12 +417,15 @@ export const QuizQuestionsPage = () => {
                                 style={[
                                     styles.questionNumber,
                                     currentQuestionIndex === index && styles.activeQuestion,
-                                    quizQuestionList[index].answer == quizQuestionList[index].selectedAnswer  && { backgroundColor: '#4BAE4F'},
-                                    quizQuestionList[index].selectedAnswer && quizQuestionList[index].answer != quizQuestionList[index].selectedAnswer  && { backgroundColor: 'red'},
+                                    quizQuestionList[index].selectedAnswer && styles.activeQuestion,
+                                    quizType == 'practice' && quizQuestionList[index].answer == quizQuestionList[index].selectedAnswer  && { backgroundColor: '#4BAE4F'},
+                                    quizType == 'practice' && quizQuestionList[index].selectedAnswer && quizQuestionList[index].answer != quizQuestionList[index].selectedAnswer  && { backgroundColor: 'red'},
                                 ]}
                                 onPress={() => navigateToQuestion(index)}
                             >
-                                <Text style={styles.questionNumberText}>{index + 1}</Text>
+                                <Text style={[styles.questionNumberText,
+                                            currentQuestionIndex === index && {color: 'white'},
+                                            quizQuestionList[index].selectedAnswer && {color: 'white'}]}>{index + 1}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -489,8 +498,8 @@ export const QuizQuestionsPage = () => {
                         <ReportComponent report={(item) => {
                             reportQuestion(item);
                         } } closeModal={function (value: React.SetStateAction<boolean>): void {
-                            setBottomSheetVisible(false)
-                        } } />
+                            setBottomSheetVisible(false);
+                        } } options={reportOptions} />
                     </View>
                 </View>
             </Modal>
@@ -512,7 +521,7 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                        <QuizOverView time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false); } } questions={quizQuestionList} />
+                        {reqObject && <QuizOverView chapterNames={reqObject.chapterName} time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false); } } questions={quizQuestionList} />}
                     </View>
                 </View>
             </Modal>

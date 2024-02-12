@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     },
     HighscoreCard: {
         borderRadius: 10,
-        backgroundColor: 'rgba(0, 107, 127, 0.05)',
+        backgroundColor: Colors.secondary,
         gap: 10,
         paddingHorizontal: 9,
         paddingBottom: 10,

@@ -11,9 +11,9 @@ export const BotIntroduction = () => {
 
 
   const basicInfoList: string[] = [
-    "Great choice! You've selected Class" + user?.class +" 📚",
-    "From now on, our answers and assistance will be tailored to Class " +user?.class +"  subjects and topics.",
-    "Feel free to ask questions related to your " +user?.class +" curriculum, and we'll provide you with accurate and helpful information.",
+    "Buckle up for an incredible academic journey! Ezy is here to add a dash of fun to your " + user?.class +" grade learning 📚",
+    "Simply type your question & watch the magic happen!. Get personalized answers from your textbooks instantly.",
+    "Feel free to ask as many questions as you want, from any subject you're studying! Ezy is now your forever study partner.",
     "We're here to support your learning journey in Class " + user?.class +" . Ask away!"
   ]  
   const [intromessages, setIntroMessages] = useState([
@@ -42,10 +42,10 @@ export const BotIntroduction = () => {
     <>
     <View style={BotIntroStyle.container}>
         <Text style={BotIntroStyle.title}>
-            Welcome to the Ezy!
+            Welcome to Ezy!
         </Text>
         <Text style={BotIntroStyle.titleInfo}>
-            Unlock the Power of AI to Find Solutions Tailored to Your Study Needs.
+            Revolutionize your learning with the Power of AI.
         </Text>
         {!showOptions && 
             <View style={BotIntroStyle.infoCard}>

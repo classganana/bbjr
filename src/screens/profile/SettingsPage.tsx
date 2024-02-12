@@ -79,13 +79,17 @@ export const SettingsPage = () => {
     { title: 'Log Out', leftSvg: <LogoutIcon height={15} width={17} fill={'black'} /> },
   ];
 
+  const onBack = () => {
+    navigation.navigate('DashboardNavigator' as never)
+}
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.heading}>
-          <View style={styles.backButton}>
-            <NewBackButton height={18} width={25} fill={'black'} />
-          </View>
+          <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
+            <NewBackButton height={18} width={18} fill={'black'} />
+          </TouchableOpacity>
           <View>
             <Text style={styles.headingTitle}>Settings</Text>
           </View>

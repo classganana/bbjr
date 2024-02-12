@@ -17,6 +17,13 @@ import { UtilService } from '../../services/UtilService';
 import { ExamPrepAllChapter } from '../../components/quiz/ExamPrepAllChapter';
 import { Image } from 'react-native';
 
+interface Chapter {
+    chapterName: string;
+    totalQuestions: number;
+    practicedQuestions: number;
+    score: number | null;
+}
+
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Quizzes');
     const [data, setData] = useState<CardData[]>([]);
@@ -39,7 +46,7 @@ export const QuizHomePage = () => {
 
     const [selectedSubject, setSelectedSubject] = useState<{
         subjectName: string;
-    }>({subjectName:"Science"});
+    }>({subjectName:""});
 
     const [allChapterSelected, setAllChapterSelected] = useState(false);
 
@@ -51,7 +58,6 @@ export const QuizHomePage = () => {
     },[multiSelect])
 
     useEffect(() => {
-        setData([]);
         setScreen();
         UtilService.checkIfCDNHasTheImage(selectedSubject.subjectName).then((item) => {
             console.log("here is URL => ", selectedSubject.subjectName);
@@ -98,7 +104,7 @@ export const QuizHomePage = () => {
         //             setData(list);
         //         }
         //     });
-    },[selectedSubject?.subjectName, tab])
+    },[selectedSubject?.subjectName, tab]);
 
     // useEffect(() => {
     //     setOptions(false);
@@ -112,6 +118,25 @@ export const QuizHomePage = () => {
         getSubjectFromLocal();
         setLoading(false); 
     }, []);
+
+    useEffect(() => {
+        setOptions(false);
+        resetSelection();
+    },[multiSelect])
+
+    useEffect(() => {
+        if(allChapterSelected){
+            setOptions(true);
+            resetSelection();
+        } else {
+            setOptions(allChapterSelected);
+        }
+        setSelectedQuiz(() => []);
+    },[allChapterSelected]);
+
+    useEffect(() => {
+        console.log("New Su",subjectUrl)
+    }, [subjectUrl])
 
     const fetchData = async () => {
         try {
@@ -136,26 +161,33 @@ export const QuizHomePage = () => {
                 "requestBody": s
             }
             
-            const response = await httpClient.post(`auth/c-auth`, reqObj);
-            
-            // Handle successful response
-            let list = response.data.data.quizzes;
-            if(list && list.map) {
-                list = list.map((item: any, index: number) => ({
-                    id: index,
-                    title: (tab === 'Quizzes') ? item.name : item.chapterName,
-                    infoText: 'Info about Card 1',
-                    imageUrl: 'https://placehold.co/400',
-                    done: false,
-                    noOfQuestions: item.totalQuestions,
-                    timeRequired: item.time,
-                    selected: false,
-                    score: item.score,
-                    // subject: "Science"
-                    subject: selectedSubject.subjectName,
-                    practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
-                }));
-                setData(list);
+            if(selectedSubject.subjectName && selectedSubject.subjectName.length){
+                const response = await httpClient.post(`auth/c-auth`, reqObj);
+                
+                // Handle successful response
+                let list = response.data.data.quizzes;
+                (tab !== 'Quizzes') && sortChapters(list)
+                if(list && list.map) {
+                    list = sortChapters(list)
+                    list = list.map((item: any, index: number) => ({
+                        id: index,
+                        title: (tab === 'Quizzes') ? item.name : item.chapterName,
+                        infoText: 'Info about Card 1',
+                        imageUrl: 'https://placehold.co/400',
+                        done: false,
+                        noOfQuestions: item.totalQuestions,
+                        timeRequired: item.time,
+                        selected: false,
+                        score: item.score,
+                        // subject: "Science"
+                        subject: selectedSubject.subjectName,
+                        practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
+                    }));
+                    // console.log(list);
+                    // const newList = sortChapters(list)
+                    // console.log(newList);
+                    setData(list);
+                }
             }
         } catch (error) {
             // Handle errors here. You can display a message to the user.
@@ -168,25 +200,47 @@ export const QuizHomePage = () => {
         }
     };
 
-    useEffect(() => {
-        setOptions(false);
-        resetSelection();
-    },[multiSelect])
+    // const sortChapters = (chapters: Chapter[]) => {
+    //     // Define a custom sorting function based on chapter number
+    //     const customSort = (a: any, b: any) => {
+    //         const chapterNumA = parseInt(a.title.match(/\d+/)[0]);
+    //         const chapterNumB = parseInt(b.title.match(/\d+/)[0]);
+    //         return chapterNumA - chapterNumB;
+    //     };
+    
+    //     // Sort the chapters array using the custom sorting function
+    //     chapters.sort(customSort);
+        
+    //     setData(chapters as any);
+    //     return chapters;
+    // };
 
-    useEffect(() => {
-        if(allChapterSelected){
-            setOptions(true);
-            resetSelection();
-        } else {
-            setOptions(allChapterSelected);
-        }
-        setSelectedQuiz(() => []);
-    },[allChapterSelected]);
-
-    useEffect(() => {
-        console.log("New Su",subjectUrl)
-    }, [subjectUrl])
-
+    function sortChapters(data: any) {
+        return data.sort((a, b) => {
+          // Extract chapter numbers from chapter names
+          const chapterNumberA = extractChapterNumber(a.chapterName);
+          const chapterNumberB = extractChapterNumber(b.chapterName);
+      
+          // Handle chapters with numbers (sort numerically)
+          if (chapterNumberA !== null && chapterNumberB !== null) {
+            return chapterNumberA - chapterNumberB;
+          }
+      
+          // Handle chapters without numbers (sort alphabetically)
+          if (chapterNumberA === null && chapterNumberB === null) {
+            return a.chapterName.localeCompare(b.chapterName);
+          }
+      
+          // If one chapter has a number and the other doesn't, prioritize the one with a number
+          return chapterNumberA !== null ? -1 : 1;
+        });
+      }
+      
+      // Helper function to extract chapter number from chapter name
+      function extractChapterNumber(chapterName: any) {
+        const match = chapterName.match(/\d+/);
+        return match ? parseInt(match[0]) : null;
+      }
 
     const setSubjectToLocal = async (item: {subjectName: string}) => {
         try {
@@ -199,8 +253,10 @@ export const QuizHomePage = () => {
     const getSubjectFromLocal = async () => {
         try {
             const subject = await AsyncStorage.getItem('quizSubject');
-            if (subject) {
+            if (subject && subject.length) {
                 setSelectedSubject({subjectName : subject});
+            } else {
+                setAvailableSubject();
             }
         } catch (e) {
             console.log("Error => ", e);
@@ -249,7 +305,7 @@ export const QuizHomePage = () => {
         // Map the filtered array to extract the chapter number from the title
         const chapters = selectedChapters.map(item => {
           // Extract the chapter number from the title
-          const chapterNumber = parseInt(item?.title?.match(/\d+/)[0]);
+          const chapterNumber = (tab == 'Quizzes')? item?.title?.match: parseInt(item?.title?.match(/\d+/)[0]);
           return { chapterNo: chapterNumber };
         });
       
@@ -267,6 +323,8 @@ export const QuizHomePage = () => {
         await AsyncStorage.removeItem('quizType');
         await AsyncStorage.setItem('quizType', 'quiz');
         UtilService.setQuizType('quiz');
+        setAllChapterSelected(false);
+        resetSelection();
         if(!allChapterSelected) {
             navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
         } else {
@@ -279,6 +337,8 @@ export const QuizHomePage = () => {
         const item = data.filter((item) => item.selected == true)[0];
         await AsyncStorage.setItem('quizType', 'practice');
         UtilService.setQuizType('practice');
+        setAllChapterSelected(false);
+        resetSelection();
         if(!allChapterSelected) {
             navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
         } else {
@@ -328,15 +388,12 @@ export const QuizHomePage = () => {
         const a = [[{
                     subject: selectedSubject.subjectName,
                     allChapter: true,
-                    title: [""]
+                    title: ["All Chapters: " + selectedSubject.subjectName]
                 }]]
         navigation.navigate('QuizFirstPage' as never, a as never);       
     }
 
     const DynamicRenderingSubjectCardorAllChapterCard = () => {
-        // console.log("selectedQuiz");
-        // selectedQuiz && console.log(selectedQuiz[0][0]);
-        console.log("Subject URL", subjectUrl);
         if(!multiSelect && selectedQuiz &&  selectedQuiz[0] && selectedQuiz[0].length > 0) {
             const selectedItem = selectedQuiz[0][0]; 
             return <>
@@ -426,7 +483,7 @@ export const QuizHomePage = () => {
                             id={0} title={'All Chapters'} infoText={''} imageUrl={subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10}}>
-                            <Text style={styles.chapterWise}>All Chapter Wise</Text>
+                            <Text style={styles.chapterWise}>Chapter Wise</Text>
                             <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
                                 {multiSelect && <View style={styles.crossMultiSelect} >
                                     <CrossIcon height={12} width={12} fill={Colors.black_01} />
@@ -456,35 +513,76 @@ export const QuizHomePage = () => {
                     </>
                     }
                 </ScrollView>
-                {(allChapterSelected || options && getSelectedChapters(data).length > 0) && <View style={styles.floatingButtonContainer}>
-                <DynamicRenderingSubjectCardorAllChapterCard />
-                    <Text>
-                        Which one do you want to explore?
-                    </Text>
-                    <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
-                            <CrossIcon height={18} width={18} fill={Colors.black_01} />
-                    </TouchableOpacity>
-                    {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
-                    {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
-                        {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
-                            return (
-                                <View key={index} style={styles.selectedChapters}>
-                                    <Text key={index}>{item.chapterNo}</Text>
-                                </View>    
-                            )
-                        })}
-                    </View>    
-                    }
-                    <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
-                        {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
-                        <Text style={styles.floatingButtonText}>Practice</Text>
-                    </TouchableOpacity>
-                    <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
-                    {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
-                        <ClockIcon height={'20'} width={'20'} fill={'black'} />
-                        <Text style={styles.floatingButtonText}>Take a Test</Text>
-                    </TouchableOpacity> */}
-                </View>}
+                {
+                (allChapterSelected || (!multiSelect && options && getSelectedChapters(data).length == 1)) &&
+                    <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={(allChapterSelected || options && getSelectedChapters(data).length > 0)}
+                    onRequestClose={() => setBottomSheetVisible(false)}>
+                    <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}></View>   
+                    <View style={styles.floatingButtonContainer}>
+                        <DynamicRenderingSubjectCardorAllChapterCard />
+                        <Text>
+                            Which one do you want to explore?
+                        </Text>
+                        <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
+                                <CrossIcon height={18} width={18} fill={Colors.black_01} />
+                        </TouchableOpacity>
+                        {/* {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
+                        {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
+                            {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
+                                return (
+                                    <View key={index} style={styles.selectedChapters}>
+                                        <Text key={index}>{item.chapterNo}</Text>
+                                    </View>    
+                                )
+                            })}
+                        </View>    
+                        } */}
+                        <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
+                            {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
+                            <Text style={styles.floatingButtonText}>Practice</Text>
+                        </TouchableOpacity>
+                        <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
+                        {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
+                            <ClockIcon height={'20'} width={'20'} fill={'black'} />
+                            <Text style={styles.floatingButtonText}>Take a Test</Text>
+                        </TouchableOpacity> */}
+                    </View>
+                    </Modal>
+                }
+
+                {(multiSelect && options && getSelectedChapters(data).length > 0) &&
+                    <View style={styles.floatingButtonContainer}>
+                        <Text>
+                            Which one do you want to explore?
+                        </Text>
+                        <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
+                                <CrossIcon height={18} width={18} fill={Colors.black_01} />
+                        </TouchableOpacity>
+                        {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
+                        {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
+                            {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
+                                return (
+                                    <View key={index} style={styles.selectedChapters}>
+                                        <Text key={index}>{item.chapterNo}</Text>
+                                    </View>    
+                                )
+                            })}
+                        </View>    
+                        }
+                        <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
+                            {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
+                            <Text style={styles.floatingButtonText}>Practice</Text>
+                        </TouchableOpacity>
+                        <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
+                        {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
+                            <ClockIcon height={'20'} width={'20'} fill={'black'} />
+                            <Text style={styles.floatingButtonText}>Take a Test</Text>
+                        </TouchableOpacity> */}
+                    </View>
+                }
 
                 <Modal
                     animationType="fade"

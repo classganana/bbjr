@@ -28,6 +28,7 @@ export const BotScreen = () => {
   const [userFeedback, setUserFeedback] = useState('');
   const [botMessage, setBotMessage] = useState<BotMessageFeedback>();
   const [subjectModal, setSubjectModal] = useState(false);
+  const reportOptions = ['Wrong Answer', 'Incomplete answer', 'Missing answer'];
 
   useEffect(() => {
     getSubjectFromLocal()
@@ -238,7 +239,7 @@ export const BotScreen = () => {
         <View style={BotStyle.header}>
           <View style={{ flexDirection: 'row', gap: 10 }}>
             <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
-              <NewBackButton height={18} width={24} fill={'black'} />
+              <NewBackButton style={{backgroundColor: "rgba(41, 71, 212, 0.07)", borderRadius: 24, padding : 5}} height={18} width={18} fill={'black'} />
               <BotIcon height={32} width={32} fill={Colors.primary} />
             </TouchableOpacity>
             <View style={{justifyContent: 'center'}}>
@@ -259,9 +260,9 @@ export const BotScreen = () => {
                   <Pen height={"18"} width={"18"} fill={Colors.primary} />
                 </TouchableOpacity>
             </View>
-            <View style={BotStyle.menu}>
+            {/* <View style={BotStyle.menu}>
               <ThreeDots height={16} width={4} fill={'#454545'} />
-            </View>
+            </View> */}
           </View>
         </View>
         <View style={{ flex: 1 }}>
@@ -291,8 +292,8 @@ export const BotScreen = () => {
           <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
             <View style={BotStyle.bottomSheetContainer}>
               <ReportComponent
-                report={(item) => { reportQuestion(item); }}
-                closeModal={(item) => setBottomSheetVisible(item)} />
+                report={(item) => { reportQuestion(item) } }
+                closeModal={(item) => setBottomSheetVisible(item)} options={reportOptions} />
             </View>
           </View>
         </Modal>

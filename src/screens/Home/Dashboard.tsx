@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { DashboardStyle } from './DashboardStyle'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { ArrowIcon, ArrowLeft, Send, Sprit, Star, StreakCircle } from '../../components/common/SvgComponent/SvgComponent'
 import { PrimaryDefaultButton, PrimaryIconDefaultButton, PrimarySmallButton, defaultButton } from '../../components/common/ButttonComponent/ButtonStyles'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Constants } from '../../constants/constants'
 import { Colors } from '../../styles/colors'
 import { ExamPrepQuizCard, ExamPrepQuizCardData } from '../../components/quiz/ExamPrepQuizCard'
@@ -39,6 +39,13 @@ export const Dashboard = () => {
     const [noOfExamPrep, setNoOfExamPrep] = useState(0);
     const [promptsForRepeatUser, setPromptsForRepeatUser] = useState<any>(null)
     const [lastChatQuestion, setLastChatQuestion] = useState("");
+
+    useFocusEffect(
+        React.useCallback(() => {
+        // here we call api to update the data on home page
+          console.log("hii")
+        }, [])
+      );
 
     useEffect(() => {
         AsyncStorage.setItem('user', JSON.stringify(user));
@@ -133,10 +140,10 @@ export const Dashboard = () => {
         if (lastQuestion) setLastChatQuestion(lastQuestion);
 
         const RenderLastQuestion = () => {
-            return (<>
+            return (<View style={{}}>
                 <Text style={{ display: 'flex' }}>Your last question to Ezy was</Text>
                 <Text style={DashboardStyle.promptText}>{lastQuestion}</Text>
-            </>
+            </View>
             )
         }
 
@@ -152,6 +159,11 @@ export const Dashboard = () => {
         return arr;
     }
 
+    const navigateToProfilePage = () => {
+        navigator.navigate('Profile' as never);
+        navigator.navigate('Profile' as never, { screen: 'EditProfile'} as never);
+    }
+
 
     return (
         <View style={DashboardStyle.container}>
@@ -163,17 +175,17 @@ export const Dashboard = () => {
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>
                         <CircleInitials name={user?.name} size={32} />
-                        <View style={{ flex: 1 }}>
-                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name} 😎</Text>
-                        </View>
+                        <TouchableWithoutFeedback onPress={navigateToProfilePage} style={{ flex: 1 }}>
+                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
+                        </TouchableWithoutFeedback>
                     </View>
                 </View>
                 <View style={DashboardStyle.options}>
                     <View style={DashboardStyle.optionTitle}>
                         <Text style={DashboardStyle.boostYourKnowledge}>Boost Your Knowledge</Text>
-                        <TouchableOpacity style={DashboardStyle.viewAllBlock} onPress={moveToExploreQuizPage}>
+                        {/* <TouchableOpacity style={DashboardStyle.viewAllBlock} onPress={moveToExploreQuizPage}>
                             <Text style={DashboardStyle.viewAllText}>Explore</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={DashboardStyle.optionsCard}>
                         <View style={DashboardStyle.option}>
@@ -189,11 +201,13 @@ export const Dashboard = () => {
                                 {noOfQuiz == 0 ? "Fortify your knowledge with our quizzes!" :
                                     "You have played total " + { noOfQuiz } + "quizzes last month!"}
                             </Text>
-                            {<View style={{marginLeft: 30}}>
+                            {<View style={{marginLeft: 10}}>
                                 <IconButton className={OutlinePlaneButton} onPress={function (): void {
                                     moveToExploreQuizPage()
                                 }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
+                                <View style={DashboardStyle.circularDiv}>
                                     <ArrowLeft height={20} width={20} fill={'black'} />
+                                </View>
                                 </View>} label={'Take Quiz'} pos={'right'}></IconButton>                                
                             </View>}
                         </View>
@@ -203,20 +217,22 @@ export const Dashboard = () => {
                                     <Image style={{ height: 25, width: 25, borderRadius: 34, padding: 10 }} source={require("../../../assets/svg/books.png")}></Image>
                                 </View>
                                 <View>
-                                    <Text style={DashboardStyle.optionHeaderText}>{noOfExamPrep}</Text>
+                                    {noOfExamPrep != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfExamPrep}</Text>}
                                     {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
                                 </View>
                             </View>
-                            <Text style={DashboardStyle.optionCardHeading}>Exam Prep</Text>
+                            <Text style={DashboardStyle.optionCardHeading}>Exam Preparation</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
                                 {noOfExamPrep == 0 ? "Reinforce your learning with our chapter wise quizzes!" :
                                     "Keep Going! You're Doing Great!"}
                             </Text>
-                            {<View style={{marginLeft: 30}}><IconButton className={OutlinePlaneButton} onPress={function (): void {
+                            {<View style={{marginLeft: 10}}><IconButton className={OutlinePlaneButton} onPress={function (): void {
                                 moveToExploreExamPrepPage()
                             }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
-                                <ArrowLeft height={20} width={20} fill={'black'} />
-                            </View>} label={'Exam Prep'} pos={'right'}></IconButton>
+                                <View style={DashboardStyle.circularDiv}>
+                                    <ArrowLeft height={20} width={20} fill={'black'} />
+                                </View>
+                            </View>} label={'Continue'} pos={'right'}></IconButton>
                             </View>}
                         </View>
                     </View>

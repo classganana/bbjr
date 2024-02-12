@@ -55,6 +55,12 @@ const BottomTabSetup = () => {
     ...styles.shadow,
   };
 
+  const NegivateToBotScreen = () => { 
+    navigation.navigate('Bot' as never);
+
+    return <></>
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
@@ -113,7 +119,7 @@ const BottomTabSetup = () => {
           component={BotScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              // <TouchableOpacity onPress={() => navigation.navigate('Bot' as never)}
+              <TouchableOpacity onPress={(event) => {  event.preventDefault(); navigation.navigate('Bot' as never)}} >
               <Animated.View
                 style={{
                   alignItems: "center",
@@ -134,9 +140,10 @@ const BottomTabSetup = () => {
                     fontSize: 14,
                   }}
                 >
-                  Zeal
+                  Ezy
                 </Text>
               </Animated.View>
+               </TouchableOpacity>
             ),
           }}
         />
@@ -145,38 +152,40 @@ const BottomTabSetup = () => {
           component={QuizNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Animated.View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transform: [{ scale: focused ? scaleValues.LoginScreen : 1 }],
-                  borderTopWidth: focused ?  4:  1,
-                  borderTopColor: focused ?  Colors.primary:  "white",
-                }}
-                onTouchStart={() => handlePressIn("LoginScreen")}
-                onTouchEnd={() => handlePressOut("LoginScreen")}
-                onTouchCancel={() => handlePressOut("LoginScreen")}
-              >
-                <Image
-                  source={require("../../../assets/png/quiz.png")}
-                  resizeMode="contain"
+              <TouchableOpacity onPress={(event) => {  event.preventDefault(); navigation.navigate('Quiz' as never)}} >
+                <Animated.View
                   style={{
-                    width: 30,
-                    height: 30,
-                    tintColor: focused ? Colors.primary : "#748C94",
-                    
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transform: [{ scale: focused ? scaleValues.LoginScreen : 1 }],
+                    borderTopWidth: focused ?  4:  1,
+                    borderTopColor: focused ?  Colors.primary:  "white",
                   }}
-                />
-                <Text
-                  style={{
-                    color: focused ? Colors.primary : "#748C94",
-                    fontSize: 14,
-
-                  }}
+                  onTouchStart={() => handlePressIn("LoginScreen")}
+                  onTouchEnd={() => handlePressOut("LoginScreen")}
+                  onTouchCancel={() => handlePressOut("LoginScreen")}
                 >
-                  Quiz
-                </Text>
-              </Animated.View>
+                  <Image
+                    source={require("../../../assets/png/quiz.png")}
+                    resizeMode="contain"
+                    style={{
+                      width: 30,
+                      height: 30,
+                      tintColor: focused ? Colors.primary : "#748C94",
+                      
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: focused ? Colors.primary : "#748C94",
+                      fontSize: 14,
+
+                    }}
+                  >
+                    Quiz
+                  </Text>
+                </Animated.View>
+              </TouchableOpacity>
             ),
 
           }}
@@ -187,35 +196,37 @@ const BottomTabSetup = () => {
           component={ProfileNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Animated.View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderTopWidth: focused ?  4:  1,
-                  borderTopColor: focused ?  Colors.primary:  "white",
-                  transform: [
-                    { scale: focused ? scaleValues.PasswordScreen : 1 },
-                  ],
-                }} >
-                <Image
-                  source={require("../../../assets/png/threelines.png")}
-                  resizeMode="contain"
+              <TouchableOpacity onPress={(event) => {  event.preventDefault(); navigation.navigate('Profile' as never)}} >
+                <Animated.View
                   style={{
-                    width: 30,
-                    height: 30,
-                    // tintColor: focused ? "#E32F45" : "#748C94",
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? Colors.primary : "#748C94",
-                    fontSize: 14,
-                    
-                  }}
-                >
-                  Settings
-                </Text>
-              </Animated.View>
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderTopWidth: focused ?  4:  1,
+                    borderTopColor: focused ?  Colors.primary:  "white",
+                    transform: [
+                      { scale: focused ? scaleValues.PasswordScreen : 1 },
+                    ],
+                  }} >
+                  <Image
+                    source={require("../../../assets/png/threelines.png")}
+                    resizeMode="contain"
+                    style={{
+                      width: 30,
+                      height: 30,
+                      // tintColor: focused ? "#E32F45" : "#748C94",
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: focused ? Colors.primary : "#748C94",
+                      fontSize: 14,
+                      
+                    }}
+                  >
+                    Settings
+                  </Text>
+                </Animated.View>
+              </TouchableOpacity>
             ),
           }}
         />

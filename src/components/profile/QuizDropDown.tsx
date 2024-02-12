@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Subject } from '../../screens/Profile/QuizHistory';
 import { HistoryExamPrepQuizCard } from '../quiz/HistoryExamPrepQuizCard';
 import { DownArrow } from '../common/SvgComponent';
+import { Colors } from '../../styles/colors';
 
 type Props = {
   subject: Subject | undefined;
@@ -43,7 +44,7 @@ export const QuizDropDown = (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    backgroundColor: 'rgba(0, 107, 127, 0.06)',
+    backgroundColor: Colors.secondary,
   },
   dropdownTitle: {
     flexDirection: 'row',

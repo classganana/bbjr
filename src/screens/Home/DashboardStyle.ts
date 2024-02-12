@@ -218,6 +218,7 @@ export const DashboardStyle = StyleSheet.create({
       minHeight: 140,
       padding: 14,
       backgroundColor: "white",
+      borderRadius: 20,
       shadowColor: Colors.black_03,
       borderWidth: 0.5,
       ...Platform.select({
@@ -317,9 +318,25 @@ export const DashboardStyle = StyleSheet.create({
       // aspectRatio: "1.08",
     },
     promptText: {
+      flexDirection: 'row',
       fontSize: 14,
       fontWeight: "600",
       top: 10 
+    },
+    circularDiv : {
+      width: 30,  // Set the width of your circular div
+      height: 30, // Set the height of your circular div
+      borderRadius: 50, // Set the borderRadius to half of the width or height
+      //backgroundColor: 'blue',
+      justifyContent: 'center', // Center vertically
+      alignItems: 'center',
+      borderWidth: 2,  
+      borderColor: 'white',
+      backgroundColor: 'white', // Set a non-transparent background color
+      shadowColor: 'grey',
+      shadowOffset: { width: 0, height: -4 }, // Adjust the height for downward shadow
+      shadowOpacity: 0.6,
+      shadowRadius: 4,
+      elevation: 5, // Elevation (for Android)
     }
-
 })
