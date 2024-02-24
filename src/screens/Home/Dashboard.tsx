@@ -4,7 +4,7 @@ import { DashboardStyle } from './DashboardStyle'
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { ArrowIcon, ArrowLeft, Send, Sprit, Star, StreakCircle } from '../../components/common/SvgComponent/SvgComponent'
 import { PrimaryDefaultButton, PrimaryIconDefaultButton, PrimarySmallButton, defaultButton } from '../../components/common/ButttonComponent/ButtonStyles'
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Constants } from '../../constants/constants'
 import { Colors } from '../../styles/colors'
 import { ExamPrepQuizCard, ExamPrepQuizCardData } from '../../components/quiz/ExamPrepQuizCard'
@@ -40,12 +40,22 @@ export const Dashboard = () => {
     const [promptsForRepeatUser, setPromptsForRepeatUser] = useState<any>(null)
     const [lastChatQuestion, setLastChatQuestion] = useState("");
 
-    useFocusEffect(
-        React.useCallback(() => {
-        // here we call api to update the data on home page
-          console.log("hii")
-        }, [])
-      );
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //     // here we call api to update the data on home page
+    //     getPendingQuiz().then((list) => {
+    //         if (list && list.length) {
+    //             list = list.map((item: any, index: number) => {
+    //                 item.id = index;
+    //                 item.title = item.chapterName;
+    //                 item.practiceProgress = getPracticePercentage(item.mcqs)
+    //                 return item;
+    //             })
+    //             setData(list)
+    //         }
+    //     })
+    //     }, [])
+    //   );
 
     useEffect(() => {
         AsyncStorage.setItem('user', JSON.stringify(user));
@@ -103,7 +113,6 @@ export const Dashboard = () => {
         httpClient.post(`auth/c-auth`, reqObj)
             .then((res) => {
                 if (res.data.statusCode == 200) {
-                    console.log(res.data.data);
                     const response: quizResponse[] = res.data.data;
                     response.map((exam: quizResponse) => {
                         if (exam.class == 'examPreparation') {
@@ -113,8 +122,6 @@ export const Dashboard = () => {
                         }
                         return exam;
                     })
-                } else {
-                    console.log("main", res.data);
                 }
             })
     }
@@ -140,23 +147,13 @@ export const Dashboard = () => {
         if (lastQuestion) setLastChatQuestion(lastQuestion);
 
         const RenderLastQuestion = () => {
-            return (<View style={{}}>
+            return (lastQuestion && <View>
                 <Text style={{ display: 'flex' }}>Your last question to Ezy was</Text>
                 <Text style={DashboardStyle.promptText}>{lastQuestion}</Text>
             </View>
             )
         }
-
-        const RenderLastSubject = () => {
-
-        }
-
-        const arr = [
-            RenderLastQuestion,
-            "You talked about {chapter name} in" + lastChatSubject + " with Ezy during your last chat."
-        ]
-        setPromptsForRepeatUser(arr[0])
-        return arr;
+        setPromptsForRepeatUser(RenderLastQuestion)
     }
 
     const navigateToProfilePage = () => {
@@ -183,9 +180,6 @@ export const Dashboard = () => {
                 <View style={DashboardStyle.options}>
                     <View style={DashboardStyle.optionTitle}>
                         <Text style={DashboardStyle.boostYourKnowledge}>Boost Your Knowledge</Text>
-                        {/* <TouchableOpacity style={DashboardStyle.viewAllBlock} onPress={moveToExploreQuizPage}>
-                            <Text style={DashboardStyle.viewAllText}>Explore</Text>
-                        </TouchableOpacity> */}
                     </View>
                     <View style={DashboardStyle.optionsCard}>
                         <View style={DashboardStyle.option}>
@@ -193,7 +187,6 @@ export const Dashboard = () => {
                                 <Sprit height={'36'} width={'36'} fill={'red'} />
                                 <View>
                                     {noOfQuiz != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfQuiz}</Text>}
-                                    {/* <Text style={DashboardStyle.optionHeaderInfoText}>Quizzes</Text> */}
                                 </View>
                             </View>
                             <Text style={DashboardStyle.optionCardHeading}>Quizzes</Text>
@@ -218,7 +211,6 @@ export const Dashboard = () => {
                                 </View>
                                 <View>
                                     {noOfExamPrep != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfExamPrep}</Text>}
-                                    {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
                                 </View>
                             </View>
                             <Text style={DashboardStyle.optionCardHeading}>Exam Preparation</Text>
@@ -250,11 +242,11 @@ export const Dashboard = () => {
                             Ezy Your Personal Study Buddy 🚀 
                         </Text>}
                     </View>
-                        {lastChatQuestion && lastChatQuestion.length && <View style={{ width: "80%" }}>
-                        <Text>
-                            {promptsForRepeatUser}
-                        </Text>
-                    </View>}
+                     <View>
+                           <Text>
+                               {lastChatQuestion && lastChatQuestion.length && promptsForRepeatUser}
+                            </Text> 
+                    </View>
                     <View style={DashboardStyle.botBlockDesc}>
                          <Text>Chat With Ezy...</Text>
                         <View style={{ flex: 1 }}>

@@ -94,7 +94,7 @@ const EditProfile = () => {
 
     return (
 
-        <ScrollView style={{ flexGrow: 1 }}>
+        <ScrollView style={{flex: 1}}>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
@@ -104,7 +104,7 @@ const EditProfile = () => {
                         <Text style={styles.headingTitle}>Profile</Text>
                     </View>
                 </View>
-                <View style={styles.DetailContainer}>
+                <View style={[styles.DetailContainer, !isEditMode && {backgroundColor: 'rgba(103, 103, 103, 0.37)'} ]}>
                     <View style={styles.ImageContainer}>
                         {/* <View style={styles.ProfileImage} > */}
                             {/* <View style={styles.CameraBorder}> */}
@@ -144,6 +144,21 @@ const EditProfile = () => {
                     </View>
 
                     <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>School/College</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="School Name"
+                            value={school}
+                            editable={isEditMode}
+                            onChangeText={text => {
+                                setSchool(text);
+                                // checkFields();
+                            }}
+                        />
+                    </View>
+
+
+                    <View style={styles.inputBlocks}>
                         <Text style={styles.label}>Class</Text>
                         <View style={styles.picker}>
                         <Picker 
@@ -166,31 +181,22 @@ const EditProfile = () => {
                         </View>
                     </View>
 
-                    <Text style={styles.label}>School/College</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="School Name"
-                        value={school}
-                        editable={isEditMode}
-                        onChangeText={text => {
-                            setSchool(text);
-                            // checkFields();
-                        }}
-                    />
 
-                    <Text style={styles.label}>Board</Text>
-                    <View style={styles.picker}>
-                        <Picker
-                            enabled={isEditMode}
-                            selectedValue={board}
-                            onValueChange={(itemValue) => {
-                                setBoard(itemValue);
-                                // checkFields();
-                            }}
-                        >
-                            <Picker.Item label="Select Board" value=""/>
-                            <Picker.Item label="CBSE" value="CBSE" />
-                        </Picker>
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Board</Text>
+                        <View style={styles.picker}>
+                            <Picker
+                                enabled={isEditMode}
+                                selectedValue={board}
+                                onValueChange={(itemValue) => {
+                                    setBoard(itemValue);
+                                    // checkFields();
+                                }}
+                            >
+                                <Picker.Item label="Select Board" value=""/>
+                                <Picker.Item label="CBSE" value="CBSE" />
+                            </Picker>
+                        </View>
                     </View>
                             {/* <Picker.Item label="ICSE" value="ICSE" /> */}
                             {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
@@ -239,7 +245,8 @@ const EditProfile = () => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.white
+        backgroundColor: Colors.white,
+        flex: 1
     },
     header: {
         paddingHorizontal: 20,
@@ -265,10 +272,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     DetailContainer: {
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
+        // borderTopLeftRadius: 20,
+        // borderTopRightRadius: 20,
         backgroundColor: Colors.white,
         paddingHorizontal: 20,
+        flex: 1
     },
     ImageContainer: {
         paddingHorizontal: '25%',

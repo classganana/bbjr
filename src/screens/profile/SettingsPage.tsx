@@ -111,18 +111,8 @@ export const SettingsPage = () => {
             <Text>Invite Friends</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={moveToEditProfile} style={styles.editProfile}>
-          <PencilIcon height={18} width={28} fill={'#fff'} />
             <Text style={{color: 'white'}}>View Complete Profile</Text>
           </TouchableOpacity>
-            {/* <IconButton
-              onPress={moveToEditProfile}
-              className={EditIconButton}
-              icon={
-              <PencilIcon height={18} width={28} fill={'#fff'} />
-            }
-              label={'Edit Profile'}
-              pos={'right'}
-            /> */}
         </View>
         {labels.map((buttonLabel, index) => (
           <TouchableOpacity

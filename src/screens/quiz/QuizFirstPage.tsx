@@ -63,7 +63,7 @@ export const QuizFirstPage = () => {
         })
 
         setChapters(listOfChapters);
-        setCurrentQuiz(() => route.params)
+        setCurrentQuiz(() => route.params);
         const subject = route.params[0][0].subject;
         setSubject(subject);
         AsyncStorage.setItem('subject', subject);
