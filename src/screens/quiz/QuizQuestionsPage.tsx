@@ -1,11 +1,11 @@
-import React, { SetStateAction, useEffect, useRef, useState } from 'react';
+import React, { SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, CrossIcon, InfoIcon, NewBackButton, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { LoginButton, OutlineButton, SmallOutlineButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import styles from './QuizQuestionsPageStyle';
 import ReportComponent from '../../components/quiz/ReportComponent';
 import { Description } from '../../components/feedback/Description/Description';
@@ -75,53 +75,36 @@ export const QuizQuestionsPage = () => {
     useEffect(() => {
         getQuizType();
         getQuizFlow();
-        // findQuizForPracticeNUpdateByChapterName()
-        const req = {
-            "schoolId": "default",
-            "subject": subject,
-            "boardId": user?.board,
-            "className": user?.class,
-            "studentId": user?.userId,
-            "chapterName": [
-                "string"
-            ],
-            // fix it
-            "dataType": "school",
-            "size": 0
-        }
-
         // add time score dataType screenpage
         setReqObject(route.params as any);
         setQuizQuestionList(route.params.mcqs);
         AsyncStorage.removeItem('questions',);
-        setTimer(route.params.time);
+        setTimer(10);
+        // setTimer(route.params.time);
         setQuizzId(route.params.quizzId)
         setQuestionsInLocal();
-
-        // const reqObj = {
-        //     "service": "ml_service",
-        //     "endpoint":  `/data/quizz`,
-        //     "requestMethod": "POST",
-        //     "requestBody": {
-        //         "schoolId": "default",
-        //         "boardId": "CBSE",
-        //         "subject": "Science",
-        //         "className": 10,
-        //         "chapterName": [
-        //             "Crop Production and Management"
-        //         ],
-        //         "studentId": 10,
-        //         "size": 10,
-        //         "dataType": "school"
-        //     }
-        //   }          
-
-        // httpClient.post(`auth/c-auth`, reqObj)
-        // .then((res) => {
-
-        //     // setQuizQuestionList(res.data.data.mcqs);
-        // });
     }, [])
+
+    useFocusEffect(
+        useCallback(() => {
+          const fetchData = async () => {
+            getQuizType();
+            getQuizFlow();
+            // add time score dataType screenpage
+            setQuizQuestionList(route.params.mcqs);
+            await AsyncStorage.removeItem('questions');
+            setTimer(route.params.time);
+            setQuizzId(route.params.quizzId);
+            setQuestionsInLocal();
+          };
+      
+          fetchData();
+      
+          return () => {
+            // Cleanup function if necessary
+          };
+        }, [route.params])
+      );
 
     const setQuestionsInLocal = async () => {
         const quizDetails = {

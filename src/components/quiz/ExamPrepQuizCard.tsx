@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     },
     selected: {
         borderWidth: 1 / 2,
-        borderColor: '#006B7F',
+        borderColor: Colors.secondary,
         shadowColor: 'rgba(0, 0, 0, 0.25)',
         shadowOffset: { width: 0, height: 4 },
         shadowRadius: 8,

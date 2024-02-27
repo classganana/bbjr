@@ -75,7 +75,6 @@ export const QuizResult = () => {
     useEffect(() => {
         const backAction = () => {
           if (navigator.isFocused()) {
-            console.log("back button");
             return true; // Returning true prevents the default back action
           }
           return false; // Allow the default back action on other screens
@@ -89,8 +88,18 @@ export const QuizResult = () => {
     async function getData() {
         try {
             let r: any = route.params;
-            if(r) r.time = r.quizQuestionList.length * 15;
-            setRetryData(r);
+            let retry: any = {};
+            if(r) retry['time'] = r.quizQuestionList.length * 15;
+            
+            const updatedQuestions = r.quizQuestionList.map(question => {
+                // Destructure the object and exclude the 'selectedAnswer' property
+                const { selectedAnswer, ...rest } = question;
+                return rest; // Return the modified object without 'selectedAnswer'
+            });
+
+            retry['mcqs'] = cleanQuizContentAndRetryQuiz(updatedQuestions);
+
+            setRetryData(retry);
 
             const data = JSON.parse((await AsyncStorage.getItem('questions')) as string); 
             const UserAnswerList = data && (data.quizQuestionList) ? data.quizQuestionList : []
@@ -115,8 +124,16 @@ export const QuizResult = () => {
         navigator.navigate('QuizQuestionAnswersReview' as never)
     }
 
+    const cleanQuizContentAndRetryQuiz = (mcqs: any[]) => {
+            return mcqs.map((mcq) => {
+                delete mcq.selectedAnswer;
+                return mcq;
+            })
+    }
+
     function retryQuiz() {
         console.log(retryData);
+        // changing key name quizQuestionList to mcqs
         navigator.navigate('QuizQuestionPages' as never, retryData as never)
     }
 

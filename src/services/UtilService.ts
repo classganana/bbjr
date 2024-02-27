@@ -75,15 +75,18 @@ export const UtilService = {
         }
       },
       checkIfCDNHasTheImage: async (subjectName: string) => {
-        // Extract the first part of the subject name before the hyphen
         const firstPart = subjectName.split('-')[0].trim();
-        
-        // Convert the first part to uppercase and replace spaces with underscores
-        const formattedPart = firstPart.toUpperCase().replace(/\s+/g, '_');
+
+        // Remove "Part 1", "Part 2", etc. from the subject name
+        const formattedPart = firstPart.replace(/Part \d+/i, '').trim();
+    
+        // Convert the formatted part to uppercase and replace spaces with underscores
+        const formattedSubject = formattedPart.toUpperCase().replace(/\s+/g, '_');
+    
         
         const cdnUrl = CDN;
-        const imageName = `${formattedPart}.png`;
+        const imageName = `${formattedSubject}.png`;
         const imageUrl = `${cdnUrl}${imageName}`;
         return imageUrl;
-    }        
+    }
 };

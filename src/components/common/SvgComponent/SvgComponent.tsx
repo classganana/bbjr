@@ -1030,3 +1030,49 @@ export const NewBackButton = (props: Props) => {
   </Svg>
   )
 }
+
+export const QuizClock = (props: Props)  => {
+  return (
+    <Svg
+      viewBox="0 0 41 40"
+      {...props}
+    >
+      <Ellipse cx={20.2778} cy={20} rx={20.2778} ry={20} fill="#333" />
+      <Path
+        d="M20.743 29.32c4.961 0 8.983-3.967 8.983-8.86 0-4.894-4.022-8.86-8.983-8.86s-8.983 3.966-8.983 8.86c0 4.893 4.022 8.86 8.983 8.86z"
+        stroke="#fff"
+        strokeWidth={1.2}
+        strokeMiterlimit={10}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M20.744 15.62v4.84l3.021 1.42"
+        stroke="#fff"
+        strokeWidth={1.2}
+        strokeMiterlimit={10}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
+
+export const QuizStar = (props: Props) => {
+  return (
+    <Svg
+      viewBox="0 0 41 40"
+      {...props}
+    >
+      <Ellipse cx={20.2778} cy={20} rx={20.2778} ry={20} fill="#333" />
+      <Path
+        d="M20.989 11.05l2.099 5.72 6.164.2c.649.02.923.83.406 1.23l-4.867 3.73 1.713 5.84c.183.62-.517 1.12-1.054.76l-5.1-3.41-5.1 3.41c-.537.36-1.237-.14-1.054-.76l1.713-5.84-4.887-3.73c-.517-.39-.243-1.21.406-1.23l6.164-.2 2.1-5.72c.212-.6 1.074-.6 1.297 0z"
+        stroke="#fff"
+        strokeWidth={1.2}
+        strokeMiterlimit={10}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}

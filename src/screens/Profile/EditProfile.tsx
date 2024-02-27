@@ -21,7 +21,7 @@ const EditProfile = () => {
     const [GuardianName, setGuardianName] = useState('');
     const [GuardianEmail, setGuardianEmail] = useState('');
     const [userId, setUserId] = useState<any>('');
-    const {user, setUser} = useUser()
+    const { user, setUser } = useUser()
     const navigation = useNavigation();
 
     const [isEditMode, setIsEditMode] = useState(false);
@@ -32,7 +32,7 @@ const EditProfile = () => {
 
 
     useEffect(() => {
-        if(user){
+        if (user) {
             setName(user.name);
             setBoard(user.board);
             setClassValue(user.class);
@@ -56,15 +56,15 @@ const EditProfile = () => {
 
         updatedData.class = parseInt(updatedData.class);
 
-        GuardianName? updatedData = {...updatedData, GuardianName}: ''
-        GuardianEmail? updatedData = {...updatedData, GuardianEmail}: ''
+        GuardianName ? updatedData = { ...updatedData, GuardianName } : ''
+        GuardianEmail ? updatedData = { ...updatedData, GuardianEmail } : ''
 
         httpClient.patch(`users/${userId}`, {
             ...updatedData
         }).then((res) => {
-            if(res.data.acknowledged) {
-                setUser({...updatedData, userId});
-                AsyncStorage.setItem('user',JSON.stringify({...updatedData, userId}));
+            if (res.data.acknowledged) {
+                setUser({ ...updatedData, userId });
+                AsyncStorage.setItem('user', JSON.stringify({ ...updatedData, userId }));
                 toggleEditMode();
             }
         });
@@ -93,8 +93,7 @@ const EditProfile = () => {
 
 
     return (
-
-        <ScrollView style={{ flexGrow: 1 }}>
+        <ScrollView style={{ flex: 1, flexGrow: 1, backgroundColor: 'white' }}>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
@@ -106,12 +105,7 @@ const EditProfile = () => {
                 </View>
                 <View style={styles.DetailContainer}>
                     <View style={styles.ImageContainer}>
-                        {/* <View style={styles.ProfileImage} > */}
-                            {/* <View style={styles.CameraBorder}> */}
-                                <CircleInitials name={user?.name} size={150} />
-                                {/* <CameraIcon height={'50'} width={'50'} fill={'white'} /> */}
-                            {/* </View> */}
-                        {/* </View> */}
+                        <CircleInitials name={user?.name} size={150} />
                     </View>
 
 
@@ -146,7 +140,7 @@ const EditProfile = () => {
                     <View style={styles.inputBlocks}>
                         <Text style={styles.label}>Class</Text>
                         <View style={styles.picker}>
-                        <Picker 
+                            <Picker
                                 enabled={isEditMode}
                                 selectedValue={classValue.toString()}
                                 onValueChange={(itemValue) => {
@@ -154,14 +148,14 @@ const EditProfile = () => {
                                     // checkFields();
                                 }}
                             >
-                                <Picker.Item style={styles.pickerItem} label="5" value="5"/>
-                                <Picker.Item style={styles.pickerItem} label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                                <Picker.Item label="8" value="8"/>
-                                <Picker.Item label="9" value="9"/>
-                                <Picker.Item label="10" value="10"/>
-                                <Picker.Item label="11" value="11"/>
-                                <Picker.Item label="12" value="12"/>
+                                <Picker.Item style={styles.pickerItem} label="5" value="5" />
+                                <Picker.Item style={styles.pickerItem} label="6" value="6" />
+                                <Picker.Item label="7" value="7" />
+                                <Picker.Item label="8" value="8" />
+                                <Picker.Item label="9" value="9" />
+                                <Picker.Item label="10" value="10" />
+                                <Picker.Item label="11" value="11" />
+                                <Picker.Item label="12" value="12" />
                             </Picker>
                         </View>
                     </View>
@@ -188,12 +182,12 @@ const EditProfile = () => {
                                 // checkFields();
                             }}
                         >
-                            <Picker.Item label="Select Board" value=""/>
+                            <Picker.Item label="Select Board" value="" />
                             <Picker.Item label="CBSE" value="CBSE" />
                         </Picker>
                     </View>
-                            {/* <Picker.Item label="ICSE" value="ICSE" /> */}
-                            {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
+                    {/* <Picker.Item label="ICSE" value="ICSE" /> */}
+                    {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
                     <Text style={styles.label}>Guardian’s Name</Text>
                     <TextInput
                         style={styles.input}
@@ -239,6 +233,7 @@ const EditProfile = () => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: Colors.white
     },
     header: {
