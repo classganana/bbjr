@@ -21,7 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
-
+import { Alert } from 'react-native';
 
 export const SettingsPage = () => {
   // const [user, setUser] = useState<any>();
@@ -59,10 +59,31 @@ export const SettingsPage = () => {
   };
 
   const logout = () => {
-    AsyncStorage.clear();
-    navigation.navigate('Auth' as never);
-    setUser({});
-    console.log("Loggin Out");
+    console.log("hihiih");
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel'
+        },
+        {
+          text: 'Logout',
+          onPress: () => {
+            AsyncStorage.clear();
+            navigation.navigate('Auth' as never);
+            setUser({});
+            console.log("Loggin Out");
+            // Perform logout action here
+            // For example, navigate to logout screen or clear session
+            // You can call your logout function here
+            // e.g., logout();
+          }
+        }
+      ]
+    );
 
   }
 

@@ -129,7 +129,7 @@ export const QuizFirstPage = () => {
                 const req = {
                     "schoolId": "default",
                     "boardId": user?.board,
-                    "subject": subject,
+                    subject: route.params[0][0].subject,
                     "className": user?.class,
                     "studentId": user?.userId,
                     "chapterName": listOfChapters,
@@ -151,14 +151,16 @@ export const QuizFirstPage = () => {
                     delete req.subject;
                 }
 
-                route?.params[0][0].allChapter ? delete req.chapterName: ''
+                route?.params[0][0].allChapter == true ? delete req.chapterName: ''
+
+                console.log(reqObj);
         
                 httpClient.post(`auth/c-auth`, reqObj)
                     .then((res: any) => {
                         const quiz = {
                             schoolId: 'default',
                             chapterName: listOfChapters,
-                            subject: subject,
+                            subject: route.params[0][0].subject,
                             boardId: user?.board,
                             className: user?.class,
                             studentId: user?.userId,

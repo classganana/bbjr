@@ -83,10 +83,11 @@ export const UtilService = {
         // Convert the formatted part to uppercase and replace spaces with underscores
         const formattedSubject = formattedPart.toUpperCase().replace(/\s+/g, '_');
     
-        
-        const cdnUrl = CDN;
-        const imageName = `${formattedSubject}.png`;
-        const imageUrl = `${cdnUrl}${imageName}`;
-        return imageUrl;
+        if(formattedSubject && formattedSubject.length > 0) {
+          const cdnUrl = CDN;
+          const imageName = `${formattedSubject}.png`;
+          const imageUrl = `${cdnUrl}${imageName}`;
+          return imageUrl;
+        }
     }
 };

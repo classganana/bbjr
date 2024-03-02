@@ -6,7 +6,7 @@ import Tabs from '../../components/common/Tabs/Tabs';
 import { CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
 import { useNavigation } from '@react-navigation/native';
-import { httpClient } from '../../services/HttpServices';
+import { CDN, httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
 import { Button } from '../../components/common/ButttonComponent/Button';
@@ -139,6 +139,7 @@ export const QuizHomePage = () => {
     }, [subjectUrl])
 
     const fetchData = async () => {
+        setData([]);
         try {
             // You might want to set loading state here.
             setLoading(true);
@@ -453,9 +454,13 @@ export const QuizHomePage = () => {
                             {...item}
                             onCardClick={(i) => updateList(i)}                            />
                         ))}
+                        {loading && <>
+                            {/* <Text style={{fontSize: 100}}>{loadingText}</Text> */}
+                            <Image  style={{ height: 200, width: "50%", alignSelf: 'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} />
+                        </>}                        
                         <>
                             {data && data.length == 0 && <>
-                                <Text style={{fontSize: 100}}>Loading</Text>
+                                <Image source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} />
                             </>}
                         </>
                     </>}
@@ -504,7 +509,8 @@ export const QuizHomePage = () => {
                             />
                         ))}
                         {loading && <>
-                            <Text style={{fontSize: 100}}>{loadingText}</Text>
+                            {/* <Text style={{fontSize: 100}}>{loadingText}</Text> */}
+                            <Image  style={{ height: 200, width: "50%", alignSelf: 'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} />
                         </>
                         }
                         {!loading && data && data.length == 0 && <> 

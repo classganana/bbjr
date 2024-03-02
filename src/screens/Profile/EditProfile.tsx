@@ -123,7 +123,7 @@ const EditProfile = () => {
                         />
                     </View>
 
-                    <View style={styles.inputBlocks}>
+                    {/* <View style={styles.inputBlocks}>
                         <Text style={styles.label}>Phone Number</Text>
                         <TextInput
                             style={styles.input}
@@ -135,7 +135,7 @@ const EditProfile = () => {
                                 // checkFields();
                             }}
                         />
-                    </View>
+                    </View> */}
 
                     <View style={styles.inputBlocks}>
                         <Text style={styles.label}>Class</Text>

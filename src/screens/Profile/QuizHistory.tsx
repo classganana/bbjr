@@ -24,6 +24,7 @@ export const QuizHistory = () => {
     const [tab, setTab] = useState('Quizzes');
     const [data, setData] = useState<Subject[]>();
     const {user} = useUser();
+    const [isLoading, setIsLoading] = useState(true);
 
     const navigation = useNavigation();
 
@@ -70,7 +71,7 @@ export const QuizHistory = () => {
                         chapters: [{ name, quizzId, score }],
                       });
                     }
-                  
+                    setIsLoading(false)
                     return acc;
                   }, []);
                   
