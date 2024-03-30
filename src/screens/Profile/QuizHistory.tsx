@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { StrongBackButton } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUser } from '../../context/UserContext';
 import { styles } from '../quiz/QuizHomePageStyle';
 import { QuizDropDown } from '../../components/profile/QuizDropDown';
+import { Button } from '../../components/common/ButttonComponent/Button';
+import { Examprep, LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 
 export interface Chapter {
     name: string[];
@@ -20,12 +22,12 @@ export  interface Subject {
     chapters: Chapter[];
   }
 
+
 export const QuizHistory = () => {
     const [tab, setTab] = useState('Quizzes');
     const [data, setData] = useState<Subject[]>();
     const {user} = useUser();
     const [isLoading, setIsLoading] = useState(true);
-
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -40,6 +42,7 @@ export const QuizHistory = () => {
 
     const fetchData = async () => {
         // setData([]);
+        setIsLoading(true);
         const req = {
             "schoolId": "default",
             "boardId": user?.board,
@@ -71,11 +74,12 @@ export const QuizHistory = () => {
                         chapters: [{ name, quizzId, score }],
                       });
                     }
-                    setIsLoading(false)
                     return acc;
                   }, []);
                   
-                  setData(result);
+                //   setData(result);
+                  setData([]);
+                  setIsLoading(false)
                   console.log(JSON.stringify(data));
             })
     };
@@ -86,6 +90,16 @@ export const QuizHistory = () => {
 
     const onBack = () => {
         navigation.navigate('Setting' as never)
+    }
+
+    const moveToExploreQuizPage = async () => {
+        await AsyncStorage.setItem('quizFlow', 'Quizzes');
+        navigation.navigate('Quiz' as never);
+    }
+
+    const moveToExploreExamPrepPage = async () => {
+        await AsyncStorage.setItem('quizFlow', 'Exam Prep');
+        navigation.navigate('Quiz' as never);
     }
 
     return (
@@ -103,23 +117,54 @@ export const QuizHistory = () => {
                     <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => setTab(i)} ></Tabs>
                 </View>
                 <ScrollView style={styles.tabs}>
-                    {tab == "Quizzes" && <>
+                    {tab == "Quizzes" && <View style={{flex: 1}}>
                     <Text style={styles.selectedOption}>{tab}</Text>
-                        <>
-                            {data && data.length == 0 && <>
-                                <Text style={{fontSize: 100}}>Loading</Text>
-                            </>}
-                        </>
-                    </>}
+                        {
+                            isLoading ? 
+                            <Image  style={{ height: 200, width: "50%", alignSelf: 'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} /> :
+                        <View style={styles.noQuizFound}>
+                            {data && data.length == 0 && <View>
+                                <Image style={{ height: 200, width: 250, alignSelf: 'center' }} source={require('../../../assets/png/test.png')} />
+                                <Text style={{fontSize: 20, marginTop: 30}}>Get started with Quizzes now!</Text>
+                            </View>}
+                            <View style={{height: 60, width: "80%"}}>
+                                <Button label={"Quizzes"} 
+                                        disabled={false} onPress={moveToExploreQuizPage} 
+                                        className={Examprep}
+                                        />
+                            </View>
+                        </View>
+
+                        }
+                        
+                    </View>}
                     {tab == 'Exam Prep' && <>
                         <View>
                             <TouchableOpacity >
                                 <Text style={styles.examPreparation}>Exam Prep History</Text>
                             </TouchableOpacity>
                         </View>
-                        {data?.map((item, index) => (
-                             <QuizDropDown key={index} subject={item} />
-                        ))}
+                        {
+                            isLoading ?
+                            <Image  style={{ height: 200, width: "50%", alignSelf: 'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} /> :
+                        <View>
+                        <View style={styles.noQuizFound}>
+                            {data && data.length == 0 && <View>
+                                <Image style={{ height: 200, width: 250, alignSelf: 'center' }} source={require('../../../assets/png/test.png')} />
+                                <Text style={{fontSize: 20, marginTop: 30}}>Get started with Quizzes now!</Text>
+                            </View>}
+                            <View style={{height: 60, width: "80%"}}>
+                                <Button label={"Exam Preparation"} 
+                                        disabled={false} onPress={moveToExploreExamPrepPage} 
+                                        className={Examprep}
+                                        />
+                            </View>
+                        </View>
+                            {data?.map((item, index) => (
+                                <QuizDropDown key={index} subject={item} />
+                            ))}
+
+                        </View>}
                     </>
                     }
                 </ScrollView>

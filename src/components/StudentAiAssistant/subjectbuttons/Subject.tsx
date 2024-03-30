@@ -36,7 +36,7 @@ const ChipComponent: React.FC<ButtonProps> = ({
 }) => {
   const { user } = useUser()
   const textStyle:any=[
-    {color: themeColor && isPressed && Colors.white},
+    { color: (themeColor && isPressed) ? Colors.white: 'black' },
   ]
   const buttonStyle:any= [
     styles.child,{borderColor: themeColor && 'rgba(150, 150, 150, 0.64)',

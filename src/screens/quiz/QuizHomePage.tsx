@@ -16,6 +16,7 @@ import { styles } from './QuizHomePageStyle';
 import { UtilService } from '../../services/UtilService';
 import { ExamPrepAllChapter } from '../../components/quiz/ExamPrepAllChapter';
 import { Image } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 interface Chapter {
     chapterName: string;
@@ -38,6 +39,7 @@ export const QuizHomePage = () => {
     const {user} = useUser();
     const [loadingText, setLoadingText] = useState('');
     const [subjectUrl, setSubjectUrl] = useState('');
+    const [tempSubject, setTempSubject] = useState('');
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
@@ -313,11 +315,16 @@ export const QuizHomePage = () => {
         return chapters;
       }
 
-    const setSubjectAndCloseModal = (item: any) => {
+    const setSubjectAndCloseModal = () => {
         setBottomSheetVisible(false);
-        setSelectedSubject(item);
-        setSubjectToLocal(item);
+        setSelectedSubject(tempSubject as any);
+        setSubjectToLocal(tempSubject as any);
+        setTempSubject('');
       };
+
+    const setTemporarySubject = (item: any) => {
+        setTempSubject(item);
+    }
 
 
     const startTheQuiz = async () => {
@@ -456,8 +463,9 @@ export const QuizHomePage = () => {
                         ))}
                         {loading && <>
                             {/* <Text style={{fontSize: 100}}>{loadingText}</Text> */}
-                            <Image  style={{ height: 200, width: "50%", alignSelf: 'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} />
-                        </>}                        
+                            {/* <Image  style={{ height: 200, width: "50%", alignSelf: 'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} /> */}
+                            <ActivityIndicator size="large" color={Colors.primary} />
+                        </>}
                         <>
                             {data && data.length == 0 && <>
                                 <Image source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} />
@@ -510,7 +518,8 @@ export const QuizHomePage = () => {
                         ))}
                         {loading && <>
                             {/* <Text style={{fontSize: 100}}>{loadingText}</Text> */}
-                            <Image  style={{ height: 200, width: "50%", alignSelf: 'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} />
+                            {/* <Image  style={{ height: 200, width: "50%", alignSelf:  'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} /> */}
+                            <ActivityIndicator size="large" color={Colors.primary} />
                         </>
                         }
                         {!loading && data && data.length == 0 && <> 
@@ -600,7 +609,7 @@ export const QuizHomePage = () => {
                         <View style={styles.bottomSheetContainer}>
                             <Text style={styles.subjecttxt}>Subject</Text>
                             <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>
-                                <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} subject={selectedSubject.subjectName} />
+                                <Student selectedSubject={(item: any) => setTempSubject(item)} themeColor={true} subject={selectedSubject.subjectName} />
                             </ScrollView>
                             <View
                                 style={{
@@ -612,13 +621,12 @@ export const QuizHomePage = () => {
                                     paddingVertical: 20,
                                     width: '100%',
                                 }}
-
                             >
                                 <Button
                                     label={'Continue'}
-                                    disabled={false}
+                                    disabled={tempSubject.length == 0}
                                     className={EditButton}
-                                    onPress={() => setBottomSheetVisible(false)}
+                                    onPress={() => setSubjectAndCloseModal()}
                                 />
                             </View>
                         </View>

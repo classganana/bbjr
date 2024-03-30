@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     },
     header: {
         paddingHorizontal: 24,
-        paddingVertical: 26,
+        paddingVertical: 16,
         height: 96,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
@@ -31,14 +31,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: 28,
-        flex: 1
+        flex: 1,
     },
     headingLeft: {
         flex: 7,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        gap: 10
     },
     headingRight: {
         flex: 3,
+        // height: 30
     },
     headingTitle: {
         color: Colors.primary,
@@ -60,7 +62,8 @@ const styles = StyleSheet.create({
         //  position: "absolute",
         display: 'flex',
         flexDirection: 'row',
-        right: 10
+        right: 10,
+        gap: 10
     },
     timer: {
         textAlign: 'center',

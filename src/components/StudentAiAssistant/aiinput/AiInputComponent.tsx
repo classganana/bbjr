@@ -37,7 +37,6 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
     setNewUser(prev => false);
     setSelectedSubject(item);
     setPlaceholder("Ask me anything related to " + item.subjectName)
-    onSubjectChange(item);
   };
 
   const getSubject = async () => {
@@ -158,9 +157,9 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
                   height: 60 
                 }}
               >
-                <View style={styles.closeButton}>
+                <TouchableOpacity onPress={() => Continue()} style={styles.closeButton}>
                   <Text style={styles.closeButtonText}>Continue</Text>
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

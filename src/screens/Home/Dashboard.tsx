@@ -174,10 +174,10 @@ export const Dashboard = () => {
             <ScrollView style={DashboardStyle.body}>
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>
-                        <CircleInitials name={user?.name} size={32} />
-                        <TouchableWithoutFeedback onPress={navigateToProfilePage} style={{ flex: 1 }}>
-                            <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
-                        </TouchableWithoutFeedback>
+                        <TouchableOpacity onPress={navigateToProfilePage}>
+                            <CircleInitials name={user?.name} size={32} />
+                        </TouchableOpacity>
+                        <Text style={{ fontWeight: '600', fontSize: 18 }}>Hello! {user?.name}</Text>
                     </View>
                 </View>
                 <View style={DashboardStyle.options}>

@@ -359,21 +359,21 @@ export const QuizQuestionsPage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <View style={styles.headingLeft}>
-                        <Text style={styles.headingTitle}>{quizType == 'practice' ? 'Practice': 'Test'}</Text>
+                        {/* <Text style={styles.headingTitle}>{quizType == 'practice' ? 'Practice': 'Test'}</Text> */}
+                        <Button className={SmallOutlineButton} 
+                            label={quizType == 'practice' ? 'Finish': 'Finish'} 
+                            disabled={false} onPress={() => {
+                                setModalVisible(true)
+                                }} />
                         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.headingInfo}>{reqObject?.chapterName}</Text>
                     </View>
                     <View style={styles.headingRight}>
-                        <View style={{ display: 'flex', gap: 4, flex: 1 }}>
+                        <View style={{ display: 'flex', gap: 2, flex: 1, alignItems: "flex-end", }}>
                         {timer > 0 && 
                             <View style={styles.timerBlock}>
                                 <Text style={styles.timerText}>Time Left:</Text>
                                 <Text style={styles.timer}>{formatTime(timer)}</Text>
                             </View>}
-                            <Button className={SmallOutlineButton} 
-                            label={quizType == 'practice' ? 'Finish': 'Finish'} 
-                            disabled={false} onPress={() => {
-                                setModalVisible(true)
-                                }} />
                         </View>
                     </View>
                 </View>

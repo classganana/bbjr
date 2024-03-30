@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Chats } from '../studentaiAssistant/Chats.interface'
 import { useUser } from '../../context/UserContext'
 import ReportComponent from '../../components/quiz/ReportComponent'
-import { ToastService } from '../../services/ToastService'
+import {  } from '../../services/ToastService'
 import { Colors } from '../../styles/colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -142,25 +142,45 @@ export const BotScreen = () => {
     };
 
     if (user?.board && user?.class && user?.name, user?.userId && subject) {
-      httpClient.post('auth/c-auth', req).then((res) => {
-        const data = res.data.data;
-        const botmsg: Chats = {
-          source: data.source,
-          text: data.text,
-          timestamp: Date.now(),
-          stream: true,
-          suggestions: data.similar_questions
-        };
-
-        // Replace the 'typing' message with the actual bot response
-        setMessages((prev: any) => {
-          const updatedMessages = [...prev];
-          const index = updatedMessages.findIndex((message) => message.source === 'bot' && message.text === 'typing');
-          if (index !== -1) {
-            updatedMessages[index] = botmsg;
-          }
-          return updatedMessages;
-        });
+      httpClient.post('auth/c-auth', req).then((res: any) => {
+        if (res.data.statusCode == 200) {
+          const data = res.data.data;
+          const botmsg: Chats = {
+            source: data.source,
+            text: data.text,
+            timestamp: Date.now(),
+            stream: true,
+            suggestions: data.similar_questions
+          };
+  
+          // Replace the 'typing' message with the actual bot response
+          setMessages((prev: any) => {
+            const updatedMessages = [...prev];
+            const index = updatedMessages.findIndex((message) => message.source === 'bot' && message.text === 'typing');
+            if (index !== -1) {
+              updatedMessages[index] = botmsg;
+            }
+            return updatedMessages;
+          });
+        } else {
+          const botmsg: Chats = {
+            source: 'bot',
+            text: 'something went wrong',
+            timestamp: Date.now(),
+            stream: true,
+            suggestions: ['']
+          };
+  
+          // Replace the 'typing' message with the actual bot response
+          setMessages((prev: any) => {
+            const updatedMessages = [...prev];
+            const index = updatedMessages.findIndex((message) => message.source === 'bot' && message.text === 'typing');
+            if (index !== -1) {
+              updatedMessages[index] = botmsg;
+            }
+            return updatedMessages;
+          });
+        }
       });
     }
   };
@@ -197,7 +217,7 @@ export const BotScreen = () => {
     }
 
     console.log(req);
-    const res = await httpClient.post(`auth/c-auth`, reqObj);
+    const res:any = await httpClient.post(`auth/c-auth`, reqObj);
     if (res.data.statusCode == 200) {
       setBottomSheetVisible(false);
       ToastService('Thanks alot for the feedback');
@@ -237,12 +257,14 @@ export const BotScreen = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 30}>
       <View style={BotStyle.container}>
         <View style={BotStyle.header}>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
+          <View style={{ flexDirection: 'row', gap: 5 }}>
             <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
-              <NewBackButton style={{backgroundColor: "rgba(41, 71, 212, 0.07)", borderRadius: 24, padding : 5}} height={18} width={18} fill={'black'} />
-              <BotIcon height={32} width={32} fill={Colors.primary} />
+              <View style={{backgroundColor: "rgba(41, 71, 212, 0.07)", borderRadius: 24, padding : 5}}>
+                  <NewBackButton style={{}} height={14} width={18} fill={'black'} />
+              </View>
             </TouchableOpacity>
-            <View style={{justifyContent: 'center'}}>
+            <View style={{justifyContent: 'center', flexDirection: 'row', alignItems: 'center', gap: 5}}>
+              <BotIcon height={32} width={32} fill={Colors.primary} />
               <Text style={BotStyle.headerTitle}>Ezy..</Text>
               {/* <Text style={BotStyle.headerTitleInfo}>• online</Text> */}
             </View>

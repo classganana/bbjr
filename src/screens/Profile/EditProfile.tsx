@@ -8,9 +8,10 @@ import { CancelButton, EditButton, ExitButton, LoginButton, OutlineButton, Submi
 import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
-import { CustomDropdown } from '../../components/common/Performance/CustomDropdown/CustomDropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { ToastService } from '../../services/ToastService';
+import Dropdown from '../../components/common/Performance/CustomDropdown/CustomDropdown';
 
 const EditProfile = () => {
     const [name, setName] = useState('');
@@ -29,6 +30,8 @@ const EditProfile = () => {
     const toggleEditMode = () => {
         setIsEditMode(!isEditMode);
     };
+
+    useEffect(() =>{})
 
 
     useEffect(() => {
@@ -66,30 +69,31 @@ const EditProfile = () => {
                 setUser({ ...updatedData, userId });
                 AsyncStorage.setItem('user', JSON.stringify({ ...updatedData, userId }));
                 toggleEditMode();
+                ToastService('Profile updated successfully.');
             }
         });
     }
 
     const listOfClass = [
-        { label: 5 },
-        { label: 6 },
-        { label: 7 },
-        { label: 8 },
-        { label: 9 },
-        { label: 10 },
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
     ]
 
     const listOfBoards = [
-        { label: "CBSE" },
-        { label: "ICSE" },
-        { label: "Telangana Board" },
+        "CBSE",
+        // "ICSE",
+        // "Telangana Board"
     ]
 
     const onBack = () => {
         navigation.navigate('Setting' as never)
     }
-
-
 
 
     return (
@@ -123,93 +127,82 @@ const EditProfile = () => {
                         />
                     </View>
 
-                    {/* <View style={styles.inputBlocks}>
+                    <View style={styles.inputBlocks}>
                         <Text style={styles.label}>Phone Number</Text>
                         <TextInput
                             style={styles.input}
                             placeholder="Phone number"
                             value={phoneNumber}
-                            editable={isEditMode}
+                            editable={false}
                             onChangeText={text => {
                                 setPhoneNumber(text);
                                 // checkFields();
                             }}
                         />
-                    </View> */}
+                       {isEditMode && <Text style={{color: 'red', fontSize: 12}}>Phone number can't be edited.</Text>}
+                    </View>
 
                     <View style={styles.inputBlocks}>
                         <Text style={styles.label}>Class</Text>
-                        <View style={styles.picker}>
-                            <Picker
-                                enabled={isEditMode}
-                                selectedValue={classValue.toString()}
-                                onValueChange={(itemValue) => {
-                                    setClassValue(parseInt(itemValue));
-                                    // checkFields();
-                                }}
-                            >
-                                <Picker.Item style={styles.pickerItem} label="5" value="5" />
-                                <Picker.Item style={styles.pickerItem} label="6" value="6" />
-                                <Picker.Item label="7" value="7" />
-                                <Picker.Item label="8" value="8" />
-                                <Picker.Item label="9" value="9" />
-                                <Picker.Item label="10" value="10" />
-                                <Picker.Item label="11" value="11" />
-                                <Picker.Item label="12" value="12" />
-                            </Picker>
-                        </View>
-                    </View>
-
-                    <Text style={styles.label}>School/College</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="School Name"
-                        value={school}
-                        editable={isEditMode}
-                        onChangeText={text => {
-                            setSchool(text);
+                        <Dropdown disabled={isEditMode} options={listOfClass} onSelect={(itemValue) => {
+                            console.log(itemValue);
+                            setClassValue((prev) => parseInt(itemValue));
                             // checkFields();
-                        }}
-                    />
+                        } } label={classValue} />
 
-                    <Text style={styles.label}>Board</Text>
-                    <View style={styles.picker}>
-                        <Picker
-                            enabled={isEditMode}
-                            selectedValue={board}
-                            onValueChange={(itemValue) => {
-                                setBoard(itemValue);
+                    </View>
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>School/College</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="School Name"
+                            value={school}
+                            editable={isEditMode}
+                            onChangeText={text => {
+                                setSchool(text);
                                 // checkFields();
                             }}
-                        >
-                            <Picker.Item label="Select Board" value="" />
-                            <Picker.Item label="CBSE" value="CBSE" />
-                        </Picker>
+                        />
+                    </View>
+
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Board</Text>
+                        <Dropdown disabled={isEditMode} options={listOfBoards} onSelect={(itemValue) => {
+                            console.log(itemValue);
+                            setBoard((prev) => itemValue);
+                            // checkFields();
+                        } } label={board} dropdownTitle={''} />
+
                     </View>
                     {/* <Picker.Item label="ICSE" value="ICSE" /> */}
                     {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
-                    <Text style={styles.label}>Guardian’s Name</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Guardian’s Name"
-                        value={GuardianName}
-                        editable={isEditMode}
-                        onChangeText={text => {
-                            setGuardianName(text);
-                            // checkFields();
-                        }}
-                    />
-                    <Text style={styles.label}>Guardian’s Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Guardian's Email"
-                        value={GuardianEmail}
-                        editable={isEditMode}
-                        onChangeText={text => {
-                            setGuardianEmail(text);
-                            // checkFields();
-                        }}
-                    />
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Guardian’s Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter Guardian’s Name"
+                            value={GuardianName}
+                            editable={isEditMode}
+                            onChangeText={text => {
+                                setGuardianName(text);
+                                // checkFields();
+                            }}
+                        />
+                    </View>
+
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Guardian’s Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter Guardian's Email"
+                            value={GuardianEmail}
+                            editable={isEditMode}
+                            onChangeText={text => {
+                                setGuardianEmail(text);
+                                // checkFields();
+                            }}
+                        />
+                    </View>
                     <View style={styles.btn}>
                         {!isEditMode ? (
                             <Button
@@ -237,7 +230,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white
     },
     header: {
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         paddingVertical: 20,
         flexShrink: 0,
     },
@@ -288,6 +281,7 @@ const styles = StyleSheet.create({
     },
     inputBlocks: {
         paddingVertical: 0,
+        marginTop: 10
     },
     label: {
         fontSize: 16,
@@ -297,6 +291,7 @@ const styles = StyleSheet.create({
         padding: 0,
         borderBottomWidth: 1,
         borderColor: Colors.primary,
+        color: 'black'
         // height: 35, // Set the height as needed
         // marginBottom: 10,
     },

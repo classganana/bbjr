@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Onboard } from '../screens/onboarding/Onboard';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Colors } from '../styles/colors';
 
 export const OnBoardingNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -36,7 +37,7 @@ export const OnBoardingNavigator = () => {
     // Render loading indicator while loading
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }

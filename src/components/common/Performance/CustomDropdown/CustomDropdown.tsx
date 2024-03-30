@@ -1,156 +1,87 @@
-import React, { useState } from "react";
-import {
-  ScrollView,
-  FlatList,
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { Colors } from "../../../../styles/colors";
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
+import { Colors } from '../../../../styles/colors';
 
-type CustomDropdownProps = {
-  label: string;
-  dropdownPlaceholder: string;
-  list: { label: string | number }[];
-  defaultSelectedItem?: any;
-};
+interface DropdownProps {
+  options: string[];
+  onSelect: (option: string) => void;
+  label: string | number;
+  disabled: boolean,
+  dropdownTitle: string
+}
 
-export const CustomDropdown: React.FC<CustomDropdownProps> = ({
-  label,
-  dropdownPlaceholder,
-  list,
-  defaultSelectedItem,
-}) => {
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string | number>(
-    defaultSelectedItem
-  );
-  const [inputValue, setInputValue] = useState<string | number>(
-    dropdownPlaceholder
-  );
+const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, label, disabled, dropdownTitle = 'Select from given option' }) => {
+  const [isVisible, setIsVisible] = useState(false);
 
-  const handleDropdownSelect = (itemLabel: string | number) => {
-    setSelectedItem(itemLabel);
-    setInputValue(itemLabel);
-    setDropdownVisible(false);
+  const handleSelectOption = (option: string) => {
+    onSelect(option);
+    setIsVisible(false);
   };
-
-  const handleInputPress = () => {
-    setDropdownVisible(!isDropdownVisible);
-  };
-
-  const handleDropdownClose = () => {
-    setDropdownVisible(false);
-  };
-
-  const HideStar = label === "Select Exam" || label === "Select Subject";
 
   return (
-    <TouchableWithoutFeedback onPress={handleDropdownClose}>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handleInputPress}>
-          <View>
-            <View style={styles.label}>
-              <Text style={styles.labeltext}>
-                {label}
-                {!HideStar && <Text style={styles.star}> *</Text>}
-              </Text>
-            </View>
-            <View style={styles.inputcontainer}>
-              <Text style={styles.inputValue}>{inputValue}</Text>
-              <Text style={styles.icon}>
-                {isDropdownVisible ? "▲" : "▼"}
-              </Text>
-            </View>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={() => disabled && setIsVisible(true)} style={styles.dropdownButton}>
+        <Text style={styles.selectedOption}>{label}</Text>
+      </TouchableOpacity>
+      {disabled && <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}>
+        <TouchableOpacity style={styles.modalOverlay} onPress={() => setIsVisible(false)}>
+          <View style={styles.modalContent}>
+            <Text style={styles.dropdownTitle}>{dropdownTitle}</Text>
+            <FlatList
+              data={options}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handleSelectOption(item)}>
+                  <Text style={styles.optionText}>{item}</Text>
+                </TouchableOpacity>
+              )}
+            />
           </View>
         </TouchableOpacity>
-
-        {isDropdownVisible && (
-          <View style={styles.dropdowncontainer}>
-            {/* <View
-              style={{ maxHeight: 400 }} // Set a maximum height for scrolling
-            > */}
-              <FlatList
-                data={list}
-                keyExtractor={(item) => item.label.toString()}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={styles.dropdownOption}
-                    onPress={() => handleDropdownSelect(item.label)}
-                  >
-                    <Text>{item.label}</Text>
-                  </TouchableOpacity>
-                )}
-              />
-            {/* </View> */}
-          </View>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+      </Modal>}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: 100,
-    backgroundColor: Colors.white,
-    elevation: 4,
-    shadowColor: Colors.shadow_color,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 0.5,
-    borderRadius: 10,
-    display: "flex",
+    width: '100%',
   },
-
-  inputcontainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingLeft: 10,
-    padding: 10,
-  },
-
-  label: {
-    flexDirection: "row",
-  },
-
-  labeltext: {
-    fontSize: 12,
-    fontFamily: "Inter-Regular",
-    paddingHorizontal: 4,
-  },
-
-  star: {
-    color: Colors.red,
-  },
-
-  icon: {
-    marginHorizontal: 5,
-  },
-
-  dropdowncontainer: {
-    elevation: 20,
-    shadowColor: Colors.black_03,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-    borderColor: Colors.black_01,
-    borderRadius: 5,
-    padding: 10,
-    width: "100%",
-    backgroundColor: Colors.gray_01,
-    zIndex: 100,
-    height: 100
-  },
-
-  dropdownOption: {
+  dropdownButton: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.primary,
     paddingVertical: 5,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
-
-  inputValue: {
-    color: Colors.gray_09,
+  dropdownTitle : {
+    padding: 16
+  },
+  selectedOption: {
+    fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    maxHeight: 200,
+    width: '100%',
+  },
+  optionText: {
+    padding: 10,
+    fontSize: 16,
   },
 });
+
+export default Dropdown;

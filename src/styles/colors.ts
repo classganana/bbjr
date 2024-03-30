@@ -64,7 +64,8 @@ export const Colors = {
   progressBar: "#E0DFF1" ,
   lemon_yellow: "#FFF7E3",
   bot_message_bg : "#F1F3FF",
-  secondary: "#F0F2FC"
+  secondary: "#F0F2FC",
+  settinBgColor: 'rgba(41, 71, 212, 0.08)'
 };
 
 export const SubjectColors = [
