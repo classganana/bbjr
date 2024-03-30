@@ -5,7 +5,7 @@ import { OnBoardingNavigator } from './OnboardinNavigator';
 import { DashboardNavigator } from './DashboardNavigator';
 import { QuizNavigator } from './QuizNavigator';
 import { BotNavigator } from './BotNavigator';
-import { LoginScreen } from '../screens/auth/LoginScreen/LoginScreen';
+import { LoginScreen } from '../screens/Auth/LoginScreen/LoginScreen';
 import { AuthNavigator } from './AuthNavigator';
 import { ProfileNavigator } from './ProfileNavigator';
 import BottomTabSetup from '../screens/BottomTab/BottomTabSetup';
