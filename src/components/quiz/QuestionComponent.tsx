@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
   optionButtonContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    gap: 5
   },
   selectedOptionButton: {
     borderWidth: 1 / 2,
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 10,
+    // marginRight: 10,
   },
   optionMarkerSelected: {
     backgroundColor: Colors.primary
