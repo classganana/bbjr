@@ -73,7 +73,8 @@ export const DashboardStyle = StyleSheet.create({
     leaderboardHeader: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginBottom: 10
     },
     leaderboardHeaderText: {
         fontWeight: "500",
@@ -118,7 +119,7 @@ export const DashboardStyle = StyleSheet.create({
     optionTitle: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 10,
+        paddingVertical: 2,
         paddingHorizontal: 5,
         // borderBottomColor: Colors.primary,
         // borderBottomWidth: 1/2,
@@ -126,7 +127,8 @@ export const DashboardStyle = StyleSheet.create({
     },
     viewAllBlock: {
       borderBlockColor: Colors.primary,
-      borderBottomWidth: 1,
+      borderBottomWidth: 0,
+      marginTop: 6,
       filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.10))",
     },
     viewAllText: {
@@ -140,6 +142,7 @@ export const DashboardStyle = StyleSheet.create({
       display: 'flex',
       flexDirection: 'row',
       gap: 20,
+      padding: 10
     },
     optionHeading: {
       fontSize: 16,
@@ -151,7 +154,7 @@ export const DashboardStyle = StyleSheet.create({
     optionCardHeading: {
       fontSize: 16,
       color: "#4E4E4E",
-      fontWeight: '500',
+      fontWeight: '600',
     },
     option: {
       width: "100%",
@@ -160,7 +163,7 @@ export const DashboardStyle = StyleSheet.create({
       display: 'flex',
       padding: 12,
       borderRadius:22,
-      gap: 15,
+      gap: 10,
       backgroundColor: 'white', // Set a non-transparent background color
       shadowColor: Colors.black_03,
       shadowOffset: { width: 4, height: 4 },
@@ -199,7 +202,7 @@ export const DashboardStyle = StyleSheet.create({
     },
     optionBodyDescription: {
       fontSize: 14,
-      color: '#676767'
+      color: Colors.dark_gray_06,      
     },
     botHeading: {
       color: "#000",
@@ -211,12 +214,14 @@ export const DashboardStyle = StyleSheet.create({
       fontSize: 12
     },
     botBlock: {
-      borderColor: "#DBE2FF",
+      borderColor: "#2947D4",
       marginBottom: 12,
       alignSelf: 'center',
       width: '98%',
-      minHeight: 140,
-      padding: 14,
+      minHeight: 160,
+      padding: 16,
+      paddingHorizontal: 20,
+      
       backgroundColor: "white",
       borderRadius: 20,
       shadowColor: Colors.black_03,
@@ -226,17 +231,17 @@ export const DashboardStyle = StyleSheet.create({
           shadowColor: 'rgba(0, 0, 0, 0.15)',
           shadowOffset: { width: 0, height: 0 },
           shadowOpacity: 1,
-          shadowRadius: 8,
+          shadowRadius: 4,
         },
         android: {
-          elevation: 4,
+          elevation: 2,
         },
       }),
       
     },
     botBlockDesc: {
       flex: 10,
-      marginTop: "5%",
+      marginTop: "10%",
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -278,7 +283,7 @@ export const DashboardStyle = StyleSheet.create({
     },
     boostYourKnowledge : {
         fontWeight: '500',
-        fontSize: 16
+        fontSize: 18
     },
     pendingQuizzesList : {
       paddingHorizontal: 4,
@@ -320,8 +325,9 @@ export const DashboardStyle = StyleSheet.create({
     promptText: {
       flexDirection: 'row',
       fontSize: 14,
-      fontWeight: "600",
-      top: 10 
+      fontWeight: "400",
+      top: 10,
+      lineHeight: 20
     },
     circularDiv : {
       width: 30,  // Set the width of your circular div
@@ -338,5 +344,10 @@ export const DashboardStyle = StyleSheet.create({
       shadowOpacity: 0.6,
       shadowRadius: 4,
       elevation: 5, // Elevation (for Android)
-    }
+    },
+    avatarImage: {
+      height: 50,
+      width: 50,
+      borderRadius: 60, // Make it circular
+    },
 })

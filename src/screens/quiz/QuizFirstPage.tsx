@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { ArrowLeft, DownArrow } from '../../components/common/SvgComponent/SvgComponent'
+import { ArrowLeft, DownArrow, NewBackButton } from '../../components/common/SvgComponent/SvgComponent'
 import { Colors } from '../../styles/colors'
 import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
 import { QuizInformation } from '../../components/quiz/QuizInformation'
@@ -129,7 +129,7 @@ export const QuizFirstPage = () => {
                 const req = {
                     "schoolId": "default",
                     "boardId": user?.board,
-                    "subject": subject,
+                    subject: route.params[0][0].subject,
                     "className": user?.class,
                     "studentId": user?.userId,
                     "chapterName": listOfChapters,
@@ -151,14 +151,16 @@ export const QuizFirstPage = () => {
                     delete req.subject;
                 }
 
-                route?.params[0][0].allChapter ? delete req.chapterName: ''
+                route?.params[0][0].allChapter == true ? delete req.chapterName: ''
+
+                console.log(reqObj);
         
                 httpClient.post(`auth/c-auth`, reqObj)
                     .then((res: any) => {
                         const quiz = {
                             schoolId: 'default',
                             chapterName: listOfChapters,
-                            subject: subject,
+                            subject: route.params[0][0].subject,
                             boardId: user?.board,
                             className: user?.class,
                             studentId: user?.userId,
@@ -239,7 +241,7 @@ export const QuizFirstPage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity onPress={onBack} style={styles.backButton}>
-                        <ArrowLeft height={'25'} width={'25'} fill={'black'} />
+                        <NewBackButton height={'18'} width={'18'} fill={'black'} />
                     </TouchableOpacity>
                     <Text style={styles.headingTitle}>
                         {quizType} Details</Text>
@@ -316,7 +318,7 @@ const styles = StyleSheet.create({
     container: {
         margin: 0,
         flex: 1,
-        backgroundColor: "#F2F7F8"
+        backgroundColor: Colors.white
     },
     header: {
         paddingHorizontal: 22,
@@ -340,7 +342,7 @@ const styles = StyleSheet.create({
         height: 45,
         width: 45,
         borderRadius: 45,
-        backgroundColor: "#D9D9D9",
+        backgroundColor: Colors.white,
         display: 'flex',
         marginLeft: -10,
         // flexDirection: 'row',
@@ -365,17 +367,7 @@ const styles = StyleSheet.create({
     quizInfo: {
         zIndex: -1,
         flex: 1,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
         backgroundColor: '#FFF',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 0,
-        },
-        shadowOpacity: 0.10,
-        shadowRadius: 15,
-        elevation: 2, // for Android shadow
         paddingHorizontal: 24,
     },
     startQuizButton: {

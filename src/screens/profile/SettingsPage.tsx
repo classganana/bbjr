@@ -1,33 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Share } from 'react-native';
-import { IconButton } from '../../components/common/IconButtonComponent/IconButton';
-import { EditIconButton } from '../../components/common/IconButtonComponent/iconButtonStyle';
+import { View, Text, StyleSheet, TouchableOpacity, Share, Image, Modal, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import {
   AboutIcon,
-  ArrowIcon,
-  ArrowLeft,
   ConditionIcon,
   ContactIcon,
-  LeaderIcon,
+  EditProfilePicIcon,
   LogoutIcon,
   NewBackButton,
   PencilIcon,
   PrivacyIcon,
   ScoreIcon,
+  ShareIcon,
 } from '../../components/common/SvgComponent/SvgComponent';
 import { Colors } from '../../styles/colors';
-import { httpClient } from '../../services/HttpServices';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert, Linking } from 'react-native';
+import { Button } from '../../components/common/ButttonComponent/Button';
+import { StartButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
-
 
 export const SettingsPage = () => {
   // const [user, setUser] = useState<any>();
   const {user, setUser} = useUser()
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const dummyArray = [1, 2, 3, 4, 5, 6];
+  const [selectedImage, setSelectedImage] = useState(1);
+  const images: { [key: number]: NodeRequire } = {
+    1: require('../../../assets/users/f1.png'),
+    2: require('../../../assets/users/f2.png'),
+    3: require('../../../assets/users/f3.png'),
+    4: require('../../../assets/users/f4.png'),
+    5: require('../../../assets/users/f5.png'),
+    6: require('../../../assets/users/f6.png'),
+  };
+
+  const privacyUrl = 'http://eduzy.in/privacyPolicy';
 
   const navigation = useNavigation();
+
+  const handleImageClick = (index: number) => {
+    setSelectedImage(index);
+  };
 
   const moveToEditProfile = () => {
       navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never);
@@ -59,12 +75,40 @@ export const SettingsPage = () => {
   };
 
   const logout = () => {
-    AsyncStorage.clear();
-    navigation.navigate('Auth' as never);
-    setUser({});
-    console.log("Loggin Out");
+    console.log("hihiih");
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel'
+        },
+        {
+          text: 'Logout',
+          onPress: () => {
+            AsyncStorage.clear();
+            navigation.navigate('Auth' as never);
+            setUser({});
+            console.log("Loggin Out");
+          }
+        }
+      ]
+    );
 
   }
+
+  const handleOpenBrowser = async () => {
+    const url = 'http://eduzy.in/privacyPolicy'; // Replace this with your desired URL
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.error("Don't know how to open URI: " + url);
+    }
+  };
 
   useEffect(() => {
   }, []);
@@ -81,14 +125,22 @@ export const SettingsPage = () => {
 
   const onBack = () => {
     navigation.navigate('DashboardNavigator' as never)
-}
+  }
+
+  const toggleModal = (save?: boolean) => {
+    setIsModalVisible(!isModalVisible);
+    if (save) {
+      const obj = {...user, avatarId: selectedImage }
+      setUser(obj);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.heading}>
-          <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
-            <NewBackButton height={18} width={18} fill={'black'} />
+           <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
+            <NewBackButton height={14} width={14} fill={'black'} />
           </TouchableOpacity>
           <View>
             <Text style={styles.headingTitle}>Settings</Text>
@@ -96,70 +148,166 @@ export const SettingsPage = () => {
         </View>
       </View>
       <View style={styles.DetailContainer}>
-        <View style={styles.block1}>  
-         <CircleInitials name={user?.name} size={100} />
-          <View style={{ gap: 6 }}>
+        <View style={styles.block1}>
+        {user && user?.avatarId ? <Image style={styles.avatarImage} source={images[user.avatarId] as any} />
+                            : <CircleInitials name={user?.name} size={120} />}
+          <TouchableOpacity onPress={() => toggleModal()} style={styles.editIconContainer}>
+            <EditProfilePicIcon height={24} width={24} fill={'white'} />
+          </TouchableOpacity>
+         {/* <CircleInitials name={user?.name} size={100} /> b*/}
+          {/* <View style={{ gap: 6 }}>
             <Text style={styles.name}>{user && user.name}</Text>
             <Text>{user && user.class} Class</Text>
             <Text>{user && user.school}</Text>
             <Text>{user && user.board} Board</Text>
-          </View>
+          </View> */}
         </View>
         <View style={styles.block2}>
           <TouchableOpacity onPress={handleShare} style={styles.friend}>
-            <ContactIcon height={15} width={16} fill={'black'} />
-            <Text>Invite Friends</Text>
+            <ShareIcon height={16} width={16} fill={"#2947D4"} />
+            <Text style={styles.friendText}>Invite Friends</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={moveToEditProfile} style={styles.editProfile}>
-          <PencilIcon height={18} width={28} fill={'#fff'} />
+
+          <TouchableOpacity onPress={moveToEditProfile} style={styles.friend}>
+            <ContactIcon height={20} width={16} fill={"#2947D4"} />
+            <Text style={styles.friendText}>Edit Profile</Text>
+          </TouchableOpacity>
+
+
+          {/* <TouchableOpacity onPress={moveToEditProfile} style={styles.editProfile}>
             <Text style={{color: 'white'}}>View Complete Profile</Text>
-          </TouchableOpacity>
-            {/* <IconButton
-              onPress={moveToEditProfile}
-              className={EditIconButton}
-              icon={
-              <PencilIcon height={18} width={28} fill={'#fff'} />
-            }
-              label={'Edit Profile'}
-              pos={'right'}
-            /> */}
+          </TouchableOpacity> */}
         </View>
-        {labels.map((buttonLabel, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => {
-              if (buttonLabel.title === 'View leaderboard') {
-                moveToLeaderboard();
-              }
-              if(buttonLabel.title === 'Log Out') {
-                logout();
-              }
-              if (buttonLabel.title === 'Previous Test Scores') {
-                moveToQuizHistory();
-              }
-            }}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: 20, position: 'relative' }}>
-            {buttonLabel.leftSvg}
-            <Text>{buttonLabel.title}</Text>
-            <View style={{ position: 'absolute', right: 0 }}>
-              <ArrowIcon height={5} width={10} fill={'black'} />
-            </View>
-          </TouchableOpacity>
-        ))}
+        <View style={styles.optionList}>
+        <View style={styles.optionHeading}>
+          <Text style={styles.headingTitle}>Account</Text>
+          <Text style={styles.headingInfo}>Your account and privacy details</Text>
+        </View>
+          {labels.map((buttonLabel, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                if (buttonLabel.title === 'View leaderboard') {
+                  moveToLeaderboard();
+                }
+                if(buttonLabel.title === 'Log Out') {
+                  logout();
+                }
+                if (buttonLabel.title === 'Previous Test Scores') {
+                  moveToQuizHistory();
+                }
+                if (buttonLabel.title === 'Privacy') {
+                  handleOpenBrowser();
+                }
+              }}
+              style={styles.settionOptions}>
+              {buttonLabel.leftSvg}
+              <Text style={{fontSize: 16}} >{buttonLabel.title}</Text>
+              <View style={{ position: 'absolute', right: 26, transform: [{ rotate: '180deg' }] }}>
+                  <NewBackButton height={14} width={14} fill={'black'} />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => toggleModal()}
+      >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+                <Text style={styles.modalText}>Choose your avatar</Text>
+                <ScrollView contentContainerStyle={styles.avatarContainer}>
+                  <TouchableOpacity onPress={() => handleImageClick(1)}>
+                    <Image style={[styles.avatarImage, selectedImage === 1 && styles.selectedImage]} source={require('../../../assets/users/f1.png')} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleImageClick(2)}>
+                    <Image style={[styles.avatarImage, selectedImage === 2 && styles.selectedImage]} source={require('../../../assets/users/f2.png')} />
+                  </TouchableOpacity>                  
+                  <TouchableOpacity onPress={() => handleImageClick(3)}>
+                    <Image style={[styles.avatarImage, selectedImage === 3 && styles.selectedImage]} source={require('../../../assets/users/f3.png')} />
+                  </TouchableOpacity>                  
+                  <TouchableOpacity onPress={() => handleImageClick(4)}>
+                    <Image style={[styles.avatarImage, selectedImage === 4 && styles.selectedImage]} source={require('../../../assets/users/f4.png')} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleImageClick(5)}>
+                    <Image style={[styles.avatarImage, selectedImage === 5 && styles.selectedImage]} source={require('../../../assets/users/f5.png')} />
+                  </TouchableOpacity>                  
+                  <TouchableOpacity onPress={() => handleImageClick(6)}>
+                    <Image style={[styles.avatarImage, selectedImage === 6 && styles.selectedImage]} source={require('../../../assets/users/f6.png')} />
+                  </TouchableOpacity>
+                </ScrollView>
+                <Button label={"Save"} disabled={!(selectedImage > 0 && selectedImage <= 6)} onPress={() => (toggleModal(true))}
+              className={StartButton}
+              ></Button>
+            </View>
+          </View>
+      </Modal>
     </View>
   );
 };
 
 
 const styles = StyleSheet.create({
+  selectedImage: {
+    borderWidth: 2,
+    borderColor: 'blue', // Add your desired border color here
+  },
+  avatarImage: {
+    height: 120,
+    width: 120,
+    borderRadius: 60, // Make it circular
+  },
+  avatarContainer : {
+      marginTop: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      flex: 1
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    width: '100%',
+    alignItems: 'center',
+    height: "50%",
+    justifyContent: 'center',
+
+  },
+  modalText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: 'black', // Change the color if needed
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#2947D4',
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
   container: {
     display: 'flex',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.settinBgColor,
     flex: 1,
 
   },
   header: {
+    backgroundColor: Colors.settinBgColor,
     paddingHorizontal: 20,
     paddingVertical: 20,
 
@@ -167,8 +315,27 @@ const styles = StyleSheet.create({
   heading: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 20
-
+    gap: 12
+  },
+  editIconContainer: {
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+    backgroundColor: Colors.white,
+    position:"absolute", 
+    left: "55%",
+    top: "70%",
+    padding: 6
+  },
+  optionList : {
+    backgroundColor: Colors.white,
+    flex: 1,
+    gap: 10
+  },
+  optionHeading : {
+    gap: 12,
+    paddingVertical: 20,
+    paddingHorizontal: 26,
   },
   headingTitle: {
     color: Colors.black_05,
@@ -179,13 +346,23 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   DetailContainer: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    backgroundColor: Colors.white,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    gap: 32,
+    backgroundColor: Colors.settinBgColor,
+    // gap: 32,
     flex: 1,
+
+  },
+  settionOptions: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     gap: 20,
+     marginHorizontal: 24,
+     marginTop: 0,
+     marginVertical: 5,
+     borderWidth: 1,
+     borderColor: Colors.gray_05,
+     paddingVertical: 14,
+     paddingHorizontal: 26,
+     borderRadius: 14
 
   },
 
@@ -193,7 +370,7 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
     borderRadius: 25,
-    backgroundColor: Colors.white,
+    // backgroundColor: Colors.white,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
@@ -208,7 +385,18 @@ const styles = StyleSheet.create({
   },
   friend: {
     flexDirection: 'row',
-    gap: 7,
+    gap: 10,
+    backgroundColor: Colors.white,
+    paddingVertical: 12,
+    paddingHorizontal: 26,
+    borderRadius: 16,
+    alignItems: 'center',
+
+  },
+  friendText:{
+    fontWeight: '600',
+    color: "#2947D4",
+    fontSize: 16
   },
   editProfile: {
     backgroundColor: Colors.primary,
@@ -221,19 +409,19 @@ const styles = StyleSheet.create({
   },
   block1: {
     flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'center',
     display: 'flex',
-    gap: 32,
   },
   block2: {
-    position: 'relative',
-    borderBottomWidth: 1,
+    gap: 10,
     flexDirection: 'row',
     paddingHorizontal: 10,
-    paddingVertical: 10,
     borderColor: Colors.primary,
     alignItems: 'center',
-    justifyContent:'space-between'
+    justifyContent:'space-around',
+    // marginBottom: 15,
+    marginVertical: 15
+    // justifyContent: 'center',
   },
   button: {
     // width: '50%',
@@ -246,7 +434,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 19.764,
   }
 })
 

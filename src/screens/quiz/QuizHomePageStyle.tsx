@@ -65,6 +65,14 @@ export const styles = StyleSheet.create({
         color: '#787878'
     },
     body: {backgroundColor: Colors.white, flex: 1, borderTopStartRadius: 20, borderTopEndRadius: 20},
+    noQuizFound : {
+        flex: 1,
+        height: 600,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+
+        // backgroundColor: 'red'
+    },
     tabs: {
         paddingHorizontal: 16,
     },

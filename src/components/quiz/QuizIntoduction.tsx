@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { Questions } from '../common/SvgComponent/SvgComponent';
+import { Questions, QuizClock, QuizStar } from '../common/SvgComponent/SvgComponent';
 import { UtilService } from '../../services/UtilService';
 
 type QuizIntoductionProps = {
@@ -34,7 +34,7 @@ export const QuizIntoduction = (props: QuizIntoductionProps) => {
                     </View>
                 </View>
                 <View style={styles.option}>
-                    <Questions height={'40'} width={'40'} fill={'black'} />
+                    <QuizClock height={'40'} width={'40'} fill={'black'} />
                     <View>
                         {quizType == 'practice' ? 
                         <Text style={styles.optionHeading}>No Time Limit</Text>
@@ -45,7 +45,7 @@ export const QuizIntoduction = (props: QuizIntoductionProps) => {
                     </View>
                 </View>
                 <View style={styles.option}>
-                    <Questions height={'40'} width={'40'} fill={'black'} />
+                    <QuizStar height={'40'} width={'40'} fill={'black'} />
                     <View>
                     {quizType == 'practice' ? 
                         <Text style={styles.optionHeading}>No Scoring</Text>

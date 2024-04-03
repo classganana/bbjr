@@ -8,9 +8,10 @@ import { CancelButton, EditButton, ExitButton, LoginButton, OutlineButton, Submi
 import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
-import { CustomDropdown } from '../../components/common/Performance/CustomDropdown/CustomDropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { ToastService } from '../../services/ToastService';
+import Dropdown from '../../components/common/Performance/CustomDropdown/CustomDropdown';
 
 const EditProfile = () => {
     const [name, setName] = useState('');
@@ -21,18 +22,17 @@ const EditProfile = () => {
     const [GuardianName, setGuardianName] = useState('');
     const [GuardianEmail, setGuardianEmail] = useState('');
     const [userId, setUserId] = useState<any>('');
-    const {user, setUser} = useUser()
+    const { user, setUser } = useUser()
     const navigation = useNavigation();
 
-    const [isEditMode, setIsEditMode] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(true);
 
     const toggleEditMode = () => {
         setIsEditMode(!isEditMode);
     };
 
-
     useEffect(() => {
-        if(user){
+        if (user) {
             setName(user.name);
             setBoard(user.board);
             setClassValue(user.class);
@@ -43,6 +43,8 @@ const EditProfile = () => {
             user.guardianName && setGuardianName(user.guardianName);
         }
     }, [])
+
+    
 
 
     const updateProfile = () => {
@@ -56,33 +58,47 @@ const EditProfile = () => {
 
         updatedData.class = parseInt(updatedData.class);
 
-        GuardianName? updatedData = {...updatedData, GuardianName}: ''
-        GuardianEmail? updatedData = {...updatedData, GuardianEmail}: ''
+        GuardianName ? updatedData = { ...updatedData, GuardianName } : ''
+        GuardianEmail ? updatedData = { ...updatedData, GuardianEmail } : ''
 
         httpClient.patch(`users/${userId}`, {
             ...updatedData
         }).then((res) => {
-            if(res.data.acknowledged) {
-                setUser({...updatedData, userId});
-                AsyncStorage.setItem('user',JSON.stringify({...updatedData, userId}));
+            if (res.data.acknowledged) {
+                setUser({ ...updatedData, userId });
+                AsyncStorage.setItem('user', JSON.stringify({ ...updatedData, userId }));
                 toggleEditMode();
+                ToastService('Profile updated successfully.');
             }
         });
     }
 
     const listOfClass = [
-        { label: 5 },
-        { label: 6 },
-        { label: 7 },
-        { label: 8 },
-        { label: 9 },
-        { label: 10 },
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
     ]
 
+    const classToRomanMapping = [
+        { class: 6, label: 'Class VI' },
+        { class: 7, label: 'Class VII' },
+        { class: 8, label: 'Class VIII' },
+        { class: 9, label: 'Class IX' },
+        { class: 10, label: 'Class X' },
+        { class: 11, label: 'Class XI' },
+        { class: 12, label: 'Class XII' }
+      ];
+      
+
     const listOfBoards = [
-        { label: "CBSE" },
-        { label: "ICSE" },
-        { label: "Telangana Board" },
+        "CBSE",
+        // "ICSE",
+        // "Telangana Board"
     ]
 
     const onBack = () => {
@@ -90,31 +106,18 @@ const EditProfile = () => {
     }
 
 
-
-
     return (
-
-        <ScrollView style={{ flexGrow: 1 }}>
+        <ScrollView style={{ flex: 1, flexGrow: 1, backgroundColor: 'white' }}>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heading}>
                         <TouchableOpacity style={styles.backButton} onPress={() => onBack()}>
-                            <NewBackButton height={'18'} width={'25'} fill={'black'} />
+                            <NewBackButton height={'14'} width={'14'} fill={'black'} />
                         </TouchableOpacity>
                         <Text style={styles.headingTitle}>Profile</Text>
                     </View>
                 </View>
                 <View style={styles.DetailContainer}>
-                    <View style={styles.ImageContainer}>
-                        {/* <View style={styles.ProfileImage} > */}
-                            {/* <View style={styles.CameraBorder}> */}
-                                <CircleInitials name={user?.name} size={150} />
-                                {/* <CameraIcon height={'50'} width={'50'} fill={'white'} /> */}
-                            {/* </View> */}
-                        {/* </View> */}
-                    </View>
-
-
                     <View style={styles.inputBlocks}>
                         <Text style={styles.label}>Name</Text>
                         <TextInput
@@ -135,87 +138,76 @@ const EditProfile = () => {
                             style={styles.input}
                             placeholder="Phone number"
                             value={phoneNumber}
-                            editable={isEditMode}
+                            editable={false}
                             onChangeText={text => {
                                 setPhoneNumber(text);
+                                // checkFields();
+                            }}
+                        />
+                       {isEditMode && <Text style={{color: 'red', fontSize: 12}}>Phone number can't be edited.</Text>}
+                    </View>
+
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Class</Text>
+                        <Dropdown disabled={isEditMode} options={listOfClass} onSelect={(itemValue) => {
+                            console.log(itemValue);
+                            setClassValue((prev) => parseInt(itemValue));
+                            // checkFields();
+                        } } label={classValue} dropdownTitle={'Select your class'} />
+
+                    </View>
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>School/College</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="School Name"
+                            value={school}
+                            editable={isEditMode}
+                            onChangeText={text => {
+                                setSchool(text);
                                 // checkFields();
                             }}
                         />
                     </View>
 
                     <View style={styles.inputBlocks}>
-                        <Text style={styles.label}>Class</Text>
-                        <View style={styles.picker}>
-                        <Picker 
-                                enabled={isEditMode}
-                                selectedValue={classValue.toString()}
-                                onValueChange={(itemValue) => {
-                                    setClassValue(parseInt(itemValue));
-                                    // checkFields();
-                                }}
-                            >
-                                <Picker.Item style={styles.pickerItem} label="5" value="5"/>
-                                <Picker.Item style={styles.pickerItem} label="6" value="6"/>
-                                <Picker.Item label="7" value="7"/>
-                                <Picker.Item label="8" value="8"/>
-                                <Picker.Item label="9" value="9"/>
-                                <Picker.Item label="10" value="10"/>
-                                <Picker.Item label="11" value="11"/>
-                                <Picker.Item label="12" value="12"/>
-                            </Picker>
-                        </View>
-                    </View>
-
-                    <Text style={styles.label}>School/College</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="School Name"
-                        value={school}
-                        editable={isEditMode}
-                        onChangeText={text => {
-                            setSchool(text);
+                        <Text style={styles.label}>Board</Text>
+                        <Dropdown disabled={isEditMode} options={listOfBoards} onSelect={(itemValue) => {
+                            console.log(itemValue);
+                            setBoard((prev) => itemValue);
                             // checkFields();
-                        }}
-                    />
+                        } } label={board} dropdownTitle={''} />
 
-                    <Text style={styles.label}>Board</Text>
-                    <View style={styles.picker}>
-                        <Picker
-                            enabled={isEditMode}
-                            selectedValue={board}
-                            onValueChange={(itemValue) => {
-                                setBoard(itemValue);
+                    </View>
+                    {/* <Picker.Item label="ICSE" value="ICSE" /> */}
+                    {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Guardian’s Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter Guardian’s Name"
+                            value={GuardianName}
+                            editable={isEditMode}
+                            onChangeText={text => {
+                                setGuardianName(text);
                                 // checkFields();
                             }}
-                        >
-                            <Picker.Item label="Select Board" value=""/>
-                            <Picker.Item label="CBSE" value="CBSE" />
-                        </Picker>
+                        />
                     </View>
-                            {/* <Picker.Item label="ICSE" value="ICSE" /> */}
-                            {/* <Picker.Item label="TELANGANA" value="TELANGANA" /> */}
-                    <Text style={styles.label}>Guardian’s Name</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Guardian’s Name"
-                        value={GuardianName}
-                        editable={isEditMode}
-                        onChangeText={text => {
-                            setGuardianName(text);
-                            // checkFields();
-                        }}
-                    />
-                    <Text style={styles.label}>Guardian’s Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Guardian's Email"
-                        value={GuardianEmail}
-                        editable={isEditMode}
-                        onChangeText={text => {
-                            setGuardianEmail(text);
-                            // checkFields();
-                        }}
-                    />
+
+                    <View style={styles.inputBlocks}>
+                        <Text style={styles.label}>Guardian’s Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter Guardian's Email"
+                            value={GuardianEmail}
+                            editable={isEditMode}
+                            onChangeText={text => {
+                                setGuardianEmail(text);
+                                // checkFields();
+                            }}
+                        />
+                    </View>
                     <View style={styles.btn}>
                         {!isEditMode ? (
                             <Button
@@ -226,7 +218,7 @@ const EditProfile = () => {
                             />
                         ) : (
                             <>
-                                <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={toggleEditMode} />
+                                <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={onBack} />
                                 <Button label={'Submit'} disabled={false} className={LoginButton} onPress={updateProfile} />
                             </>
                         )}
@@ -239,18 +231,20 @@ const EditProfile = () => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: Colors.white
     },
     header: {
-        paddingHorizontal: 20,
-        paddingVertical: 20,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
         flexShrink: 0,
+        flex: 1
     },
     heading: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10
+        gap: 0
     },
     headingTitle: {
         fontWeight: "500",
@@ -265,6 +259,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     DetailContainer: {
+        flex: 1,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         backgroundColor: Colors.white,
@@ -293,15 +288,20 @@ const styles = StyleSheet.create({
     },
     inputBlocks: {
         paddingVertical: 0,
+        marginTop: 10,
+        gap: 4
     },
     label: {
         fontSize: 16,
         fontWeight: '400',
     },
     input: {
-        padding: 0,
-        borderBottomWidth: 1,
-        borderColor: Colors.primary,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderWidth: 1,
+        borderColor: "#E2E8F0",
+        color: 'black',
+        borderRadius: 8
         // height: 35, // Set the height as needed
         // marginBottom: 10,
     },
@@ -325,6 +325,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignSelf: 'center',
         width: '100%',
+        bottom: 0,
     },
     Editbtn: {
         margin: 50,

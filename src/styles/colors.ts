@@ -42,6 +42,9 @@ export const Colors = {
   light_gray_01: "#F5F5F5",
   dark_gray_02:"#8C8C8C",
   dark_gray_03: "#898989",
+  dark_gray_04: "#7C7C7C",
+  dark_gray_05: "#6C6C6C",
+  dark_gray_06: "#5C5C5C",
   light_gray_02: "#D7D7D7",
   light_gray_03:"#C9C9C9",
   light_gray_04:"#717171",
@@ -64,7 +67,8 @@ export const Colors = {
   progressBar: "#E0DFF1" ,
   lemon_yellow: "#FFF7E3",
   bot_message_bg : "#F1F3FF",
-  secondary: "#F0F2FC"
+  secondary: "#F0F2FC",
+  settinBgColor: 'rgba(41, 71, 212, 0.08)'
 };
 
 export const SubjectColors = [

@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 import { Button } from "../../common/ButttonComponent/Button";
 import { StartButton } from "../../common/ButttonComponent/ButtonStyles";
 import { Colors, SubjectColors } from "../../../styles/colors";
@@ -35,32 +35,34 @@ const ChipComponent: React.FC<ButtonProps> = ({
   themeColor
 }) => {
   const { user } = useUser()
-  const textStyle:any=[
-    {color: themeColor && isPressed && Colors.white},
+  const textStyle: any = [
+    { color: (themeColor && isPressed) ? Colors.white : 'black' },
   ]
-  const buttonStyle:any= [
-    styles.child,{borderColor: themeColor && 'rgba(150, 150, 150, 0.64)',
-      borderWidth: themeColor && 1},
-    { backgroundColor: buttonData.color || Colors.Snow_Flurry },
+  const buttonStyle: any = [
+    styles.child, {
+      borderColor: themeColor && 'rgba(150, 150, 150, 0.64)',
+      borderWidth: themeColor && 1
+    },
+    { backgroundColor: buttonData.color || Colors.primary },
     isPressed
       ? {
-          shadowColor: "#000",
-          backgroundColor: themeColor && Colors.primary,
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
+        shadowColor: "#000",
+        backgroundColor: themeColor && Colors.primary,
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
 
-        }
+      }
       : null,
   ];
 
   return (
     <TouchableOpacity style={buttonStyle} onPress={onPress}>
-      <Text style={[styles.buttonText,textStyle]}>{buttonData.text}</Text>
+      <Text style={[styles.buttonText, textStyle]}>{buttonData.text}</Text>
     </TouchableOpacity>
   );
 };
@@ -73,12 +75,13 @@ export interface Props {
 
 // change component name from student to subject
 export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
-  const {user} = useUser();
+  const { user } = useUser();
   const [listOfSubjects, setListOfSubjects] = useState<Subject[]>([]);
   const [colorsMappedSubjectList, setColorsMappedSubjectList] = useState<
     SubjectWithColor[]
   >([]);
   const [pressedSubject, setPressedSubject] = useState<number>(-1);
+  const [loading, setLoading] = useState(true);
 
   const getSubjects = () => {
     const reqObj = {
@@ -86,24 +89,25 @@ export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
       // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
       "endpoint": `/subjects?board_id=${user?.board}&class_name=${user?.class}&school_id=default`,
       "requestMethod": "GET"
-  }
+    }
 
-  httpClient.post(`auth/c-auth`, reqObj).then((res) => {
-    const subjectList = res.data.data;
-    const result = subjectList.map((sub: any) => {
-      return {
-        subjectName: sub.subject
-      }
+    httpClient.post(`auth/c-auth`, reqObj).then((res) => {
+      const subjectList = res.data.data;
+      setLoading(false);
+      const result = subjectList.map((sub: any) => {
+        return {
+          subjectName: sub.subject
+        }
+      })
+
+      setListOfSubjects(result);
     })
-
-    setListOfSubjects(result);
-  })
   };
 
   const mapSubjectWithColors = (listOfSubject?: Subject[]) => {
     const mappedSubjectWithColor = listOfSubject?.map(
       (subject: Subject, index) => {
-        if(!themeColor) {
+        if (!themeColor) {
           const colorIndex = index % SubjectColors.length;
           return {
             subjectName: subject.subjectName,
@@ -134,6 +138,15 @@ export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
     selectedSubject(listOfSubjects[index]);
   };
 
+  if (loading) {
+    // Render loading indicator while loading
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 300 }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.subjectcontainer}>
@@ -152,7 +165,7 @@ export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
       </View>
     </ScrollView>
 
-);
+  );
 };
 
 const styles = StyleSheet.create({
