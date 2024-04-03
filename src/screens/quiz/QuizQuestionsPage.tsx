@@ -42,7 +42,7 @@ export const QuizQuestionsPage = () => {
     const [quizzId, setQuizzId] = useState<string | null>('');
     const {user} = useUser();
     const [subject, setSubject] = useState<string | null>('');
-    const reportOptions = ['Incorrect or incomplete question', 'Wrong Question', 'Formatting or image quality issue'];
+    const reportOptions = ['Incorrect or incomplete question', 'Wrong Question', 'Formatting issue'];
 
     const getQuizType = async () => {
         setQuizType(await AsyncStorage.getItem('quizType'));
