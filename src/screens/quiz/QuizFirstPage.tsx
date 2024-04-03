@@ -211,10 +211,10 @@ export const QuizFirstPage = () => {
         return (
             <View style={styles.chapterList}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={styles.infoContainerTextWidth}>
-                    {chapters}
+                    {subject}
                 </Text>
-                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setShow(!show)} >
-                    <Text>View more</Text>
+                <TouchableOpacity style={{ flexDirection: 'row', flex: 0.5 }} onPress={() => setShow(!show)} >
+                    <Text>View Selected Chapters</Text>
                     <DownArrow height={'20'} width={'20'} fill={Colors.black_01} />
                 </TouchableOpacity>
                 {show && <View style={styles.dropdownContainer}>
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     listOfChapters: {
-        marginTop: 24
+        marginTop: 24,
     },
     dropdownContainer: {
         borderWidth: 0.5,
@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: 'white',
         top: 0,
+        right: 0,
         paddingHorizontal: 18,
         paddingVertical: 20,
     },
@@ -297,18 +298,20 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '180deg' }]
     },
     infoContainerTextWidth: {
-        width: 200,
         fontSize: 18,
         fontWeight: "500",
+        flex: 1,
         color: Colors.black_01
     },
     chapterList: {
         width: "100%",
         borderRadius: 5,
         zIndex: 10,
+        display: 'flex',
+        gap: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        position: 'relative',
+        position: 'relative'
     },
     container: {
         margin: 0,
@@ -316,7 +319,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#F2F7F8"
     },
     header: {
-        paddingHorizontal: 24,
+        paddingHorizontal: 22,
         paddingVertical: 26,
         // height: 150,
         flexShrink: 0,
@@ -325,7 +328,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 28
+        gap: 26
     },
     headingTitle: {
         textTransform: 'capitalize',
@@ -339,6 +342,7 @@ const styles = StyleSheet.create({
         borderRadius: 45,
         backgroundColor: "#D9D9D9",
         display: 'flex',
+        marginLeft: -10,
         // flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
@@ -346,7 +350,6 @@ const styles = StyleSheet.create({
     infoContainer: {
         marginTop: 18,
         display: 'flex',
-        paddingHorizontal: 10
     },
     infoContainerTitle: {
         fontSize: 18,
