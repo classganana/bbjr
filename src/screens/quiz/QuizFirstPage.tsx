@@ -262,7 +262,7 @@ export const QuizFirstPage = () => {
             </View>
             <View style={styles.quizInfo}>
                 <QuizIntoduction mcqs={quizContent?.mcqs?.length} time={quizContent?.time} />
-                <QuizInformation />
+                {quizType !== 'practice' &&  <QuizInformation />}
             </View>
             <View style={styles.startQuizButton}>
                 <Button label={"Start " + quizType} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
