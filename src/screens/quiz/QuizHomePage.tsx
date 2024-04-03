@@ -494,19 +494,19 @@ export const QuizHomePage = () => {
                             <ExamPrepAllChapter selected={allChapterSelected} onCardClick={() => { allChapterCardClick ()}}
                             id={0} title={'All Chapters'} infoText={''} imageUrl={subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10}}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 10}}>
                             <Text style={styles.chapterWise}>Chapter Wise</Text>
                             <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
                                 {multiSelect && <View style={styles.crossMultiSelect} >
-                                    <CrossIcon height={12} width={12} fill={Colors.black_01} />
                                     <Text>
-                                        {(selectedQuiz && selectedQuiz[0]?.length)? selectedQuiz[0]?.length: 0}
+                                        Selected Count: {(selectedQuiz && selectedQuiz[0]?.length)? selectedQuiz[0]?.length: 0}
                                     </Text>
+                                    <CrossIcon height={12} width={12} fill={Colors.black_01} />
                                 </View>}
-                                {!multiSelect && <Text style={styles.crossMultiSelect}>Select</Text>}
+                                {!multiSelect && <Text style={styles.crossMultiSelect}>Select Multiple</Text>}
                             </TouchableOpacity>
                         </View>
-
+                     <View style={{display: 'flex', flexDirection: 'column', gap: 5}}>
                         {loading ? (
                             <ActivityIndicator size="large" color={Colors.primary} />
                         ) : (
@@ -524,7 +524,7 @@ export const QuizHomePage = () => {
                                 ))}
                             </>
                         )}
-
+                    </View>
                     </>
                     }
                 </ScrollView>
@@ -571,12 +571,12 @@ export const QuizHomePage = () => {
                 {(multiSelect && options && getSelectedChapters(data).length > 0) &&
                     <View style={styles.floatingButtonContainer}>
                         <Text>
-                            Which one do you want to explore?
+                            Select multiple chapters to customize your test
                         </Text>
                         <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
                                 <CrossIcon height={18} width={18} fill={Colors.black_01} />
                         </TouchableOpacity>
-                        {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
+                        {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapter Numbers</Text> }
                         {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
                             {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
                                 return (

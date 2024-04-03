@@ -12,7 +12,7 @@ interface ReportProps {
 }
 
 function ReportComponent(props: ReportProps) {
-  const buttons = ['Wrong Answer', 'Wrong Answer', 'Formatting or image quality issue'];
+  const buttons = ['Wrong Answer', 'Wrong Answer', 'Formatting issue'];
   const [selectedButton, setSelectedButton] = useState('');
   const [bottomSheetVisible, setBottomSheetVisible] = useState(true);
 
