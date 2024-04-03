@@ -25,14 +25,11 @@ const EditProfile = () => {
     const { user, setUser } = useUser()
     const navigation = useNavigation();
 
-    const [isEditMode, setIsEditMode] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(true);
 
     const toggleEditMode = () => {
         setIsEditMode(!isEditMode);
     };
-
-    useEffect(() =>{})
-
 
     useEffect(() => {
         if (user) {
@@ -46,6 +43,8 @@ const EditProfile = () => {
             user.guardianName && setGuardianName(user.guardianName);
         }
     }, [])
+
+    
 
 
     const updateProfile = () => {
@@ -85,6 +84,17 @@ const EditProfile = () => {
         "12"
     ]
 
+    const classToRomanMapping = [
+        { class: 6, label: 'Class VI' },
+        { class: 7, label: 'Class VII' },
+        { class: 8, label: 'Class VIII' },
+        { class: 9, label: 'Class IX' },
+        { class: 10, label: 'Class X' },
+        { class: 11, label: 'Class XI' },
+        { class: 12, label: 'Class XII' }
+      ];
+      
+
     const listOfBoards = [
         "CBSE",
         // "ICSE",
@@ -102,17 +112,12 @@ const EditProfile = () => {
                 <View style={styles.header}>
                     <View style={styles.heading}>
                         <TouchableOpacity style={styles.backButton} onPress={() => onBack()}>
-                            <NewBackButton height={'18'} width={'25'} fill={'black'} />
+                            <NewBackButton height={'14'} width={'14'} fill={'black'} />
                         </TouchableOpacity>
                         <Text style={styles.headingTitle}>Profile</Text>
                     </View>
                 </View>
                 <View style={styles.DetailContainer}>
-                    <View style={styles.ImageContainer}>
-                        <CircleInitials name={user?.name} size={150} />
-                    </View>
-
-
                     <View style={styles.inputBlocks}>
                         <Text style={styles.label}>Name</Text>
                         <TextInput
@@ -148,7 +153,7 @@ const EditProfile = () => {
                             console.log(itemValue);
                             setClassValue((prev) => parseInt(itemValue));
                             // checkFields();
-                        } } label={classValue} />
+                        } } label={classValue} dropdownTitle={'Select your class'} />
 
                     </View>
                     <View style={styles.inputBlocks}>
@@ -213,7 +218,7 @@ const EditProfile = () => {
                             />
                         ) : (
                             <>
-                                <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={toggleEditMode} />
+                                <Button label={'Cancel'} disabled={false} className={CancelButton} onPress={onBack} />
                                 <Button label={'Submit'} disabled={false} className={LoginButton} onPress={updateProfile} />
                             </>
                         )}
@@ -231,14 +236,15 @@ const styles = StyleSheet.create({
     },
     header: {
         paddingHorizontal: 10,
-        paddingVertical: 20,
+        paddingVertical: 10,
         flexShrink: 0,
+        flex: 1
     },
     heading: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10
+        gap: 0
     },
     headingTitle: {
         fontWeight: "500",
@@ -253,6 +259,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     DetailContainer: {
+        flex: 1,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         backgroundColor: Colors.white,
@@ -281,17 +288,20 @@ const styles = StyleSheet.create({
     },
     inputBlocks: {
         paddingVertical: 0,
-        marginTop: 10
+        marginTop: 10,
+        gap: 4
     },
     label: {
         fontSize: 16,
         fontWeight: '400',
     },
     input: {
-        padding: 0,
-        borderBottomWidth: 1,
-        borderColor: Colors.primary,
-        color: 'black'
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderWidth: 1,
+        borderColor: "#E2E8F0",
+        color: 'black',
+        borderRadius: 8
         // height: 35, // Set the height as needed
         // marginBottom: 10,
     },
@@ -315,6 +325,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignSelf: 'center',
         width: '100%',
+        bottom: 0,
     },
     Editbtn: {
         margin: 50,

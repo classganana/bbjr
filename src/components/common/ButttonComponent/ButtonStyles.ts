@@ -108,12 +108,12 @@ export const PrimaryIconDefaultButton = StyleSheet.create<Style>({
   container: {
     height: 40,
     // flex: 1,
-    // width: "100%",
+    width: "80%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
-    borderRadius: 8,
+    borderRadius: 10,
     gap: 10
     // paddingHorizontal: 12
   },
@@ -441,14 +441,14 @@ export const def = StyleSheet.create({
 
 export const StartButton = StyleSheet.create<Style>({
   container: {
-    height: 56,
+    // height: 56,
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.skyblue,
+    backgroundColor: Colors.primary,
     borderColor: Colors.Lavender_Pinocchio,
-    borderRadius: 25,
+    borderRadius: 12,
     borderWidth: 0.5,
     shadowColor: Colors.shadow_color,
     shadowOffset: {
@@ -463,7 +463,6 @@ export const StartButton = StyleSheet.create<Style>({
     color: Colors.white,
     fontWeight: "500",
     fontSize: 20,
-    fontFamily: "Inter-SemiBold",
   },
 });
 
@@ -544,6 +543,7 @@ export const EditButton = StyleSheet.create<Style>({
     // borderWidth: 4/4,
     backgroundColor:Colors.primary,
     borderColor:Colors.primary,
+    bottom: 0
 
   },
   title: {

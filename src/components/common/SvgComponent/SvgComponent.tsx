@@ -1076,3 +1076,60 @@ export const QuizStar = (props: Props) => {
     </Svg>
   )
 }
+
+export const EditProfilePicIcon = (props: Props) => {
+  return (
+    <Svg
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M10 15H7a4 4 0 00-4 4v1"
+        fill="#2947D4"
+      />
+      <Path
+        d="M10 15H7a4 4 0 00-4 4v1"
+        stroke="#5D5FEF"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M20 21h-6 6z"
+        fill="#2947D4"
+      />
+      <Path
+        d="M20 21h-6"
+        stroke="#5D5FEF"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.293 15.334l3.041-3.041a1 1 0 011.415 0l.958.958a1 1 0 010 1.415l-3.041 3.041a1 1 0 01-.707.293H14.5a.5.5 0 01-.5-.5v-1.459a1 1 0 01.293-.707z"
+        fill="#2947D4"
+        stroke="#5D5FEF"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Circle
+        cx={11}
+        cy={7}
+        r={4}
+        stroke="#5D5FEF"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
+
+

@@ -52,9 +52,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   dropdownButton: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.primary,
-    paddingVertical: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    color: 'black',
+    borderRadius: 8
     // alignItems: 'center',
     // justifyContent: 'center',
   },

@@ -118,7 +118,6 @@ export const QuizHomePage = () => {
     useEffect(() => {
         // setAvailableSubject();
         getSubjectFromLocal();
-        setLoading(false); 
     }, []);
 
     useEffect(() => {
@@ -190,6 +189,7 @@ export const QuizHomePage = () => {
                     // const newList = sortChapters(list)
                     // console.log(newList);
                     setData(list);
+                    setLoading(false);
                 }
             }
         } catch (error) {
@@ -199,7 +199,6 @@ export const QuizHomePage = () => {
         } finally {
             setLoadingText("Data");
             // Make sure to unset loading state.
-            setLoading(false);
         }
     };
 
@@ -508,23 +507,24 @@ export const QuizHomePage = () => {
                             </TouchableOpacity>
                         </View>
 
-                        {data && data.map((item) => (
-                            <ExamPrepQuizCard
-                            key={item.id}
-                            score={item.score}
-                            {...item}
-                            onCardClick={(i) => updateList(i)}
-                            />
-                        ))}
-                        {loading && <>
-                            {/* <Text style={{fontSize: 100}}>{loadingText}</Text> */}
-                            {/* <Image  style={{ height: 200, width: "50%", alignSelf:  'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} /> */}
+                        {loading ? (
                             <ActivityIndicator size="large" color={Colors.primary} />
-                        </>
-                        }
-                        {!loading && data && data.length == 0 && <> 
-                            <Text style={{fontSize: 100}}>No Data</Text>
-                        </>}
+                        ) : (
+                            <>
+                                {data && data.length === 0 && (
+                                    <Text style={{fontSize: 100}}>No Data</Text>
+                                )}
+                                {data && data.map((item) => (
+                                    <ExamPrepQuizCard
+                                    key={item.id}
+                                    score={item.score}
+                                    {...item}
+                                    onCardClick={(i) => updateList(i)}
+                                    />
+                                ))}
+                            </>
+                        )}
+
                     </>
                     }
                 </ScrollView>

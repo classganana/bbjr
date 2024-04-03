@@ -2,7 +2,7 @@
   "expo": {
     "name": "Eduzy",
     "slug": "BBJr",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#2947D4"
       },
-      "package": "com.classganana.BBJr"
+      "package": "com.classganana.BBJr",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
