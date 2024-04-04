@@ -32,7 +32,7 @@ export const ExamPrepQuizCard: React.FC<ExamPrepQuizCardData> = ({ id,practicePr
             <View style={styles.textContainer}>
                 <View>
                     <Text style={styles.infoText}>{title}</Text>
-                    <Text style={styles.title}>Recent Test score - {score ? score : 0}/100</Text>
+                    <Text style={styles.title}>Test score - {score ? score : 0}/100</Text>
                 </View>
                 <View style={styles.quizInfo}>
                     <ExamPrepProgressBar perc={practiceProgress? practiceProgress : 0} label={"Practice"} />
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     },
     selected: {
         borderWidth: 1 / 2,
-        borderColor: '#006B7F',
+        borderColor: Colors.secondary,
         shadowColor: 'rgba(0, 0, 0, 0.25)',
         shadowOffset: { width: 0, height: 4 },
         shadowRadius: 8,

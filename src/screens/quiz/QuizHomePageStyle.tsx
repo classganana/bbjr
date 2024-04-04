@@ -33,7 +33,8 @@ export const styles = StyleSheet.create({
     },
     examPreparation: {
         fontWeight: '600',
-        fontSize: 18
+        fontSize: 18,
+        marginVertical: 16
     },
     headingTitle: {
         color: Colors.black_05,
@@ -64,6 +65,14 @@ export const styles = StyleSheet.create({
         color: '#787878'
     },
     body: {backgroundColor: Colors.white, flex: 1, borderTopStartRadius: 20, borderTopEndRadius: 20},
+    noQuizFound : {
+        flex: 1,
+        height: 600,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+
+        // backgroundColor: 'red'
+    },
     tabs: {
         paddingHorizontal: 16,
     },
@@ -83,7 +92,8 @@ export const styles = StyleSheet.create({
         width: "100%",
         bottom: 0,
         alignSelf: 'center',
-        borderRadius: 25,
+        borderTopRightRadius: 25,
+        borderTopLeftRadius: 25,
         borderWidth: 0.5,
         borderColor: '#B1B1B1',
         boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.25)",

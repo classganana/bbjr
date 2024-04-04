@@ -8,10 +8,11 @@ import { Description } from '../feedback/Description/Description';
 interface ReportProps {
   report: React.Dispatch<React.SetStateAction<string>>;
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
+  options: string[];
 }
 
 function ReportComponent(props: ReportProps) {
-  const buttons = ['Incorrect or incomplete question', 'Incorrect or incomplete Options', 'Formatting or image quality issue'];
+  const buttons = ['Wrong Answer', 'Wrong Answer', 'Formatting issue'];
   const [selectedButton, setSelectedButton] = useState('');
   const [bottomSheetVisible, setBottomSheetVisible] = useState(true);
 
@@ -20,7 +21,7 @@ function ReportComponent(props: ReportProps) {
       <ScrollView style={styles.container}>
         <Text style={styles.heading}> What seems to be the problem?</Text>
         <Text style={styles.text}>Your feedback will help us to improve your test-taking experience</Text>
-        {buttons.map((buttonLabel, index) => (
+        {props.options.map((buttonLabel: string, index: number) => (
           <TouchableOpacity key={index} onPress={() => {
             setSelectedButton(buttonLabel)
           }}>
@@ -47,7 +48,7 @@ function ReportComponent(props: ReportProps) {
             width: '100%'
             }}>
           <Button label={'Cancel'} disabled={false} className={OutlineButton} onPress={() => props.closeModal(false)}></Button>
-          <Button label={'Report'} disabled={false}
+          <Button label={'Submit'} disabled={false}
             className={LoginButton} onPress={() => {
               props.report(selectedButton);
             }}></Button>
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderRadius: 12,
     borderWidth: 0.5,
-    borderColor: 'rgba(0, 107, 127, 0.35)',
+    borderColor: Colors.secondary,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

@@ -12,48 +12,46 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [isFontLoaded, setFontLoaded] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [splashTime, setSplashTime] = useState(3000); // Set the splash screen time in milliseconds (3 seconds by default)
+  const [isSplashDone, setSplashDone] = useState(false); // New state for splash screen
+
   async function loadFonts() {
-
-
     await Font.loadAsync({
       'Inter-Regular': require('./assets/fonts/NunitoSans_10pt-Regular.ttf'),
       'Inter-Bold': require('./assets/fonts/NunitoSans_10pt-Bold.ttf'),
       'Inter-ExtraBold': require('./assets/fonts/NunitoSans_10pt-ExtraBold.ttf'),
     });
-    setFontLoaded(true);
-
-    setTimeout(() => {
-      setLoading(true); // Set loading to true when fonts are loaded
-    }, splashTime);
   }
 
   const splastScreenControl = async () => {
-    const isItFirstTime = await AsyncStorage.getItem('user');
-    if(isItFirstTime != null){
-        setSplashTime(0);
-    }
-    loadFonts();
+    loadFonts().then(async () => {
+      setFontLoaded(true);
+      const isItFirstTime = await AsyncStorage.getItem('user');
+      if (isItFirstTime && isItFirstTime.length) {
+        setSplashDone(true); // Mark splash screen as done if user data is already stored in AsyncStorage
+      } else {
+          setTimeout(() => {
+            setSplashDone(true);
+          }, 3000)
+      }
+    })
   }
 
   useEffect(() => {
     splastScreenControl();
   }, []); // Run this effect only once on component mount
 
-
   return (
     <SafeAreaView style={styles.container}>
-   <AnimatedSplash
+      <AnimatedSplash
         translucent={true}
-        isLoaded={loading}
+        isLoaded={isSplashDone} // Use the new state for controlling the splash screen
         logoImage={require("./assets/gifs/two.gif")}
         backgroundColor={"#262626"}
         logoHeight={1000}
         logoWidth={450}
       >
     {/* {Platform.OS === "android" && (<StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />)} */}
-      {loading && isFontLoaded ? (
+      {isSplashDone && isFontLoaded ? (
         <NavigationContainer>
           <UserProvider>
             <AppNavigator />

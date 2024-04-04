@@ -16,7 +16,7 @@ export const BotStyle = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 0.5,
         borderColor: '#DFDFDF',
-        backgroundColor: '#F0F2FC',
+        backgroundColor: '#FFF',
         shadowColor: 'rgba(0, 0, 0, 0.10)',
         shadowOffset: {
           width: 0,

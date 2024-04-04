@@ -11,10 +11,10 @@ export const BotIntroduction = () => {
 
 
   const basicInfoList: string[] = [
-    "Buckle up for an incredible academic journey! EZ is here to add a dash of fun to your [grade no] grade learning."  +" 📚",
+    "Buckle up for an incredible academic journey! Ezy is here to add a dash of fun to your " + user?.class +" grade learning 📚",
     "Simply type your question & watch the magic happen!. Get personalized answers from your textbooks instantly.",
-    "Feel free to ask as many questions as you want, from any subject you're studying! EZ is now your forever study partner. " ,
-    "Understand concepts in your style, breeze through homework effortlessly and clear your doubts instantly. That’s EZ for you "
+    "Feel free to ask as many questions as you want, from any subject you're studying! Ezy is now your forever study partner.",
+    "We're here to support your learning journey in Class " + user?.class +" . Ask away!"
   ]  
   const [intromessages, setIntroMessages] = useState([
     { text: "Where should I begin to get started?" },

@@ -764,7 +764,7 @@ export const ContactIcon = (props: Props) => {
     >
       <Path
         d="M2.18 6.215a3.647 3.647 0 011.741-3.12 3.624 3.624 0 014.927 1.1 3.668 3.668 0 01-.91 4.99 5.805 5.805 0 012.603 2.07 5.85 5.85 0 011.047 3.169.551.551 0 01-.32.527.546.546 0 01-.77-.495 4.741 4.741 0 00-1.428-3.251A4.693 4.693 0 005.794 9.87a4.693 4.693 0 00-3.276 1.335 4.741 4.741 0 00-1.428 3.25.55.55 0 01-.56.52.544.544 0 01-.53-.551 5.848 5.848 0 011.056-3.18 5.803 5.803 0 012.624-2.07 3.646 3.646 0 01-1.5-2.96zm3.636-2.56a2.535 2.535 0 00-1.8.75 2.56 2.56 0 00-.746 1.81 2.57 2.57 0 00.746 1.809 2.545 2.545 0 001.8.75 2.54 2.54 0 001.8-.75 2.566 2.566 0 000-3.619 2.54 2.54 0 00-1.8-.75zM13.272 0a.544.544 0 01.546.548v1.645h1.636a.544.544 0 01.546.549.55.55 0 01-.546.548h-1.636v1.645a.55.55 0 01-.546.548.544.544 0 01-.545-.548V3.29H11.09a.544.544 0 01-.546-.548.55.55 0 01.546-.549h1.637V.548A.55.55 0 0113.272 0z"
-        fill="#1D1D1D"
+        fill={props.fill}
       />
     </Svg>
   )
@@ -1030,3 +1030,106 @@ export const NewBackButton = (props: Props) => {
   </Svg>
   )
 }
+
+export const QuizClock = (props: Props)  => {
+  return (
+    <Svg
+      viewBox="0 0 41 40"
+      {...props}
+    >
+      <Ellipse cx={20.2778} cy={20} rx={20.2778} ry={20} fill="#333" />
+      <Path
+        d="M20.743 29.32c4.961 0 8.983-3.967 8.983-8.86 0-4.894-4.022-8.86-8.983-8.86s-8.983 3.966-8.983 8.86c0 4.893 4.022 8.86 8.983 8.86z"
+        stroke="#fff"
+        strokeWidth={1.2}
+        strokeMiterlimit={10}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M20.744 15.62v4.84l3.021 1.42"
+        stroke="#fff"
+        strokeWidth={1.2}
+        strokeMiterlimit={10}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
+
+export const QuizStar = (props: Props) => {
+  return (
+    <Svg
+      viewBox="0 0 41 40"
+      {...props}
+    >
+      <Ellipse cx={20.2778} cy={20} rx={20.2778} ry={20} fill="#333" />
+      <Path
+        d="M20.989 11.05l2.099 5.72 6.164.2c.649.02.923.83.406 1.23l-4.867 3.73 1.713 5.84c.183.62-.517 1.12-1.054.76l-5.1-3.41-5.1 3.41c-.537.36-1.237-.14-1.054-.76l1.713-5.84-4.887-3.73c-.517-.39-.243-1.21.406-1.23l6.164-.2 2.1-5.72c.212-.6 1.074-.6 1.297 0z"
+        stroke="#fff"
+        strokeWidth={1.2}
+        strokeMiterlimit={10}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
+
+export const EditProfilePicIcon = (props: Props) => {
+  return (
+    <Svg
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M10 15H7a4 4 0 00-4 4v1"
+        fill="#2947D4"
+      />
+      <Path
+        d="M10 15H7a4 4 0 00-4 4v1"
+        stroke="#5D5FEF"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M20 21h-6 6z"
+        fill="#2947D4"
+      />
+      <Path
+        d="M20 21h-6"
+        stroke="#5D5FEF"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.293 15.334l3.041-3.041a1 1 0 011.415 0l.958.958a1 1 0 010 1.415l-3.041 3.041a1 1 0 01-.707.293H14.5a.5.5 0 01-.5-.5v-1.459a1 1 0 01.293-.707z"
+        fill="#2947D4"
+        stroke="#5D5FEF"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Circle
+        cx={11}
+        cy={7}
+        r={4}
+        stroke="#5D5FEF"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
+
+

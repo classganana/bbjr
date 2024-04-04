@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     },
     header: {
         paddingHorizontal: 24,
-        paddingVertical: 26,
+        paddingVertical: 16,
         height: 96,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
@@ -31,14 +31,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: 28,
-        flex: 1
+        flex: 1,
     },
     headingLeft: {
         flex: 7,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        gap: 10
     },
     headingRight: {
         flex: 3,
+        // height: 30
     },
     headingTitle: {
         color: Colors.primary,
@@ -60,7 +62,8 @@ const styles = StyleSheet.create({
         //  position: "absolute",
         display: 'flex',
         flexDirection: 'row',
-        right: 10
+        right: 10,
+        gap: 10
     },
     timer: {
         textAlign: 'center',
@@ -96,11 +99,11 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         borderRadius: 15,
-        backgroundColor: '#D4D4D4',
+        backgroundColor: 'rgba(41, 71, 212, 0.1)',
         marginHorizontal: 5,
     },
     questionNumberText: {
-        color: Colors.white,
+        color: Colors.black_01,
         fontSize: 16,
         fontWeight: '700',
     },
@@ -121,7 +124,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'center',
         paddingHorizontal: 16,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        gap: 10
     },
     body: {
         flex: 1,
@@ -197,7 +201,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        // gap: 10
+        gap: 10
     },
     hintSheetContainerHeaderLeftText: {
         fontSize: 18,

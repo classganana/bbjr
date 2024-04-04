@@ -6,7 +6,7 @@ import Tabs from '../../components/common/Tabs/Tabs';
 import { CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
 import { useNavigation } from '@react-navigation/native';
-import { httpClient } from '../../services/HttpServices';
+import { CDN, httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
 import { Button } from '../../components/common/ButttonComponent/Button';
@@ -16,6 +16,14 @@ import { styles } from './QuizHomePageStyle';
 import { UtilService } from '../../services/UtilService';
 import { ExamPrepAllChapter } from '../../components/quiz/ExamPrepAllChapter';
 import { Image } from 'react-native';
+import { ActivityIndicator } from 'react-native';
+
+interface Chapter {
+    chapterName: string;
+    totalQuestions: number;
+    practicedQuestions: number;
+    score: number | null;
+}
 
 export const QuizHomePage = () => {
     const [tab, setTab] = useState('Quizzes');
@@ -31,6 +39,7 @@ export const QuizHomePage = () => {
     const {user} = useUser();
     const [loadingText, setLoadingText] = useState('');
     const [subjectUrl, setSubjectUrl] = useState('');
+    const [tempSubject, setTempSubject] = useState('');
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
@@ -39,7 +48,7 @@ export const QuizHomePage = () => {
 
     const [selectedSubject, setSelectedSubject] = useState<{
         subjectName: string;
-    }>({subjectName:"Science"});
+    }>({subjectName:""});
 
     const [allChapterSelected, setAllChapterSelected] = useState(false);
 
@@ -51,7 +60,6 @@ export const QuizHomePage = () => {
     },[multiSelect])
 
     useEffect(() => {
-        setData([]);
         setScreen();
         UtilService.checkIfCDNHasTheImage(selectedSubject.subjectName).then((item) => {
             console.log("here is URL => ", selectedSubject.subjectName);
@@ -98,7 +106,7 @@ export const QuizHomePage = () => {
         //             setData(list);
         //         }
         //     });
-    },[selectedSubject?.subjectName, tab])
+    },[selectedSubject?.subjectName, tab]);
 
     // useEffect(() => {
     //     setOptions(false);
@@ -110,10 +118,29 @@ export const QuizHomePage = () => {
     useEffect(() => {
         // setAvailableSubject();
         getSubjectFromLocal();
-        setLoading(false); 
     }, []);
 
+    useEffect(() => {
+        setOptions(false);
+        resetSelection();
+    },[multiSelect])
+
+    useEffect(() => {
+        if(allChapterSelected){
+            setOptions(true);
+            resetSelection();
+        } else {
+            setOptions(allChapterSelected);
+        }
+        setSelectedQuiz(() => []);
+    },[allChapterSelected]);
+
+    useEffect(() => {
+        console.log("New Su",subjectUrl)
+    }, [subjectUrl])
+
     const fetchData = async () => {
+        setData([]);
         try {
             // You might want to set loading state here.
             setLoading(true);
@@ -136,26 +163,34 @@ export const QuizHomePage = () => {
                 "requestBody": s
             }
             
-            const response = await httpClient.post(`auth/c-auth`, reqObj);
-            
-            // Handle successful response
-            let list = response.data.data.quizzes;
-            if(list && list.map) {
-                list = list.map((item: any, index: number) => ({
-                    id: index,
-                    title: (tab === 'Quizzes') ? item.name : item.chapterName,
-                    infoText: 'Info about Card 1',
-                    imageUrl: 'https://placehold.co/400',
-                    done: false,
-                    noOfQuestions: item.totalQuestions,
-                    timeRequired: item.time,
-                    selected: false,
-                    score: item.score,
-                    // subject: "Science"
-                    subject: selectedSubject.subjectName,
-                    practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
-                }));
-                setData(list);
+            if(selectedSubject.subjectName && selectedSubject.subjectName.length){
+                const response = await httpClient.post(`auth/c-auth`, reqObj);
+                
+                // Handle successful response
+                let list = response.data.data.quizzes;
+                (tab !== 'Quizzes') && sortChapters(list)
+                if(list && list.map) {
+                    list = sortChapters(list)
+                    list = list.map((item: any, index: number) => ({
+                        id: index,
+                        title: (tab === 'Quizzes') ? item.name : item.chapterName,
+                        infoText: 'Info about Card 1',
+                        imageUrl: 'https://placehold.co/400',
+                        done: false,
+                        noOfQuestions: item.totalQuestions,
+                        timeRequired: item.time,
+                        selected: false,
+                        score: item.score,
+                        // subject: "Science"
+                        subject: selectedSubject.subjectName,
+                        practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
+                    }));
+                    // console.log(list);
+                    // const newList = sortChapters(list)
+                    // console.log(newList);
+                    setData(list);
+                    setLoading(false);
+                }
             }
         } catch (error) {
             // Handle errors here. You can display a message to the user.
@@ -164,29 +199,50 @@ export const QuizHomePage = () => {
         } finally {
             setLoadingText("Data");
             // Make sure to unset loading state.
-            setLoading(false);
         }
     };
 
-    useEffect(() => {
-        setOptions(false);
-        resetSelection();
-    },[multiSelect])
+    // const sortChapters = (chapters: Chapter[]) => {
+    //     // Define a custom sorting function based on chapter number
+    //     const customSort = (a: any, b: any) => {
+    //         const chapterNumA = parseInt(a.title.match(/\d+/)[0]);
+    //         const chapterNumB = parseInt(b.title.match(/\d+/)[0]);
+    //         return chapterNumA - chapterNumB;
+    //     };
+    
+    //     // Sort the chapters array using the custom sorting function
+    //     chapters.sort(customSort);
+        
+    //     setData(chapters as any);
+    //     return chapters;
+    // };
 
-    useEffect(() => {
-        if(allChapterSelected){
-            setOptions(true);
-            resetSelection();
-        } else {
-            setOptions(allChapterSelected);
-        }
-        setSelectedQuiz(() => []);
-    },[allChapterSelected]);
-
-    useEffect(() => {
-        console.log("New Su",subjectUrl)
-    }, [subjectUrl])
-
+    function sortChapters(data: any) {
+        return data.sort((a, b) => {
+          // Extract chapter numbers from chapter names
+          const chapterNumberA = extractChapterNumber(a.chapterName);
+          const chapterNumberB = extractChapterNumber(b.chapterName);
+      
+          // Handle chapters with numbers (sort numerically)
+          if (chapterNumberA !== null && chapterNumberB !== null) {
+            return chapterNumberA - chapterNumberB;
+          }
+      
+          // Handle chapters without numbers (sort alphabetically)
+          if (chapterNumberA === null && chapterNumberB === null) {
+            return a.chapterName.localeCompare(b.chapterName);
+          }
+      
+          // If one chapter has a number and the other doesn't, prioritize the one with a number
+          return chapterNumberA !== null ? -1 : 1;
+        });
+      }
+      
+      // Helper function to extract chapter number from chapter name
+      function extractChapterNumber(chapterName: any) {
+        const match = chapterName.match(/\d+/);
+        return match ? parseInt(match[0]) : null;
+      }
 
     const setSubjectToLocal = async (item: {subjectName: string}) => {
         try {
@@ -199,8 +255,10 @@ export const QuizHomePage = () => {
     const getSubjectFromLocal = async () => {
         try {
             const subject = await AsyncStorage.getItem('quizSubject');
-            if (subject) {
+            if (subject && subject.length) {
                 setSelectedSubject({subjectName : subject});
+            } else {
+                setAvailableSubject();
             }
         } catch (e) {
             console.log("Error => ", e);
@@ -249,24 +307,31 @@ export const QuizHomePage = () => {
         // Map the filtered array to extract the chapter number from the title
         const chapters = selectedChapters.map(item => {
           // Extract the chapter number from the title
-          const chapterNumber = parseInt(item?.title?.match(/\d+/)[0]);
+          const chapterNumber = (tab == 'Quizzes')? item?.title?.match: parseInt(item?.title?.match(/\d+/)[0]);
           return { chapterNo: chapterNumber };
         });
       
         return chapters;
       }
 
-    const setSubjectAndCloseModal = (item: any) => {
+    const setSubjectAndCloseModal = () => {
         setBottomSheetVisible(false);
-        setSelectedSubject(item);
-        setSubjectToLocal(item);
+        setSelectedSubject(tempSubject as any);
+        setSubjectToLocal(tempSubject as any);
+        setTempSubject('');
       };
+
+    const setTemporarySubject = (item: any) => {
+        setTempSubject(item);
+    }
 
 
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
         await AsyncStorage.setItem('quizType', 'quiz');
         UtilService.setQuizType('quiz');
+        setAllChapterSelected(false);
+        resetSelection();
         if(!allChapterSelected) {
             navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
         } else {
@@ -279,6 +344,8 @@ export const QuizHomePage = () => {
         const item = data.filter((item) => item.selected == true)[0];
         await AsyncStorage.setItem('quizType', 'practice');
         UtilService.setQuizType('practice');
+        setAllChapterSelected(false);
+        resetSelection();
         if(!allChapterSelected) {
             navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
         } else {
@@ -328,15 +395,12 @@ export const QuizHomePage = () => {
         const a = [[{
                     subject: selectedSubject.subjectName,
                     allChapter: true,
-                    title: [""]
+                    title: ["All Chapters: " + selectedSubject.subjectName]
                 }]]
         navigation.navigate('QuizFirstPage' as never, a as never);       
     }
 
     const DynamicRenderingSubjectCardorAllChapterCard = () => {
-        // console.log("selectedQuiz");
-        // selectedQuiz && console.log(selectedQuiz[0][0]);
-        console.log("Subject URL", subjectUrl);
         if(!multiSelect && selectedQuiz &&  selectedQuiz[0] && selectedQuiz[0].length > 0) {
             const selectedItem = selectedQuiz[0][0]; 
             return <>
@@ -396,9 +460,14 @@ export const QuizHomePage = () => {
                             {...item}
                             onCardClick={(i) => updateList(i)}                            />
                         ))}
+                        {loading && <>
+                            {/* <Text style={{fontSize: 100}}>{loadingText}</Text> */}
+                            {/* <Image  style={{ height: 200, width: "50%", alignSelf: 'center' }}  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} /> */}
+                            <ActivityIndicator size="large" color={Colors.primary} />
+                        </>}
                         <>
                             {data && data.length == 0 && <>
-                                <Text style={{fontSize: 100}}>Loading</Text>
+                                <Image source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/loading.gif' }} />
                             </>}
                         </>
                     </>}
@@ -425,66 +494,110 @@ export const QuizHomePage = () => {
                             <ExamPrepAllChapter selected={allChapterSelected} onCardClick={() => { allChapterCardClick ()}}
                             id={0} title={'All Chapters'} infoText={''} imageUrl={subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10}}>
-                            <Text style={styles.chapterWise}>All Chapter Wise</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 10}}>
+                            <Text style={styles.chapterWise}>Chapter Wise</Text>
                             <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
                                 {multiSelect && <View style={styles.crossMultiSelect} >
-                                    <CrossIcon height={12} width={12} fill={Colors.black_01} />
                                     <Text>
-                                        {(selectedQuiz && selectedQuiz[0]?.length)? selectedQuiz[0]?.length: 0}
+                                        Selected Count: {(selectedQuiz && selectedQuiz[0]?.length)? selectedQuiz[0]?.length: 0}
                                     </Text>
+                                    <CrossIcon height={12} width={12} fill={Colors.black_01} />
                                 </View>}
-                                {!multiSelect && <Text style={styles.crossMultiSelect}>Select</Text>}
+                                {!multiSelect && <Text style={styles.crossMultiSelect}>Select Multiple</Text>}
                             </TouchableOpacity>
                         </View>
-
-                        {data && data.map((item) => (
-                            <ExamPrepQuizCard
-                            key={item.id}
-                            score={item.score}
-                            {...item}
-                            onCardClick={(i) => updateList(i)}
-                            />
-                        ))}
-                        {loading && <>
-                            <Text style={{fontSize: 100}}>{loadingText}</Text>
-                        </>
-                        }
-                        {!loading && data && data.length == 0 && <> 
-                            <Text style={{fontSize: 100}}>No Data</Text>
-                        </>}
+                     <View style={{display: 'flex', flexDirection: 'column', gap: 5}}>
+                        {loading ? (
+                            <ActivityIndicator size="large" color={Colors.primary} />
+                        ) : (
+                            <>
+                                {data && data.length === 0 && (
+                                    <Text style={{fontSize: 100}}>No Data</Text>
+                                )}
+                                {data && data.map((item) => (
+                                    <ExamPrepQuizCard
+                                    key={item.id}
+                                    score={item.score}
+                                    {...item}
+                                    onCardClick={(i) => updateList(i)}
+                                    />
+                                ))}
+                            </>
+                        )}
+                    </View>
                     </>
                     }
                 </ScrollView>
-                {(allChapterSelected || options && getSelectedChapters(data).length > 0) && <View style={styles.floatingButtonContainer}>
-                <DynamicRenderingSubjectCardorAllChapterCard />
-                    <Text>
-                        Which one do you want to explore?
-                    </Text>
-                    <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
-                            <CrossIcon height={18} width={18} fill={Colors.black_01} />
-                    </TouchableOpacity>
-                    {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
-                    {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
-                        {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
-                            return (
-                                <View key={index} style={styles.selectedChapters}>
-                                    <Text key={index}>{item.chapterNo}</Text>
-                                </View>    
-                            )
-                        })}
-                    </View>    
-                    }
-                    <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
-                        {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
-                        <Text style={styles.floatingButtonText}>Practice</Text>
-                    </TouchableOpacity>
-                    <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
-                    {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
-                        <ClockIcon height={'20'} width={'20'} fill={'black'} />
-                        <Text style={styles.floatingButtonText}>Take a Test</Text>
-                    </TouchableOpacity> */}
-                </View>}
+                {
+                (allChapterSelected || (!multiSelect && options && getSelectedChapters(data).length == 1)) &&
+                    <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={(allChapterSelected || options && getSelectedChapters(data).length > 0)}
+                    onRequestClose={() => setBottomSheetVisible(false)}>
+                    <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}></View>   
+                    <View style={styles.floatingButtonContainer}>
+                        <DynamicRenderingSubjectCardorAllChapterCard />
+                        <Text>
+                            Which one do you want to explore?
+                        </Text>
+                        <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
+                                <CrossIcon height={18} width={18} fill={Colors.black_01} />
+                        </TouchableOpacity>
+                        {/* {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
+                        {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
+                            {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
+                                return (
+                                    <View key={index} style={styles.selectedChapters}>
+                                        <Text key={index}>{item.chapterNo}</Text>
+                                    </View>    
+                                )
+                            })}
+                        </View>    
+                        } */}
+                        <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
+                            {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
+                            <Text style={styles.floatingButtonText}>Practice</Text>
+                        </TouchableOpacity>
+                        <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
+                        {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
+                            <ClockIcon height={'20'} width={'20'} fill={'black'} />
+                            <Text style={styles.floatingButtonText}>Take a Test</Text>
+                        </TouchableOpacity> */}
+                    </View>
+                    </Modal>
+                }
+
+                {(multiSelect && options && getSelectedChapters(data).length > 0) &&
+                    <View style={styles.floatingButtonContainer}>
+                        <Text>
+                            Select multiple chapters to customize your test
+                        </Text>
+                        <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
+                                <CrossIcon height={18} width={18} fill={Colors.black_01} />
+                        </TouchableOpacity>
+                        {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapter Numbers</Text> }
+                        {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
+                            {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
+                                return (
+                                    <View key={index} style={styles.selectedChapters}>
+                                        <Text key={index}>{item.chapterNo}</Text>
+                                    </View>    
+                                )
+                            })}
+                        </View>    
+                        }
+                        <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
+                            {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
+                            <Text style={styles.floatingButtonText}>Practice</Text>
+                        </TouchableOpacity>
+                        <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
+                        {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
+                            <ClockIcon height={'20'} width={'20'} fill={'black'} />
+                            <Text style={styles.floatingButtonText}>Take a Test</Text>
+                        </TouchableOpacity> */}
+                    </View>
+                }
 
                 <Modal
                     animationType="fade"
@@ -496,7 +609,7 @@ export const QuizHomePage = () => {
                         <View style={styles.bottomSheetContainer}>
                             <Text style={styles.subjecttxt}>Subject</Text>
                             <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>
-                                <Student selectedSubject={(item: any) => setSubjectAndCloseModal(item)} themeColor={true} subject={selectedSubject.subjectName} />
+                                <Student selectedSubject={(item: any) => setTempSubject(item)} themeColor={true} subject={selectedSubject.subjectName} />
                             </ScrollView>
                             <View
                                 style={{
@@ -508,13 +621,12 @@ export const QuizHomePage = () => {
                                     paddingVertical: 20,
                                     width: '100%',
                                 }}
-
                             >
                                 <Button
                                     label={'Continue'}
-                                    disabled={false}
+                                    disabled={tempSubject.length == 0}
                                     className={EditButton}
-                                    onPress={() => setBottomSheetVisible(false)}
+                                    onPress={() => setSubjectAndCloseModal()}
                                 />
                             </View>
                         </View>

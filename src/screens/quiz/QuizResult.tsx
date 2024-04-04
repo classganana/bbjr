@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { BackHandler, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { BackHandler, Image, ImageBackground, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ArrowLeft, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, NewBackButton, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { ShowAnswer, TryAgain} from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -12,6 +12,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { useUser } from '../../context/UserContext';
 import { httpClient } from '../../services/HttpServices';
 import { LeaderboardEntry } from '../Profile/viewLeadboard';
+import { UtilService } from '../../services/UtilService';
 
 
 type Props = {
@@ -23,7 +24,7 @@ export const QuizResult = () => {
     const { user } = useUser();
     const props: any = {};
     const imageRef = useRef();
-    const [retryData, setRetryData] = useState({});
+    const [retryData, setRetryData] = useState();
     const [result, setResult] = useState([
         {
             label: "Total Score",
@@ -75,7 +76,6 @@ export const QuizResult = () => {
     useEffect(() => {
         const backAction = () => {
           if (navigator.isFocused()) {
-            console.log("back button");
             return true; // Returning true prevents the default back action
           }
           return false; // Allow the default back action on other screens
@@ -88,7 +88,20 @@ export const QuizResult = () => {
 
     async function getData() {
         try {
-            setRetryData(route?.params?.retryData)
+            let r: any = route.params;
+            let retry: any = {};
+            if(r) retry['time'] = r.quizQuestionList.length * 15;
+            
+            const updatedQuestions = r.quizQuestionList.map(question => {
+                // Destructure the object and exclude the 'selectedAnswer' property
+                const { selectedAnswer, ...rest } = question;
+                return rest; // Return the modified object without 'selectedAnswer'
+            });
+
+            retry['mcqs'] = cleanQuizContentAndRetryQuiz(updatedQuestions);
+
+            setRetryData(retry);
+
             const data = JSON.parse((await AsyncStorage.getItem('questions')) as string); 
             const UserAnswerList = data && (data.quizQuestionList) ? data.quizQuestionList : []
             const score = calculateScore(UserAnswerList);
@@ -112,7 +125,16 @@ export const QuizResult = () => {
         navigator.navigate('QuizQuestionAnswersReview' as never)
     }
 
+    const cleanQuizContentAndRetryQuiz = (mcqs: any[]) => {
+            return mcqs.map((mcq) => {
+                delete mcq.selectedAnswer;
+                return mcq;
+            })
+    }
+
     function retryQuiz() {
+        console.log(retryData);
+        // changing key name quizQuestionList to mcqs
         navigator.navigate('QuizQuestionPages' as never, retryData as never)
     }
 
@@ -149,7 +171,10 @@ export const QuizResult = () => {
       };
 
       const onBack = () => {
-        navigator.navigate('Quiz' as never)
+        navigator.reset({
+            index: 0,
+            routes: [{ name: 'QuizHomepage' } as never] // Replace 'Home' with the actual name of your main screen
+          });
       }
 
     return (
@@ -157,7 +182,7 @@ export const QuizResult = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
-                        <ArrowLeft height={'30'} width={'30'} fill={'white'}></ArrowLeft>
+                        <NewBackButton height={'18'} width={'18'} fill={'white'} />
                     </TouchableOpacity>
                     <Text style={styles.title}>Test Score</Text>
                     <TouchableOpacity onPress={onSaveImageAsync} style={[styles.shareButton, { position: "absolute", right: 10 }]}>
@@ -183,7 +208,12 @@ export const QuizResult = () => {
             </View>
             <View>
                 <ImageBackground source={require('../../../assets/gifs/celebrate.gif')} style={styles.imageSection}>
-                    <Image style={styles.image} source={require('../../../assets/png/trophy.png')}></Image>
+                    <Image style={styles.image} source={require('../../../assets/png/loginbot.png')}></Image>
+                    <View style={styles.imageTextContainer}>
+                        <Text style={styles.imageText}>
+                            {UtilService.getRandomMessage(props.noOfCorrectAnswers)}
+                        </Text>
+                    </View>
                 </ImageBackground>
             </View>
             <View style={styles.cardsContainer}>
@@ -212,7 +242,7 @@ export const QuizResult = () => {
             </View>
             <View style={styles.buttonSection}>
                 <Button label={"View Solutions"} className={ShowAnswer} disabled={false} onPress={showAnswersScreen} />
-                <Button label={"Play Again"} className={TryAgain} disabled={false} onPress={retryQuiz} />
+                <Button label={"Try Again"} className={TryAgain} disabled={false} onPress={retryQuiz} />
             </View>
             </ScrollView>
         </View>
@@ -247,7 +277,7 @@ const styles = StyleSheet.create({
         height: 45,
         width: 45,
         borderRadius: 45,
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.white,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -314,10 +344,39 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         height: 250,
+        marginVertical: 10,
+        position: 'relative'
     },
     image: {
-        height: 200,
-        width: 200
+        height: 250,
+        width: 150
+    },
+    imageTextContainer: {
+        borderColor: "#DBE2FF",
+        paddingHorizontal: 16,
+        paddingVertical: 24,
+        backgroundColor: 'white',
+        width: "80%",
+        position: 'absolute',
+        top: '60%',
+        left: '10%',
+        borderWidth: 0.5,
+        borderRadius: 30,
+        alignItems: 'center',
+        ...Platform.select({
+            ios: {
+              shadowColor: 'rgba(0, 0, 0, 0.15)',
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 1,
+              shadowRadius: 8,
+            },
+            android: {
+              elevation: 4,
+            },
+          })
+    },
+    imageText: {
+        fontWeight: '500'
     },
     cardsContainer: {
         gap: 10,

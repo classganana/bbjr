@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { ArrowLeft, DownArrow } from '../../components/common/SvgComponent/SvgComponent'
+import { ArrowLeft, DownArrow, NewBackButton } from '../../components/common/SvgComponent/SvgComponent'
 import { Colors } from '../../styles/colors'
 import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
 import { QuizInformation } from '../../components/quiz/QuizInformation'
@@ -33,10 +33,11 @@ export const QuizFirstPage = () => {
         getQuizFlow();
         getQuizType();
         setCurrentQuiz(() => route.params)
+        console.log(route.params)
     }, [])
 
     useEffect(() => {
-        console.log(currentQuiz, quizContent);
+        console.debug(currentQuiz, quizContent);
     }, [currentQuiz, quizContent]);
 
     const getQuizFlow = async () => {
@@ -128,7 +129,7 @@ export const QuizFirstPage = () => {
                 const req = {
                     "schoolId": "default",
                     "boardId": user?.board,
-                    "subject": subject,
+                    subject: route.params[0][0].subject,
                     "className": user?.class,
                     "studentId": user?.userId,
                     "chapterName": listOfChapters,
@@ -150,14 +151,16 @@ export const QuizFirstPage = () => {
                     delete req.subject;
                 }
 
-                route?.params[0][0].allChapter ? delete req.chapterName: ''
+                route?.params[0][0].allChapter == true ? delete req.chapterName: ''
+
+                console.log(reqObj);
         
                 httpClient.post(`auth/c-auth`, reqObj)
                     .then((res: any) => {
                         const quiz = {
                             schoolId: 'default',
                             chapterName: listOfChapters,
-                            subject: subject,
+                            subject: route.params[0][0].subject,
                             boardId: user?.board,
                             className: user?.class,
                             studentId: user?.userId,
@@ -210,10 +213,10 @@ export const QuizFirstPage = () => {
         return (
             <View style={styles.chapterList}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={styles.infoContainerTextWidth}>
-                    {chapters}
+                    {subject}
                 </Text>
-                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setShow(!show)} >
-                    <Text>view more</Text>
+                <TouchableOpacity style={{ flexDirection: 'row', flex: 0.5 }} onPress={() => setShow(!show)} >
+                    <Text>View Selected Chapters</Text>
                     <DownArrow height={'20'} width={'20'} fill={Colors.black_01} />
                 </TouchableOpacity>
                 {show && <View style={styles.dropdownContainer}>
@@ -238,9 +241,10 @@ export const QuizFirstPage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity onPress={onBack} style={styles.backButton}>
-                        <ArrowLeft height={'25'} width={'25'} fill={'black'} />
+                        <NewBackButton height={'18'} width={'18'} fill={'black'} />
                     </TouchableOpacity>
-                    <Text style={styles.headingTitle}>{quizType} Details</Text>
+                    <Text style={styles.headingTitle}>
+                        {quizType} Details</Text>
                 </View>
                 <View style={styles.infoContainer}>
                     <Text style={styles.infoContainerTitle}>
@@ -251,7 +255,7 @@ export const QuizFirstPage = () => {
                             {chapters}
                         </Text>
                     }
-                    {!chapters ? <ChapterDropdown /> :
+                    {!!route?.params[0][0].allChapter &&
                         <Text style={styles.infoContainerText}>
                           {route.params[0][0].subject} - All Chapters
                         </Text>
@@ -260,7 +264,7 @@ export const QuizFirstPage = () => {
             </View>
             <View style={styles.quizInfo}>
                 <QuizIntoduction mcqs={quizContent?.mcqs?.length} time={quizContent?.time} />
-                <QuizInformation />
+                {quizType !== 'practice' &&  <QuizInformation />}
             </View>
             <View style={styles.startQuizButton}>
                 <Button label={"Start " + quizType} className={LoginButton} disabled={false} onPress={startQuiz} ></Button>
@@ -274,7 +278,7 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     listOfChapters: {
-        marginTop: 24
+        marginTop: 24,
     },
     dropdownContainer: {
         borderWidth: 0.5,
@@ -283,6 +287,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: 'white',
         top: 0,
+        right: 0,
         paddingHorizontal: 18,
         paddingVertical: 20,
     },
@@ -295,26 +300,28 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '180deg' }]
     },
     infoContainerTextWidth: {
-        width: 200,
         fontSize: 18,
         fontWeight: "500",
+        flex: 1,
         color: Colors.black_01
     },
     chapterList: {
         width: "100%",
         borderRadius: 5,
         zIndex: 10,
+        display: 'flex',
+        gap: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        position: 'relative',
+        position: 'relative'
     },
     container: {
         margin: 0,
         flex: 1,
-        backgroundColor: "#F2F7F8"
+        backgroundColor: Colors.white
     },
     header: {
-        paddingHorizontal: 24,
+        paddingHorizontal: 22,
         paddingVertical: 26,
         // height: 150,
         flexShrink: 0,
@@ -323,7 +330,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 28
+        gap: 26
     },
     headingTitle: {
         textTransform: 'capitalize',
@@ -335,8 +342,9 @@ const styles = StyleSheet.create({
         height: 45,
         width: 45,
         borderRadius: 45,
-        backgroundColor: "#D9D9D9",
+        backgroundColor: Colors.white,
         display: 'flex',
+        marginLeft: -10,
         // flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
@@ -344,7 +352,6 @@ const styles = StyleSheet.create({
     infoContainer: {
         marginTop: 18,
         display: 'flex',
-        paddingHorizontal: 10
     },
     infoContainerTitle: {
         fontSize: 18,
@@ -360,17 +367,7 @@ const styles = StyleSheet.create({
     quizInfo: {
         zIndex: -1,
         flex: 1,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
         backgroundColor: '#FFF',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 0,
-        },
-        shadowOpacity: 0.10,
-        shadowRadius: 15,
-        elevation: 2, // for Android shadow
         paddingHorizontal: 24,
     },
     startQuizButton: {

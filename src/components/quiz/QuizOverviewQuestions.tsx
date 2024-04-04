@@ -153,7 +153,7 @@ export const QuizOverviewQuestions = ({closeSheet, questionList}: Props) => {
                 </View>
             <View style={styles.subheader}>
                 <View style={styles.secondaryCircle}></View>
-                <Text>UnAnswered</Text>
+                <Text>Unanswered</Text>
             </View>
         </View>
         <View style={styles.questionsBody}>

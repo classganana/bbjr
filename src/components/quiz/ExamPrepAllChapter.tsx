@@ -32,7 +32,7 @@ export const ExamPrepAllChapter: React.FC<ExamPrepQuizCardData> = ({ id,practice
             <View style={styles.textContainer}>
                 <View>
                     <Text style={styles.infoText}>{title}</Text>
-                    <Text style={styles.title}>Recent Test score - {score ? score : 0}/100</Text>
+                    <Text style={styles.title}>Test score - {score ? score : 0}/100</Text>
                 </View>
                 <View style={styles.quizInfo}>
                     <ExamPrepProgressBar perc={practiceProgress? practiceProgress : 0} label={"Practice"} />

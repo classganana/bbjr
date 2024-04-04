@@ -108,12 +108,12 @@ export const PrimaryIconDefaultButton = StyleSheet.create<Style>({
   container: {
     height: 40,
     // flex: 1,
-    // width: "100%",
+    width: "80%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
-    borderRadius: 8,
+    borderRadius: 10,
     gap: 10
     // paddingHorizontal: 12
   },
@@ -167,6 +167,27 @@ export const LoginButton = StyleSheet.create<Style>({
   },
 });
 
+export const Examprep = StyleSheet.create<Style>({
+  container: {
+    // height: 56,
+    flex: 1,
+    // width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: 8,
+    // padding: 24,
+    // paddingVertical: 22
+  },
+  title: {
+    color: Colors.white,
+    fontWeight: "600",
+    fontSize: 18,
+    fontFamily: "Inter-Regular",
+  },
+});
+
 export const TakeTest = StyleSheet.create<Style>({
   container: {
     // height: 56,
@@ -193,7 +214,7 @@ export const SmallOutlineButton = StyleSheet.create<Style>({
   container: {
     // height: 22,
     // flex: 1,
-    // width: "100%",
+    width: "50%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -201,11 +222,12 @@ export const SmallOutlineButton = StyleSheet.create<Style>({
     borderWidth: 1/4,
     borderColor: Colors.primary,
     backgroundColor: Colors.white,
+    paddingVertical: 2
   },
   title: {
     color: Colors.primary,
-    fontWeight: "500",
-    fontSize: 10,
+    fontWeight: "400",
+    fontSize: 12,
     fontFamily: "Inter-Regular",
   },
 });
@@ -419,14 +441,14 @@ export const def = StyleSheet.create({
 
 export const StartButton = StyleSheet.create<Style>({
   container: {
-    height: 56,
+    // height: 56,
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.skyblue,
+    backgroundColor: Colors.primary,
     borderColor: Colors.Lavender_Pinocchio,
-    borderRadius: 25,
+    borderRadius: 12,
     borderWidth: 0.5,
     shadowColor: Colors.shadow_color,
     shadowOffset: {
@@ -441,7 +463,6 @@ export const StartButton = StyleSheet.create<Style>({
     color: Colors.white,
     fontWeight: "500",
     fontSize: 20,
-    fontFamily: "Inter-SemiBold",
   },
 });
 
@@ -522,6 +543,7 @@ export const EditButton = StyleSheet.create<Style>({
     // borderWidth: 4/4,
     backgroundColor:Colors.primary,
     borderColor:Colors.primary,
+    bottom: 0
 
   },
   title: {
@@ -564,6 +586,24 @@ export const ResendOtpButton = StyleSheet.create<Style>({
   title: {
     color: Colors.primary,
     fontWeight: "500",
+    fontSize: 15,
+    fontFamily: "Inter-Regular",
+  }
+});
+
+export const SettingsPageOutlineButton = StyleSheet.create<Style>({
+  container: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    borderRadius: 5,
+    backgroundColor:Colors.white,
+    paddingHorizontal:15,
+    paddingVertical:5,
+  },
+  title: {
+    color: Colors.primary,
+    fontWeight: "600",
     fontSize: 15,
     fontFamily: "Inter-Regular",
   }

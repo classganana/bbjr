@@ -15,6 +15,8 @@ import {
 } from "../../common/SvgComponent/SvgComponent";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { EditButton } from "../../common/ButttonComponent/ButtonStyles";
+import { Button } from "../../common/ButttonComponent/Button";
 
 type Props = {
   onSendClick: (selectedOption: string) => void;
@@ -31,12 +33,20 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
   const [text, setText] = useState("");
   const [placeholder, setPlaceholder] = useState("Ask Anything...")
   const [lastQuestion, setLastQuestion] = useState('');
+  const [newUser, setNewUser] = useState(true);
 
   const setSubjectAndCloseModal = (item: any) => {
+    setNewUser(prev => false);
     setSelectedSubject(item);
     setPlaceholder("Ask me anything related to " + item.subjectName)
-    onSubjectChange(item);
   };
+
+  const getSubject = async () => {
+    const chatSubject = await AsyncStorage.getItem('chatSubject');
+    if(chatSubject && chatSubject.length > 1) {
+      setNewUser(false);
+    }
+  }
 
   const Continue = () => {
     setBottomSheetVisible(false);
@@ -52,11 +62,16 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
     ) as any;
     setSelectedSubject(currentRouteObject?.params?.selectedSubject);
     // setBottomSheetVisible(true)
+    getSubject();
   }, []);
 
   useEffect(() => {
     setBottomSheetVisible(openPopUp)
   },[openPopUp])
+
+  useEffect(() => {
+    console.log(newUser)
+  }, [newUser])
 
   const onChange = (text: string) => {
     setText(text);
@@ -110,7 +125,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
             </TouchableOpacity>
           </View> */}
         </View>
-        <View style={styles.content}>
+        {!newUser && <View style={styles.content}>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -119,11 +134,11 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
               onChangeText={(text) => onChange(text)}
               onSubmitEditing={handleOnSubmitEditing}
             />
-          <TouchableOpacity onPress={onSend} style={styles.send}>
-            <Send height={"27"} width={"27"} fill={Colors.primary} />
-          </TouchableOpacity>
+            <TouchableOpacity onPress={onSend} style={styles.send}>
+              <Send height={"27"} width={"27"} fill={Colors.primary} />
+            </TouchableOpacity>
           </View>
-        </View>
+        </View> }
       </View>
 
       <Modal
@@ -141,12 +156,16 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
               selectedSubject={(item: any) => setSubjectAndCloseModal(item)} subject={selectedSubject?.subjectName}              />
               <View
                 style={{
-                  height: 60 
+                  height: 60,
+                  marginHorizontal: 10
                 }}
               >
-                <View style={styles.closeButton}>
-                  <Text style={styles.closeButtonText}>Continue</Text>
-                </View>
+                <Button
+                      label={'Continue'}
+                      disabled={selectedSubject?.subjectName.length == 0}
+                      className={EditButton}
+                      onPress={() => Continue()}
+                    />
               </View>
             </View>
           </View>

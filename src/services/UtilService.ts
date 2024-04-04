@@ -75,15 +75,77 @@ export const UtilService = {
         }
       },
       checkIfCDNHasTheImage: async (subjectName: string) => {
-        // Extract the first part of the subject name before the hyphen
         const firstPart = subjectName.split('-')[0].trim();
-        
-        // Convert the first part to uppercase and replace spaces with underscores
-        const formattedPart = firstPart.toUpperCase().replace(/\s+/g, '_');
-        
-        const cdnUrl = CDN;
-        const imageName = `${formattedPart}.png`;
-        const imageUrl = `${cdnUrl}${imageName}`;
-        return imageUrl;
-    }        
+
+        // Remove "Part 1", "Part 2", etc. from the subject name
+        const formattedPart = firstPart.replace(/Part \d+/i, '').trim();
+    
+        // Convert the formatted part to uppercase and replace spaces with underscores
+        const formattedSubject = formattedPart.toUpperCase().replace(/\s+/g, '_');
+    
+        if(formattedSubject && formattedSubject.length > 0) {
+          const cdnUrl = CDN;
+          const imageName = `${formattedSubject}.png`;
+          const imageUrl = `${cdnUrl}${imageName}`;
+          return imageUrl;
+        }
+    },
+    getRandomMessage: (score: number) => {
+      const messages: any = {
+        "100": [
+          "Wow, perfect score! 🌟 You rock!",
+          "You nailed it, superstar! 🌟",
+          "Flawless! 🔥 You're on fire!",
+          "Perfecto! High-five, genius! 🙌",
+          "Full marks, you're unstoppable! 🚀"
+        ],
+        "80-99": [
+          "Almost there, keep it up! 🌈",
+          "Almost perfect, keep going! 🚀",
+          "Bravo! Keep the momentum! 💫",
+          "Fantastic effort, keep it up! 🌟",
+          "Solid performance, you rock! 👍"
+        ],
+        "60-79": [
+          "Good going, keep pushing! 👊",
+          "Great effort, you've got it! 🌟",
+          "Nice job, keep it up! 👏",
+          "Making progress, you're awesome! 🌟",
+          "Onward and upward, superstar! ✨",
+          "Well done, keep progressing! 👍"
+        ],
+        "40-59": [
+          "Keep at it, you're improving! 💪",
+          "You're getting there, keep going! 🌟",
+          "You're making strides, keep going! 🌟",
+          "You're on the right track! 🚀",
+          "Stay focused, you're improving! 👀",
+          "Persistence pays off, keep going! 💪"
+        ],
+        "0-39": [
+          "Each effort counts, keep striving! ⭐",
+          "Keep at it, success awaits! 🏆",
+          "Every setback is temporary, keep striving! 🌈",
+          "Don't lose heart, keep pushing! ❤️",
+          "Chin up, progress is near! 😊",
+          "Stay resilient, triumph awaits! 💫"
+        ]
+      };
+    
+      let range;
+      if (score >= 100) {
+        range = "100";
+      } else if (score >= 80) {
+        range = "80-99";
+      } else if (score >= 60) {
+        range = "60-79";
+      } else if (score >= 40) {
+        range = "40-59";
+      } else {
+        range = "0-39";
+      }
+    
+      const randomIndex = Math.floor(Math.random() * messages[range].length);
+      return messages[range][randomIndex];
+    }
 };
