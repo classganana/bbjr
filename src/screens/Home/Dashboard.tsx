@@ -204,7 +204,7 @@ export const Dashboard = () => {
                         </TouchableOpacity>
                     </View>
                     <View style={DashboardStyle.optionsCard}>
-                        <View style={[DashboardStyle.option,{gap: 100}]}>
+                        <View style={[DashboardStyle.option]}>
                             <View style={DashboardStyle.optionHeader}>
                                 <Sprit height={'30'} width={'30'} fill={'red'} />
                                 <View>
@@ -272,10 +272,15 @@ export const Dashboard = () => {
                     </View>}
                     <View style={DashboardStyle.botBlockDesc}>
                          <Text style={{fontSize: 16}}>Chat with Ezy</Text>
-                        <View style={{ flex: 1}}>
-                            <IconButton className={PrimaryIconDefaultButton}
-                                onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={lastChatQuestion.length ? "Let's Continue " : 'Get Started'} pos={'right'} backgroundColor={Colors.primary} />
-                        </View>
+                         {/* <Text style={{fontSize: 16}}>Chat with Ezy</Text> */}
+                        {/* <View style={{ flex: 1}}> */}
+                            <TouchableOpacity style={DashboardStyle.botButton} onPress={() => moveToExploreBotPage()}>
+                                <Text style={DashboardStyle.botButtonText}>{lastChatQuestion.length ? "Let's Continue " : 'Get Started'}</Text>
+                                <Send height={'20'} width={'20'} fill={'white'} />
+                            </TouchableOpacity>
+                            {/* <IconButton className={PrimaryIconDefaultButton}
+                                onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={lastChatQuestion.length ? "Let's Continue " : 'Get Started'} pos={'right'} backgroundColor={Colors.primary} /> */}
+                        {/* </View> */}
                     </View>
                     <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
                 </LinearGradient>

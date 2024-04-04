@@ -42,7 +42,6 @@ export const DashboardStyle = StyleSheet.create({
         height: 50,
         width: 50,
         borderRadius: 50,
-        backgroundColor: 'red'
     },
     userDetails: {
         color: Colors.white,
@@ -155,22 +154,23 @@ export const DashboardStyle = StyleSheet.create({
       fontSize: 16,
       color: "#4E4E4E",
       fontWeight: '600',
+      marginTop: 10
     },
     option: {
       width: "100%",
-      // height: 180,
+      // height: 150,
       flex: 1,
       display: 'flex',
       padding: 12,
       borderRadius:22,
-      gap: 10,
+      // gap: 10,
       backgroundColor: 'white', // Set a non-transparent background color
       shadowColor: Colors.black_03,
       shadowOffset: { width: 4, height: 4 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
       borderWidth: 1/2,
-      justifyContent: 'space-evenly',
+      // justifyContent: 'space-evenly',
       borderColor: Colors.primary,
       ...Platform.select({
         ios: {
@@ -245,7 +245,6 @@ export const DashboardStyle = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      gap: 50
     },
     headerBotGif: {
       height: 150, 
@@ -350,4 +349,15 @@ export const DashboardStyle = StyleSheet.create({
       width: 50,
       borderRadius: 60, // Make it circular
     },
+    botButton: {
+      backgroundColor: Colors.primary,
+      flexDirection: 'row',
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 8,
+      gap: 10
+    },
+    botButtonText: {
+      color: Colors.white,
+    }
 })
