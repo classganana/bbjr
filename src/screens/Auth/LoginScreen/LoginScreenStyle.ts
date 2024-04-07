@@ -66,8 +66,8 @@ export const LoginScreenStyle = StyleSheet.create({
     },
     backButton: {
         top: "5%",
-        left: "5%",
-        width: 43,
+        left: "3%",
+        width: 40,
         height: 40,
         backgroundColor: "#E9EDFB",
         borderRadius: 50,

@@ -146,46 +146,48 @@ export const LoginForm = () => {
                 sendOtp={() => sendVerification()} />
             </View>}
           {!otpScreen && (
-            <View style={styles.loginForm}>
-              <FirebaseRecaptchaVerifierModal
-                style={{flex: 1, alignSelf: 'center', 
-                justifyContent: 'center', 
-                alignItems: 'center', height: 100, width: 100, borderRadius: 10, borderWidth: 1, borderColor: 'gray', backgroundColor: 'white' }}
-                title="Phone Verification"
-                cancelLabel="Close"
-                ref={recaptchaVerifier}
-                firebaseConfig={firebaseConfig}
-              />
-              <View style={styles.loginTitleContainer}>
-                <Text style={styles.loginTitle}>Login</Text>
-                <Text style={styles.loginSubTitle}>Please enter your phone number</Text>
-              </View>
-              <View style={styles.phoneInputField}>
-                <Text style={styles.inputLabel}>Phone Number</Text>
-                <View style={styles.phoneContainer}>
-                  <View style={styles.phoneCode}>
-                    <Text style={{fontSize: 16}}>
-                      +91
-                    </Text>
-                  </View>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Phone number"
-                    keyboardType="numeric"
-                    onChangeText={(text) => {
-                      setPhoneNumber(text);
-                      validatePhoneNumber(text);
-                    }}
-                  />
+            <View style={styles.loginFormContainer}>
+              <View style={styles.loginForm}>
+                <FirebaseRecaptchaVerifierModal
+                  style={{flex: 1, alignSelf: 'center', 
+                  justifyContent: 'center', 
+                  alignItems: 'center', height: 100, width: 100, borderRadius: 10, borderWidth: 1, borderColor: 'gray', backgroundColor: 'white' }}
+                  title="Phone Verification"
+                  cancelLabel="Close"
+                  ref={recaptchaVerifier}
+                  firebaseConfig={firebaseConfig}
+                />
+                <View style={styles.loginTitleContainer}>
+                  <Text style={styles.loginTitle}>Login</Text>
+                  <Text style={styles.loginSubTitle}>Please enter your phone number</Text>
                 </View>
-                {phoneNumberError !== "" && (
-                  <Text style={styles.errorText}>{phoneNumberError}</Text>
-                )}
+                <View style={styles.phoneInputField}>
+                  <Text style={styles.inputLabel}>Phone Number</Text>
+                  <View style={styles.phoneContainer}>
+                    <View style={styles.phoneCode}>
+                      <Text style={{fontSize: 16}}>
+                        +91
+                      </Text>
+                    </View>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Phone number"
+                      keyboardType="numeric"
+                      onChangeText={(text) => {
+                        setPhoneNumber(text);
+                        validatePhoneNumber(text);
+                      }}
+                    />
+                  </View>
+                  {phoneNumberError !== "" && (
+                    <Text style={styles.errorText}>{phoneNumberError}</Text>
+                  )}
+                  <Text style={{ fontSize: 12, paddingHorizontal: 5 }}>
+                    By Continuing you agree to the Terms of services and Privacy policy
+                  </Text>
+                </View>
               </View>
               <View style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <Text style={{ fontSize: 12, padding: 5 }}>
-                  By Continuing you agree to the Terms of services and Privacy policy
-                </Text>
                 <Button
                   className={PrimaryDefaultButton}
                   label={"Get OTP"}
@@ -205,12 +207,19 @@ const styles = StyleSheet.create({
   loginTitleContainer:{
     display: 'flex',
     flexDirection: 'column',
-    gap: 10
+    gap: 10,
+    paddingHorizontal: 10,
   },
   loginForm: {
-    padding: 20,
-    gap: 30,
-    flex: 1.1
+    paddingVertical: 20,
+    gap: 30
+  },
+  loginFormContainer: {
+    flex: 1.1,
+    paddingHorizontal: 5,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
   },
   loginTitle: {
     fontWeight: '600',
@@ -228,6 +237,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
+    paddingHorizontal: 10,
   },
   inputLabel: {
     fontSize: 18,
@@ -267,5 +277,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "red",
+    paddingHorizontal: 5,
   },
 });

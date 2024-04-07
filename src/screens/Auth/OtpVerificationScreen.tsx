@@ -13,7 +13,7 @@ type Props = {
 
 const OtpVerification = (props: Props) => {
   const inputRefs = Array.from({ length: 6 }, () => useRef<TextInput>(null));
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(30);
   const [isButtonDisabled, setButtonDisabled] = useState(true);
   const [isResendOTPEnabled, setIsResendOTPEnabled] = useState(true);
 
@@ -114,19 +114,22 @@ const OtpVerification = (props: Props) => {
         </View>
       </KeyboardAvoidingView>
       <TouchableOpacity style={styles.button}>
-        {isResendOTPEnabled && <Text>Resend OTP in {formatTime(timer)}</Text>}
-        {!isResendOTPEnabled && <Button
-          onPress={() => props.sendOtp()}
-          label="Resend OTP"
-          className={ResendOtpButton}
-          disabled={isResendOTPEnabled}
-        />}
         <Button
           onPress={moveToResetPassword}
           label="Verify"
           className={SubmitButton}
           disabled={isButtonDisabled}
-        />
+          />
+
+        <View style={styles.otpContainer}>
+          {isResendOTPEnabled && <Text>Resend OTP in {formatTime(timer)}</Text>}
+          <Button
+            onPress={() => props.sendOtp()}
+            label="Resend OTP"
+            className={ResendOtpButton}
+            disabled={isResendOTPEnabled}
+          />
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -147,23 +150,30 @@ const styles = StyleSheet.create({
   },
   inputView: {
     width: 50,
-    height: 50,
+    height: 56,
     borderWidth: 0,
     borderRadius: 10,
     backgroundColor: "#E9EDFB",
     margin: 5,
     textAlign: 'center',
     fontFamily: 'Inter-Bold',
-    fontSize: 20,
+    fontSize: 28,
+    color: Colors.primary,
     ...(Platform.OS === "web" ? { outlineStyle: "none" } : {}),
   },
   inputViewBg: {
     backgroundColor: 'red'
   },
   button: {
-    marginTop: 10,
-    width: "90%",
+    marginTop: '10%',
+    width: "98%",
     gap: 10
+  },
+  otpContainer: {
+    marginTop: '20%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   text: {
     width: "90%",
