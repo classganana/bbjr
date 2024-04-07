@@ -86,7 +86,6 @@ export const PrimaryDefaultCircleButton = StyleSheet.create<Style>({
 
 export const PrimaryDefaultButton = StyleSheet.create<Style>({
   container: {
-    height: 40,
     // flex: 1,
     width: "100%",
     display: "flex",
@@ -94,13 +93,17 @@ export const PrimaryDefaultButton = StyleSheet.create<Style>({
     justifyContent: "center",
     backgroundColor: Colors.primary,
     borderRadius: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    borderWidth: 0.5,
+    borderColor: '#E8E8E8',
     // paddingHorizontal: 12
   },
   title: {
     color: Colors.white,
-    fontWeight: "400",
+    fontWeight: '600',
     fontSize: 16,
-    fontFamily: "Inter-Regular",
+    fontFamily: "Inter-Bold",
   },
 });
 
@@ -355,15 +358,16 @@ export const RegisterButton = StyleSheet.create<Style>({
 });
 export const SubmitButton = StyleSheet.create<Style>({
   container: {
-    height: 56,
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    borderWidth: 0.5,
+    borderColor: '#E8E8E8',
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
-    borderColor: Colors.Lavender_Pinocchio,
     borderRadius: 8,
-    borderWidth: 0.5,
     shadowColor: Colors.shadow_color,
     shadowOffset: {
       width: 1,
@@ -376,8 +380,8 @@ export const SubmitButton = StyleSheet.create<Style>({
   title: {
     color: Colors.white,
     fontWeight: "600",
-    fontSize: 24,
-    fontFamily: "Inter-Regular",
+    fontSize: 18,
+    fontFamily: "Inter-Bold",
   },
 });
 
@@ -576,11 +580,10 @@ export const ExploreButton = StyleSheet.create<Style>({
 export const ResendOtpButton = StyleSheet.create<Style>({
   container: {
     display: "flex",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
     backgroundColor:Colors.white,
-    paddingHorizontal:15,
     paddingVertical:5,
   },
   title: {

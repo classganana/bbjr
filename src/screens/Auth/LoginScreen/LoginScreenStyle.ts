@@ -7,6 +7,8 @@ export const LoginScreenStyle = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.white,
         width: "100%",
+        fontFamily: "Inter-Regular",
+        padding: 10
     },
     header: {
         flexDirection: 'row',
@@ -31,8 +33,8 @@ export const LoginScreenStyle = StyleSheet.create({
         // paddingHorizontal: 25
     },
     imageBlock: {
-        height: "50%",
-        width: "100%"
+        width: "100%",
+        flex: 1
     },
     inputContainer: {
         borderWidth: 1,
@@ -56,15 +58,16 @@ export const LoginScreenStyle = StyleSheet.create({
       },
     loginHeading: {
         top: 40,
-        fontSize: 22,
+        fontSize: 26,
         fontWeight: '600',
         color: "#212121",
+        lineHeight: 27.17,
         textAlign: 'center'
     },
     backButton: {
         top: "5%",
-        left: "5%",
-        width: 43,
+        left: "3%",
+        width: 40,
         height: 40,
         backgroundColor: "#E9EDFB",
         borderRadius: 50,
