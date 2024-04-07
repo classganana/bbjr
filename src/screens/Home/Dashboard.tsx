@@ -229,7 +229,7 @@ export const Dashboard = () => {
                         </View>
                         <View style={[DashboardStyle.option]}>
                             <View style={DashboardStyle.optionHeader}>
-                                <View style={{ height: 30, width: 30, borderRadius: 34, padding: 5, backgroundColor: '#D6E0FC' }}>
+                                <View style={{ height: 30, width: 30, borderRadius: 34, padding: 5, backgroundColor: '#007AFF' }}>
                                     <Image style={{ height: 20, width: 20, borderRadius: 34 }} source={require("../../../assets/svg/books.png")}></Image>
                                 </View>
                                 <View>
@@ -285,9 +285,9 @@ export const Dashboard = () => {
                     <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
                 </LinearGradient>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
-                {data && data.length > 0 ? <View>
-                    <View style={DashboardStyle.continuePractice}>
-                        <Text style={DashboardStyle.boostYourKnowledge}>Continue practice </Text>
+                {data && data.length > 0 ? <View style={{ marginTop: 10 }}>
+                    <View style={[DashboardStyle.continuePractice]}>
+                        <Text style={[DashboardStyle.boostYourKnowledge]}>Continue practice </Text>
                     </View>
                     <View style={DashboardStyle.pendingQuizzesList}>
                         {data && data.map((item, index) => (
@@ -296,9 +296,12 @@ export const Dashboard = () => {
                     </View>
                 </View>
                     :
+                    <>
+                    <Text style={[DashboardStyle.boostYourKnowledge, { marginTop: 12 }]}>Continue Practice</Text>
                     <ContinutPractice onPress={() => {
                         moveToExploreExamPrepPage()
                     }} />
+                    </>
                 }
             </ScrollView>
         </View>

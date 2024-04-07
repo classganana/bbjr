@@ -91,7 +91,8 @@ export const httpClient = {
   },
 };
 
-const handleApiError = () => {
+const handleApiError = (error: any) => {
+  console.log(error);
   ToastService('Something went wrong');
   // You can implement error handling logic here, such as showing a modal or toast notification to the user
   // Additionally, you can perform actions like logging the error or sending analytics data

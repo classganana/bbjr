@@ -39,5 +39,5 @@ export type UserType = {
     school: string,
     guardianEmail?: string,
     guardianName?: string,
-    avatarId: number,
+    avatarId: string,
 }

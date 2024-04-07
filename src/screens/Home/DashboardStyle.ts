@@ -73,7 +73,7 @@ export const DashboardStyle = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 10
+        marginBottom: 12
     },
     leaderboardHeaderText: {
         fontWeight: "500",
@@ -109,11 +109,11 @@ export const DashboardStyle = StyleSheet.create({
     },
     options: {
         // height: 330,
-        backgroundColor: '#F0F2F580',
+        backgroundColor: '#F5F7FF',
         paddingVertical: 12,
         paddingHorizontal: 14,
         borderRadius: 20,
-        marginBottom: 18
+        marginBottom: 10
     },
     optionTitle: {
         flexDirection: 'row',
@@ -190,6 +190,7 @@ export const DashboardStyle = StyleSheet.create({
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      paddingHorizontal: 1
     },
     optionHeaderText: {
       fontSize: 22,
@@ -202,7 +203,8 @@ export const DashboardStyle = StyleSheet.create({
     },
     optionBodyDescription: {
       fontSize: 14,
-      color: Colors.dark_gray_06,      
+      color: Colors.dark_gray_06,
+      paddingHorizontal: 1
     },
     botHeading: {
       color: "#000",
@@ -274,13 +276,17 @@ export const DashboardStyle = StyleSheet.create({
     continuePractice: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      marginLeft:10,
+      marginVertical: 10,
+      marginTop: 20
     },
     explore: {
       color: Colors.primary,
       fontWeight: '500'
     },
     boostYourKnowledge : {
+        // marginTop: 10,
         fontWeight: '500',
         fontSize: 18
     },
@@ -350,22 +356,6 @@ export const DashboardStyle = StyleSheet.create({
       fontWeight: "400",
       top: 10,
       lineHeight: 20
-    },
-    circularDiv : {
-      width: 30,  // Set the width of your circular div
-      height: 30, // Set the height of your circular div
-      borderRadius: 50, // Set the borderRadius to half of the width or height
-      //backgroundColor: 'blue',
-      justifyContent: 'center', // Center vertically
-      alignItems: 'center',
-      borderWidth: 2,  
-      borderColor: 'white',
-      backgroundColor: 'white', // Set a non-transparent background color
-      shadowColor: 'grey',
-      shadowOffset: { width: 0, height: -4 }, // Adjust the height for downward shadow
-      shadowOpacity: 0.6,
-      shadowRadius: 4,
-      elevation: 5, // Elevation (for Android)
     },
     avatarImage: {
       height: 50,

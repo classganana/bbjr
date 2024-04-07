@@ -44,9 +44,6 @@ const EditProfile = () => {
         }
     }, [])
 
-    
-
-
     const updateProfile = () => {
         let updatedData: any = {
             name,
@@ -93,7 +90,6 @@ const EditProfile = () => {
         { class: 11, label: 'Class XI' },
         { class: 12, label: 'Class XII' }
       ];
-      
 
     const listOfBoards = [
         "CBSE",
@@ -238,7 +234,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
         flexShrink: 0,
-        flex: 1
+        // flex: 1
     },
     heading: {
         display: 'flex',

@@ -21,10 +21,13 @@ import { Button } from '../../components/common/ButttonComponent/Button';
 import { StartButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import CircleInitials from '../../components/common/CircleInitials/CircleInitials';
+import { httpClient } from '../../services/HttpServices';
+import { ToastService } from '../../services/ToastService';
 
 export const SettingsPage = () => {
   // const [user, setUser] = useState<any>();
-  const {user, setUser} = useUser()
+  const {user, setUser} = useUser();
+  console.log(user);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const dummyArray = [1, 2, 3, 4, 5, 6];
   const [selectedImage, setSelectedImage] = useState(1);
@@ -111,6 +114,7 @@ export const SettingsPage = () => {
   };
 
   useEffect(() => {
+    console.log(user);
   }, []);
 
   const labels = [
@@ -130,8 +134,18 @@ export const SettingsPage = () => {
   const toggleModal = (save?: boolean) => {
     setIsModalVisible(!isModalVisible);
     if (save) {
-      const obj = {...user, avatarId: selectedImage }
+      const obj = {...user, avatarId: selectedImage.toString() };
+      console.log(obj);
       setUser(obj);
+      user?.userId && httpClient.patch(`users/${(user?.userId).toString()}`, {...obj})
+      .then((data) => {
+        if(data.status == 200) {
+          setUser(obj);
+          ToastService("User Avatar updated successfully");
+        } else {
+          ToastService("Something went wrong");
+        }
+      })
     }
   };
 

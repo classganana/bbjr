@@ -11,9 +11,9 @@ type Props = {
 export const ContinutPractice = (props: Props) => {
   return (
     <View style={style.container}>
-        <Text style={style.mainHeading}>
+        {/* <Text style={style.mainHeading}>
             Continue Practice
-        </Text>
+        </Text> */}
         <View style={style.block}>
             <Image style={style.image} source={require('../../../../assets/png/practice.png')} />
             <View style={style.rightBlock}>
@@ -31,14 +31,16 @@ export const ContinutPractice = (props: Props) => {
 
 const style = StyleSheet.create({
     container: {
+        marginVertical: 1,
         flex: 1,
         padding: 14,
-        borderRadius: 8,
+        borderRadius: 12,
         alignSelf: 'center',
         width: '98%',
-        backgroundColor: '#F0F6F8',
+        backgroundColor: '#F5F7FF',
         borderColor: Colors.white,
-        borderWidth: 0.5,
+        borderWidth: 0.1,
+        marginTop: 10,
         ...Platform.select({
           ios: {
             shadowColor: 'rgba(0, 0, 0, 0.15)',
@@ -47,7 +49,7 @@ const style = StyleSheet.create({
             shadowRadius: 8,
           },
           android: {
-            elevation: 4,
+            // elevation: 1,
           },
         }),
     },

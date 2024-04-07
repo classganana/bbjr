@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowRadius: 8,
         shadowOpacity: 1,
-        elevation: 4, // For Android shadow
+        elevation: 1, // For Android shadow
     },
     multiSelected: {
         borderWidth: 1 / 2,
