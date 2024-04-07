@@ -12,7 +12,7 @@ export const Onboard = () => {
     const data = [
         {
             image: require('../../../assets/gifs/quizzes.gif'),
-            title: "Personalized Quiz",
+            title: "Personalized Quizzes",
             info: "Combining the best of AI and language science, lessons are tailored to help you learn at just the right level and pace.",
             dots: require('../../../assets/png/fdots.png')
         },
@@ -24,7 +24,7 @@ export const Onboard = () => {
         },
         {
             image: require('../../../assets/gifs/examprep.gif'),
-            title: "Fun & Effective Exam preparation",
+            title: "Fun & Effective Exam Preparation",
             info: "Learning with Eduzy is fun, and research shows that it works.",
             dots: require('../../../assets/png/ldots.png')
         },

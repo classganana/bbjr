@@ -239,7 +239,7 @@ export const Dashboard = () => {
                             </View>
                             <Text style={DashboardStyle.optionCardHeading}>Exam Prep</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
-                                {noOfExamPrep == 0 ? "Reinforce your learning with our chapter wise quizzes!" :
+                                {noOfExamPrep == 0 ? "Ace your exams with our practice tests!" :
                                     "Keep Going! You're Doing Great!"}
                             </Text>
                             {/* {<View style={{marginLeft: 10}}><IconButton className={OutlinePlaneButton} onPress={function (): void {

@@ -2,8 +2,8 @@ import { View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { BotScreen } from '../screens/bot/BotScreen';
-import { LoginScreen } from '../screens/auth/LoginScreen/LoginScreen';
-import { SignUpScreen } from '../screens/auth/SignUpScreen/SignUpScreen';
+import { LoginScreen } from '../screens/Auth/LoginScreen/LoginScreen';
+import { SignUpScreen } from '../screens/Auth/SignUpScreen/SignUpScreen';
 
 export const AuthNavigator = () => {
     const Stack = createNativeStackNavigator();

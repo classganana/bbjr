@@ -127,80 +127,108 @@ export const LoginForm = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
       <View style={{flex: 1}}>
-      {otpScreen &&     
-      <TouchableOpacity style={LoginScreenStyle.backButton} onPress={() => setOtpScreen(false)}>
-        <NewBackButton height={20} width={20} fill={"black"} />
-        {/* <Text style={LoginScreenStyle.loginHeading}>Log in</Text> */}
-      </TouchableOpacity>
-      }
-      {/* <ScrollView contentContainerStyle={{ flex: 1 }}> */}
-      <View style={{flex: 1}}>
-      {!otpScreen && <View style={[LoginScreenStyle.imageBlock]}>
-        {/* <View> */}
-          <Text style={LoginScreenStyle.loginHeading}>Eduzy</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, marginTop: "10%" }}>
-            <Image style={{ height: "70%", width: "50%", resizeMode: 'contain'}} source={require('../../../../assets/png/loginbot.png')} />
-          {/* </View> */}
-        </View>
-      </View> }
-      {otpScreen &&  <View style={{ marginTop: "30%", height: 600 }}>
-          <OtpVerification phoneNumber={""} otpGiven={(otp: string) => otpGiven(otp)}
-            sendOtp={() => sendVerification()} />
-        </View>}
-      {!otpScreen && (
-        <View style={{ padding: 20 }}>
-          <FirebaseRecaptchaVerifierModal
-            style={{flex: 1, alignSelf: 'center', 
-            justifyContent: 'center', 
-            alignItems: 'center', height: 100, width: 100, borderRadius: 10, borderWidth: 1, borderColor: 'gray', backgroundColor: 'white' }}
-            title="Phone Verification"
-            cancelLabel="Close"
-            ref={recaptchaVerifier}
-            firebaseConfig={firebaseConfig}
-          />
-          <Text style={styles.inputLabel}>Phone Number:</Text>
-          <Text style={styles.inputDescription}>
-            Please confirm your country code and enter your mobile number.
-          </Text>
-          <View style={styles.phoneContainer}>
-            <View>
-              <Text>
-                +91
-              </Text>
+        {otpScreen &&     
+        <TouchableOpacity style={LoginScreenStyle.backButton} onPress={() => setOtpScreen(false)}>
+          <NewBackButton height={20} width={20} fill={"black"} />
+          {/* <Text style={LoginScreenStyle.loginHeading}>Log in</Text> */}
+        </TouchableOpacity>
+        }
+        {/* <ScrollView contentContainerStyle={{ flex: 1 }}> */}
+        <View style={{flex: 1}}>
+          {!otpScreen && <View style={[LoginScreenStyle.imageBlock]}>
+            <Text style={LoginScreenStyle.loginHeading}>Eduzy</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, marginTop: "10%" }}>
+              <Image style={{ height: "70%", width: "50%", resizeMode: 'contain'}} source={require('../../../../assets/png/loginbot.png')} />
             </View>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter phone number"
-              keyboardType="numeric"
-              onChangeText={(text) => {
-                setPhoneNumber(text);
-                validatePhoneNumber(text);
-              }}
-            />
-          </View>
-          {phoneNumberError !== "" && (
-            <Text style={styles.errorText}>{phoneNumberError}</Text>
+          </View> }
+          {otpScreen &&  <View style={{ marginTop: "30%", height: 600 }}>
+              <OtpVerification phoneNumber={""} otpGiven={(otp: string) => otpGiven(otp)}
+                sendOtp={() => sendVerification()} />
+            </View>}
+          {!otpScreen && (
+            <View style={styles.loginForm}>
+              <FirebaseRecaptchaVerifierModal
+                style={{flex: 1, alignSelf: 'center', 
+                justifyContent: 'center', 
+                alignItems: 'center', height: 100, width: 100, borderRadius: 10, borderWidth: 1, borderColor: 'gray', backgroundColor: 'white' }}
+                title="Phone Verification"
+                cancelLabel="Close"
+                ref={recaptchaVerifier}
+                firebaseConfig={firebaseConfig}
+              />
+              <View style={styles.loginTitleContainer}>
+                <Text style={styles.loginTitle}>Login</Text>
+                <Text style={styles.loginSubTitle}>Please enter your phone number</Text>
+              </View>
+              <View style={styles.phoneInputField}>
+                <Text style={styles.inputLabel}>Phone Number</Text>
+                <View style={styles.phoneContainer}>
+                  <View style={styles.phoneCode}>
+                    <Text style={{fontSize: 16}}>
+                      +91
+                    </Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Phone number"
+                    keyboardType="numeric"
+                    onChangeText={(text) => {
+                      setPhoneNumber(text);
+                      validatePhoneNumber(text);
+                    }}
+                  />
+                </View>
+                {phoneNumberError !== "" && (
+                  <Text style={styles.errorText}>{phoneNumberError}</Text>
+                )}
+              </View>
+              <View style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <Text style={{ fontSize: 12, padding: 5 }}>
+                  By Continuing you agree to the Terms of services and Privacy policy
+                </Text>
+                <Button
+                  className={PrimaryDefaultButton}
+                  label={"Get OTP"}
+                  disabled={phoneNumberError !== ""}
+                  onPress={moveToOtpScreen}
+                />
+              </View>
+            </View>
           )}
-          <Button
-            className={PrimaryDefaultButton}
-            label={"Login"}
-            disabled={phoneNumberError !== ""}
-            onPress={moveToOtpScreen}
-          />
-          <View>
-            <Text style={{ textAlign: 'center' }}>
-              By Continuing you agree to the Terms of services and Privacy policy
-            </Text>
-          </View>
         </View>
-      )}
-      </View>
       </View>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  loginTitleContainer:{
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10
+  },
+  loginForm: {
+    padding: 20,
+    gap: 30,
+    flex: 1.1
+  },
+  loginTitle: {
+    fontWeight: '600',
+    fontSize: 24,
+    lineHeight: 29.65,
+    color: '#212121'
+  },
+  loginSubTitle: {
+    fontWeight: '600',
+    color: '#7A7A7A',
+    lineHeight: 19.76,
+    fontSize: 16,
+  },
+  phoneInputField: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+  },
   inputLabel: {
     fontSize: 18,
     fontWeight: '500',
@@ -213,23 +241,29 @@ const styles = StyleSheet.create({
   phoneContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
     alignItems: 'center',
-    gap: 10
+    gap: 10,
+    borderColor: '#B3B3B3',
+    borderWidth: 0.5,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+    minHeight: 50,
   },
   input: {
-    flex: 6,
-    height: 40,
-    borderBottomColor: 'gray',
-    borderBottomWidth: 1,
-    marginRight: 10,
+    flex: 7,
+    fontSize: 16,
+    height: '100%'
   },
   phoneCode: {
     flex: 1,
-    height: 40,
-    borderBottomColor: 'gray',
-    borderBottomWidth: 1,
-    marginRight: 10,
+    borderRightColor: '#8B8B8B',
+    borderRightWidth: 0.5,
+    paddingRight: 3,
+    marginRight: 3,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   errorText: {
     color: "red",
