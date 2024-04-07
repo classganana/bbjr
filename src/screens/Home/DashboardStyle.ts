@@ -321,6 +321,29 @@ export const DashboardStyle = StyleSheet.create({
       // marginHorizontal: 0,
       // aspectRatio: "1.08",
     },
+    solveAnyDoubts : {
+      fontWeight: '500',
+      fontSize: 16,
+      paddingVertical: 8,
+      paddingHorizontal: 4,
+      
+  },
+  circularDiv : {
+    width: 35,  // Set the width of your circular div
+    height: 35, // Set the height of your circular div
+    borderRadius: 50, // Set the borderRadius to half of the width or height
+    //backgroundColor: 'blue',
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center',
+    borderWidth: 2,  
+    borderColor: 'white',
+    
+    shadowColor: 'grey',
+    shadowOffset: { width: 0, height: -4 }, // Adjust the height for downward shadow
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    elevation: 5, // Elevation (for Android)
+  },
     promptText: {
       flexDirection: 'row',
       fontSize: 14,

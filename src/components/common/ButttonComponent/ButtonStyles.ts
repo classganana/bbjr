@@ -518,7 +518,7 @@ export const StartExamPrep = StyleSheet.create<Style>({
 export const ExitButton = StyleSheet.create<Style>({
   container: {
     height: 40,
-    width:  130,
+    width:  "50%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

@@ -237,7 +237,7 @@ export const Dashboard = () => {
                                     {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
                                 </View>
                             </View>
-                            <Text style={DashboardStyle.optionCardHeading}>Exam Prep</Text>
+                            <Text style={DashboardStyle.optionCardHeading}>Exam Preparation</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
                                 {noOfExamPrep == 0 ? "Ace your exams with our practice tests!" :
                                     "Keep Going! You're Doing Great!"}
