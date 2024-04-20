@@ -113,7 +113,7 @@ export const DashboardStyle = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 14,
         borderRadius: 20,
-        marginBottom: 10
+        marginBottom: 20
     },
     optionTitle: {
         flexDirection: 'row',
@@ -141,7 +141,7 @@ export const DashboardStyle = StyleSheet.create({
       display: 'flex',
       flexDirection: 'row',
       gap: 20,
-      padding: 10
+      padding: 10,
     },
     optionHeading: {
       fontSize: 16,
@@ -170,6 +170,7 @@ export const DashboardStyle = StyleSheet.create({
       shadowOpacity: 0.1,
       shadowRadius: 4,
       borderWidth: 1/2,
+      paddingVertical: 20,
       // justifyContent: 'space-evenly',
       borderColor: Colors.primary,
       ...Platform.select({
@@ -223,11 +224,10 @@ export const DashboardStyle = StyleSheet.create({
       minHeight: 160,
       padding: 16,
       paddingHorizontal: 20,
-      
       backgroundColor: "white",
       borderRadius: 20,
       shadowColor: Colors.black_03,
-      borderWidth: 0.5,
+      borderWidth: 0.4,
       ...Platform.select({
         ios: {
           shadowColor: 'rgba(0, 0, 0, 0.15)',

@@ -131,22 +131,33 @@ export const SettingsPage = () => {
     navigation.navigate('DashboardNavigator' as never)
   }
 
-  const toggleModal = (save?: boolean) => {
+  const toggleModal = async (save?: boolean) => {
     setIsModalVisible(!isModalVisible);
     if (save) {
       const obj = {...user, avatarId: selectedImage.toString() };
-      console.log(obj);
-      setUser(obj);
-      user?.userId && httpClient.patch(`users/${(user?.userId).toString()}`, {...obj})
-      .then((data) => {
-        if(data.status == 200) {
-          setUser(obj);
-          ToastService("User Avatar updated successfully");
-        } else {
-          ToastService("Something went wrong");
-        }
-      })
-    }
+      console.log(obj); 
+      const data = await AsyncStorage.getItem('user');
+      if(data) {
+          let userData = JSON.parse(data);
+          
+          if (userData) {
+              userData['avatarId'] = selectedImage.toString();
+              await AsyncStorage.setItem('user', JSON.stringify(userData));
+          }
+          
+    
+          user?.userId && httpClient.patch(`users/${(user?.userId).toString()}`, {...obj})
+          .then((data) => {
+            if(data.status == 200) {
+              AsyncStorage.setItem('avatarId', selectedImage.toString());
+              setUser({...obj});
+              ToastService("User Avatar updated successfully");
+            } else {
+              ToastService("Something went wrong");
+            }
+          })
+      }
+      }
   };
 
   return (

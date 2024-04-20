@@ -41,6 +41,7 @@ const style = StyleSheet.create({
         borderColor: Colors.white,
         borderWidth: 0.1,
         marginTop: 10,
+        paddingVertical: 20,
         ...Platform.select({
           ios: {
             shadowColor: 'rgba(0, 0, 0, 0.15)',
@@ -60,7 +61,7 @@ const style = StyleSheet.create({
     block: {
         flexDirection: 'row',
         justifyContent:"center",
-        gap:20,
+        gap: 20,
         width: "100%"
     },
     rightBlock: {
@@ -69,20 +70,21 @@ const style = StyleSheet.create({
     },
     heading: {
         color: "#3D3D3D",
-        fontSize: 12,
-        fontWeight: '500'
+        fontSize: 18,
+        fontWeight: '600'
     },
     infoText: {
-        fontSize: 12,
+        fontSize: 14,
         marginTop: 10,
         textAlign: 'center',
-        marginBottom: 10
+        marginBottom: 20,
+        color: "#4D4D4D",
+        lineHeight: 20,
     },
     mainHeading: {
         color: "#1E1E1E",
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: '500',
         marginBottom: 15
     }
-
 })

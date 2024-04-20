@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ClockIcon, CrossIcon, NewBackButton, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { CrossIcon, NewBackButton } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
@@ -10,13 +10,16 @@ import { CDN, httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { EditButton, LoginButton, TakeTest } from '../../components/common/ButttonComponent/ButtonStyles';
+import { EditButton, TakeTest } from '../../components/common/ButttonComponent/ButtonStyles';
 import { useUser } from '../../context/UserContext';
 import { styles } from './QuizHomePageStyle';
 import { UtilService } from '../../services/UtilService';
 import { ExamPrepAllChapter } from '../../components/quiz/ExamPrepAllChapter';
 import { Image } from 'react-native';
 import { ActivityIndicator } from 'react-native';
+import BottomSheet, { BottomSheetView, BottomSheetScrollView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { StyleSheet } from 'react-native';
+
 
 interface Chapter {
     chapterName: string;
@@ -36,34 +39,41 @@ export const QuizHomePage = () => {
     const [totalQuestions, setTotalQuestions] = useState(0);
     const [selectedQuiz, setSelectedQuiz] = useState<any[]>();
     const [loading, setLoading] = useState(true);
-    const {user} = useUser();
+    const { user } = useUser();
     const [loadingText, setLoadingText] = useState('');
     const [subjectUrl, setSubjectUrl] = useState('');
     const [tempSubject, setTempSubject] = useState('');
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
     ]);
-    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     const [selectedSubject, setSelectedSubject] = useState<{
         subjectName: string;
-    }>({subjectName:""});
+    }>({ subjectName: "" });
 
     const [allChapterSelected, setAllChapterSelected] = useState(false);
 
     const navigation = useNavigation();
 
+    const snapPoints = useMemo(() => ['25%', '50%', '80%'], []);
+    const bottomSheetref = useRef<BottomSheet>(null);
+
+    const handleOpenPress = () => {
+        bottomSheetref.current?.snapToIndex(2);
+    };
+
     useEffect(() => {
         setOptions(false);
         resetSelection();
-    },[multiSelect])
+    }, [multiSelect])
 
     useEffect(() => {
         setScreen();
         UtilService.checkIfCDNHasTheImage(selectedSubject.subjectName).then((item) => {
             console.log("here is URL => ", selectedSubject.subjectName);
-            setSubjectUrl(item+ "?v="+ Date.now());
+            setSubjectUrl(item + "?v=" + Date.now());
         }).catch((err) => {
             console.log("here is error => ", err, selectedSubject.subjectName);
         })
@@ -106,7 +116,7 @@ export const QuizHomePage = () => {
         //             setData(list);
         //         }
         //     });
-    },[selectedSubject?.subjectName, tab]);
+    }, [selectedSubject?.subjectName, tab]);
 
     // useEffect(() => {
     //     setOptions(false);
@@ -123,20 +133,20 @@ export const QuizHomePage = () => {
     useEffect(() => {
         setOptions(false);
         resetSelection();
-    },[multiSelect])
+    }, [multiSelect])
 
     useEffect(() => {
-        if(allChapterSelected){
+        if (allChapterSelected) {
             setOptions(true);
             resetSelection();
         } else {
             setOptions(allChapterSelected);
         }
         setSelectedQuiz(() => []);
-    },[allChapterSelected]);
+    }, [allChapterSelected]);
 
     useEffect(() => {
-        console.log("New Su",subjectUrl)
+        console.log("New Su", subjectUrl)
     }, [subjectUrl])
 
     const fetchData = async () => {
@@ -162,14 +172,14 @@ export const QuizHomePage = () => {
                 "requestMethod": "POST",
                 "requestBody": s
             }
-            
-            if(selectedSubject.subjectName && selectedSubject.subjectName.length){
+
+            if (selectedSubject.subjectName && selectedSubject.subjectName.length) {
                 const response = await httpClient.post(`auth/c-auth`, reqObj);
-                
+
                 // Handle successful response
                 let list = response.data.data.quizzes;
                 (tab !== 'Quizzes') && sortChapters(list)
-                if(list && list.map) {
+                if (list && list.map) {
                     list = sortChapters(list)
                     list = list.map((item: any, index: number) => ({
                         id: index,
@@ -183,7 +193,7 @@ export const QuizHomePage = () => {
                         score: item.score,
                         // subject: "Science"
                         subject: selectedSubject.subjectName,
-                        practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
+                        practiceProgress: (item.practicedQuestions / item.totalQuestions) * 100
                     }));
                     // console.log(list);
                     // const newList = sortChapters(list)
@@ -202,6 +212,17 @@ export const QuizHomePage = () => {
         }
     };
 
+    const renderBackdrop = useCallback(
+		(props: any) => (
+			<BottomSheetBackdrop
+				{...props}
+				disappearsOnIndex={-1}
+				appearsOnIndex={2}
+			/>
+		),
+		[]
+	);
+
     // const sortChapters = (chapters: Chapter[]) => {
     //     // Define a custom sorting function based on chapter number
     //     const customSort = (a: any, b: any) => {
@@ -209,54 +230,54 @@ export const QuizHomePage = () => {
     //         const chapterNumB = parseInt(b.title.match(/\d+/)[0]);
     //         return chapterNumA - chapterNumB;
     //     };
-    
+
     //     // Sort the chapters array using the custom sorting function
     //     chapters.sort(customSort);
-        
+
     //     setData(chapters as any);
     //     return chapters;
     // };
 
     function sortChapters(data: any) {
         return data.sort((a, b) => {
-          // Extract chapter numbers from chapter names
-          const chapterNumberA = extractChapterNumber(a.chapterName);
-          const chapterNumberB = extractChapterNumber(b.chapterName);
-      
-          // Handle chapters with numbers (sort numerically)
-          if (chapterNumberA !== null && chapterNumberB !== null) {
-            return chapterNumberA - chapterNumberB;
-          }
-      
-          // Handle chapters without numbers (sort alphabetically)
-          if (chapterNumberA === null && chapterNumberB === null) {
-            return a.chapterName.localeCompare(b.chapterName);
-          }
-      
-          // If one chapter has a number and the other doesn't, prioritize the one with a number
-          return chapterNumberA !== null ? -1 : 1;
+            // Extract chapter numbers from chapter names
+            const chapterNumberA = extractChapterNumber(a.chapterName);
+            const chapterNumberB = extractChapterNumber(b.chapterName);
+
+            // Handle chapters with numbers (sort numerically)
+            if (chapterNumberA !== null && chapterNumberB !== null) {
+                return chapterNumberA - chapterNumberB;
+            }
+
+            // Handle chapters without numbers (sort alphabetically)
+            if (chapterNumberA === null && chapterNumberB === null) {
+                return a.chapterName.localeCompare(b.chapterName);
+            }
+
+            // If one chapter has a number and the other doesn't, prioritize the one with a number
+            return chapterNumberA !== null ? -1 : 1;
         });
-      }
-      
-      // Helper function to extract chapter number from chapter name
-      function extractChapterNumber(chapterName: any) {
+    }
+
+    // Helper function to extract chapter number from chapter name
+    function extractChapterNumber(chapterName: any) {
         const match = chapterName.match(/\d+/);
         return match ? parseInt(match[0]) : null;
-      }
+    }
 
-    const setSubjectToLocal = async (item: {subjectName: string}) => {
+    const setSubjectToLocal = async (item: { subjectName: string }) => {
         try {
-          await AsyncStorage.setItem('quizSubject', item.subjectName);
+            await AsyncStorage.setItem('quizSubject', item.subjectName);
         } catch (e) {
-          console.log("Error => ", e);
+            console.log("Error => ", e);
         }
-      }
-    
+    }
+
     const getSubjectFromLocal = async () => {
         try {
             const subject = await AsyncStorage.getItem('quizSubject');
             if (subject && subject.length) {
-                setSelectedSubject({subjectName : subject});
+                setSelectedSubject({ subjectName: subject });
             } else {
                 setAvailableSubject();
             }
@@ -267,7 +288,7 @@ export const QuizHomePage = () => {
 
     const resetSelection = () => {
         let tempData = data;
-        if(tempData && tempData.length) {
+        if (tempData && tempData.length) {
             tempData = tempData.map((temp) => {
                 temp.selected = false;
                 return temp;
@@ -282,13 +303,13 @@ export const QuizHomePage = () => {
 
         setData((prev) => {
             let tem = prev;
-            tem  = tem.map((temp) => {
+            tem = tem.map((temp) => {
                 if (temp.id != (index)) {
                     !multiSelect && (temp.selected = false);
-                } 
+                }
                 return temp;
             });
-            if(tem[index].selected) tem[index].selected = false;
+            if (tem[index].selected) tem[index].selected = false;
             else tem[index].selected = true;
             tem[index].subject = selectedSubject.subjectName;
             setOptions(true);
@@ -299,32 +320,31 @@ export const QuizHomePage = () => {
         // setData(() => [...tempData]);
     }
 
-
     const getSelectedChapters = (data: CardData[]) => {
         // Filter the array to include only objects where selected is true
         const selectedChapters = data.filter(item => item.selected);
-      
+
         // Map the filtered array to extract the chapter number from the title
         const chapters = selectedChapters.map(item => {
-          // Extract the chapter number from the title
-          const chapterNumber = (tab == 'Quizzes')? item?.title?.match: parseInt(item?.title?.match(/\d+/)[0]);
-          return { chapterNo: chapterNumber };
+            // Extract the chapter number from the title
+            const chapterNumber = (tab == 'Quizzes') ? item?.title?.match : parseInt(item?.title?.match(/\d+/)[0]);
+            return { chapterNo: chapterNumber };
         });
-      
+
         return chapters;
-      }
+    }
 
     const setSubjectAndCloseModal = () => {
         setBottomSheetVisible(false);
         setSelectedSubject(tempSubject as any);
         setSubjectToLocal(tempSubject as any);
         setTempSubject('');
-      };
+        bottomSheetref.current?.close();
+    };
 
     const setTemporarySubject = (item: any) => {
         setTempSubject(item);
     }
-
 
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
@@ -332,7 +352,7 @@ export const QuizHomePage = () => {
         UtilService.setQuizType('quiz');
         setAllChapterSelected(false);
         resetSelection();
-        if(!allChapterSelected) {
+        if (!allChapterSelected) {
             navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
         } else {
             allChapterNavigate()
@@ -346,7 +366,7 @@ export const QuizHomePage = () => {
         UtilService.setQuizType('practice');
         setAllChapterSelected(false);
         resetSelection();
-        if(!allChapterSelected) {
+        if (!allChapterSelected) {
             navigation.navigate('QuizFirstPage' as never, selectedQuiz as never);
         } else {
             allChapterNavigate()
@@ -355,27 +375,27 @@ export const QuizHomePage = () => {
 
     const setAvailableSubject = () => {
         const reqObj = {
-          "service": "ml_service",
-          // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
-          "endpoint": `/subjects?board_id=${user?.board}&class_name=${user?.class}&school_id=default`,
-          "requestMethod": "GET"
-      }
-    
-      httpClient.post(`auth/c-auth`, reqObj).then((res) => {
-        const subjectList = res.data.data;
-        const result = subjectList.map((sub: any) => {
-          return {
-            subjectName: sub.subject
-          }
+            "service": "ml_service",
+            // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
+            "endpoint": `/subjects?board_id=${user?.board}&class_name=${user?.class}&school_id=default`,
+            "requestMethod": "GET"
+        }
+
+        httpClient.post(`auth/c-auth`, reqObj).then((res) => {
+            const subjectList = res.data.data;
+            const result = subjectList.map((sub: any) => {
+                return {
+                    subjectName: sub.subject
+                }
+            })
+            setSelectedSubject(result[0]);
         })
-        setSelectedSubject(result[0]);
-      })
-      
+
     };
-    
+
     const setScreen = async () => {
         const screen = await AsyncStorage.getItem('quizFlow');
-        if(screen == "Quizzes") {
+        if (screen == "Quizzes") {
             setTab('Quizzes');
         } else {
             setTab('Exam Preparation')
@@ -393,38 +413,38 @@ export const QuizHomePage = () => {
 
     const allChapterNavigate = () => {
         const a = [[{
-                    subject: selectedSubject.subjectName,
-                    allChapter: true,
-                    title: ["All Chapters: " + selectedSubject.subjectName]
-                }]]
-        navigation.navigate('QuizFirstPage' as never, a as never);       
+            subject: selectedSubject.subjectName,
+            allChapter: true,
+            title: ["All Chapters: " + selectedSubject.subjectName]
+        }]]
+        navigation.navigate('QuizFirstPage' as never, a as never);
     }
 
     const DynamicRenderingSubjectCardorAllChapterCard = () => {
-        if(!multiSelect && selectedQuiz &&  selectedQuiz[0] && selectedQuiz[0].length > 0) {
-            const selectedItem = selectedQuiz[0][0]; 
+        if (!multiSelect && selectedQuiz && selectedQuiz[0] && selectedQuiz[0].length > 0) {
+            const selectedItem = selectedQuiz[0][0];
             return <>
-            {data.map((item, key) => (
+                {data.map((item, key) => (
                     item.selected && <ExamPrepQuizCard
-                    key={key}
-                    score={item.score}
-                    {...item}
-                    onCardClick={(i) => {}}/>
-            ))}
-            </> 
+                        key={key}
+                        score={item.score}
+                        {...item}
+                        onCardClick={(i) => { }} />
+                ))}
+            </>
         } else {
-            return ( 
+            return (
                 <View style={styles.allChapterCard}>
-                    <View style={{height: 180, borderRadius: 10, overflow: 'hidden',}}>
-                        <Image 
-                            source={{ uri: subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400' }} 
-                            resizeMode="cover" 
-                            style={{ height: 200, width: "100%" }} 
-                            />
+                    <View style={{ height: 180, borderRadius: 4, overflow: 'hidden', }}>
+                        <Image
+                            source={{ uri: subjectUrl && subjectUrl.length ? subjectUrl : 'https://placehold.co/400' }}
+                            resizeMode="cover"
+                            style={{ height: 200, width: "100%", borderRadius: 4 }}
+                        />
                     </View>
                     <Text style={styles.allChapterCardtext}>{selectedSubject.subjectName} - All Chapters</Text>
                 </View>
-                )
+            )
         }
     }
 
@@ -437,28 +457,24 @@ export const QuizHomePage = () => {
                     </TouchableOpacity>
                     <Text style={styles.headingTitle}>Boost Your Knowledge</Text>
                 </View>
-                {/* <View style={styles.infoContainer}>
-                    <SearchIcon height={'20'} width={'20'} fill={'#787878'} />
-                    <TextInput style={styles.searchBox}
-                        onChangeText={(text) => { setSearchTerm(text) }}
-                        placeholderTextColor={"#808080"} placeholder='Seach Quizzes'></TextInput>
-                </View> */}
             </View>
+
             <View style={styles.body}>
                 <View style={styles.tabs}>
                     <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Preparation']} onChangeTab={(i) => {
                         setTab(i)
-                        UtilService.setQuizFlow(i);}} ></Tabs>
+                        UtilService.setQuizFlow(i);
+                    }} ></Tabs>
                 </View>
                 <ScrollView style={styles.tabs}>
                     {tab == "Quizzes" && <>
-                    <Text style={styles.selectedOption}>{tab}</Text>
-                    {data.map((item, key) => (
+                        <Text style={styles.selectedOption}>{tab}</Text>
+                        {data.map((item, key) => (
                             <ExamPrepQuizCard
-                            practiceProgress={item.practiceProgress} key={key}
-                            score={item.score}
-                            {...item}
-                            onCardClick={(i) => updateList(i)}                            />
+                                practiceProgress={item.practiceProgress} key={key}
+                                score={item.score}
+                                {...item}
+                                onCardClick={(i) => updateList(i)} />
                         ))}
                         {loading && <>
                             {/* <Text style={{fontSize: 100}}>{loadingText}</Text> */}
@@ -481,70 +497,70 @@ export const QuizHomePage = () => {
 
 
                             <View style={styles.buttoncontainer}>
-                            <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
-                                {selectedSubject?.subjectName}
-                            </Text>
-                            <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
-                                <Text>Change</Text>
-                                <View style={styles.pencil}>
-                                    <NewBackButton height={'12'} width={'12'} fill={Colors.white} />
-                                </View>
-                            </TouchableOpacity>
+                                <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
+                                    {selectedSubject?.subjectName}
+                                </Text>
+                                <TouchableOpacity onPress={handleOpenPress} style={styles.changebutton} >
+                                    <Text>Change</Text>
+                                    <View style={styles.pencil}>
+                                        <NewBackButton height={'12'} width={'12'} fill={Colors.white} />
+                                    </View>
+                                </TouchableOpacity>
                             </View>
-                            <ExamPrepAllChapter selected={allChapterSelected} onCardClick={() => { allChapterCardClick ()}}
-                            id={0} title={'All Chapters'} infoText={''} imageUrl={subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
+                            <ExamPrepAllChapter selected={allChapterSelected} onCardClick={() => { allChapterCardClick() }}
+                                id={0} title={'All Chapters'} infoText={''} imageUrl={subjectUrl && subjectUrl.length ? subjectUrl : 'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 10}}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 10 }}>
                             <Text style={styles.chapterWise}>Chapter Wise</Text>
                             <TouchableOpacity onPress={() => { setMultiSelect(!multiSelect) }}>
                                 {multiSelect && <View style={styles.crossMultiSelect} >
                                     <Text>
-                                        Selected Count: {(selectedQuiz && selectedQuiz[0]?.length)? selectedQuiz[0]?.length: 0}
+                                        Selected : {(selectedQuiz && selectedQuiz[0]?.length) ? selectedQuiz[0]?.length : 0}
                                     </Text>
                                     <CrossIcon height={12} width={12} fill={Colors.black_01} />
                                 </View>}
                                 {!multiSelect && <Text style={styles.crossMultiSelect}>Select Multiple</Text>}
                             </TouchableOpacity>
                         </View>
-                     <View style={{display: 'flex', flexDirection: 'column', gap: 5}}>
-                        {loading ? (
-                            <ActivityIndicator size="large" color={Colors.primary} />
-                        ) : (
-                            <>
-                                {data && data.length === 0 && (
-                                    <Text style={{fontSize: 100}}>No Data</Text>
-                                )}
-                                {data && data.map((item) => (
-                                    <ExamPrepQuizCard
-                                    key={item.id}
-                                    score={item.score}
-                                    {...item}
-                                    onCardClick={(i) => updateList(i)}
-                                    />
-                                ))}
-                            </>
-                        )}
-                    </View>
+                        <View style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                            {loading ? (
+                                <ActivityIndicator size="large" color={Colors.primary} />
+                            ) : (
+                                <>
+                                    {data && data.length === 0 && (
+                                        <Text style={{ fontSize: 100 }}>No Data</Text>
+                                    )}
+                                    {data && data.map((item) => (
+                                        <ExamPrepQuizCard
+                                            key={item.id}
+                                            score={item.score}
+                                            {...item}
+                                            onCardClick={(i) => updateList(i)}
+                                        />
+                                    ))}
+                                </>
+                            )}
+                        </View>
                     </>
                     }
                 </ScrollView>
                 {
-                (allChapterSelected || (!multiSelect && options && getSelectedChapters(data).length == 1)) &&
+                    (allChapterSelected || (!multiSelect && options && getSelectedChapters(data).length == 1)) &&
                     <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={(allChapterSelected || options && getSelectedChapters(data).length > 0)}
-                    onRequestClose={() => setBottomSheetVisible(false)}>
-                    <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}></View>   
-                    <View style={styles.floatingButtonContainer}>
-                        <DynamicRenderingSubjectCardorAllChapterCard />
-                        <Text>
-                            Which one do you want to explore?
-                        </Text>
-                        <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
+                        animationType="fade"
+                        transparent={true}
+                        visible={(allChapterSelected || options && getSelectedChapters(data).length > 0)}
+                        onRequestClose={() => setBottomSheetVisible(false)}>
+                        <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}></View>
+                        <View style={styles.floatingButtonContainer}>
+                            <DynamicRenderingSubjectCardorAllChapterCard />
+                            <Text>
+                                Which one do you want to explore?
+                            </Text>
+                            <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
                                 <CrossIcon height={18} width={18} fill={Colors.black_01} />
-                        </TouchableOpacity>
-                        {/* {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
+                            </TouchableOpacity>
+                            {/* {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapters</Text> }
                         {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
                             {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
                                 return (
@@ -555,16 +571,16 @@ export const QuizHomePage = () => {
                             })}
                         </View>    
                         } */}
-                        <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
-                            {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
-                            <Text style={styles.floatingButtonText}>Practice</Text>
-                        </TouchableOpacity>
-                        <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
-                        {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
+                            <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
+                                {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
+                                <Text style={styles.floatingButtonText}>Practice</Text>
+                            </TouchableOpacity>
+                            <Button className={TakeTest} label={"Take a Test"} disabled={false} onPress={startTheQuiz}></Button>
+                            {/* <TouchableOpacity onPress={startTheQuiz} style={styles.floatingButton}>
                             <ClockIcon height={'20'} width={'20'} fill={'black'} />
                             <Text style={styles.floatingButtonText}>Take a Test</Text>
                         </TouchableOpacity> */}
-                    </View>
+                        </View>
                     </Modal>
                 }
 
@@ -574,18 +590,18 @@ export const QuizHomePage = () => {
                             Select multiple chapters to customize your test
                         </Text>
                         <TouchableOpacity style={styles.crossfloatingButton} onPress={() => { resetSelection(); setAllChapterSelected(false) }}>
-                                <CrossIcon height={18} width={18} fill={Colors.black_01} />
+                            <CrossIcon height={18} width={18} fill={Colors.black_01} />
                         </TouchableOpacity>
-                        {multiSelect &&  getSelectedChapters(data).length && <Text>Selected Chapter Numbers</Text> }
-                        {multiSelect &&  getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
+                        {multiSelect && getSelectedChapters(data).length && <Text>Selected Chapter Numbers</Text>}
+                        {multiSelect && getSelectedChapters(data).length && <View style={styles.selectedChapterContainer}>
                             {multiSelect && getSelectedChapters(data).map((item: any, index: number) => {
                                 return (
                                     <View key={index} style={styles.selectedChapters}>
                                         <Text key={index}>{item.chapterNo}</Text>
-                                    </View>    
+                                    </View>
                                 )
                             })}
-                        </View>    
+                        </View>
                         }
                         <TouchableOpacity style={styles.floatingButton} onPress={startThePractice}>
                             {/* <TestIcon height={'20'} width={'20'} fill={'black'} /> */}
@@ -605,34 +621,57 @@ export const QuizHomePage = () => {
                     visible={bottomSheetVisible}
                     onRequestClose={() => setBottomSheetVisible(false)}
                 >
-                    <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
-                        <View style={styles.bottomSheetContainer}>
-                            <Text style={styles.subjecttxt}>Subject</Text>
-                            <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>
-                                <Student selectedSubject={(item: any) => setTempSubject(item)} themeColor={true} subject={selectedSubject.subjectName} />
-                            </ScrollView>
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    gap: 5,
-                                    position: "absolute",
-                                    bottom: 0,
-                                    paddingHorizontal: 20,
-                                    paddingVertical: 20,
-                                    width: '100%',
-                                }}
-                            >
-                                <Button
-                                    label={'Continue'}
-                                    disabled={tempSubject.length == 0}
-                                    className={EditButton}
-                                    onPress={() => setSubjectAndCloseModal()}
-                                />
-                            </View>
-                        </View>
-                    </View>
                 </Modal>
             </View>
+
+            <BottomSheet
+                backdropComponent={renderBackdrop}
+                ref={bottomSheetref}
+                index={0}
+                snapPoints={snapPoints}
+                enablePanDownToClose={true}
+                handleIndicatorStyle={{width: "20%"}}
+            >
+                <BottomSheetScrollView contentContainerStyle={BottomStyles.contentContainer}>
+                    <Student selectedSubject={(item: any) => setTempSubject(item)} themeColor={true} subject={selectedSubject.subjectName} />
+                </BottomSheetScrollView>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        gap: 5,
+                        position: "absolute",
+                        bottom: 0,
+                        paddingHorizontal: 20,
+                        paddingVertical: 20,
+                        width: '100%',
+                    }}
+                >
+                    <Button
+                        label={'Continue'}
+                        disabled={tempSubject.length == 0}
+                        className={EditButton}
+                        onPress={() => setSubjectAndCloseModal()}
+                    />
+                </View>
+            </BottomSheet>
+
         </View>
     )
 }
+
+
+const BottomStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingTop: 200,
+    },
+    contentContainer: {
+        paddingBottom: 50,
+        backgroundColor: "white",
+    },
+    itemContainer: {
+        padding: 6,
+        margin: 6,
+        backgroundColor: "#eee",
+    },
+});

@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         flex: 1,
-        gap: 18,
+        gap: 6,
         width: "100%"
     },
     title: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize: 16,
         color: '#000000',
-        fontWeight: '600'
+        fontWeight: '400'
     },
     questionText: {
         color: "#999",

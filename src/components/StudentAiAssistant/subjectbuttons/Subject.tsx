@@ -6,6 +6,8 @@ import { StartButton } from "../../common/ButttonComponent/ButtonStyles";
 import { Colors, SubjectColors } from "../../../styles/colors";
 import { UserType, useUser } from "../../../context/UserContext";
 import { httpClient } from "../../../services/HttpServices";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+
 
 interface ButtonData {
   text: string;
@@ -148,7 +150,7 @@ export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+
       <View style={styles.subjectcontainer}>
         {colorsMappedSubjectList.map((subjectWithColor, index) => (
           <ChipComponent
@@ -163,7 +165,6 @@ export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
           />
         ))}
       </View>
-    </ScrollView>
 
   );
 };
@@ -173,11 +174,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    // flex: 1,
-    // height: 300,
+    height: "80%",
     width: "100%",
-    // backgroundColor: Colors.white,
-    // position: "relative",
   },
   subjectcontainer: {
     display: "flex",

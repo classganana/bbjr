@@ -10,8 +10,8 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 8,
         alignItems: 'center',
-        paddingVertical: 4,
-        paddingHorizontal: 10
+        paddingVertical: 8,
+        paddingHorizontal: 16
     },
     container: {
         margin: 0,
@@ -146,15 +146,15 @@ export const styles = StyleSheet.create({
         color: Colors.primary
     },
     bottomSheetContainer: {
-        position: "absolute",
-        bottom: 0,
-        width: "100%",
-        height: "75%",
-        backgroundColor: Colors.white,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        overflow: 'scroll',
-        paddingBottom: 50
+        // position: "absolute",
+        // bottom: 0,
+        // width: "100%",
+        height: "100%",
+        // backgroundColor: Colors.white,
+        // borderTopLeftRadius: 20,
+        // borderTopRightRadius: 20,
+        // overflow: 'scroll',
+        // paddingBottom: 50
     },
     subjecttxt: {
         alignSelf: 'center',
@@ -211,8 +211,8 @@ export const styles = StyleSheet.create({
             paddingVertical:20,
         },
         chapterWise: {
-            fontSize: 16,
-            fontWeight: '600'
+            fontSize: 18,
+            fontWeight: '500'
         },
         allChapterCard: {
             paddingTop: 10,
@@ -235,5 +235,11 @@ export const styles = StyleSheet.create({
             fontSize: 16,
             fontWeight: '500',
 
-        }
+        },
+        contentContainer: {
+            flex: 1,
+            alignItems: 'center',
+            flexGrow: 1,
+            backgroundColor: 'red',
+        },
 });

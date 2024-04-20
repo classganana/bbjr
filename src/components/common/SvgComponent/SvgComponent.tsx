@@ -161,10 +161,6 @@ export const Sprit = (props: Props) => (
     <Defs>
       <LinearGradient
         id="paint0_linear_6992_38588"
-        x1={8.33973}
-        y1={6.87576e-7}
-        x2={60.3415}
-        y2={64.7071}
         gradientUnits="userSpaceOnUse"
       >
         <Stop stopColor="#D6E0FC" />

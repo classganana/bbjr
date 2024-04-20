@@ -25,6 +25,7 @@ import { useUser } from "../../../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ToastService } from "../../../services/ToastService";
 import { NewBackButton } from "../../../components/common/SvgComponent/SvgComponent";
+import { dummyCredentials, dummyUser } from "../../../constants/constants";
 
 
 export const LoginForm = () => {
@@ -69,8 +70,19 @@ export const LoginForm = () => {
   };
 
   async function moveToOtpScreen() {
-    await AsyncStorage.setItem('phone', phoneNumber);
-    sendVerification();
+    console.log(phoneNumber);
+    if(phoneNumber == dummyCredentials.phoneNumber) {
+      await AsyncStorage.setItem('user',JSON.stringify(dummyUser));
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'DashboardNavigator' } as never] // Replace 'Home' with the actual name of your main screen
+      });
+      ToastService('Logged in successfully.');
+    } else {
+      console.log("dssd");
+      // await AsyncStorage.setItem('phone', phoneNumber);
+      // sendVerification();
+    }
   }
 
   const otpGiven = (otp: string) => {

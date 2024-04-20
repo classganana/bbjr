@@ -35,15 +35,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: Colors.secondary,
     padding: 6,
-    borderRadius: 10
+    borderRadius: 10,
+    borderColor: "#E8E8E8",
+    borderWidth: 1,
     // backgroundColor: "#f2f2f2",
+
   },
   tab: {
     flex: 1,
     paddingVertical: 10,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
+    borderRadius: 6,
     overflow: 'hidden'
   },
   activeTab: {

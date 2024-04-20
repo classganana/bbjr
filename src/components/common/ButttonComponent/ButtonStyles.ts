@@ -496,7 +496,7 @@ export const CancelButton = StyleSheet.create<Style>({
 
 export const StartExamPrep = StyleSheet.create<Style>({
   container: {
-    height: 40,
+    // height: 40,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -504,13 +504,14 @@ export const StartExamPrep = StyleSheet.create<Style>({
     borderWidth: 1/4,
     borderColor: Colors.primary,
     paddingVertical: 8,
-    backgroundColor: Colors.white
+    backgroundColor: Colors.white,
+    paddingHorizontal: 24,
   },
   title: {
     // padding: 30,
     color: Colors.primary,
     fontWeight: "500",
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: "Inter-Regular",
   }
 });

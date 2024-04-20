@@ -58,7 +58,6 @@ export const BotScreen = () => {
     setSubjectToLocal()
   }, [subject])
 
-
   const setSubjectToLocal = async () => {
     try {
       await AsyncStorage.setItem('chatSubject', subject);
@@ -77,7 +76,6 @@ export const BotScreen = () => {
       console.log("Error => ", e);
     }
   }
-
 
   const deleteLastSuggestions = () => {
     const lastMessages = messages;

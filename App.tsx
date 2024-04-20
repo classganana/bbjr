@@ -7,6 +7,8 @@ import { AppNavigator } from './src/navigators/AppNavigator';
 import AnimatedSplash from "react-native-animated-splash-screen";
 import { UserProvider } from './src/context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 
 
 
@@ -54,7 +56,9 @@ export default function App() {
       {isSplashDone && isFontLoaded ? (
         <NavigationContainer>
           <UserProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
             <AppNavigator />
+          </GestureHandlerRootView>
           </UserProvider>
         </NavigationContainer>
       ) : (

@@ -70,9 +70,7 @@ export const Dashboard = () => {
         })
         botTextForRepititiveUser();
     }, [])
-
-
-
+    
     const moveToExploreQuizPage = async () => {
         await AsyncStorage.setItem('quizFlow', 'Quizzes');
         navigator.navigate('Quiz' as never);
@@ -229,7 +227,7 @@ export const Dashboard = () => {
                         </View>
                         <View style={[DashboardStyle.option]}>
                             <View style={DashboardStyle.optionHeader}>
-                                <View style={{ height: 30, width: 30, borderRadius: 34, padding: 5, backgroundColor: '#007AFF' }}>
+                                <View style={{ height: 30, width: 30, borderRadius: 34, padding: 5, backgroundColor: '#D6E0FC' }}>
                                     <Image style={{ height: 20, width: 20, borderRadius: 34 }} source={require("../../../assets/svg/books.png")}></Image>
                                 </View>
                                 <View>
