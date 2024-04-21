@@ -68,7 +68,6 @@ export const QuizQuestionsPage = () => {
                 return setA.size === setB.size &&
                        [...setA].every((item) => setB.has(item))
               }); 
-              console.log(matchingQuizzes);
         }
     }
 
@@ -154,7 +153,6 @@ export const QuizQuestionsPage = () => {
 
     const navigateToQuestion = (index: number) => {
         setCurrentQuestionIndex(index);
-        console.log(currentQuestion);
     };
 
     const navigateToNextQuestion = () => {
@@ -170,7 +168,6 @@ export const QuizQuestionsPage = () => {
             setCurrentQuestionIndex(currentQuestionIndex - 1);
         }
         scrollToPrevQuestion();
-        console.log(currentQuestion);
     };
 
     const calculateScore = (answerList: questionWithTime) => {
@@ -207,7 +204,6 @@ export const QuizQuestionsPage = () => {
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
             const quizType = await UtilService.getQuizType();
-            console.log(list);
             if(quizType == 'practice') {
                 UtilService.updateLocalPracticeMcqs(reqObject?.chapterName, quizQuestionList)
                 submitPractice(UserAnswerList)
@@ -282,7 +278,6 @@ export const QuizQuestionsPage = () => {
 
         tempRequest.dataType = "school";
         setReqObject(tempRequest);
-        console.log(reqObject);
         const reqObj = {
             "service": "ml_service",
             "endpoint": quizType == 'quiz' ? `/answered/quizz` : `/answered/mcq`,
@@ -334,7 +329,6 @@ export const QuizQuestionsPage = () => {
             ],
             mcqId: currentQuestion.mcqId,
           }
-          console.log(req);
           const reqObj = {
             "service": "ml_service",
             "endpoint": `/feedback`,
