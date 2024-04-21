@@ -128,6 +128,25 @@ export const PrimaryIconDefaultButton = StyleSheet.create<Style>({
   },
 });
 
+export const FlatDefaultButton = StyleSheet.create<Style>({
+  container: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 5,
+    width: "100%",
+  },
+  title: {
+    color: Colors.black_01,
+    fontWeight: '700',
+    fontSize: 16,
+    fontFamily: "Inter-Bold",
+  },
+});
+
 export const TryAgain = StyleSheet.create<Style>({
   container: {
     height: 50,
