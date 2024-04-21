@@ -22,6 +22,8 @@ export interface Props {
   width: number | string;
   fill: string;
   style?: StyleProp<any>;
+  accessible ?: boolean;
+  accessibilityLabel?: string;
 }
 
 
@@ -516,7 +518,7 @@ export function SearchIcon(props: Props) {
 
 export function CrossIcon(props: Props) {
   return (
-    <Svg {...props} viewBox="0 0 32 32">
+    <Svg {...props} viewBox="0 0 32 32" accessibilityLabel="Close">
       <G id="X">
         <G id="Vector">
           <Path

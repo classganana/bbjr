@@ -122,7 +122,8 @@ export const Onboard = () => {
         <View style={styles.carouselActions}>
           {data.length - 1 !== currentSlide ? (
             <>
-              <TouchableOpacity onPress={nextSlide} style={styles.carouselNext}>
+              <TouchableOpacity accessible={true}
+                  accessibilityLabel="next" onPress={nextSlide} style={styles.carouselNext}>
                 <ArrowLeft height={24} width={24} fill={"white"} />
               </TouchableOpacity>
               <Button
@@ -132,6 +133,9 @@ export const Onboard = () => {
                   navigation.navigate("Auth" as never);
                 }}
                 className={FlatDefaultButton}
+                accessible={true}
+                accessibilityLabel={"Skip Introduction"}
+                accessibilityRole={"button"}
               />
             </>
           ) : (

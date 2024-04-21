@@ -184,9 +184,11 @@ export const Dashboard = () => {
             <ScrollView style={DashboardStyle.body}>
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>
-                        <TouchableOpacity onPress={navigateToProfilePage}>
-
-                        {user && user?.avatarId ? <Image style={DashboardStyle.avatarImage} source={images[user.avatarId] as any} />
+                        <TouchableOpacity
+                         onPress={navigateToProfilePage} accessible={true} 
+                         accessibilityLabel={user?.name ? `Profile picture of ${user.name}` : "Profile picture"} >
+                        {user && user?.avatarId ? <Image accessible={true} accessibilityLabel={user?.name ? `Profile picture of ${user.name}` 
+                        : "Profile picture"} style={DashboardStyle.avatarImage} source={images[user.avatarId] as any} />
                             : <CircleInitials name={user?.name} size={40} />}
                         </TouchableOpacity>
                         <Text style={{ fontWeight: '400', fontSize: 18, color: "#4A4A4A" }}>Hello! {'\n'}

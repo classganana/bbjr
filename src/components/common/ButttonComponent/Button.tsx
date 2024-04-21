@@ -18,6 +18,9 @@ export interface Props {
   disabled: boolean;
   onPress: () => void;
   styles?: StyleProp<ViewStyle>;
+  accessible?: boolean;
+  accessibilityLabel?: string;
+  accessibilityRole?: string;
 }
 
 export const Button = (props: Props) => {
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   disabledContainer: {
-    opacity: 0.6,
+    opacity: 0.8,
     // backgroundColor: "gray",
   },
   disabledTitle: {

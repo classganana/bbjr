@@ -16,6 +16,8 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, tabs, onChangeTab }) => {
           key={tab}
           style={[styles.tab, activeTab === tab && styles.activeTab]}
           onPress={() => onChangeTab(tab)}
+          accessible={true}
+          accessibilityLabel={`Tab ${tab}`}
         >
           <Text
             style={[styles.tabText, activeTab === tab && styles.activeTabText]}
@@ -26,6 +28,7 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, tabs, onChangeTab }) => {
         </TouchableOpacity>
       ))}
     </View>
+
   );
 };
 

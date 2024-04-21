@@ -218,7 +218,7 @@ export const SettingsPage = () => {
               {buttonLabel.leftSvg}
               <Text style={{fontSize: 16}} >{buttonLabel.title}</Text>
               <View style={{ position: 'absolute', right: 26, transform: [{ rotate: '180deg' }] }}>
-                  <NewBackButton height={14} width={14} fill={'black'} />
+                  <NewBackButton accessible={true} accessibilityLabel={'Back Button'} height={14} width={14} fill={'black'} />
               </View>
             </TouchableOpacity>
           ))}

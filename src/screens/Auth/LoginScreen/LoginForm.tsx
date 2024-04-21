@@ -185,6 +185,7 @@ export const LoginForm = () => {
                     </View>
                     <TextInput
                       style={styles.input}
+                      placeholderTextColor="#999"
                       placeholder="Phone number"
                       keyboardType="numeric"
                       onChangeText={(text) => {
@@ -277,7 +278,12 @@ const styles = StyleSheet.create({
   input: {
     flex: 7,
     fontSize: 16,
-    height: '100%'
+    height: 48, // Increase the height to meet touch target guidelines
+    paddingHorizontal: 10, // Add padding for better visual appearance
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    color: '#333', // Adjust text color for better contrast
   },
   phoneCode: {
     flex: 1,
@@ -290,7 +296,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   errorText: {
-    color: "red",
+    color: "#FF0000",
     paddingHorizontal: 5,
   },
 });

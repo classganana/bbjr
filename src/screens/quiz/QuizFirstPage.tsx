@@ -241,7 +241,7 @@ export const QuizFirstPage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity onPress={onBack} style={styles.backButton}>
-                        <NewBackButton height={'18'} width={'18'} fill={'black'} />
+                        <NewBackButton accessible={true} accessibilityLabel={'Back Button'} height={'18'} width={'18'} fill={'black'} />
                     </TouchableOpacity>
                     <Text style={styles.headingTitle}>
                         {quizType} Details</Text>

@@ -377,7 +377,7 @@ export const QuizQuestionsPage = () => {
                     <View style={styles.questionInfoDropDown}>
                         <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestionList.length}</Text>
                         <TouchableOpacity onPress={() => setQuestionInfoSheet(true)}>
-                            <InfoIcon height={'20'} width={'20'} fill={'black'} />
+                            <InfoIcon accessible={true} accessibilityLabel={"Quiz Info"} height={'20'} width={'20'} fill={'black'} />
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity
@@ -434,7 +434,7 @@ export const QuizQuestionsPage = () => {
                                 </View>
                                 <TouchableOpacity onPress={() => {setHideHintText(!hideHintText)}} 
                                 style={[styles.hintTextButton, hideHintText && {transform: [{rotate: '90deg'}]} ]}>
-                                    <NewBackButton height={18} width={18} fill={Colors.black_01} />
+                                    <NewBackButton accessible={true} accessibilityLabel={'Show Hint'}  height={18} width={18} fill={Colors.black_01} />
                                 </TouchableOpacity>
                             </View>
                             {hideHintText && 

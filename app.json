@@ -8,6 +8,7 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
+      "altText": "Company logo displayed on splash screen",
       "resizeMode": "contain",
       "backgroundColor": "#2947D4",
       "time": 10000

@@ -94,7 +94,7 @@ export const PrimaryDefaultButton = StyleSheet.create<Style>({
     backgroundColor: Colors.primary,
     borderRadius: 8,
     paddingHorizontal: 24,
-    paddingVertical: 14,
+    paddingVertical: 16,
     borderWidth: 0.5,
     borderColor: '#E8E8E8',
     // paddingHorizontal: 12
@@ -136,7 +136,7 @@ export const FlatDefaultButton = StyleSheet.create<Style>({
     backgroundColor: "transparent",
     borderRadius: 8,
     paddingHorizontal: 16,
-    paddingVertical: 5,
+    paddingVertical: 12,
     width: "100%",
   },
   title: {
