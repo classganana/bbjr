@@ -337,9 +337,14 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
     backgroundColor: Colors.white,
     position:"absolute", 
-    left: "55%",
-    top: "70%",
-    padding: 6
+    left: "53%",
+    top: "65%",
+    padding: 6,
+    height: 48,
+    width: 48,
+    justifyContent: 'center',
+    alignItems: 'center'
+
   },
   optionList : {
     backgroundColor: Colors.white,
@@ -381,8 +386,8 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    height: 25,
-    width: 25,
+    height: 48,
+    width: 48,
     borderRadius: 25,
     // backgroundColor: Colors.white,
     display: 'flex',

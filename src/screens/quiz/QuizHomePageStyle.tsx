@@ -127,7 +127,8 @@ export const styles = StyleSheet.create({
         position: "absolute",
         right: 20,
         top: 4,
-        width: 30,
+        width: 48, // Adjusted width
+        height: 48, // Adjusted height    
         padding: 8,
     },
     floatingButton: {
@@ -138,7 +139,8 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 8
+        gap: 8,
+        height: 48,
     },
     floatingButtonText: {
         fontSize: 16,
@@ -169,7 +171,7 @@ export const styles = StyleSheet.create({
     },
     selectedSubject: {
         width: 180,
-        paddingVertical: 7,
+        paddingVertical: 14,
         paddingHorizontal: 14,
         textAlign:'center',
         borderRadius: 25,
@@ -185,8 +187,10 @@ export const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 4, // This property adds shadow on Android
         color: Colors.white,
+        height: 48,
     },
-    changebutton:{ 
+    changebutton: {
+        height:  48,
         borderRadius: 10, 
         backgroundColor: '#F0F2FC',
          width: '40%', 
@@ -194,6 +198,7 @@ export const styles = StyleSheet.create({
          alignItems: 'center', 
          flexDirection: 'row', 
          justifyContent: 'space-around',
+         paddingHorizontal: 12,
         //  position: 'relative' 
         },
         pencil:{ 

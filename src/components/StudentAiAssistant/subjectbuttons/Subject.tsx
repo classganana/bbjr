@@ -61,7 +61,7 @@ const ChipComponent: React.FC<ButtonProps> = ({
   ];
 
   return (
-    <TouchableOpacity style={buttonStyle} onPress={onPress}>
+    <TouchableOpacity style={[styles.buttonText, textStyle]} onPress={onPress}>
       <Text style={[styles.buttonText, textStyle]}>{buttonData.text}</Text>
     </TouchableOpacity>
   );

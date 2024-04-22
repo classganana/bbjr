@@ -138,6 +138,7 @@ export const FlatDefaultButton = StyleSheet.create<Style>({
     paddingHorizontal: 16,
     paddingVertical: 12,
     width: "100%",
+    height: 48
   },
   title: {
     color: Colors.black_01,
@@ -170,7 +171,7 @@ export const TryAgain = StyleSheet.create<Style>({
 
 export const LoginButton = StyleSheet.create<Style>({
   container: {
-    // height: 56,
+    height: 48,
     flex: 1,
     // width: "100%",
     display: "flex",
@@ -212,7 +213,7 @@ export const Examprep = StyleSheet.create<Style>({
 
 export const TakeTest = StyleSheet.create<Style>({
   container: {
-    // height: 56,
+    height: 48,
     flex: 1,
     // width: "100%",
     display: "flex",
@@ -305,6 +306,7 @@ export const OutlineButton = StyleSheet.create<Style>({
     borderWidth: 1/4,
     borderColor: Colors.primary,
     backgroundColor: Colors.white,
+    height: 48, // Adjusted height
   },
   title: {
     color: Colors.primary,
@@ -491,7 +493,7 @@ export const StartButton = StyleSheet.create<Style>({
 
 export const CancelButton = StyleSheet.create<Style>({
   container: {
-    height: 40,
+    height: 48,
     flex: 1,
     // width: "90%",
     display: "flex",
@@ -536,7 +538,7 @@ export const StartExamPrep = StyleSheet.create<Style>({
 
 export const ExitButton = StyleSheet.create<Style>({
   container: {
-    height: 40,
+    height: 48,
     width:  "50%",
     display: "flex",
     alignItems: "center",

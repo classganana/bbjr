@@ -259,8 +259,8 @@ export const BotScreen = () => {
         <View style={BotStyle.header}>
           <View style={{ flexDirection: 'row', gap: 5 }}>
             <TouchableOpacity style={BotStyle.headerIcon} onPress={onBackClick}>
-              <View style={{backgroundColor: "rgba(41, 71, 212, 0.07)", borderRadius: 24, padding : 5}}>
-                  <NewBackButton accessible={true} accessibilityLabel={'Back Button'}  style={{}} height={14} width={18} fill={'black'} />
+              <View style={{backgroundColor: "rgba(41, 71, 212, 0.07)", borderRadius: 24, padding : 5, height: 40, width: 40, justifyContent: 'center', alignItems: 'center'}}>
+                  <NewBackButton accessible={true} accessibilityLabel={'Back Button'}  style={{}} height={20} width={20} fill={'black'} />
               </View>
             </TouchableOpacity>
             <View style={{justifyContent: 'center', flexDirection: 'row', alignItems: 'center', gap: 5}}>

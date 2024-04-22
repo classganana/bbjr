@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    height: 48
   },
   activeTab: {
     backgroundColor: Colors.primary,

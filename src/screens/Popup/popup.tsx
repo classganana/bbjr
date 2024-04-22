@@ -52,11 +52,12 @@ const styles = StyleSheet.create({
   },
   modalView: {
     gap: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.gray_01,
     borderRadius: 20,
     padding: 20, 
     flex: 1/2,
-    width: "90%"
+    width: "90%",
+    height: "100%",
   },
   headerText: {
     color: Colors.black_03,
@@ -73,9 +74,12 @@ const styles = StyleSheet.create({
     marginLeft:10,
     alignSelf:'flex-start',
     borderWidth: 1,
-    padding: 8,
+    paddingHorizontal: 18,
+    padding: 2,
     borderColor: Colors.gray_17,
     borderRadius: 20,
+    height: 48,
+    justifyContent: "center"
   },
   text: {
       color: Colors.black_03,

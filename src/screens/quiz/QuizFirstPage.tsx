@@ -290,8 +290,10 @@ const styles = StyleSheet.create({
         right: 0,
         paddingHorizontal: 18,
         paddingVertical: 20,
+        height: 48
     },
     dropdownHeading: {
+        height: 48,
         zIndex: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -339,8 +341,8 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     backButton: {
-        height: 45,
-        width: 45,
+        height: 48,
+        width: 48,
         borderRadius: 45,
         backgroundColor: Colors.white,
         display: 'flex',
@@ -375,6 +377,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 20,
         paddingHorizontal: 16,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        height: 48
     }
 });

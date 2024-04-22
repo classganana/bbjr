@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginTop: 10,
         marginBottom: 16,
-        maxHeight: 50,
+        maxHeight: 60,
     },
     header: {
         paddingHorizontal: 24,
@@ -96,9 +96,9 @@ const styles = StyleSheet.create({
     questionNumber: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 30,
-        height: 30,
-        borderRadius: 15,
+        width: 48,
+        height: 48,
+        borderRadius: 24,
         backgroundColor: 'rgba(41, 71, 212, 0.1)',
         marginHorizontal: 5,
     },
