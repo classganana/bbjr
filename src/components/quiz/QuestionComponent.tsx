@@ -119,7 +119,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    borderStartColor: Colors.white,
+    // borderStartColor: Colors.white,
     padding: 16,
     backgroundColor: Colors.white,
     borderRadius: 8,
@@ -138,10 +138,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#FFF',
     padding: 12,
-    marginBottom: 8,
+    marginBottom: 10,
     borderRadius: 12,
     borderWidth: 0.5,
-    borderColor: 'rgba(0, 107, 127, 0.35)',
+    borderColor: '#F2F7F8',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   selectedOptionButton: {
     borderWidth: 1 / 2,
     borderColor: Colors.primary, // Change to the desired border color
-    borderBottomColor: Colors.primary, // Change to the desired background color
+    // borderBottomColor: Colors.primary, // Change to the desired background color
   },
   optionMarker: {
     width: 30,

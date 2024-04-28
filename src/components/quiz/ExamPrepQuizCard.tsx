@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
-        shadowOpacity: 1,
+        shadowOpacity: 0.2,
         shadowRadius: 4,
-        elevation: 1,
+        elevation: 3,
         marginBottom: 10,
         gap: 12
     },
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         flex: 1,
-        gap: 18,
+        gap: 8,
         width: "100%"
     },
     title: {

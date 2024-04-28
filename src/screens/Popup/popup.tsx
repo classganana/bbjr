@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.gray_01,
     borderRadius: 20,
     padding: 20, 
-    flex: 1/2,
+    // flex: 2/3,
     width: "90%",
-    height: "100%",
+    height: "60%",
   },
   headerText: {
     color: Colors.black_03,
@@ -72,14 +72,17 @@ const styles = StyleSheet.create({
   },
   OptButton: {
     marginLeft:10,
-    alignSelf:'flex-start',
+    // alignSelf:'flex-start',
     borderWidth: 1,
-    paddingHorizontal: 18,
-    padding: 2,
+    padding: 10,
     borderColor: Colors.gray_17,
     borderRadius: 20,
     height: 48,
-    justifyContent: "center"
+    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    width: "70%"
   },
   text: {
       color: Colors.black_03,

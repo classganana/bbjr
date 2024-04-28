@@ -219,7 +219,7 @@ export const TakeTest = StyleSheet.create<Style>({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#2F50EB",
+    backgroundColor: Colors.primary,
     borderRadius: 8,
     // padding: 24,
     // paddingVertical: 22
@@ -235,9 +235,9 @@ export const TakeTest = StyleSheet.create<Style>({
 
 export const SmallOutlineButton = StyleSheet.create<Style>({
   container: {
-    // height: 22,
-    // flex: 1,
-    width: "50%",
+    // height: 36,
+    flex: 1,
+    width: "40%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -306,7 +306,8 @@ export const OutlineButton = StyleSheet.create<Style>({
     borderWidth: 1/4,
     borderColor: Colors.primary,
     backgroundColor: Colors.white,
-    height: 48, // Adjusted height
+    height: 48,
+    padding: 2
   },
   title: {
     color: Colors.primary,

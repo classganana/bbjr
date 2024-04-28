@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headingLeft: {
+        height: 50,
         flex: 7,
         justifyContent: 'space-between',
         gap: 10
@@ -96,8 +97,8 @@ const styles = StyleSheet.create({
     questionNumber: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 48,
-        height: 48,
+        width: 40,
+        height: 40,
         borderRadius: 24,
         backgroundColor: 'rgba(41, 71, 212, 0.1)',
         marginHorizontal: 5,

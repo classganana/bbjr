@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -10,7 +9,6 @@ import {
 import { Colors } from "../../../styles/colors";
 import Student from "../subjectbuttons/Subject";
 import {
-  Pen,
   Send,
 } from "../../common/SvgComponent/SvgComponent";
 import { useNavigation } from "@react-navigation/native";
@@ -23,7 +21,6 @@ type Props = {
   onSubjectChange: (selectedOption: any) => void;
   openPopUp: boolean
 }
-
 
 export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);

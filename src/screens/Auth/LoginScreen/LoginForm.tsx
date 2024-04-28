@@ -141,6 +141,15 @@ export const LoginForm = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
       <View style={{flex: 1}}>
+      <FirebaseRecaptchaVerifierModal
+                  style={{flex: 1, alignSelf: 'center', 
+                  justifyContent: 'center', 
+                  alignItems: 'center', height: 100, width: 100, borderRadius: 10, borderWidth: 1, borderColor: 'gray', backgroundColor: 'white' }}
+                  title="Phone Verification"
+                  cancelLabel="Close"
+                  ref={recaptchaVerifier}
+                  firebaseConfig={firebaseConfig}
+                />
         {otpScreen &&     
         <TouchableOpacity style={LoginScreenStyle.backButton} onPress={() => setOtpScreen(false)}>
           <NewBackButton height={20} width={20} fill={"black"} />
@@ -157,20 +166,11 @@ export const LoginForm = () => {
           </View> }
           {otpScreen &&  <View style={{ marginTop: "30%", height: 600 }}>
               <OtpVerification phoneNumber={""} otpGiven={(otp: string) => otpGiven(otp)}
-                sendOtp={() => sendVerification()} />
+                sendOtp={() => moveToOtpScreen()} />
             </View>}
           {!otpScreen && (
             <View style={styles.loginFormContainer}>
               <View style={styles.loginForm}>
-                <FirebaseRecaptchaVerifierModal
-                  style={{flex: 1, alignSelf: 'center', 
-                  justifyContent: 'center', 
-                  alignItems: 'center', height: 100, width: 100, borderRadius: 10, borderWidth: 1, borderColor: 'gray', backgroundColor: 'white' }}
-                  title="Phone Verification"
-                  cancelLabel="Close"
-                  ref={recaptchaVerifier}
-                  firebaseConfig={firebaseConfig}
-                />
                 <View style={styles.loginTitleContainer}>
                   <Text style={styles.loginTitle}>Login</Text>
                   <Text style={styles.loginSubTitle}>Please enter your phone number</Text>

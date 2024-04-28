@@ -36,7 +36,7 @@ const ChipComponent: React.FC<ButtonProps> = ({
 }) => {
   const { user } = useUser()
   const textStyle: any = [
-    { color: (themeColor && isPressed) ? Colors.white : 'black' },
+    { textAlign: 'center',color: (themeColor && isPressed) ? Colors.white : 'black' },
   ]
   const buttonStyle: any = [
     styles.child, {
@@ -44,10 +44,11 @@ const ChipComponent: React.FC<ButtonProps> = ({
       borderWidth: themeColor && 1
     },
     { backgroundColor: buttonData.color || Colors.primary },
+    { paddingVertical: 10, },
     isPressed
       ? {
         shadowColor: "#000",
-        backgroundColor: themeColor && Colors.primary,
+        backgroundColor: Colors.primary,
         shadowOffset: {
           width: 0,
           height: 2,
@@ -55,13 +56,12 @@ const ChipComponent: React.FC<ButtonProps> = ({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-
       }
       : null,
   ];
 
   return (
-    <TouchableOpacity style={[styles.buttonText, textStyle]} onPress={onPress}>
+    <TouchableOpacity style={[buttonStyle,styles.buttonText, textStyle]} onPress={onPress}>
       <Text style={[styles.buttonText, textStyle]}>{buttonData.text}</Text>
     </TouchableOpacity>
   );

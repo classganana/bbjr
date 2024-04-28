@@ -4,6 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { ResendOtpButton, PrimaryDefaultButton, SubmitButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { Colors } from '../../styles/colors';
+import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import firebase from "firebase/compat/app"
+import { firebaseConfig } from '../../../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {
   phoneNumber: string,
@@ -16,6 +20,7 @@ const OtpVerification = (props: Props) => {
   const [timer, setTimer] = useState(30);
   const [isButtonDisabled, setButtonDisabled] = useState(true);
   const [isResendOTPEnabled, setIsResendOTPEnabled] = useState(true);
+  const recaptchaVerifier = useRef(null);
 
   const [otp, setOtp] = useState<string>();
 
@@ -67,7 +72,6 @@ const OtpVerification = (props: Props) => {
     moveToResetPassword();
   };
 
-
   const focusPreviousInput = (currentIndex: number) => {
     if (currentIndex > 0) {
       inputRefs[currentIndex - 1].current?.focus();
@@ -93,9 +97,31 @@ const OtpVerification = (props: Props) => {
     setIsResendOTPEnabled(false)
   }
 
+  const resentOtp = async () => {
+    const phoneNumber = await AsyncStorage.getItem('phone');
+    const phoneProvider = new firebase.auth.PhoneAuthProvider();
+    phoneProvider.verifyPhoneNumber(`+91${phoneNumber}`, recaptchaVerifier.current).then((item) => {
+      // if (Platform.OS === "android") ToastAndroid.showWithGravity('Sending OTP', 3000, ToastAndroid.BOTTOM);
+    }
+    )
+      .catch((e) => {
+        console.log(e);
+      })
+
+  }
+
 
   return (
     <View style={styles.container}>
+      <FirebaseRecaptchaVerifierModal
+                  style={{flex: 1, alignSelf: 'center', 
+                  justifyContent: 'center', 
+                  alignItems: 'center', height: 100, width: 100, borderRadius: 10, borderWidth: 1, borderColor: 'gray', backgroundColor: 'white' }}
+                  title="Phone Verification"
+                  cancelLabel="Close"
+                  ref={recaptchaVerifier}
+                  firebaseConfig={firebaseConfig}
+                />
       <Text style={styles.text}>OTP Verification</Text>
       <Text style={styles.title}>Enter the verification code we just sent to your phone number.</Text>
       <KeyboardAvoidingView
@@ -124,7 +150,7 @@ const OtpVerification = (props: Props) => {
         <View style={styles.otpContainer}>
           {isResendOTPEnabled && <Text>Resend OTP in {formatTime(timer)}</Text>}
           <Button
-            onPress={() => props.sendOtp()}
+            onPress={() => resentOtp()}
             label="Resend OTP"
             className={ResendOtpButton}
             disabled={isResendOTPEnabled}
