@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BackHandler, Image, ImageBackground, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ArrowLeft, NewBackButton, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, NewBackIcon, ShareIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { ShowAnswer, TryAgain} from '../../components/common/ButttonComponent/ButtonStyles';
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -182,7 +182,7 @@ export const QuizResult = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
-                        <NewBackButton height={'18'} width={'18'} fill={'white'} />
+                        <NewBackIcon height={'18'} width={'18'} fill={'white'} />
                     </TouchableOpacity>
                     <Text style={styles.title}>Test Score</Text>
                     <TouchableOpacity onPress={onSaveImageAsync} style={[styles.shareButton, { position: "absolute", right: 10 }]}>

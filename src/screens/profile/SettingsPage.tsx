@@ -6,7 +6,7 @@ import {
   ContactIcon,
   EditProfilePicIcon,
   LogoutIcon,
-  NewBackButton,
+  NewBackIcon,
   PencilIcon,
   PrivacyIcon,
   ScoreIcon,
@@ -154,7 +154,7 @@ export const SettingsPage = () => {
       <View style={styles.header}>
         <View style={styles.heading}>
            <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
-            <NewBackButton height={14} width={14} fill={'black'} />
+            <NewBackIcon height={14} width={14} fill={'black'} />
           </TouchableOpacity>
           <View>
             <Text style={styles.headingTitle}>Settings</Text>
@@ -218,7 +218,7 @@ export const SettingsPage = () => {
               {buttonLabel.leftSvg}
               <Text style={{fontSize: 16}} >{buttonLabel.title}</Text>
               <View style={{ position: 'absolute', right: 26, transform: [{ rotate: '180deg' }] }}>
-                  <NewBackButton accessible={true} accessibilityLabel={'Back Button'} height={14} width={14} fill={'black'} />
+                  <NewBackIcon accessible={true} accessibilityLabel={'Back Button'} height={14} width={14} fill={'black'} />
               </View>
             </TouchableOpacity>
           ))}

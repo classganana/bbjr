@@ -24,7 +24,7 @@ import { httpClient } from "../../../services/HttpServices";
 import { useUser } from "../../../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ToastService } from "../../../services/ToastService";
-import { NewBackButton } from "../../../components/common/SvgComponent/SvgComponent";
+import { NewBackIcon } from "../../../components/common/SvgComponent/SvgComponent";
 import { dummyCredentials, dummyUser } from "../../../constants/constants";
 
 
@@ -152,7 +152,7 @@ export const LoginForm = () => {
                 />
         {otpScreen &&     
         <TouchableOpacity style={LoginScreenStyle.backButton} onPress={() => setOtpScreen(false)}>
-          <NewBackButton height={20} width={20} fill={"black"} />
+          <NewBackIcon height={20} width={20} fill={"black"} />
           {/* <Text style={LoginScreenStyle.loginHeading}>Log in</Text> */}
         </TouchableOpacity>
         }

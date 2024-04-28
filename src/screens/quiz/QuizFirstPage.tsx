@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { ArrowLeft, DownArrow, NewBackButton } from '../../components/common/SvgComponent/SvgComponent'
+import { ArrowLeft, DownArrow, NewBackIcon } from '../../components/common/SvgComponent/SvgComponent'
 import { Colors } from '../../styles/colors'
 import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
 import { QuizInformation } from '../../components/quiz/QuizInformation'
@@ -241,7 +241,7 @@ export const QuizFirstPage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity onPress={onBack} style={styles.backButton}>
-                        <NewBackButton accessible={true} accessibilityLabel={'Back Button'} height={'18'} width={'18'} fill={'black'} />
+                        <NewBackIcon accessible={true} accessibilityLabel={'Back Button'} height={'18'} width={'18'} fill={'black'} />
                     </TouchableOpacity>
                     <Text style={styles.headingTitle}>
                         {quizType} Details</Text>

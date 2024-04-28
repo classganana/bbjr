@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ClockIcon, CrossIcon, NewBackButton, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ClockIcon, CrossIcon, NewBackIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
@@ -433,7 +433,7 @@ export const QuizHomePage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity style={styles.backButton} onPress={onBack}>
-                        <NewBackButton height={'18'} width={'25'} fill={'black'} />
+                        <NewBackIcon height={'18'} width={'25'} fill={'black'} />
                     </TouchableOpacity>
                     <Text style={styles.headingTitle}>Boost Your Knowledge</Text>
                 </View>
@@ -487,7 +487,7 @@ export const QuizHomePage = () => {
                             <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
                                 <Text>Change</Text>
                                 <View style={styles.pencil}>
-                                    <NewBackButton height={'12'} width={'12'} fill={Colors.white} />
+                                    <NewBackIcon height={'12'} width={'12'} fill={Colors.white} />
                                 </View>
                             </TouchableOpacity>
                             </View>

@@ -68,7 +68,8 @@ export const Colors = {
   lemon_yellow: "#FFF7E3",
   bot_message_bg : "#F1F3FF",
   secondary: "#F0F2FC",
-  settinBgColor: 'rgba(41, 71, 212, 0.08)'
+  settinBgColor: 'rgba(41, 71, 212, 0.08)',
+  primaryBackground: "#F5F7FF",
 };
 
 export const SubjectColors = [

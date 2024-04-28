@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  Text,
 } from "react-native";
 import { Colors } from "../../../styles/colors";
 import Student from "../subjectbuttons/Subject";
@@ -19,27 +20,29 @@ import { Button } from "../../common/ButttonComponent/Button";
 type Props = {
   onSendClick: (selectedOption: string) => void;
   onSubjectChange: (selectedOption: any) => void;
-  openPopUp: boolean
+  openPopUp: boolean;
+  newUser: boolean;
+  selectedSubject: any;
+  setSelectedSubject: (item: any) => void;
+  setNewUser:(value: boolean) =>void;
+  setSubjectAndCloseModal: (item: any)=>void;
 }
 
-export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => {
+export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp, newUser, selectedSubject, setSelectedSubject, setNewUser,setSubjectAndCloseModal }: Props ) => {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const [selectedSubject, setSelectedSubject] = useState<{
-    subjectName: string;
-  }>();
+
   const [text, setText] = useState("");
   const [placeholder, setPlaceholder] = useState("Ask Anything...")
   const [lastQuestion, setLastQuestion] = useState('');
-  const [newUser, setNewUser] = useState(true);
 
-  const setSubjectAndCloseModal = (item: any) => {
-    setNewUser(prev => false);
-    setSelectedSubject(item);
-    setPlaceholder("Ask me anything related to " + item.subjectName)
-  };
+  useEffect(()=>{
+    setPlaceholder("Ask me anything related to " + setSelectedSubject)
+  },[selectedSubject])
 
-  const getSubject = async () => {
+
+    const getSubject = async () => {
     const chatSubject = await AsyncStorage.getItem('chatSubject');
+    console.log("Get Subject", chatSubject)
     if(chatSubject && chatSubject.length > 1) {
       setNewUser(false);
     }
@@ -67,7 +70,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
   },[openPopUp])
 
   useEffect(() => {
-    console.log(newUser)
+    console.log("New ",newUser)
   }, [newUser])
 
   const onChange = (text: string) => {
@@ -159,7 +162,7 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp }: Props ) => 
               >
                 <Button
                       label={'Continue'}
-                      disabled={selectedSubject?.subjectName.length == 0}
+                      disabled={!selectedSubject?.subjectName?.length}
                       className={EditButton}
                       onPress={() => Continue()}
                     />

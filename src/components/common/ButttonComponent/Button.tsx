@@ -24,9 +24,12 @@ export interface Props {
 }
 
 export const Button = (props: Props) => {
+  const handlePress = ()=>{
+    props.disabled ? undefined : props.onPress()
+  }
   return (
     <TouchableWithoutFeedback
-      onPress={props.disabled ? undefined : props.onPress}
+      onPress={handlePress}
     >
       <View
         style={[

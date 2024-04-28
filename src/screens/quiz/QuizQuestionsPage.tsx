@@ -1,5 +1,5 @@
 import React, { SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, CrossIcon, InfoIcon, NewBackButton, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, CrossIcon, InfoIcon, NewBackIcon, ReportIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import QuestionComponent from '../../components/quiz/QuestionComponent';
 import { Button } from '../../components/common/ButttonComponent/Button';
@@ -434,7 +434,7 @@ export const QuizQuestionsPage = () => {
                                 </View>
                                 <TouchableOpacity onPress={() => {setHideHintText(!hideHintText)}} 
                                 style={[styles.hintTextButton, hideHintText && {transform: [{rotate: '90deg'}]} ]}>
-                                    <NewBackButton accessible={true} accessibilityLabel={'Show Hint'}  height={18} width={18} fill={Colors.black_01} />
+                                    <NewBackIcon accessible={true} accessibilityLabel={'Show Hint'}  height={18} width={18} fill={Colors.black_01} />
                                 </TouchableOpacity>
                             </View>
                             {hideHintText && 

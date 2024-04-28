@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, TextInput, ScrollView, Platform, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button } from '../../components/common/ButttonComponent/Button'
 import { Colors } from '../../styles/colors';
-import { ArrowLeft, CameraIcon, NewBackButton } from '../../components/common/SvgComponent/SvgComponent';
+import { ArrowLeft, CameraIcon, NewBackIcon } from '../../components/common/SvgComponent/SvgComponent';
 import { Picker } from '@react-native-picker/picker';
 import { CancelButton, EditButton, ExitButton, LoginButton, OutlineButton, SubmitButton } from '../../components/common/ButttonComponent/ButtonStyles';
 import { httpClient } from '../../services/HttpServices';
@@ -108,7 +108,7 @@ const EditProfile = () => {
                 <View style={styles.header}>
                     <View style={styles.heading}>
                         <TouchableOpacity style={styles.backButton} onPress={() => onBack()}>
-                            <NewBackButton height={'14'} width={'14'} fill={'black'} />
+                            <NewBackIcon height={'14'} width={'14'} fill={'black'} />
                         </TouchableOpacity>
                         <Text style={styles.headingTitle}>Profile</Text>
                     </View>

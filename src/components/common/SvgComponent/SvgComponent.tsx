@@ -1019,7 +1019,7 @@ export const ThreeDots = (props: Props) => {
   )
 }
 
-export const NewBackButton = (props: Props) => {
+export const NewBackIcon = (props: Props) => {
   return (
     <Svg
     viewBox="0 0 7 13"
