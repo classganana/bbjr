@@ -41,6 +41,7 @@ export const OnBoardingNavigator = () => {
       </View>
     );
   }
+  
   return (
   <View style={{flex: 1, width: "100%"}}>
         <Stack.Navigator>

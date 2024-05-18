@@ -31,14 +31,6 @@ export const SettingsPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const dummyArray = [1, 2, 3, 4, 5, 6];
   const [selectedImage, setSelectedImage] = useState(1);
-  const images: { [key: number]: NodeRequire } = {
-    1: require('../../../assets/users/f1.png'),
-    2: require('../../../assets/users/f2.png'),
-    3: require('../../../assets/users/f3.png'),
-    4: require('../../../assets/users/f4.png'),
-    5: require('../../../assets/users/f5.png'),
-    6: require('../../../assets/users/f6.png'),
-  };
 
   const privacyUrl = 'http://eduzy.in/privacyPolicy';
 
@@ -113,6 +105,28 @@ export const SettingsPage = () => {
     }
   };
 
+  const handleTermsAndCondition = async () => {
+    const url = 'http://eduzy.in/termsAndCondition'; // Replace this with your desired URL
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.error("Don't know how to open URI: " + url);
+    }
+  };
+
+  const handleSupportHelp = async () => {
+    const url = 'http://eduzy.in/termsAndCondition'; // Replace this with your desired URL
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.error("Don't know how to open URI: " + url);
+    }
+  };
+
   useEffect(() => {
     console.log(user);
   }, []);
@@ -150,7 +164,7 @@ export const SettingsPage = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <View style={styles.heading}>
            <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
@@ -163,7 +177,7 @@ export const SettingsPage = () => {
       </View>
       <View style={styles.DetailContainer}>
         <View style={styles.block1}>
-        {user && user?.avatarId ? <Image style={styles.avatarImage} source={images[user.avatarId] as any} />
+        {user && user?.avatarId ? <Image style={styles.avatarImage} source={{ uri: `https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f${user.avatarId}.png`}} />
                             : <CircleInitials name={user?.name} size={120} />}
           <TouchableOpacity onPress={() => toggleModal()} style={styles.editIconContainer}>
             <EditProfilePicIcon height={24} width={24} fill={'white'} />
@@ -213,6 +227,9 @@ export const SettingsPage = () => {
                 if (buttonLabel.title === 'Privacy') {
                   handleOpenBrowser();
                 }
+                if (buttonLabel.title === 'Terms and Conditions') {
+                  handleTermsAndCondition();
+                }
               }}
               style={styles.settionOptions}>
               {buttonLabel.leftSvg}
@@ -230,27 +247,29 @@ export const SettingsPage = () => {
         visible={isModalVisible}
         onRequestClose={() => toggleModal()}
       >
+        {/* source={{ uri: "https://d1n3r5qejwo9yi.cloudfront.net/assets/bot.gif" }} /> */}
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
                 <Text style={styles.modalText}>Choose your avatar</Text>
                 <ScrollView contentContainerStyle={styles.avatarContainer}>
                   <TouchableOpacity onPress={() => handleImageClick(1)}>
-                    <Image style={[styles.avatarImage, selectedImage === 1 && styles.selectedImage]} source={require('../../../assets/users/f1.png')} />
+                    <Image style={[styles.avatarImage, selectedImage === 1 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f1.png'}}
+                     />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => handleImageClick(2)}>
-                    <Image style={[styles.avatarImage, selectedImage === 2 && styles.selectedImage]} source={require('../../../assets/users/f2.png')} />
+                    <Image style={[styles.avatarImage, selectedImage === 2 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f2.png'}} />
                   </TouchableOpacity>                  
                   <TouchableOpacity onPress={() => handleImageClick(3)}>
-                    <Image style={[styles.avatarImage, selectedImage === 3 && styles.selectedImage]} source={require('../../../assets/users/f3.png')} />
+                    <Image style={[styles.avatarImage, selectedImage === 3 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f3.png'}} />
                   </TouchableOpacity>                  
                   <TouchableOpacity onPress={() => handleImageClick(4)}>
-                    <Image style={[styles.avatarImage, selectedImage === 4 && styles.selectedImage]} source={require('../../../assets/users/f4.png')} />
+                    <Image style={[styles.avatarImage, selectedImage === 4 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f4.png'}} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => handleImageClick(5)}>
-                    <Image style={[styles.avatarImage, selectedImage === 5 && styles.selectedImage]} source={require('../../../assets/users/f5.png')} />
+                    <Image style={[styles.avatarImage, selectedImage === 5 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f5.png'}} />
                   </TouchableOpacity>                  
                   <TouchableOpacity onPress={() => handleImageClick(6)}>
-                    <Image style={[styles.avatarImage, selectedImage === 6 && styles.selectedImage]} source={require('../../../assets/users/f6.png')} />
+                    <Image style={[styles.avatarImage, selectedImage === 6 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f6.png'}} />
                   </TouchableOpacity>
                 </ScrollView>
                 <Button label={"Save"} disabled={!(selectedImage > 0 && selectedImage <= 6)} onPress={() => (toggleModal(true))}
@@ -259,7 +278,7 @@ export const SettingsPage = () => {
             </View>
           </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -318,7 +337,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     backgroundColor: Colors.settinBgColor,
     flex: 1,
-
   },
   header: {
     backgroundColor: Colors.settinBgColor,

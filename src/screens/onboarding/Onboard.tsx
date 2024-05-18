@@ -26,17 +26,17 @@ export const Onboard = () => {
 
   const data = [
     {
-      image: require("../../../assets/gifs/quizzes.gif"),
+      image: "https://d1n3r5qejwo9yi.cloudfront.net/assets/quizzes.gif",
       title: "Personalized Quizzes",
       info: "Combining the best of AI and language science, lessons are tailored to help you learn at just the right level and pace.",
     },
     {
-      image: require("../../../assets/gifs/doubt.gif"),
+      image: "https://d1n3r5qejwo9yi.cloudfront.net/assets/doubt.gif",
       title: "The free, fun, and effective way to solve doubts!",
       info: "Learning with Eduzy is fun, and research shows that it works.",
     },
     {
-      image: require("../../../assets/gifs/examprep.gif"),
+      image: "https://d1n3r5qejwo9yi.cloudfront.net/assets/examprep.gif",
       title: "Fun & Effective Exam Preparation",
       info: "Learning with Eduzy is fun, and research shows that it works.",
     },
@@ -91,7 +91,7 @@ export const Onboard = () => {
                   <Image
                     resizeMode="contain"
                     style={styles.slideImage}
-                    source={slideData.image}
+                    source={{ uri: slideData.image }}
                   />
                 </View>
                 <View style={styles.slideData}>

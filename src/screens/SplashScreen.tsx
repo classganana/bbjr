@@ -6,7 +6,6 @@ export const SplashScreen = () => {
     return (
         <View style={spStyle.container}>
             <View style={spStyle.logoContainer}>
-                <Image style={spStyle.logo} source={require("../../assets/gifs/bot.gif")} />
                 <Text style={spStyle.logoText}>
                     BRAIN BOOSTER Jr.
                 </Text>

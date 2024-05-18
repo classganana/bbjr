@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { ArrowLeft, DownArrow, NewBackIcon } from '../../components/common/SvgComponent/SvgComponent'
 import { Colors } from '../../styles/colors'
 import { QuizIntoduction } from '../../components/quiz/QuizIntoduction'
@@ -24,6 +24,7 @@ export const QuizFirstPage = () => {
     const startQuiz = () => {
         navigation.navigate('QuizQuestionPages' as never, quizContent as never);
     };
+    const [loading, setLoading] = useState(true);
 
     const [subject, setSubject] = useState();
 
@@ -110,6 +111,7 @@ export const QuizFirstPage = () => {
                         ...res.data.data,
                     }
                     setQuizContent(quiz);
+                    setLoading(false);
                     if (quizType != 'quiz') maintainQuizInLocal(quiz);
                 })
         }
@@ -221,7 +223,7 @@ export const QuizFirstPage = () => {
                 </TouchableOpacity>
                 {show && <View style={styles.dropdownContainer}>
                     <View style={styles.dropdownHeading}>
-                        <Text>{subject} - Total Chapters {chapters?.length}</Text>
+                        <Text style={{fontWeight: '500'}}>{subject} - Total Chapters {chapters?.length}</Text>
                         <TouchableOpacity onPress={() => setShow(!show)} style={styles.reverseIcon}>
                             <DownArrow height={'20'} width={'20'} fill={Colors.black_01} />
                         </TouchableOpacity>
@@ -235,6 +237,15 @@ export const QuizFirstPage = () => {
             </View>
         )
     }
+
+    if (loading) {
+        // Render loading indicator while loading
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color={Colors.primary} />
+          </View>
+        );
+      }
 
     return (
         <View style={styles.container}>
@@ -282,21 +293,31 @@ const styles = StyleSheet.create({
     },
     dropdownContainer: {
         borderWidth: 0.5,
-        borderColor: 'rgba(0, 107, 127, 0.24)',
+        borderColor: Colors.secondary,
         width: "100%",
         position: 'absolute',
         backgroundColor: 'white',
         top: 0,
         right: 0,
-        paddingHorizontal: 18,
-        paddingVertical: 20,
-        height: 48
-    },
+        paddingHorizontal: 16,
+        paddingVertical: 16,
+        ...Platform.select({
+          ios: {
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+          },
+          android: {
+            elevation: 5,
+          },
+        }),
+      },
     dropdownHeading: {
-        height: 48,
         zIndex: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        elevation: 2
     },
     reverseIcon: {
         transform: [{ rotate: '180deg' }]

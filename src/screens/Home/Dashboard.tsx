@@ -17,6 +17,7 @@ import { httpClient } from '../../services/HttpServices'
 import { OutlinePlaneButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
 import { LinearGradient } from 'expo-linear-gradient';
 
+
 interface mcqType {
     mcqId: number,
     question: string,
@@ -40,12 +41,12 @@ export const Dashboard = () => {
     const [promptsForRepeatUser, setPromptsForRepeatUser] = useState<any>(null)
     const [lastChatQuestion, setLastChatQuestion] = useState("");
     const images: { [key: number]: NodeRequire } = {
-        1: require('../../../assets/users/f1.png'),
-        2: require('../../../assets/users/f2.png'),
-        3: require('../../../assets/users/f3.png'),
-        4: require('../../../assets/users/f4.png'),
-        5: require('../../../assets/users/f5.png'),
-        6: require('../../../assets/users/f6.png'),
+        1: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f1.png'},
+        2: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f2.png'},
+        3: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f3.png'},
+        4: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f4.png'},
+        5: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f5.png'},
+        6: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f6.png'},
       };
 
     useFocusEffect(
@@ -70,8 +71,6 @@ export const Dashboard = () => {
         })
         botTextForRepititiveUser();
     }, [])
-
-
 
     const moveToExploreQuizPage = async () => {
         await AsyncStorage.setItem('quizFlow', 'Quizzes');
@@ -117,6 +116,7 @@ export const Dashboard = () => {
                         if (exam.class == 'examPreparation') {
                             setNoOfExamPrep(exam.quizzes.length);
                         } else {
+                            console.log(exam.quizzes.length)
                             setNoOfQuiz(exam.quizzes.length);
                         }
                         return exam;
@@ -188,7 +188,7 @@ export const Dashboard = () => {
                          onPress={navigateToProfilePage} accessible={true} 
                          accessibilityLabel={user?.name ? `Profile picture of ${user.name}` : "Profile picture"} >
                         {user && user?.avatarId ? <Image accessible={true} accessibilityLabel={user?.name ? `Profile picture of ${user.name}` 
-                        : "Profile picture"} style={DashboardStyle.avatarImage} source={images[user.avatarId] as any} />
+                        : "Profile picture"} style={DashboardStyle.avatarImage} source={{ uri: `https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f${user.avatarId}.png`}} />
                             : <CircleInitials name={user?.name} size={40} />}
                         </TouchableOpacity>
                         <Text style={{ fontWeight: '400', fontSize: 18, color: "#4A4A4A" }}>Hello! {'\n'}
@@ -206,6 +206,9 @@ export const Dashboard = () => {
                         </TouchableOpacity>
                     </View>
                     <View style={DashboardStyle.optionsCard}>
+                        <TouchableWithoutFeedback onPress={function (): void {
+                                    moveToExploreQuizPage()
+                                }}>
                         <View style={[DashboardStyle.option]}>
                             <View style={DashboardStyle.optionHeader}>
                                 <Sprit height={'30'} width={'30'} fill={'red'} />
@@ -217,7 +220,7 @@ export const Dashboard = () => {
                             <Text style={DashboardStyle.optionCardHeading}>Quizzes</Text>
                             <Text style={DashboardStyle.optionBodyDescription}>
                                 {noOfQuiz == 0 ? "Fortify your knowledge with our quizzes!" :
-                                    "You have played total " + { noOfQuiz } + "quizzes last month!"}
+                                    `You have played ${noOfQuiz == 1 ? '': 'total'} ${noOfQuiz} ${noOfQuiz == 1 ? 'quiz in the': 'quizzes'} last month!`}
                             </Text>
                             {/* {<View style={{marginLeft: 10}}> */}
                                 {/* <IconButton className={OutlinePlaneButton} onPress={function (): void {
@@ -229,30 +232,35 @@ export const Dashboard = () => {
                                 </View>} label={'Take Quiz'} pos={'right'}></IconButton>                                 */}
                             {/* </View>} */}
                         </View>
-                        <View style={[DashboardStyle.option]}>
-                            <View style={DashboardStyle.optionHeader}>
-                                <View style={{ height: 30, width: 30, borderRadius: 34, padding: 5, backgroundColor: '#007AFF' }}>
-                                    <Image style={{ height: 20, width: 20, borderRadius: 34 }} source={require("../../../assets/svg/books.png")}></Image>
+                                </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={function (): void {
+                                    moveToExploreExamPrepPage()
+                                }}>
+                            <View style={[DashboardStyle.option]}>
+                                <View style={DashboardStyle.optionHeader}>
+                                    <View style={{ height: 30, width: 30, borderRadius: 34, padding: 5, backgroundColor: '#D6E0FC' }}>
+                                        <Image style={{ height: 20, width: 20, borderRadius: 34 }} source={require("../../../assets/svg/books.png")}></Image>
+                                    </View>
+                                    <View>
+                                        {noOfExamPrep != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfExamPrep}</Text>}
+                                        {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
+                                    </View>
                                 </View>
-                                <View>
-                                    {noOfExamPrep != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfExamPrep}</Text>}
-                                    {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
-                                </View>
+                                <Text style={DashboardStyle.optionCardHeading}>Exam Preparation</Text>
+                                <Text style={DashboardStyle.optionBodyDescription}>
+                                    {noOfExamPrep == 0 ? "Ace your exams with our practice tests!" :
+                                        "Keep Going! You're Doing Great!"}
+                                </Text>
+                                {/* {<View style={{marginLeft: 10}}><IconButton className={OutlinePlaneButton} onPress={function (): void {
+                                    moveToExploreExamPrepPage()
+                                }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
+                                    <View style={DashboardStyle.circularDiv}>
+                                        <ArrowLeft height={20} width={20} fill={'black'} />
+                                    </View>
+                                </View>} label={'Continue'} pos={'right'}></IconButton>
+                                </View>} */}
                             </View>
-                            <Text style={DashboardStyle.optionCardHeading}>Exam Preparation</Text>
-                            <Text style={DashboardStyle.optionBodyDescription}>
-                                {noOfExamPrep == 0 ? "Ace your exams with our practice tests!" :
-                                    "Keep Going! You're Doing Great!"}
-                            </Text>
-                            {/* {<View style={{marginLeft: 10}}><IconButton className={OutlinePlaneButton} onPress={function (): void {
-                                moveToExploreExamPrepPage()
-                            }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
-                                <View style={DashboardStyle.circularDiv}>
-                                    <ArrowLeft height={20} width={20} fill={'black'} />
-                                </View>
-                            </View>} label={'Continue'} pos={'right'}></IconButton>
-                            </View>} */}
-                        </View>
+                        </TouchableWithoutFeedback>
                     </View>
                 </View>
                 <Text style={[DashboardStyle.boostYourKnowledge,{marginBottom: 10, fontWeight: '500'}]}>Solve any doubt</Text>
@@ -284,7 +292,8 @@ export const Dashboard = () => {
                                 onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={lastChatQuestion.length ? "Let's Continue " : 'Get Started'} pos={'right'} backgroundColor={Colors.primary} /> */}
                         {/* </View> */}
                     </View>
-                    <Image style={DashboardStyle.botGif} source={require("../../../assets/gifs/bot.gif")}></Image>
+                    <Image style={DashboardStyle.botGif} 
+                        source={{ uri: "https://d1n3r5qejwo9yi.cloudfront.net/assets/bot.gif" }} />
                 </LinearGradient>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
                 {data && data.length > 0 ? <View style={{ marginTop: 10 }}>

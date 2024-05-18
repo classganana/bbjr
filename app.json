@@ -11,7 +11,7 @@
       "altText": "Company logo displayed on splash screen",
       "resizeMode": "contain",
       "backgroundColor": "#2947D4",
-      "time": 10000
+      "time": 100000
     },
     "assetBundlePatterns": [
       "**/*"
@@ -25,7 +25,7 @@
         "backgroundColor": "#2947D4"
       },
       "package": "com.classganana.BBJr",
-      "versionCode": 12
+      "versionCode": 19
     },
     "web": {
       "favicon": "./assets/favicon.png"

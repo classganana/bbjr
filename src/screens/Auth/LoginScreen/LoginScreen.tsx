@@ -19,7 +19,6 @@ export const LoginScreen = () => {
   useEffect(() => {
     const backAction = () => {
       if (navigation.isFocused()) {
-        console.log("back button");
         return true;
       }
       return false;

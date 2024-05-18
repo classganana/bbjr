@@ -94,9 +94,9 @@ const styles = StyleSheet.create({
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
-    // elevation: 2, // for Android shadow
+    elevation: 2, // for Android shadow
   },
   optionMarker: {
     width: 14,
@@ -107,13 +107,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 10,
     borderWidth: 1,
-    borderColor: '#006B7F',
+    borderColor: Colors.primary,
   },
   markesign: {
     width: 9,
     height: 9,
     borderRadius: 5,
-    backgroundColor: '#006B7F',
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
