@@ -158,16 +158,23 @@ export const styles = StyleSheet.create({
         overflow: 'scroll',
         paddingBottom: 50
     },
+    modalTitleContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 20,
+    },
     subjecttxt: {
         alignSelf: 'center',
-        paddingTop: 30,
-        paddingBottom: 10,
+        // paddingTop: 30,
+        // paddingBottom: 10,
         fontFamily: 'Inter-Bold',
         fontSize: 18,
         fontWeight: '500',
         color: Colors.black_01,
-        borderTopWidth: 5,
-        marginTop: 5
+        // 
+        // marginTop: 5
     },
     selectedSubject: {
         width: 180,
@@ -208,6 +215,12 @@ export const styles = StyleSheet.create({
             // position: 'absolute', 
             // right: 5, 
             transform: [{ rotate: '270deg' }]
+        },
+        verticalSeperator: {
+            width: 1,
+            borderColor: Colors.gray_20,
+            borderRightWidth: 1,
+            marginHorizontal: 10
         },
         buttoncontainer:{
             flexDirection:'row',

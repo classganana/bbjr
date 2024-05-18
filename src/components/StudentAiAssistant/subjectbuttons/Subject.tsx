@@ -1,11 +1,20 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { Button } from "../../common/ButttonComponent/Button";
 import { StartButton } from "../../common/ButttonComponent/ButtonStyles";
 import { Colors, SubjectColors } from "../../../styles/colors";
 import { UserType, useUser } from "../../../context/UserContext";
 import { httpClient } from "../../../services/HttpServices";
+import { getSubjects } from "../../../utils/services.api";
 
 interface ButtonData {
   text: string;
@@ -25,43 +34,50 @@ interface ButtonProps {
   buttonData: ButtonData;
   onPress: (item: any) => void;
   isPressed: boolean;
-  themeColor: boolean | undefined
+  themeColor: boolean | undefined;
 }
 
-const ChipComponent: React.FC<ButtonProps> = ({
+export const ChipComponent: React.FC<ButtonProps> = ({
   buttonData,
   onPress,
   isPressed,
-  themeColor
+  themeColor,
 }) => {
-  const { user } = useUser()
+  const { user } = useUser();
   const textStyle: any = [
-    { textAlign: 'center',color: (themeColor && isPressed) ? Colors.white : 'black' },
-  ]
+    {
+      textAlign: "center",
+      color: themeColor && isPressed ? Colors.white : "black",
+    },
+  ];
   const buttonStyle: any = [
-    styles.child, {
-      borderColor: themeColor && 'rgba(150, 150, 150, 0.64)',
-      borderWidth: themeColor && 1
+    styles.child,
+    {
+      borderColor: themeColor && "rgba(150, 150, 150, 0.64)",
+      borderWidth: themeColor && 0.5,
     },
     { backgroundColor: buttonData.color || Colors.primary },
-    { paddingVertical: 10, },
+    { paddingVertical: 6 },
     isPressed
       ? {
-        shadowColor: "#000",
-        backgroundColor: Colors.primary,
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-      }
+          shadowColor: "#000",
+          backgroundColor: Colors.primary,
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }
       : null,
   ];
 
   return (
-    <TouchableOpacity style={[buttonStyle,styles.buttonText, textStyle]} onPress={onPress}>
+    <TouchableOpacity
+      style={[buttonStyle, styles.buttonText, textStyle]}
+      onPress={onPress}
+    >
       <Text style={[styles.buttonText, textStyle]}>{buttonData.text}</Text>
     </TouchableOpacity>
   );
@@ -69,12 +85,18 @@ const ChipComponent: React.FC<ButtonProps> = ({
 
 export interface Props {
   selectedSubject: (item: any) => void;
-  themeColor?: boolean,
-  subject?: string
+  themeColor?: boolean;
+  subject?: string;
+  scrollable?: boolean;
 }
 
 // change component name from student to subject
-export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
+export const Student = ({
+  selectedSubject,
+  themeColor,
+  subject,
+  scrollable,
+}: Props) => {
   const { user } = useUser();
   const [listOfSubjects, setListOfSubjects] = useState<Subject[]>([]);
   const [colorsMappedSubjectList, setColorsMappedSubjectList] = useState<
@@ -83,26 +105,16 @@ export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
   const [pressedSubject, setPressedSubject] = useState<number>(-1);
   const [loading, setLoading] = useState(true);
 
-  const getSubjects = () => {
-    const reqObj = {
-      "service": "ml_service",
-      // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
-      "endpoint": `/subjects?board_id=${user?.board}&class_name=${user?.class}&school_id=default`,
-      "requestMethod": "GET"
-    }
-
-    httpClient.post(`auth/c-auth`, reqObj).then((res) => {
-      const subjectList = res.data.data;
-      setLoading(false);
-      const result = subjectList.map((sub: any) => {
-        return {
-          subjectName: sub.subject
-        }
+  useEffect(() => {
+    getSubjects(user)
+      .then((res) => {
+        setListOfSubjects(res);
+        setLoading(false);
       })
-
-      setListOfSubjects(result);
-    })
-  };
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const mapSubjectWithColors = (listOfSubject?: Subject[]) => {
     const mappedSubjectWithColor = listOfSubject?.map(
@@ -125,10 +137,6 @@ export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
   };
 
   useEffect(() => {
-    getSubjects();
-  }, []);
-
-  useEffect(() => {
     const list = mapSubjectWithColors(listOfSubjects);
     setColorsMappedSubjectList(list);
   }, [listOfSubjects]);
@@ -141,30 +149,47 @@ export const Student = ({ selectedSubject, themeColor, subject }: Props) => {
   if (loading) {
     // Render loading indicator while loading
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: 300 }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.subjectcontainer}>
-        {colorsMappedSubjectList.map((subjectWithColor, index) => (
-          <ChipComponent
-            themeColor={themeColor}
-            key={index}
-            buttonData={{
-              text: subjectWithColor.subjectName,
-              color: subjectWithColor.color,
-            }}
-            isPressed={index === pressedSubject}
-            onPress={() => handlePressSubject(index)}
-          />
-        ))}
-      </View>
-    </ScrollView>
+  const subjectContainer = (
+    <View style={styles.subjectcontainer}>
+      {colorsMappedSubjectList.map((subjectWithColor, index) => {
+        return ((subject !== listOfSubjects[index].subjectName) 
+          ? <ChipComponent
+              themeColor={themeColor}
+              key={index}
+              buttonData={{
+                text: subjectWithColor.subjectName,
+                color: subjectWithColor.color,
+              }}
+              isPressed={index === pressedSubject}
+              onPress={() => handlePressSubject(index)}/>
+        : <></>)
+      }
+      )}
+    </View>
+  );
 
+  return (
+    <>
+      {scrollable ? (
+        <ScrollView contentContainerStyle={styles.container}>
+          {subjectContainer}
+        </ScrollView>
+      ) : (
+        <>{subjectContainer}</>
+      )}
+    </>
   );
 };
 
@@ -175,20 +200,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // flex: 1,
     // height: 300,
-    width: "100%",
+    // width: "100%",
     // backgroundColor: Colors.white,
     // position: "relative",
   },
   subjectcontainer: {
     display: "flex",
-    justifyContent: "center",
+    // justifyContent: "center",
     flexDirection: "row",
     flexWrap: "wrap",
-    width: "100%",
-    gap: 23,
-    padding: 20,
-    // height: 200,
-    paddingHorizontal: 30,
+    // width: "100%",
+    gap: 12,
+    // // height: 200,
+    paddingHorizontal: 5,
     // top: 36,
     backgroundColor: Colors.white,
   },
