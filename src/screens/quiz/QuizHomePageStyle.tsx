@@ -64,8 +64,8 @@ export const styles = StyleSheet.create({
         fontSize: 14,
         color: '#787878'
     },
-    body: {backgroundColor: Colors.white, flex: 1, borderTopStartRadius: 20, borderTopEndRadius: 20},
-    noQuizFound : {
+    body: { backgroundColor: Colors.white, flex: 1, borderTopStartRadius: 20, borderTopEndRadius: 20 },
+    noQuizFound: {
         flex: 1,
         height: 600,
         justifyContent: 'space-around',
@@ -121,7 +121,7 @@ export const styles = StyleSheet.create({
         fontWeight: '600',
         paddingVertical: 4,
         paddingHorizontal: 10,
-        backgroundColor: "#2947D41C",      
+        backgroundColor: "#2947D41C",
     },
     crossfloatingButton: {
         position: "absolute",
@@ -160,28 +160,26 @@ export const styles = StyleSheet.create({
     },
     subjecttxt: {
         alignSelf: 'center',
-        paddingTop: 30,
+        paddingTop: 20,
         paddingBottom: 10,
         fontFamily: 'Inter-Bold',
         fontSize: 18,
         fontWeight: '500',
         color: Colors.black_01,
-        borderTopWidth: 5,
-        marginTop: 5
     },
     selectedSubject: {
         width: 180,
         paddingVertical: 14,
         paddingHorizontal: 14,
-        textAlign:'center',
+        textAlign: 'center',
         borderRadius: 25,
         borderWidth: 0.5,
         borderColor: '#DFE4FF',
         backgroundColor: Colors.primary,
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 4,
+            width: 0,
+            height: 4,
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
@@ -190,55 +188,65 @@ export const styles = StyleSheet.create({
         height: 48,
     },
     changebutton: {
-        height:  48,
-        borderRadius: 10, 
+        height: 48,
+        borderRadius: 10,
         backgroundColor: '#F0F2FC',
-         width: '40%', 
+        width: '40%',
         //  justifyContent: 'center', 
-         alignItems: 'center', 
-         flexDirection: 'row', 
-         justifyContent: 'space-around',
-         paddingHorizontal: 12,
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingHorizontal: 12,
         //  position: 'relative' 
+    },
+    pencil: {
+        // borderRadius: 26.35, 
+        // backgroundColor: Colors.primary, 
+        alignItems: 'center',
+        // position: 'absolute', 
+        // right: 5, 
+        transform: [{ rotate: '270deg' }]
+    },
+    buttoncontainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,
+        paddingVertical: 20,
+    },
+    chapterWise: {
+        fontSize: 16,
+        fontWeight: '600'
+    },
+    allChapterCard: {
+        paddingTop: 10,
+        paddingHorizontal: 15,
+        height: 300,
+        borderRadius: 30,
+        overflow: 'hidden',
+        backgroundColor: Colors.white,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
         },
-        pencil:{ 
-            // borderRadius: 26.35, 
-            // backgroundColor: Colors.primary, 
-            alignItems: 'center', 
-            // position: 'absolute', 
-            // right: 5, 
-            transform: [{ rotate: '270deg' }]
-        },
-        buttoncontainer:{
-            flexDirection:'row',
-            justifyContent:'space-between',
-            paddingHorizontal:10,
-            paddingVertical:20,
-        },
-        chapterWise: {
-            fontSize: 16,
-            fontWeight: '600'
-        },
-        allChapterCard: {
-            paddingTop: 10,
-            paddingHorizontal: 15,
-            height: 300, 
-            borderRadius: 30, 
-            overflow: 'hidden',
-            backgroundColor: Colors.white,
-            shadowColor: '#000',
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 1,
-            shadowRadius: 4,
-            elevation: 1,
-        },
-        allChapterCardtext: {
-            marginTop: "5%",
-            fontSize: 16,
-            fontWeight: '500',
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 1,
+    },
+    allChapterCardtext: {
+        marginTop: "5%",
+        fontSize: 16,
+        fontWeight: '500',
 
-        }
+    },
+    crossCloseIcon: { 
+        backgroundColor: 'white', 
+        height: 40, 
+        width: 40, 
+        borderRadius: 40, 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        top: "18%",
+        left: "45%"
+    }
 });

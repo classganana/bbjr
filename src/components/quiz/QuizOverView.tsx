@@ -14,10 +14,11 @@ type Props = {
     time: string,
     questions: Answers,
     onCloseSheet: () => void,
-    chapterNames: string[]
+    chapterNames: string[],
+    clickedQuestion: (n: number) => void
 }
 
-export const QuizOverView = ({onCloseSheet, time, questions, chapterNames}: Props) => {
+export const QuizOverView = ({onCloseSheet, time, questions, chapterNames, clickedQuestion}: Props) => {
   const tabs: string[]= ['Overview', 'Instructions']  
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
@@ -57,7 +58,7 @@ export const QuizOverView = ({onCloseSheet, time, questions, chapterNames}: Prop
             onChangeTab={function (tab: string): void { setActiveTab(tab) } } />
             { activeTab == 'Overview' && 
             <View style={{paddingHorizontal: 24, paddingVertical: 20, flex: 1}}> 
-            <QuizOverviewQuestions questionList={questions}  
+            <QuizOverviewQuestions selectedQuestion={clickedQuestion} questionList={questions}  
             closeSheet={() => { onCloseSheet() }}/> 
             </View> }
             { activeTab == 'Instructions' && 

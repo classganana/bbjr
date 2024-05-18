@@ -15,6 +15,7 @@ import { httpClient } from '../../services/HttpServices';
 import { useUser } from '../../context/UserContext';
 import { UtilService } from '../../services/UtilService';
 import { Colors } from '../../styles/colors';
+import { ToastService } from '../../services/ToastService';
 
 
 export type Answers = Array<{
@@ -92,7 +93,8 @@ export const QuizQuestionsPage = () => {
             // add time score dataType screenpage
             setQuizQuestionList(route.params.mcqs);
             await AsyncStorage.removeItem('questions');
-            setTimer(route.params.time);
+            setTimer(1000);
+            // setTimer(route.params.time);
             setQuizzId(route.params.quizzId);
             setQuestionsInLocal();
           };
@@ -338,8 +340,14 @@ export const QuizQuestionsPage = () => {
 
         const res = await httpClient.post(`auth/c-auth`, reqObj);
         if (res.data.statusCode == 200) {
-            setBottomSheetVisible(false)
+            setBottomSheetVisible(false);
+            ToastService("Thanks, we will look into the issue.")
+        } else {
+            ToastService("Something went wrong! please try again later.")
+            setBottomSheetVisible(false);
+            navigateToNextQuestion();
         }
+
     }
 
     const currentQuestion = quizQuestionList[currentQuestionIndex];
@@ -498,7 +506,11 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                        {reqObject && <QuizOverView chapterNames={reqObject.chapterName} time={formatTime(timer)} onCloseSheet={() => { setQuestionInfoSheet(false); } } questions={quizQuestionList} />}
+                        {reqObject && <QuizOverView chapterNames={reqObject.chapterName} time={formatTime(timer)} onCloseSheet={() => setQuestionInfoSheet(false)} questions={quizQuestionList} 
+                        clickedQuestion={function (n: number): void {
+                            setQuestionInfoSheet(false)
+                            navigateToQuestion(n);
+                        } } />}
                     </View>
                 </View>
             </Modal>

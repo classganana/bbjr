@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
 import { ClockIcon, CrossIcon, NewBackIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
@@ -605,7 +605,10 @@ export const QuizHomePage = () => {
                     visible={bottomSheetVisible}
                     onRequestClose={() => setBottomSheetVisible(false)}
                 >
-                    <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
+                    <View style={{ backgroundColor: 'rgba(0, 0, 0,0.6)', flex: 1 }}>
+                        <Pressable style={styles.crossCloseIcon} onPress={() => setBottomSheetVisible(false)}>
+                            <CrossIcon height={25} width={25} fill={'black'} />
+                        </Pressable>
                         <View style={styles.bottomSheetContainer}>
                             <Text style={styles.subjecttxt}>Subject</Text>
                             <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -6,8 +6,10 @@ import {
   Text,
   TouchableWithoutFeedback,
   Keyboard,
+  BackHandler,
 } from "react-native";
 import { Colors } from "../../../styles/colors";
+import { useNavigation } from "@react-navigation/native";
 
 interface DescriptionComponentProps {
   placeholder: string;
@@ -21,6 +23,7 @@ export const Description: React.FC<DescriptionComponentProps> = ({
   onDescriptionChange,
 }) => {
   const [description, setDescription] = useState("");
+  const navigation = useNavigation();
 
   const handleDescriptionChange = (text: string) => {
     setDescription(text);
@@ -29,6 +32,19 @@ export const Description: React.FC<DescriptionComponentProps> = ({
       onDescriptionChange(text);
     }
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      if (navigation.isFocused()) {
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove(); // Remove the event listener when the component unmounts
+  }, [navigator]);
 
 
   const handleTapOutside = () => {
@@ -44,7 +60,7 @@ export const Description: React.FC<DescriptionComponentProps> = ({
         <TextInput
           style={styles.input}
           placeholder={placeholder}
-          placeholderTextColor={Colors.gray_12}
+          placeholderTextColor={Colors.gray_11}
           value={description}
           onChangeText={handleDescriptionChange}
           multiline
@@ -59,11 +75,11 @@ export const Description: React.FC<DescriptionComponentProps> = ({
 const styles = StyleSheet.create({
   title: {
     fontSize: 14,
-    fontWeight: "400",
     fontFamily: "Inter-Regular",
     marginBottom: 5,
   },
   input: {
+    fontFamily: 'Inter-Regular',
     fontSize: 14,
     height: 159,
     backgroundColor: Colors.white,
@@ -77,6 +93,5 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
     paddingVertical: 10,
-    fontFamily: 'Inter-Regular',
   },
 });

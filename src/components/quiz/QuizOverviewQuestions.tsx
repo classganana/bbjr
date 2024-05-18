@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableWithoutFeedback } from 'react-native'
 import { Colors } from '../../styles/colors'
 import { Button } from '../common/ButttonComponent/Button'
 import { PrimaryOutlineButton } from '../common/ButttonComponent/ButtonStyles'
@@ -7,11 +7,12 @@ import { Answers } from '../../screens/quiz/QuizQuestionsPage'
 
 type Props = {
     questionList: Answers,
-    closeSheet: () => void
+    closeSheet: () => void,
+    selectedQuestion: (n: number) => void,
 }
 
 
-export const QuizOverviewQuestions = ({closeSheet, questionList}: Props) => {
+export const QuizOverviewQuestions = ({closeSheet, questionList, selectedQuestion}: Props) => {
  
   const questions = [
     {
@@ -139,7 +140,6 @@ export const QuizOverviewQuestions = ({closeSheet, questionList}: Props) => {
         "correctAnswer": "Mona Lisa"
     }
 ]   
-
     
   return (
     <View style={styles.container}>
@@ -158,9 +158,9 @@ export const QuizOverviewQuestions = ({closeSheet, questionList}: Props) => {
         </View>
         <View style={styles.questionsBody}>
             { questionList.map((question, index) => {
-                return <View key={index} style={[(question.selectedAnswer)?styles.answeredCircle: styles.unansweredCircle]}>
+                return <TouchableWithoutFeedback onPress={() => selectedQuestion(index)} key={index} style={[(question.selectedAnswer)?styles.answeredCircle: styles.unansweredCircle]}>
                     <Text style={[(question.selectedAnswer)?styles.answeredCircleText: styles.unansweredCircleText]}> {index+1} </Text>
-                </View>
+                </TouchableWithoutFeedback>
             }) }
         </View>
         <View style={styles.footer}>
