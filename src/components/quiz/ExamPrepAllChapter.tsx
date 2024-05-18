@@ -44,6 +44,7 @@ export const ExamPrepAllChapter: React.FC<ExamPrepQuizCardData> = ({ id,practice
 
 const styles = StyleSheet.create({
     card: {
+        marginVertical: 2,
         marginHorizontal: 2,
         flexDirection: 'row',
         alignItems: 'center',

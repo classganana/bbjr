@@ -158,14 +158,21 @@ export const styles = StyleSheet.create({
         overflow: 'scroll',
         paddingBottom: 50
     },
+    modalTitleContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 20,
+    },
     subjecttxt: {
         alignSelf: 'center',
-        paddingTop: 20,
-        paddingBottom: 10,
+        // paddingTop: 30,
+        // paddingBottom: 10,
         fontFamily: 'Inter-Bold',
         fontSize: 18,
         fontWeight: '500',
-        color: Colors.black_01,
+        color: Colors.black_01
     },
     selectedSubject: {
         width: 180,
@@ -229,15 +236,54 @@ export const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
+        pencil:{ 
+            // borderRadius: 26.35, 
+            // backgroundColor: Colors.primary, 
+            alignItems: 'center', 
+            // position: 'absolute', 
+            // right: 5, 
+            transform: [{ rotate: '270deg' }]
+        },
+        verticalSeperator: {
+            width: 1,
+            borderColor: Colors.gray_20,
+            borderRightWidth: 1,
+            marginHorizontal: 10
+        },
+        buttoncontainer:{
+            flexDirection:'row',
+            justifyContent:'space-between',
+            paddingHorizontal:10,
+            paddingVertical:20,
+        },
+        chapterWise: {
+            fontSize: 16,
+            fontWeight: '600'
+        },
+        allChapterCard: {
+            paddingTop: 10,
+            paddingHorizontal: 15,
+            height: 300, 
+            borderRadius: 30, 
+            overflow: 'hidden',
+            backgroundColor: Colors.white,
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 1,
+            shadowRadius: 4,
+            elevation: 1,
+        },
+        allChapterCardtext: {
+            marginTop: "5%",
+            fontSize: 16,
+            fontWeight: '500',
+
         shadowOpacity: 1,
         shadowRadius: 4,
         elevation: 1,
-    },
-    allChapterCardtext: {
-        marginTop: "5%",
-        fontSize: 16,
-        fontWeight: '500',
-
     },
     crossCloseIcon: { 
         backgroundColor: 'white', 

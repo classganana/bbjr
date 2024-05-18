@@ -37,6 +37,7 @@ export const Colors = {
   gray_17: "#BEBEBE",
   gray_18: "#727374",
   gray_19: "#4E4E4E",
+  gray_20: "#B4B4B4",
   dark_gray: "#E8ECF4",
   dark_gray_01: "#898989",
   light_gray_01: "#F5F5F5",
