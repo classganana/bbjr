@@ -235,7 +235,7 @@ const BotIntro = ({
                 justifyContent: "space-between",
               }}
             >
-              <View>
+              <View style={{display: "flex", flex: 5}}>
                 <View style={{ display: "flex" }}>
                   <Text style={TextStyles.heading}>Subject</Text>
                   <Text style={TextStyles.subText}>
@@ -247,6 +247,7 @@ const BotIntro = ({
                     paddingVertical: 20,
                     borderTopWidth: 1,
                     borderColor: Colors.light_gray_05,
+                    flex: 1,
                   }}
                 >
                   <Student
@@ -261,6 +262,7 @@ const BotIntro = ({
                 style={{
                   height: 60,
                   marginHorizontal: 10,
+                  flex: 1,
                 }}
               >
                 <Button

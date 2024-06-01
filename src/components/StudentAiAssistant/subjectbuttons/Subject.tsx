@@ -212,11 +212,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    // flex: 1,
-    // height: 300,
-    // width: "100%",
-    // backgroundColor: Colors.white,
-    // position: "relative",
   },
   subjectcontainer: {
     display: "flex",

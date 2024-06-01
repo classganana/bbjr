@@ -178,7 +178,7 @@ export const Aiinput = ({CloseModal, onSendClick, onSubjectChange, openPopUp, ne
                   justifyContent: "space-between",
                 }}
               >
-                <View>
+                <View style={{display: "flex", flex: 5}}>
                   <View style={{ display: "flex" }}>
                     <Text style={TextStyles.heading}>Change Subject</Text>
                     <Text style={TextStyles.subText}>
@@ -190,6 +190,7 @@ export const Aiinput = ({CloseModal, onSendClick, onSubjectChange, openPopUp, ne
                       paddingVertical: 20,
                       borderTopWidth: 1,
                       borderColor: Colors.light_gray_05,
+                      flex: 1,
                     }}
                   >
                     <Student
@@ -204,6 +205,7 @@ export const Aiinput = ({CloseModal, onSendClick, onSubjectChange, openPopUp, ne
                   style={{
                     height: 60,
                     marginHorizontal: 10,
+                    flex: 1,
                   }}
                 >
                   <Button

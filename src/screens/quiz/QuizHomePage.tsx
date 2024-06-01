@@ -655,7 +655,7 @@ export const QuizHomePage = () => {
                             justifyContent: "space-between",
                             }}
                         >
-                            <View>
+                            <View style={{display: "flex", flex: 5}}>
                                 <View style={{ display: "flex" }}>
                                     <Text style={TextStyles.heading}>Change Subject</Text>
                                     <Text style={TextStyles.subText}>
@@ -667,6 +667,7 @@ export const QuizHomePage = () => {
                                     paddingVertical: 20,
                                     borderTopWidth: 1,
                                     borderColor: Colors.light_gray_05,
+                                    flex: 1,
                                     }}
                                 >
                                     <Student
@@ -681,6 +682,7 @@ export const QuizHomePage = () => {
                             style={{
                                 height: 60,
                                 marginHorizontal: 10,
+                                flex: 1,
                             }}
                             >
                                 <Button
