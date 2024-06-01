@@ -191,60 +191,60 @@ export const QuizResult = () => {
                 </View>
             </View>
             <ScrollView style={{flex: 1, paddingVertical: 2}}>
-            <View style={styles.scoreContainer}>
-                <View style={styles.scoreCard}>
-                    <View style={{flex: 2}}>
-                        <Text style={styles.userRank}>#{userRankScore?.rank}</Text>
-                    </View>
-                    <View style={{flex: 8}}>
-                        <Text style={styles.userName}>{user?.name}</Text>
-                        <Text style={styles.userSchool}>{user?.school}</Text>
-                    </View>
-                    <View style={{flex: 4}}>
-                        <Text style={styles.score}>{userRankScore?.score}</Text>
-                        <Text style={styles.overAllScore}>Overall Score</Text>
+                <View style={styles.scoreContainer}>
+                    <View style={styles.scoreCard}>
+                        <View style={{flex: 2}}>
+                            <Text style={styles.userRank}>#{userRankScore?.rank}</Text>
+                        </View>
+                        <View style={{flex: 8}}>
+                            <Text style={styles.userName}>{user?.name}</Text>
+                            <Text style={styles.userSchool}>{user?.school}</Text>
+                        </View>
+                        <View style={{flex: 4}}>
+                            <Text style={styles.score}>{userRankScore?.score}</Text>
+                            <Text style={styles.overAllScore}>Overall Score</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View>
-                <ImageBackground source={require('../../../assets/gifs/celebrate.gif')} style={styles.imageSection}>
-                    <Image style={styles.image} source={require('../../../assets/png/loginbot.png')}></Image>
-                    <View style={styles.imageTextContainer}>
-                        <Text style={styles.imageText}>
-                            {UtilService.getRandomMessage(props.noOfCorrectAnswers)}
-                        </Text>
-                    </View>
-                </ImageBackground>
-            </View>
-            <View style={styles.cardsContainer}>
-                {result.slice(0,2).map((item, index) => (
-                    <View style={styles.marksCards} key={index}>
-                        <Text style={[
-                            styles.values,
-                            item.label === 'Wrong Questions' && styles.redText,
-                            item.label === 'Right Questions' && styles.greenText
-                        ]}>{item.value}</Text>
-                        <Text style={styles.label}>{item.label}</Text>
-                    </View>
-                ))}
-            </View>
-            <View style={styles.cardsContainerBottom1}>
-            {result.slice(2,5).map((item, index) => (
-                    <View style={styles.marksCards1} key={index}>
-                        <Text style={[
-                            styles.values,
-                            item.label === 'Wrong Questions' && styles.redText,
-                            item.label === 'Right Questions' && styles.greenText
-                        ]}>{item.value}</Text>
-                        <Text style={styles.label}>{item.label}</Text>
-                    </View>
-                ))}                        
-            </View>
-            <View style={styles.buttonSection}>
-                <Button label={"View Solutions"} className={ShowAnswer} disabled={false} onPress={showAnswersScreen} />
-                <Button label={"Try Again"} className={TryAgain} disabled={false} onPress={retryQuiz} />
-            </View>
+                <View>
+                    <ImageBackground source={require('../../../assets/gifs/celebrate.gif')} style={styles.imageSection}>
+                        <Image style={styles.image} source={require('../../../assets/png/loginbot.png')}></Image>
+                        <View style={styles.imageTextContainer}>
+                            <Text style={styles.imageText}>
+                                {UtilService.getRandomMessage(props.noOfCorrectAnswers)}
+                            </Text>
+                        </View>
+                    </ImageBackground>
+                </View>
+                <View style={styles.cardsContainer}>
+                    {result.slice(0,2).map((item, index) => (
+                        <View style={styles.marksCards} key={index}>
+                            <Text style={[
+                                styles.values,
+                                item.label === 'Wrong Questions' && styles.redText,
+                                item.label === 'Right Questions' && styles.greenText
+                            ]}>{item.value}</Text>
+                            <Text style={styles.label}>{item.label}</Text>
+                        </View>
+                    ))}
+                </View>
+                <View style={styles.cardsContainerBottom1}>
+                {result.slice(2,5).map((item, index) => (
+                        <View style={styles.marksCards1} key={index}>
+                            <Text style={[
+                                styles.values,
+                                item.label === 'Wrong Questions' && styles.redText,
+                                item.label === 'Right Questions' && styles.greenText
+                            ]}>{item.value}</Text>
+                            <Text style={styles.label}>{item.label}</Text>
+                        </View>
+                    ))}                        
+                </View>
             </ScrollView>
+            <View style={styles.buttonSection}>
+                <Button label={"View Solutions"} className={ShowAnswer} styles={{flex:1}} disabled={false} onPress={showAnswersScreen} />
+                <Button label={"Try Again"} className={TryAgain} styles={{flex:1}} disabled={false} onPress={retryQuiz} />
+            </View>
         </View>
     )
 }
@@ -448,5 +448,11 @@ const styles = StyleSheet.create({
         gap: 10,
         paddingHorizontal: 16,
         paddingVertical: 10,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 });
