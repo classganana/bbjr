@@ -70,6 +70,7 @@ const BottomTabSetup = () => {
           tabBarStyle: {
             elevation: 1,
             ...styles.shadow,
+             height: 60,
           },
         }}
       >
@@ -84,6 +85,7 @@ const BottomTabSetup = () => {
                   justifyContent: "center",
                   borderTopWidth: focused ?  4:  1,
                   borderTopColor: focused ?  Colors.primary:  "white",
+                  padding: 5,  
                   transform: [
                     { scale: focused ? scaleValues.PasswordScreen : 1 },
                     
