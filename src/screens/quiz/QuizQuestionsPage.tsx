@@ -384,14 +384,14 @@ export const QuizQuestionsPage = () => {
                 <View style={styles.questionInfo}>
                     <View style={styles.questionInfoDropDown}>
                         <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestionList.length}</Text>
-                        <TouchableOpacity onPress={() => setQuestionInfoSheet(true)}>
+                        <TouchableOpacity onPress={() => setQuestionInfoSheet(true)} style={{height: 40, width: 40}}>
                             <InfoIcon accessible={true} accessibilityLabel={"Quiz Info"} height={'20'} width={'20'} fill={'black'} />
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity
                         onPress={() => setBottomSheetVisible(true)}
                     >
-                        <ReportIcon height={'18'} width={'18'} fill={'white'} />
+                        <ReportIcon height={'18'} width={'18'} fill={'white'} accessible={true} accessibilityLabel={"Report"}  />
                     </TouchableOpacity>
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>

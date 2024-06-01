@@ -206,7 +206,7 @@ export const LoginForm = () => {
                 <Button
                   className={PrimaryDefaultButton}
                   label={"Get OTP"}
-                  disabled={phoneNumberError !== ""}
+                  disabled={phoneNumberError.length > 0 || phoneNumber.length < 10}
                   onPress={moveToOtpScreen}
                 />
               </View>

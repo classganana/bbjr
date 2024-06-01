@@ -108,7 +108,7 @@ const EditProfile = () => {
                 <View style={styles.header}>
                     <View style={styles.heading}>
                         <TouchableOpacity style={styles.backButton} onPress={() => onBack()}>
-                            <NewBackIcon height={'14'} width={'14'} fill={'black'} />
+                            <NewBackIcon height={'14'} width={'14'} fill={'black'} accessibilityLabel={"Back Button"}/>
                         </TouchableOpacity>
                         <Text style={styles.headingTitle}>Profile</Text>
                     </View>

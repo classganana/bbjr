@@ -36,7 +36,7 @@ const ChipComponent: React.FC<ButtonProps> = ({
 }) => {
   const { user } = useUser()
   const textStyle: any = [
-    { textAlign: 'center',color: (themeColor && isPressed) ? Colors.white : 'black' },
+    { textAlign: 'center', color: (themeColor && isPressed) ? Colors.white : 'black' },
   ]
   const buttonStyle: any = [
     styles.child, {
@@ -61,8 +61,20 @@ const ChipComponent: React.FC<ButtonProps> = ({
   ];
 
   return (
-    <TouchableOpacity style={[buttonStyle,styles.buttonText, textStyle]} onPress={onPress}>
-      <Text style={[styles.buttonText, textStyle]}>{buttonData.text}</Text>
+    <TouchableOpacity
+      style={[buttonStyle, styles.buttonText, textStyle]}
+      onPress={onPress}
+      accessible={true}
+      accessibilityLabel={buttonData.text}
+      accessibilityRole="button"
+    >
+      <Text
+        style={[styles.buttonText, textStyle]}
+        accessible={true}
+        accessibilityRole="text"
+      >
+        {buttonData.text}
+      </Text>
     </TouchableOpacity>
   );
 };

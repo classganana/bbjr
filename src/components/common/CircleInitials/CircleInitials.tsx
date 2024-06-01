@@ -5,9 +5,10 @@ import { Colors } from '../../../styles/colors';
 interface CircleInitialsProps {
   name: string | undefined;
   size?: number;
+  accessible?: boolean;
 }
 
-const CircleInitials: React.FC<CircleInitialsProps> = ({ name, size = 50 }) => {
+const CircleInitials: React.FC<CircleInitialsProps> = ({ name, size = 50, accessible }) => {
   // Function to extract initials from the name
   const getInitials = (fullName: string| undefined): string => {
     if (typeof fullName !== 'string' || fullName.trim() === '') {
@@ -40,7 +41,7 @@ const CircleInitials: React.FC<CircleInitialsProps> = ({ name, size = 50 }) => {
   const backgroundColor = `#${(initials.charCodeAt(0) * initials.charCodeAt(1) * initials.charCodeAt(2)) % 0x1000000}`;
 
   return (
-    <View style={[styles.circle,{width: size,height: size,borderRadius: size}]}>
+    <View accessibilityLabel={'avatar'} accessible={accessible} style={[styles.circle,{width: size,height: size,borderRadius: size}]}>
       <Text style={{fontSize: size/2, color: getContrastingColor(backgroundColor) }}>{initials}</Text>
     </View>
   );

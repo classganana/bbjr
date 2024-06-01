@@ -184,13 +184,31 @@ export const Dashboard = () => {
             <ScrollView style={DashboardStyle.body}>
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>
-                        <TouchableOpacity
-                         onPress={navigateToProfilePage} accessible={true} 
-                         accessibilityLabel={user?.name ? `Profile picture of ${user.name}` : "Profile picture"} >
-                        {user && user?.avatarId ? <Image accessible={true} accessibilityLabel={user?.name ? `Profile picture of ${user.name}` 
-                        : "Profile picture"} style={DashboardStyle.avatarImage} source={{ uri: `https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f${user.avatarId}.png`}} />
-                            : <CircleInitials name={user?.name} size={40} />}
-                        </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={navigateToProfilePage}
+                        accessible={true}
+                        accessibilityLabel={user?.name ? `Profile picture of ${user.name}` : "Profile picture"}
+                        accessibilityRole="button"
+                        >
+                        {user && user?.avatarId ? (
+                            <Image
+                            accessible={true}
+                            accessibilityLabel={user?.name ? `Profile picture of ${user.name}` : "Profile picture"}
+                            accessibilityRole="image"
+                            style={DashboardStyle.avatarImage}
+                            source={{ uri: `https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f${user.avatarId}.png` }}
+                            />
+                        ) : (
+                            <CircleInitials
+                            accessible={true}
+                            accessibilityLabel={user?.name ? `Profile initials of ${user.name}` : "Profile initials"}
+                            accessibilityRole="image"
+                            name={user?.name}
+                            size={40}
+                            />
+  )}
+</TouchableOpacity>
+
                         <Text style={{ fontWeight: '400', fontSize: 18, color: "#4A4A4A" }}>Hello! {'\n'}
                         <Text style={{ fontWeight: '600', fontSize: 18 }}>
                                 {user?.name}

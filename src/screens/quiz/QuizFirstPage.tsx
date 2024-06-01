@@ -125,6 +125,7 @@ export const QuizFirstPage = () => {
                 setCurrentQuiz(matchingQuizzes);
                 setQuizContent(matchingQuizzes);
                 console.log(currentQuiz, quizContent);
+                setLoading(false);      
             } else {
                 // getting content from API
                 console.log("getting practive questions from api");
@@ -154,9 +155,6 @@ export const QuizFirstPage = () => {
                 }
 
                 route?.params[0][0].allChapter == true ? delete req.chapterName: ''
-
-                console.log(reqObj);
-        
                 httpClient.post(`auth/c-auth`, reqObj)
                     .then((res: any) => {
                         const quiz = {
@@ -168,6 +166,7 @@ export const QuizFirstPage = () => {
                             studentId: user?.userId,
                             ...res.data.data,
                         }
+                        setLoading(false);
                         setQuizContent(quiz);
                         if (quizType != 'quiz') maintainQuizInLocal(quiz);
                     })
@@ -219,13 +218,13 @@ export const QuizFirstPage = () => {
                 </Text>
                 <TouchableOpacity style={{ flexDirection: 'row', flex: 0.5 }} onPress={() => setShow(!show)} >
                     <Text>View Selected Chapters</Text>
-                    <DownArrow height={'20'} width={'20'} fill={Colors.black_01} />
+                    <DownArrow height={'20'} width={'20'} fill={Colors.black_01} accessible={true} accessibilityLabel={"Down Arrow"}/>
                 </TouchableOpacity>
                 {show && <View style={styles.dropdownContainer}>
                     <View style={styles.dropdownHeading}>
                         <Text style={{fontWeight: '500'}}>{subject} - Total Chapters {chapters?.length}</Text>
                         <TouchableOpacity onPress={() => setShow(!show)} style={styles.reverseIcon}>
-                            <DownArrow height={'20'} width={'20'} fill={Colors.black_01} />
+                            <DownArrow height={'20'} width={'20'} fill={Colors.black_01} accessible={true} accessibilityLabel={"Up Arrow"} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.listOfChapters}>

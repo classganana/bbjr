@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { StrongBackButton } from '../../components/common/SvgComponent/SvgComponent';
+import { NewBackIcon, StrongBackButton } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { useNavigation } from '@react-navigation/native';
 import { httpClient } from '../../services/HttpServices';
@@ -105,9 +105,9 @@ export const QuizHistory = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <View style={styles.heading}>
+                <View style={styles.heading} >
                     <TouchableOpacity style={styles.backButton} onPress={onBack}>
-                        <StrongBackButton height={'25'} width={'25'} fill={'black'} />
+                        <NewBackIcon accessible={true} accessibilityLabel={'Back Button'} height={14} width={14} fill={'black'} />
                     </TouchableOpacity>
                     <Text style={styles.headingTitle}>Previous Test Scores</Text>
                 </View>
@@ -128,10 +128,11 @@ export const QuizHistory = () => {
                                 <Text style={{fontSize: 20, marginTop: 30}}>Get started with Quizzes now!</Text>
                             </View>}
                             <View style={{height: 60, width: "80%"}}>
-                                <Button label={"Quizzes"} 
+                                <Button label={"Quizzes"}
                                         disabled={false} onPress={moveToExploreQuizPage} 
                                         className={Examprep}
-                                        />
+                                        accessibilityLabel={"Quizzes"}
+                                />
                             </View>
                         </View>
 
@@ -157,6 +158,7 @@ export const QuizHistory = () => {
                                 <Button label={"Exam Preparation"} 
                                         disabled={false} onPress={moveToExploreExamPrepPage} 
                                         className={Examprep}
+                                        accessibilityLabel={"Exam Preparation"}
                                         />
                             </View>
                         </View>

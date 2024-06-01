@@ -85,7 +85,7 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) 
           <View style={styles.rectangle}>
             <View style={styles.msg}>
               <TouchableOpacity onPress={readTheMessage} style={styles.speaker}>
-                <Speaker height={20} width={20} fill={speakerButtonColor} />
+                <Speaker height={20} width={20} fill={speakerButtonColor} accessibilityLabel="Speaker icon" />
               </TouchableOpacity>
               <Text style={styles.text}>
                 {stream ? <StreamingText streamDone={() => {streamDone(true)}} text={text} /> :
@@ -99,20 +99,20 @@ export const Bot: React.FC<BotProps> = ({ text, stream, feedback, streamDone }) 
               feedback({BotAnswer: text,feedback: 'positive'});
               setLikeButtonDark();
               }}>
-              <ThumsUp height={"20"} width={"20"} fill={likeButtonColor} />
+              <ThumsUp height={"20"} width={"20"} fill={likeButtonColor} accessibilityLabel="thumbs up"/>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() =>{ 
               feedback({BotAnswer: text,feedback: 'negative'})
               }}>
-              <ThumsDown height={"20"} width={"20"} fill={"#969696"} />
+              <ThumsDown height={"20"} width={"20"} fill={"#969696"} accessibilityLabel="Thumbs down"/>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => {
               copyToClipboard();
               setCopyButtonDark();
               }}>
-              <CopyIcon height={"20"} width={"20"} fill={copyButtonColor} />
+              <CopyIcon height={"20"} width={"20"} fill={copyButtonColor} accessibilityLabel="Copy Icon"/>
             </TouchableOpacity>
           </View>
         </>

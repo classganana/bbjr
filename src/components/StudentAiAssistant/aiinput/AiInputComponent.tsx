@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   Modal,
   Text,
+  Pressable,
 } from "react-native";
 import { Colors } from "../../../styles/colors";
 import Student from "../subjectbuttons/Subject";
 import {
+  CrossIcon,
   Send,
 } from "../../common/SvgComponent/SvgComponent";
 import { useNavigation } from "@react-navigation/native";
@@ -24,26 +26,28 @@ type Props = {
   newUser: boolean;
   selectedSubject: any;
   setSelectedSubject: (item: any) => void;
-  setNewUser:(value: boolean) =>void;
-  setSubjectAndCloseModal: (item: any)=>void;
+  setNewUser: (value: boolean) => void;
+  setSubjectAndCloseModal: (item: any) => void;
+  CloseModal: () => void;
+
 }
 
-export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp, newUser, selectedSubject, setSelectedSubject, setNewUser,setSubjectAndCloseModal }: Props ) => {
+export const Aiinput = ({CloseModal, onSendClick, onSubjectChange, openPopUp, newUser, selectedSubject, setSelectedSubject, setNewUser, setSubjectAndCloseModal }: Props) => {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
   const [text, setText] = useState("");
   const [placeholder, setPlaceholder] = useState("Ask Anything...")
   const [lastQuestion, setLastQuestion] = useState('');
 
-  useEffect(()=>{
+  useEffect(() => {
     setPlaceholder("Ask me anything related to " + setSelectedSubject)
-  },[selectedSubject])
+  }, [selectedSubject])
 
 
-    const getSubject = async () => {
+  const getSubject = async () => {
     const chatSubject = await AsyncStorage.getItem('chatSubject');
     console.log("Get Subject", chatSubject)
-    if(chatSubject && chatSubject.length > 1) {
+    if (chatSubject && chatSubject.length > 1) {
       setNewUser(false);
     }
   }
@@ -51,6 +55,10 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp, newUser, sele
   const Continue = () => {
     setBottomSheetVisible(false);
     onSubjectChange(selectedSubject);
+  }
+
+  const closeSubjectModal = () => {
+    CloseModal();
   }
 
   const navigation = useNavigation();
@@ -67,10 +75,10 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp, newUser, sele
 
   useEffect(() => {
     setBottomSheetVisible(openPopUp)
-  },[openPopUp])
+  }, [openPopUp])
 
   useEffect(() => {
-    console.log("New ",newUser)
+    console.log("New ", newUser)
   }, [newUser])
 
   const onChange = (text: string) => {
@@ -135,40 +143,43 @@ export const Aiinput = ({ onSendClick, onSubjectChange, openPopUp, newUser, sele
               onSubmitEditing={handleOnSubmitEditing}
             />
             <TouchableOpacity onPress={onSend} style={styles.send}>
-              <Send height={"27"} width={"27"} fill={Colors.primary} />
+              <Send height={"27"} width={"27"} fill={Colors.primary} accessible={true} accessibilityLabel={"Send Message"}/>
             </TouchableOpacity>
           </View>
-        </View> }
+        </View>}
       </View>
 
       <Modal
-        style={{borderRadius: 300}}
+        style={{ borderRadius: 300 }}
         animationType="fade"
         transparent={true}
         visible={bottomSheetVisible}
         onRequestClose={() => setBottomSheetVisible(false)}
       >
-        {/* <View style={{backgroundColor: 'rgba(0, 0, 0,0.4)', flex: 1,}}></View> */}
         <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
-            <View style={styles.bottomSheetContainer}>
-              <Student
+          <Pressable style={styles.crossCloseIcon} onPress={() => closeSubjectModal()}>
+            <CrossIcon
+              height={25} width={25} fill={'black'} />
+          </Pressable>
+          <View style={styles.bottomSheetContainer}>
+            <Student
               themeColor={true}
-              selectedSubject={(item: any) => setSubjectAndCloseModal(item)} subject={selectedSubject?.subjectName}              />
-              <View
-                style={{
-                  height: 60,
-                  marginHorizontal: 10
-                }}
-              >
-                <Button
-                      label={'Continue'}
-                      disabled={!selectedSubject?.subjectName?.length}
-                      className={EditButton}
-                      onPress={() => Continue()}
-                    />
-              </View>
+              selectedSubject={(item: any) => setSubjectAndCloseModal(item)} subject={selectedSubject?.subjectName} />
+            <View
+              style={{
+                height: 60,
+                marginHorizontal: 10
+              }}
+            >
+              <Button
+                label={'Continue'}
+                disabled={!selectedSubject?.subjectName?.length}
+                className={EditButton}
+                onPress={() => Continue()}
+              />
             </View>
           </View>
+        </View>
       </Modal>
     </View>
   );
@@ -182,12 +193,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   selectSubjectContainer: {
-      borderRadius: 25,
-      backgroundColor: "#006B7F14",
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      paddingLeft: 10
+    borderRadius: 25,
+    backgroundColor: "#006B7F14",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 10
   },
   selectedSubject: {
     // backgroundColor: Colors.primary,
@@ -296,4 +307,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     fontSize: 400,
   },
+  crossCloseIcon: {
+    backgroundColor: 'white',
+    height: 40,
+    width: 40,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: "18%",
+    left: "45%"
+  }
 });

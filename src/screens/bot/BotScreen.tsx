@@ -394,6 +394,7 @@ export const BotScreen = () => {
             </View>
             <View style={{ justifyContent: "flex-end", width: "100%" }}>
               <Aiinput
+                CloseModal={() => setSubjectModal(false)}
                 onSubjectChange={(item: any) => {
                   setSubject(item.subjectName);
                   setSubjectModal(false);

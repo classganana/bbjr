@@ -433,7 +433,7 @@ export const QuizHomePage = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity style={styles.backButton} onPress={onBack}>
-                        <NewBackIcon height={'18'} width={'25'} fill={'black'} />
+                        <NewBackIcon height={'18'} width={'25'} fill={'black'} accessibilityLabel={"Back Button"} />
                     </TouchableOpacity>
                     <Text style={styles.headingTitle}>Boost Your Knowledge</Text>
                 </View>
@@ -606,7 +606,7 @@ export const QuizHomePage = () => {
                     onRequestClose={() => setBottomSheetVisible(false)}
                 >
                     <View style={{ backgroundColor: 'rgba(0, 0, 0,0.6)', flex: 1 }}>
-                        <Pressable style={styles.crossCloseIcon} onPress={() => setBottomSheetVisible(false)}>
+                        <Pressable accessibilityLabel={"Close Icon"} style={styles.crossCloseIcon} onPress={() => setBottomSheetVisible(false)}>
                             <CrossIcon height={25} width={25} fill={'black'} />
                         </Pressable>
                         <View style={styles.bottomSheetContainer}>

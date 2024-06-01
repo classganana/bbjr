@@ -182,11 +182,11 @@ export const QuizResult = () => {
             <View style={styles.header}>
                 <View style={styles.heading}>
                     <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
-                        <NewBackIcon height={'18'} width={'18'} fill={'white'} />
+                        <NewBackIcon height={'18'} width={'18'} fill={'white'} accessible={true} accessibilityLabel={"Back Button"} />
                     </TouchableOpacity>
                     <Text style={styles.title}>Test Score</Text>
                     <TouchableOpacity onPress={onSaveImageAsync} style={[styles.shareButton, { position: "absolute", right: 10 }]}>
-                        <ShareIcon height={'20'} width={'20'} fill={Colors.primary} />
+                        <ShareIcon height={'20'} width={'20'} fill={Colors.primary} accessible={true} accessibilityLabel={"Share"} />
                     </TouchableOpacity>
                 </View>
             </View>

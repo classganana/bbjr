@@ -26,7 +26,7 @@ import { ToastService } from '../../services/ToastService';
 
 export const SettingsPage = () => {
   // const [user, setUser] = useState<any>();
-  const {user, setUser} = useUser();
+  const { user, setUser } = useUser();
   console.log(user);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const dummyArray = [1, 2, 3, 4, 5, 6];
@@ -41,7 +41,7 @@ export const SettingsPage = () => {
   };
 
   const moveToEditProfile = () => {
-      navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never);
+    navigation.navigate('Profile' as never, { screen: 'EditProfile' } as never);
   };
 
   const moveToQuizHistory = () => {
@@ -53,7 +53,7 @@ export const SettingsPage = () => {
       const result = await Share.share({
         message: "Challenge yourself with this exciting quiz on Brain Booster Junior. Can you beat the top score? Let's grind it. Here's the app link: https://itoniclabs.in",
       });
-            
+
       if (result.action === Share.sharedAction) {
         // Content was successfully shared
 
@@ -148,18 +148,17 @@ export const SettingsPage = () => {
   const toggleModal = (save?: boolean) => {
     setIsModalVisible(!isModalVisible);
     if (save) {
-      const obj = {...user, avatarId: selectedImage.toString() };
-      console.log(obj);
+      const obj = { ...user, avatarId: selectedImage.toString() };
       setUser(obj);
-      user?.userId && httpClient.patch(`users/${(user?.userId).toString()}`, {...obj})
-      .then((data) => {
-        if(data.status == 200) {
-          setUser(obj);
-          ToastService("User Avatar updated successfully");
-        } else {
-          ToastService("Something went wrong");
-        }
-      })
+      user?.userId && httpClient.patch(`users/${(user?.userId).toString()}`, { ...obj })
+        .then((data) => {
+          if (data.status == 200) {
+            setUser(obj);
+            ToastService("User Avatar updated successfully");
+          } else {
+            ToastService("Something went wrong");
+          }
+        })
     }
   };
 
@@ -167,8 +166,8 @@ export const SettingsPage = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <View style={styles.heading}>
-           <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
-            <NewBackIcon height={14} width={14} fill={'black'} />
+          <TouchableOpacity onPress={() => onBack()} style={styles.backButton}>
+            <NewBackIcon height={14} width={14} fill={'black'} accessibilityLabel={"Back Button"}/>
           </TouchableOpacity>
           <View>
             <Text style={styles.headingTitle}>Settings</Text>
@@ -177,12 +176,12 @@ export const SettingsPage = () => {
       </View>
       <View style={styles.DetailContainer}>
         <View style={styles.block1}>
-        {user && user?.avatarId ? <Image style={styles.avatarImage} source={{ uri: `https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f${user.avatarId}.png`}} />
-                            : <CircleInitials name={user?.name} size={120} />}
+          {user && user?.avatarId ? <Image style={styles.avatarImage} source={{ uri: `https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f${user.avatarId}.png` }} />
+            : <CircleInitials name={user?.name} size={120} />}
           <TouchableOpacity onPress={() => toggleModal()} style={styles.editIconContainer}>
-            <EditProfilePicIcon height={24} width={24} fill={'white'} />
+            <EditProfilePicIcon height={24} width={24} fill={'white'} accessible={true} accessibilityLabel={"Edit Profile Photo"}/>
           </TouchableOpacity>
-         {/* <CircleInitials name={user?.name} size={100} /> b*/}
+          {/* <CircleInitials name={user?.name} size={100} /> b*/}
           {/* <View style={{ gap: 6 }}>
             <Text style={styles.name}>{user && user.name}</Text>
             <Text>{user && user.class} Class</Text>
@@ -207,10 +206,10 @@ export const SettingsPage = () => {
           </TouchableOpacity> */}
         </View>
         <View style={styles.optionList}>
-        <View style={styles.optionHeading}>
-          <Text style={styles.headingTitle}>Account</Text>
-          <Text style={styles.headingInfo}>Your account and privacy details</Text>
-        </View>
+          <View style={styles.optionHeading}>
+            <Text style={styles.headingTitle}>Account</Text>
+            <Text style={styles.headingInfo}>Your account and privacy details</Text>
+          </View>
           {labels.map((buttonLabel, index) => (
             <TouchableOpacity
               key={index}
@@ -218,7 +217,7 @@ export const SettingsPage = () => {
                 if (buttonLabel.title === 'View leaderboard') {
                   moveToLeaderboard();
                 }
-                if(buttonLabel.title === 'Log Out') {
+                if (buttonLabel.title === 'Log Out') {
                   logout();
                 }
                 if (buttonLabel.title === 'Previous Test Scores') {
@@ -233,9 +232,9 @@ export const SettingsPage = () => {
               }}
               style={styles.settionOptions}>
               {buttonLabel.leftSvg}
-              <Text style={{fontSize: 16}} >{buttonLabel.title}</Text>
+              <Text style={{ fontSize: 16 }} >{buttonLabel.title}</Text>
               <View style={{ position: 'absolute', right: 26, transform: [{ rotate: '180deg' }] }}>
-                  <NewBackIcon accessible={true} accessibilityLabel={'Back Button'} height={14} width={14} fill={'black'} />
+                <NewBackIcon accessible={true} accessibilityLabel={'Forward Button'} height={14} width={14} fill={'black'} />
               </View>
             </TouchableOpacity>
           ))}
@@ -248,35 +247,82 @@ export const SettingsPage = () => {
         onRequestClose={() => toggleModal()}
       >
         {/* source={{ uri: "https://d1n3r5qejwo9yi.cloudfront.net/assets/bot.gif" }} /> */}
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-                <Text style={styles.modalText}>Choose your avatar</Text>
-                <ScrollView contentContainerStyle={styles.avatarContainer}>
-                  <TouchableOpacity onPress={() => handleImageClick(1)}>
-                    <Image style={[styles.avatarImage, selectedImage === 1 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f1.png'}}
-                     />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => handleImageClick(2)}>
-                    <Image style={[styles.avatarImage, selectedImage === 2 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f2.png'}} />
-                  </TouchableOpacity>                  
-                  <TouchableOpacity onPress={() => handleImageClick(3)}>
-                    <Image style={[styles.avatarImage, selectedImage === 3 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f3.png'}} />
-                  </TouchableOpacity>                  
-                  <TouchableOpacity onPress={() => handleImageClick(4)}>
-                    <Image style={[styles.avatarImage, selectedImage === 4 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f4.png'}} />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => handleImageClick(5)}>
-                    <Image style={[styles.avatarImage, selectedImage === 5 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f5.png'}} />
-                  </TouchableOpacity>                  
-                  <TouchableOpacity onPress={() => handleImageClick(6)}>
-                    <Image style={[styles.avatarImage, selectedImage === 6 && styles.selectedImage]} source={{uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f6.png'}} />
-                  </TouchableOpacity>
-                </ScrollView>
-                <Button label={"Save"} disabled={!(selectedImage > 0 && selectedImage <= 6)} onPress={() => (toggleModal(true))}
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Choose your avatar</Text>
+            <ScrollView contentContainerStyle={styles.avatarContainer}>
+              <TouchableOpacity
+                onPress={() => handleImageClick(1)}
+                accessible={true}
+                accessibilityLabel="Avatar 1"
+                accessibilityRole="button">
+                <Image
+                  style={[styles.avatarImage, selectedImage === 1 && styles.selectedImage]}
+                  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f1.png' }}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => handleImageClick(2)}
+                accessible={true}
+                accessibilityLabel="Avatar 2"
+                accessibilityRole="button">
+                <Image
+                  style={[styles.avatarImage, selectedImage === 2 && styles.selectedImage]}
+                  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f2.png' }}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => handleImageClick(3)}
+                accessible={true}
+                accessibilityLabel="Avatar 3"
+                accessibilityRole="button">
+                <Image
+                  style={[styles.avatarImage, selectedImage === 3 && styles.selectedImage]}
+                  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f3.png' }}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => handleImageClick(4)}
+                accessible={true}
+                accessibilityLabel="Avatar 4"
+                accessibilityRole="button">
+                <Image
+                  style={[styles.avatarImage, selectedImage === 4 && styles.selectedImage]}
+                  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f4.png' }}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => handleImageClick(5)}
+                accessible={true}
+                accessibilityLabel="Avatar 5"
+                accessibilityRole="button">
+                <Image
+                  style={[styles.avatarImage, selectedImage === 5 && styles.selectedImage]}
+                  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f5.png' }}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => handleImageClick(6)}
+                accessible={true}
+                accessibilityLabel="Avatar 6"
+                accessibilityRole="button">
+                <Image
+                  style={[styles.avatarImage, selectedImage === 6 && styles.selectedImage]}
+                  source={{ uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f6.png' }}
+                />
+              </TouchableOpacity>
+            </ScrollView>
+
+            <Button label={"Save"} disabled={!(selectedImage > 0 && selectedImage <= 6)} onPress={() => (toggleModal(true))}
               className={StartButton}
-              ></Button>
-            </View>
+            ></Button>
           </View>
+        </View>
       </Modal>
     </ScrollView>
   );
@@ -293,13 +339,13 @@ const styles = StyleSheet.create({
     width: 120,
     borderRadius: 60, // Make it circular
   },
-  avatarContainer : {
-      marginTop: 10,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-      flex: 1
+  avatarContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    flex: 1
   },
   modalContainer: {
     flex: 1,
@@ -354,7 +400,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.primary,
     backgroundColor: Colors.white,
-    position:"absolute", 
+    position: "absolute",
     left: "53%",
     top: "65%",
     padding: 6,
@@ -364,12 +410,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
 
   },
-  optionList : {
+  optionList: {
     backgroundColor: Colors.white,
     flex: 1,
     gap: 10
   },
-  optionHeading : {
+  optionHeading: {
     gap: 12,
     paddingVertical: 20,
     paddingHorizontal: 26,
@@ -389,17 +435,17 @@ const styles = StyleSheet.create({
 
   },
   settionOptions: {
-     flexDirection: 'row',
-     alignItems: 'center',
-     gap: 20,
-     marginHorizontal: 24,
-     marginTop: 0,
-     marginVertical: 5,
-     borderWidth: 1,
-     borderColor: Colors.gray_05,
-     paddingVertical: 14,
-     paddingHorizontal: 26,
-     borderRadius: 14
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+    marginHorizontal: 24,
+    marginTop: 0,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: Colors.gray_05,
+    paddingVertical: 14,
+    paddingHorizontal: 26,
+    borderRadius: 14
 
   },
 
@@ -430,7 +476,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
   },
-  friendText:{
+  friendText: {
     fontWeight: '600',
     color: "#2947D4",
     fontSize: 16
@@ -455,7 +501,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderColor: Colors.primary,
     alignItems: 'center',
-    justifyContent:'space-around',
+    justifyContent: 'space-around',
     // marginBottom: 15,
     marginVertical: 15
     // justifyContent: 'center',
