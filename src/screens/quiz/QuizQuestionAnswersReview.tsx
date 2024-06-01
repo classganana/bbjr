@@ -20,6 +20,7 @@ export const QuizQuestionAnswerReview = () => {
     const questionScrollViewRef = useRef<ScrollView | null>(null);
     const [quizQuestionList, setQuizQuestionList] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [chapterNames, setChapterNames] = useState<Array<string>>([])
     const navigation = useNavigation()
     useEffect(() => {
         getData();
@@ -31,8 +32,9 @@ export const QuizQuestionAnswerReview = () => {
 
     const getData = async () => {
         try {
-            const userAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) || '[]');
+            const userAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) || '{}');
             setQuizQuestionList(userAnswerList.quizQuestionList);
+            setChapterNames(userAnswerList.chapterNames)
         } catch (error) {
             console.error('Error retrieving data:', error);
         }
@@ -66,7 +68,7 @@ export const QuizQuestionAnswerReview = () => {
             questionScrollViewRef.current.scrollTo({ x: scrollX, animated: true });
         }
         try {
-            await AsyncStorage.setItem('questions', JSON.stringify(quizQuestionList));
+            await AsyncStorage.setItem('questions', JSON.stringify({"questions" : quizQuestionList, "chapterNames" : chapterNames}));
         } catch (error) {
             console.error('Error storing data:', error);
         }
@@ -80,7 +82,7 @@ export const QuizQuestionAnswerReview = () => {
                 <View style={styles.heading}>
                     <View>
                         <Text style={styles.headingTitle}>Test</Text>
-                        <Text style={styles.headingInfo}>English Vocabulary Quiz</Text>
+                        <Text style={styles.headingInfo}>{chapterNames && chapterNames.join(', ')}</Text>
                     </View>
                 </View>
             </View>
@@ -178,6 +180,7 @@ const styles = StyleSheet.create({
     },
     headingInfo: {
         fontWeight: '500',
+        fontSize: 16,
     },
     backButton: {
         height: 45,
