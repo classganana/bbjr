@@ -1,8 +1,8 @@
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
-  Back,
   BotIcon,
   ClockIcon,
+  CrossIcon,
   NewBackIcon,
 } from "../common/SvgComponent/SvgComponent";
 import { Colors } from "../../styles/colors";
@@ -15,8 +15,9 @@ import {
   EditButton,
   PrimaryDefaultButton,
 } from "../common/ButttonComponent/ButtonStyles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Student from "../StudentAiAssistant/subjectbuttons/Subject";
+import { TextStyles } from "../../styles/texts";
 
 const BotIntroBody = () => {
   return (
@@ -69,7 +70,6 @@ const botIntroBodyStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 18,
-    alignItems: "center",
     marginVertical: 10,
   },
   highlightPoint: {
@@ -174,12 +174,12 @@ const screenStyles = StyleSheet.create({
 
 const BotIntro = ({
   selectedSubject,
-  setSubjectAndCloseModal,
+  setSelectedSubjectAndMarkUser,
   onSubjectChange,
 }: {
   selectedSubject: any;
   onSubjectChange: (selectedOption: any) => void;
-  setSubjectAndCloseModal: (item: any) => void;
+  setSelectedSubjectAndMarkUser: (item: any) => void;
 }) => {
   const [showSubjectSheet, setShowSelectedSubject] = useState(false);
 
@@ -197,63 +197,117 @@ const BotIntro = ({
   };
 
   const Continue = () => {
-    console.log(selectedSubject)
-    if (selectedSubject) {
+    console.log(pressedSubject)
+    if (pressedSubject) {
+        setSelectedSubjectAndMarkUser(pressedSubject);
         setShowSelectedSubject(false);
-        onSubjectChange(selectedSubject);
+        onSubjectChange(pressedSubject);
     }
   };
+
+  const [pressedSubject, setPressedSubject] = useState<Record<string, any>>({})
 
   return (
     <View>
       <Screen footer={BotIntroFooter()} />
       <Modal
-        style={{ borderRadius: 300 }}
-        animationType="fade"
-        transparent={true}
-        visible={showSubjectSheet}
-        onRequestClose={() => setShowSelectedSubject(false)}
-      >
-        {/* <View style={{backgroundColor: 'rgba(0, 0, 0,0.4)', flex: 1,}}></View> */}
-        <View style={{ backgroundColor: "rgba(0, 0, 0,0.3)", flex: 1 }}>
-          <View style={styles.bottomSheetContainer}>
-            <Student
-              themeColor={true}
-              selectedSubject={(item: any) => setSubjectAndCloseModal(item)}
-              subject={selectedSubject?.subjectName}
-            />
+      style={{ borderRadius: 300 }}
+      animationType="fade"
+      transparent={true}
+      visible={showSubjectSheet}
+      onRequestClose={() => setShowSelectedSubject(false)}
+    >
+      <View style={{ backgroundColor: "rgba(0, 0, 0,0.3)", flex: 1}}>
+        <View style={styles.bottomSheetContainer}>
+          <Pressable
+                accessibilityLabel={"Close Icon"}
+                style={styles.crossCloseIcon}
+                onPress={() => setShowSelectedSubject(false)}
+              >
+            <CrossIcon height={25} width={25} fill={"black"} />
+          </Pressable>
+          <View style={[styles.bottomSheet]}>
             <View
               style={{
-                height: 60,
-                marginHorizontal: 10,
+                position: "relative",
+                display: "flex",
+                flex: 1,
+                justifyContent: "space-between",
               }}
             >
-              <Button
-                label={"Continue"}
-                disabled={!selectedSubject?.subjectName.length}
-                className={EditButton}
-                onPress={() => Continue()}
-              />
+              <View>
+                <View style={{ display: "flex" }}>
+                  <Text style={TextStyles.heading}>Subject</Text>
+                  <Text style={TextStyles.subText}>
+                    Select a subject to proceed
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    paddingVertical: 20,
+                    borderTopWidth: 1,
+                    borderColor: Colors.light_gray_05,
+                  }}
+                >
+                  <Student
+                    themeColor={true}
+                    selectedSubject={setPressedSubject}
+                    subject={selectedSubject?.subjectName}
+                    scrollable={true}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  height: 60,
+                  marginHorizontal: 10,
+                }}
+              >
+                <Button
+                  label={"Continue"}
+                  disabled={!pressedSubject?.subjectName?.length}
+                  className={EditButton}
+                  onPress={() => Continue()}
+                />
+              </View>
             </View>
           </View>
         </View>
+      </View>
       </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  bottomSheetContainer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: "75%",
+  bottomSheet: {
     backgroundColor: Colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: 'scroll',
-    paddingBottom: 0
+    paddingBottom: 0,
+    padding: 20,
+    display: "flex",
+    flex: 1,
   },
+  bottomSheetContainer: {
+    position: "absolute",
+    bottom: 0,
+    height: "60%",
+    width: "100%",
+  },
+  crossCloseIcon: {
+    backgroundColor: 'white',
+    height: 40,
+    width: 40,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: "auto",
+    marginRight: "auto",
+    bottom: 0,
+    margin: 10,
+  }
 });
 
 export default BotIntro;

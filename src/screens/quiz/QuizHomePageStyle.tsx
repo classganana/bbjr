@@ -147,16 +147,12 @@ export const styles = StyleSheet.create({
         fontWeight: '500',
         color: Colors.primary
     },
-    bottomSheetContainer: {
-        position: "absolute",
-        bottom: 0,
-        width: "100%",
-        height: "75%",
-        backgroundColor: Colors.white,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        overflow: 'scroll',
-        paddingBottom: 50
+    modalTitleContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
     },
     subjecttxt: {
         alignSelf: 'center',
@@ -207,6 +203,12 @@ export const styles = StyleSheet.create({
         // right: 5, 
         transform: [{ rotate: '270deg' }]
     },
+    verticalSeperator: {
+        width: 1,
+        borderColor: Colors.gray_20,
+        borderRightWidth: 1,
+        marginHorizontal: 10
+    },
     buttoncontainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -239,14 +241,32 @@ export const styles = StyleSheet.create({
         fontWeight: '500',
 
     },
-    crossCloseIcon: { 
-        backgroundColor: 'white', 
-        height: 40, 
-        width: 40, 
-        borderRadius: 40, 
-        justifyContent: 'center', 
+    bottomSheet: {
+        backgroundColor: Colors.white,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        overflow: 'scroll',
+        paddingBottom: 0,
+        padding: 20,
+        display: "flex",
+        flex: 1,
+    },
+    bottomSheetContainer: {
+        position: "absolute",
+        bottom: 0,
+        height: "60%",
+        width: "100%",
+    },
+    crossCloseIcon: {
+        backgroundColor: 'white',
+        height: 40,
+        width: 40,
+        borderRadius: 40,
+        justifyContent: 'center',
         alignItems: 'center',
-        top: "18%",
-        left: "45%"
+        marginLeft: "auto",
+        marginRight: "auto",
+        bottom: 0,
+        margin: 10,
     }
 });

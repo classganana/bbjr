@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Colors } from '../../styles/colors';
-import { ClockIcon, CrossIcon, NewBackIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
+import { ClockIcon, CopyIcon, CrossIcon, FilterIcon, NewBackIcon, Pencil, StrongBackButton, TestIcon } from '../../components/common/SvgComponent/SvgComponent';
 import Tabs from '../../components/common/Tabs/Tabs';
 import { CardData } from '../../components/quiz/QuizCard';
 import { ExamPrepQuizCard } from '../../components/quiz/ExamPrepQuizCard';
 import { useNavigation } from '@react-navigation/native';
 import { CDN, httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
+import { ChipComponent, Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { EditButton, LoginButton, TakeTest } from '../../components/common/ButttonComponent/ButtonStyles';
 import { useUser } from '../../context/UserContext';
@@ -17,6 +17,7 @@ import { UtilService } from '../../services/UtilService';
 import { ExamPrepAllChapter } from '../../components/quiz/ExamPrepAllChapter';
 import { Image } from 'react-native';
 import { ActivityIndicator } from 'react-native';
+import { TextStyles } from '../../styles/texts';
 
 interface Chapter {
     chapterName: string;
@@ -39,7 +40,7 @@ export const QuizHomePage = () => {
     const {user} = useUser();
     const [loadingText, setLoadingText] = useState('');
     const [subjectUrl, setSubjectUrl] = useState('');
-    const [tempSubject, setTempSubject] = useState('');
+    const [tempSubject, setTempSubject] = useState<Record<string, any>>({});
 
     const [subjects, setSubject] = useState([
         "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
@@ -318,8 +319,15 @@ export const QuizHomePage = () => {
         setBottomSheetVisible(false);
         setSelectedSubject(tempSubject as any);
         setSubjectToLocal(tempSubject as any);
-        setTempSubject('');
+        setTempSubject({});
       };
+
+      const changeSelectedSubject = (subject: any) => {
+        setSelectedSubject(subject as any);
+        setSubjectToLocal(subject as any);
+        setTempSubject({});
+      };
+
 
     const setTemporarySubject = (item: any) => {
         setTempSubject(item);
@@ -450,6 +458,30 @@ export const QuizHomePage = () => {
                         setTab(i)
                         UtilService.setQuizFlow(i);}} ></Tabs>
                 </View>
+                {tab == 'Exam Preparation' && 
+                <View style={[styles.buttoncontainer]}>
+                    <ScrollView horizontal style={{margin: 3}} showsHorizontalScrollIndicator={false}>
+                        <View style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', gap: 10}}>
+                            <View style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                                <TouchableOpacity onPress={() => setBottomSheetVisible(true)}>
+                                    <FilterIcon height={'20'} width={'20'} fill={Colors.black_01}/>
+                                </TouchableOpacity>
+                            </View>
+                            <ChipComponent
+                                themeColor={true}
+                                key={selectedSubject.subjectName + 'selected'}
+                                buttonData={{
+                                text: selectedSubject.subjectName,
+                                color: Colors.primary,
+                                }}
+                                isPressed={true}
+                                onPress={()=>{}}
+                            />
+                        </View>
+                        <View style={styles.verticalSeperator}></View>
+                        <Student scrollable={false} selectedSubject={(item: any) => {changeSelectedSubject(item)}} themeColor={true} subject={selectedSubject.subjectName} />
+                    </ScrollView>
+                </View>}
                 <ScrollView style={styles.tabs}>
                     {tab == "Quizzes" && <>
                     <Text style={styles.selectedOption}>{tab}</Text>
@@ -479,18 +511,17 @@ export const QuizHomePage = () => {
                             </TouchableOpacity> */}
                             {/* <Text>Selected Subject</Text> */}
 
-
-                            <View style={styles.buttoncontainer}>
-                            <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
-                                {selectedSubject?.subjectName}
-                            </Text>
-                            <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
-                                <Text>Change</Text>
-                                <View style={styles.pencil}>
-                                    <NewBackIcon height={'12'} width={'12'} fill={Colors.white} />
-                                </View>
-                            </TouchableOpacity>
-                            </View>
+                            {/* <View style={styles.buttoncontainer}>
+                                <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
+                                    {selectedSubject?.subjectName}
+                                </Text>
+                                <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
+                                    <Text>Change</Text>
+                                    <View style={styles.pencil}>
+                                        <NewBackIcon height={'12'} width={'12'} fill={Colors.white} />
+                                    </View>
+                                </TouchableOpacity>
+                            </View> */}
                             <ExamPrepAllChapter selected={allChapterSelected} onCardClick={() => { allChapterCardClick ()}}
                             id={0} title={'All Chapters'} infoText={''} imageUrl={subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
                         </View>
@@ -506,25 +537,25 @@ export const QuizHomePage = () => {
                                 {!multiSelect && <Text style={styles.crossMultiSelect}>Select Multiple</Text>}
                             </TouchableOpacity>
                         </View>
-                     <View style={{display: 'flex', flexDirection: 'column', gap: 5}}>
-                        {loading ? (
-                            <ActivityIndicator size="large" color={Colors.primary} />
-                        ) : (
-                            <>
-                                {data && data.length === 0 && (
-                                    <Text style={{fontSize: 100}}>No Data</Text>
-                                )}
-                                {data && data.map((item) => (
-                                    <ExamPrepQuizCard
-                                    key={item.id}
-                                    score={item.score}
-                                    {...item}
-                                    onCardClick={(i) => updateList(i)}
-                                    />
-                                ))}
-                            </>
-                        )}
-                    </View>
+                        <View style={{display: 'flex', flexDirection: 'column', gap: 5}}>
+                            {loading ? (
+                                <ActivityIndicator size="large" color={Colors.primary} />
+                            ) : (
+                                <>
+                                    {data && data.length === 0 && (
+                                        <Text style={{fontSize: 100}}>No Data</Text>
+                                    )}
+                                    {data && data.map((item) => (
+                                        <ExamPrepQuizCard
+                                        key={item.id}
+                                        score={item.score}
+                                        {...item}
+                                        onCardClick={(i) => updateList(i)}
+                                        />
+                                    ))}
+                                </>
+                            )}
+                        </View>
                     </>
                     }
                 </ScrollView>
@@ -600,39 +631,68 @@ export const QuizHomePage = () => {
                 }
 
                 <Modal
+                    style={{ borderRadius: 300 }}
                     animationType="fade"
                     transparent={true}
                     visible={bottomSheetVisible}
                     onRequestClose={() => setBottomSheetVisible(false)}
                 >
-                    <View style={{ backgroundColor: 'rgba(0, 0, 0,0.6)', flex: 1 }}>
-                        <Pressable accessibilityLabel={"Close Icon"} style={styles.crossCloseIcon} onPress={() => setBottomSheetVisible(false)}>
-                            <CrossIcon height={25} width={25} fill={'black'} />
+                    <View style={{ backgroundColor: "rgba(0, 0, 0,0.3)", flex: 1}}>
+                    <View style={styles.bottomSheetContainer}>
+                        <Pressable
+                            accessibilityLabel={"Close Icon"}
+                            style={styles.crossCloseIcon}
+                            onPress={() => setBottomSheetVisible(false)}
+                            >
+                        <CrossIcon height={25} width={25} fill={"black"} />
                         </Pressable>
-                        <View style={styles.bottomSheetContainer}>
-                            <Text style={styles.subjecttxt}>Subject</Text>
-                            <ScrollView style={{ borderTopWidth: 1, borderColor: Colors.light_gray_05, height: "30%" }}>
-                                <Student selectedSubject={(item: any) => setTempSubject(item)} themeColor={true} subject={selectedSubject.subjectName} />
-                            </ScrollView>
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    gap: 5,
-                                    position: "absolute",
-                                    bottom: 0,
-                                    paddingHorizontal: 20,
+                        <View style={[styles.bottomSheet]}>
+                        <View
+                            style={{
+                            position: "relative",
+                            display: "flex",
+                            flex: 1,
+                            justifyContent: "space-between",
+                            }}
+                        >
+                            <View>
+                                <View style={{ display: "flex" }}>
+                                    <Text style={TextStyles.heading}>Change Subject</Text>
+                                    <Text style={TextStyles.subText}>
+                                    Select a subject to proceed
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
                                     paddingVertical: 20,
-                                    width: '100%',
-                                }}
+                                    borderTopWidth: 1,
+                                    borderColor: Colors.light_gray_05,
+                                    }}
+                                >
+                                    <Student
+                                    themeColor={true}
+                                    selectedSubject={(item: any) => setTempSubject(item)}
+                                    subject={selectedSubject?.subjectName}
+                                    scrollable={true}
+                                    />
+                                </View>
+                            </View>
+                            <View
+                            style={{
+                                height: 60,
+                                marginHorizontal: 10,
+                            }}
                             >
                                 <Button
-                                    label={'Continue'}
-                                    disabled={tempSubject.length == 0}
+                                    label={"Continue"}
+                                    disabled={!tempSubject?.subjectName}
                                     className={EditButton}
                                     onPress={() => setSubjectAndCloseModal()}
                                 />
                             </View>
                         </View>
+                        </View>
+                    </View>
                     </View>
                 </Modal>
             </View>

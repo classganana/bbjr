@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { EditButton } from "../../common/ButttonComponent/ButtonStyles";
 import { Button } from "../../common/ButttonComponent/Button";
+import { TextStyles } from "../../../styles/texts";
 
 type Props = {
   onSendClick: (selectedOption: string) => void;
@@ -50,11 +51,6 @@ export const Aiinput = ({CloseModal, onSendClick, onSubjectChange, openPopUp, ne
     if (chatSubject && chatSubject.length > 1) {
       setNewUser(false);
     }
-  }
-
-  const Continue = () => {
-    setBottomSheetVisible(false);
-    onSubjectChange(selectedSubject);
   }
 
   const closeSubjectModal = () => {
@@ -102,6 +98,14 @@ export const Aiinput = ({CloseModal, onSendClick, onSubjectChange, openPopUp, ne
     }
     setText("");
   }
+
+  const [pressedSubject, setPressedSubject] = useState<Record<string, any>>({});
+  const Continue = () => {
+    if (pressedSubject) {
+        setBottomSheetVisible(false);
+        onSubjectChange(pressedSubject);
+    }
+  };
 
   return (
     <View style={styles.Container}>
@@ -154,29 +158,62 @@ export const Aiinput = ({CloseModal, onSendClick, onSubjectChange, openPopUp, ne
         animationType="fade"
         transparent={true}
         visible={bottomSheetVisible}
-        onRequestClose={() => setBottomSheetVisible(false)}
+        onRequestClose={() => closeSubjectModal()}
       >
-        <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
-          <Pressable style={styles.crossCloseIcon} onPress={() => closeSubjectModal()}>
-            <CrossIcon
-              height={25} width={25} fill={'black'} />
-          </Pressable>
+        <View style={{ backgroundColor: "rgba(0, 0, 0,0.3)", flex: 1}}>
           <View style={styles.bottomSheetContainer}>
-            <Student
-              themeColor={true}
-              selectedSubject={(item: any) => setSubjectAndCloseModal(item)} subject={selectedSubject?.subjectName} />
-            <View
-              style={{
-                height: 60,
-                marginHorizontal: 10
-              }}
-            >
-              <Button
-                label={'Continue'}
-                disabled={!selectedSubject?.subjectName?.length}
-                className={EditButton}
-                onPress={() => Continue()}
-              />
+            <Pressable
+                  accessibilityLabel={"Close Icon"}
+                  style={styles.crossCloseIcon}
+                  onPress={() => closeSubjectModal()}
+                >
+              <CrossIcon height={25} width={25} fill={"black"} />
+            </Pressable>
+            <View style={[styles.bottomSheet]}>
+              <View
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  flex: 1,
+                  justifyContent: "space-between",
+                }}
+              >
+                <View>
+                  <View style={{ display: "flex" }}>
+                    <Text style={TextStyles.heading}>Change Subject</Text>
+                    <Text style={TextStyles.subText}>
+                      Select a subject to proceed
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      paddingVertical: 20,
+                      borderTopWidth: 1,
+                      borderColor: Colors.light_gray_05,
+                    }}
+                  >
+                    <Student
+                      themeColor={true}
+                      selectedSubject={setPressedSubject}
+                      subject={selectedSubject?.subjectName}
+                      scrollable={true}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: 60,
+                    marginHorizontal: 10,
+                  }}
+                >
+                  <Button
+                    label={"Continue"}
+                    disabled={!pressedSubject?.subjectName?.length}
+                    className={EditButton}
+                    onPress={() => Continue()}
+                  />
+                </View>
+              </View>
             </View>
           </View>
         </View>
@@ -270,17 +307,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     gap: 14,
   },
-  bottomSheetContainer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: "75%",
-    backgroundColor: Colors.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    overflow: 'scroll',
-    paddingBottom: 0
-  },
   closeButton: {
     flexDirection: "row",
     bottom: 10,
@@ -307,6 +333,22 @@ const styles = StyleSheet.create({
     position: "absolute",
     fontSize: 400,
   },
+  bottomSheet: {
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: 'scroll',
+    paddingBottom: 0,
+    padding: 20,
+    display: "flex",
+    flex: 1,
+  },
+  bottomSheetContainer: {
+    position: "absolute",
+    bottom: 0,
+    height: "60%",
+    width: "100%",
+  },
   crossCloseIcon: {
     backgroundColor: 'white',
     height: 40,
@@ -314,7 +356,9 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    top: "18%",
-    left: "45%"
+    marginLeft: "auto",
+    marginRight: "auto",
+    bottom: 0,
+    margin: 10,
   }
 });

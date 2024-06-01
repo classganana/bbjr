@@ -283,7 +283,7 @@ export const BotScreen = () => {
     }
   };
 
-  const setSubjectAndCloseModal = (item: any) => {
+  const setSelectedSubjectAndMarkUser = (item: any) => {
     setNewUser(false);
     setSelectedSubject(item);
   };
@@ -293,11 +293,12 @@ export const BotScreen = () => {
       {!subject ? (
         <BotIntro
           onSubjectChange={(item: any) => {
+            setSelectedSubject(item)
             setSubject(item.subjectName);
             setSubjectModal(false);
           }}
           selectedSubject={selectedSubject}
-          setSubjectAndCloseModal={setSubjectAndCloseModal}
+          setSelectedSubjectAndMarkUser={setSelectedSubjectAndMarkUser}
         />
       ) : (
         <KeyboardAvoidingView
@@ -400,7 +401,7 @@ export const BotScreen = () => {
                   setSubjectModal(false);
                 }}
                 selectedSubject={selectedSubject}
-                setSubjectAndCloseModal={setSubjectAndCloseModal}
+                setSubjectAndCloseModal={setSelectedSubjectAndMarkUser}
                 setSelectedSubject={setSelectedSubject}
                 newUser={newUser}
                 setNewUser={setNewUser}
