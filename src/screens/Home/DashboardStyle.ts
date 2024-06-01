@@ -116,13 +116,14 @@ export const DashboardStyle = StyleSheet.create({
         marginBottom: 10
     },
     optionTitle: {
+        height: 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 2,
         paddingHorizontal: 5,
         // borderBottomColor: Colors.primary,
         // borderBottomWidth: 1/2,
-        marginBottom: 10
+        marginBottom: 2
     },
     viewAllBlock: {
       borderBlockColor: Colors.primary,

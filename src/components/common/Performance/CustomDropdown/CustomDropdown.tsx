@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
-import { Colors } from '../../../../styles/colors';
 
 interface DropdownProps {
   options: string[];
@@ -82,7 +81,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   optionText: {
-    padding: 10,
+    height: 48,
+    padding: 12,
     fontSize: 16,
   },
 });

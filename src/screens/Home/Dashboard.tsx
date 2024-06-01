@@ -41,20 +41,20 @@ export const Dashboard = () => {
     const [promptsForRepeatUser, setPromptsForRepeatUser] = useState<any>(null)
     const [lastChatQuestion, setLastChatQuestion] = useState("");
     const images: { [key: number]: NodeRequire } = {
-        1: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f1.png'},
-        2: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f2.png'},
-        3: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f3.png'},
-        4: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f4.png'},
-        5: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f5.png'},
-        6: {uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f6.png'},
-      };
+        1: { uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f1.png' },
+        2: { uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f2.png' },
+        3: { uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f3.png' },
+        4: { uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f4.png' },
+        5: { uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f5.png' },
+        6: { uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f6.png' },
+    };
 
     useFocusEffect(
         React.useCallback(() => {
-        // here we call api to update the data on home page
-          console.log("hii")
+            // here we call api to update the data on home page
+            console.log("hii")
         }, [])
-      );
+    );
 
     useEffect(() => {
         AsyncStorage.setItem('user', JSON.stringify(user));
@@ -152,7 +152,7 @@ export const Dashboard = () => {
                 <Text style={{ display: 'flex', fontSize: 16, fontWeight: '500' }}>Your last question to Ezy was</Text>
                 <Text style={DashboardStyle.promptText}>
                     {lastQuestion}
-                    </Text>
+                </Text>
             </View>
             )
         }
@@ -171,7 +171,7 @@ export const Dashboard = () => {
 
     const navigateToProfilePage = () => {
         navigator.navigate('Profile' as never);
-        navigator.navigate('Profile' as never, { screen: 'EditProfile'} as never);
+        navigator.navigate('Profile' as never, { screen: 'EditProfile' } as never);
     }
 
 
@@ -184,33 +184,33 @@ export const Dashboard = () => {
             <ScrollView style={DashboardStyle.body}>
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>
-                    <TouchableOpacity
-                        onPress={navigateToProfilePage}
-                        accessible={true}
-                        accessibilityLabel={user?.name ? `Profile picture of ${user.name}` : "Profile picture"}
-                        accessibilityRole="button"
-                        >
-                        {user && user?.avatarId ? (
-                            <Image
+                        <TouchableOpacity
+                            onPress={navigateToProfilePage}
                             accessible={true}
                             accessibilityLabel={user?.name ? `Profile picture of ${user.name}` : "Profile picture"}
-                            accessibilityRole="image"
-                            style={DashboardStyle.avatarImage}
-                            source={{ uri: `https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f${user.avatarId}.png` }}
-                            />
-                        ) : (
-                            <CircleInitials
-                            accessible={true}
-                            accessibilityLabel={user?.name ? `Profile initials of ${user.name}` : "Profile initials"}
-                            accessibilityRole="image"
-                            name={user?.name}
-                            size={40}
-                            />
-  )}
-</TouchableOpacity>
+                            accessibilityRole="button"
+                        >
+                            {user && user?.avatarId ? (
+                                <Image
+                                    accessible={true}
+                                    accessibilityLabel={user?.name ? `Profile picture of ${user.name}` : "Profile picture"}
+                                    accessibilityRole="image"
+                                    style={DashboardStyle.avatarImage}
+                                    source={{ uri: `https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f${user.avatarId}.png` }}
+                                />
+                            ) : (
+                                <CircleInitials
+                                    accessible={true}
+                                    accessibilityLabel={user?.name ? `Profile initials of ${user.name}` : "Profile initials"}
+                                    accessibilityRole="image"
+                                    name={user?.name}
+                                    size={40}
+                                />
+                            )}
+                        </TouchableOpacity>
 
                         <Text style={{ fontWeight: '400', fontSize: 18, color: "#4A4A4A" }}>Hello! {'\n'}
-                        <Text style={{ fontWeight: '600', fontSize: 18 }}>
+                            <Text style={{ fontWeight: '600', fontSize: 18 }}>
                                 {user?.name}
                             </Text>
                         </Text>
@@ -225,22 +225,22 @@ export const Dashboard = () => {
                     </View>
                     <View style={DashboardStyle.optionsCard}>
                         <TouchableWithoutFeedback onPress={function (): void {
-                                    moveToExploreQuizPage()
-                                }}>
-                        <View style={[DashboardStyle.option]}>
-                            <View style={DashboardStyle.optionHeader}>
-                                <Sprit height={'30'} width={'30'} fill={'red'} />
-                                <View>
-                                    {noOfQuiz != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfQuiz}</Text>}
-                                    {/* <Text style={DashboardStyle.optionHeaderInfoText}>Quizzes</Text> */}
+                            moveToExploreQuizPage()
+                        }}>
+                            <View style={[DashboardStyle.option]}>
+                                <View style={DashboardStyle.optionHeader}>
+                                    <Sprit height={'30'} width={'30'} fill={'red'} />
+                                    <View>
+                                        {noOfQuiz != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfQuiz}</Text>}
+                                        {/* <Text style={DashboardStyle.optionHeaderInfoText}>Quizzes</Text> */}
+                                    </View>
                                 </View>
-                            </View>
-                            <Text style={DashboardStyle.optionCardHeading}>Quizzes</Text>
-                            <Text style={DashboardStyle.optionBodyDescription}>
-                                {noOfQuiz == 0 ? "Fortify your knowledge with our quizzes!" :
-                                    `You have played ${noOfQuiz == 1 ? '': 'total'} ${noOfQuiz} ${noOfQuiz == 1 ? 'quiz in the': 'quizzes'} last month!`}
-                            </Text>
-                            {/* {<View style={{marginLeft: 10}}> */}
+                                <Text style={DashboardStyle.optionCardHeading}>Quizzes</Text>
+                                <Text style={DashboardStyle.optionBodyDescription}>
+                                    {noOfQuiz == 0 ? "Fortify your knowledge with our quizzes!" :
+                                        `You have played ${noOfQuiz == 1 ? '' : 'total'} ${noOfQuiz} ${noOfQuiz == 1 ? 'quiz in the' : 'quizzes'} last month!`}
+                                </Text>
+                                {/* {<View style={{marginLeft: 10}}> */}
                                 {/* <IconButton className={OutlinePlaneButton} onPress={function (): void {
                                     moveToExploreQuizPage()
                                 }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
@@ -248,12 +248,12 @@ export const Dashboard = () => {
                                     <ArrowLeft height={20} width={20} fill={'black'} />
                                 </View>
                                 </View>} label={'Take Quiz'} pos={'right'}></IconButton>                                 */}
-                            {/* </View>} */}
-                        </View>
-                                </TouchableWithoutFeedback>
+                                {/* </View>} */}
+                            </View>
+                        </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback onPress={function (): void {
-                                    moveToExploreExamPrepPage()
-                                }}>
+                            moveToExploreExamPrepPage()
+                        }}>
                             <View style={[DashboardStyle.option]}>
                                 <View style={DashboardStyle.optionHeader}>
                                     <View style={{ height: 30, width: 30, borderRadius: 34, padding: 5, backgroundColor: '#D6E0FC' }}>
@@ -281,7 +281,7 @@ export const Dashboard = () => {
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
-                <Text style={[DashboardStyle.boostYourKnowledge,{marginBottom: 10, fontWeight: '500'}]}>Solve any doubt</Text>
+                <Text style={[DashboardStyle.boostYourKnowledge, { marginBottom: 10, fontWeight: '500' }]}>Solve any doubt</Text>
                 <LinearGradient
                     colors={['#E3E8FF', 'rgba(255, 255, 254, 0.27)', '#C8D2FF']}
                     start={{ x: 0, y: 0 }}
@@ -292,25 +292,25 @@ export const Dashboard = () => {
                         {!lastChatQuestion.length && <Text style={DashboardStyle.botHeading}>Start Learning with AI Chat</Text>}
                         {!lastChatQuestion.length && <Text style={DashboardStyle.botheadingInfo}>
                             Introducing to you - {"\n"}
-                            Ezy Your Personal Study Buddy 🚀 
+                            Ezy Your Personal Study Buddy 🚀
                         </Text>}
                     </View>
-                        {lastChatQuestion && lastChatQuestion.length && <View style={{ width: "80%" }}>
-                            {promptsForRepeatUser}
+                    {lastChatQuestion && lastChatQuestion.length && <View style={{ width: "80%" }}>
+                        {promptsForRepeatUser}
                     </View>}
                     <View style={DashboardStyle.botBlockDesc}>
-                         <Text style={{fontSize: 16}}>Chat with Ezy</Text>
-                         {/* <Text style={{fontSize: 16}}>Chat with Ezy</Text> */}
+                        <Text style={{ fontSize: 16 }}>Chat with Ezy</Text>
+                        {/* <Text style={{fontSize: 16}}>Chat with Ezy</Text> */}
                         {/* <View style={{ flex: 1}}> */}
-                            <TouchableOpacity style={DashboardStyle.botButton} onPress={() => moveToExploreBotPage()}>
-                                <Text style={DashboardStyle.botButtonText}>{lastChatQuestion.length ? "Let's Continue " : 'Get Started'}</Text>
-                                <Send height={'20'} width={'20'} fill={'white'} />
-                            </TouchableOpacity>
-                            {/* <IconButton className={PrimaryIconDefaultButton}
+                        <TouchableOpacity style={DashboardStyle.botButton} onPress={() => moveToExploreBotPage()}>
+                            <Text style={DashboardStyle.botButtonText}>{lastChatQuestion.length ? "Let's Continue " : 'Get Started'}</Text>
+                            <Send height={'20'} width={'20'} fill={'white'} />
+                        </TouchableOpacity>
+                        {/* <IconButton className={PrimaryIconDefaultButton}
                                 onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={lastChatQuestion.length ? "Let's Continue " : 'Get Started'} pos={'right'} backgroundColor={Colors.primary} /> */}
                         {/* </View> */}
                     </View>
-                    <Image style={DashboardStyle.botGif} 
+                    <Image style={DashboardStyle.botGif}
                         source={{ uri: "https://d1n3r5qejwo9yi.cloudfront.net/assets/bot.gif" }} />
                 </LinearGradient>
                 {/* <Text style={{ color: Colors.primary, width: "80%" }}>Congratulations! You're ahead of 60% of our users. Let's aim even higher!</Text> */}
@@ -326,10 +326,10 @@ export const Dashboard = () => {
                 </View>
                     :
                     <>
-                    <Text style={[DashboardStyle.boostYourKnowledge, { marginTop: 12 }]}>Continue Practice</Text>
-                    <ContinutPractice onPress={() => {
-                        moveToExploreExamPrepPage()
-                    }} />
+                        <Text style={[DashboardStyle.boostYourKnowledge, { marginTop: 12 }]}>Continue Practice</Text>
+                        <ContinutPractice onPress={() => {
+                            moveToExploreExamPrepPage()
+                        }} />
                     </>
                 }
             </ScrollView>
