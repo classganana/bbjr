@@ -110,7 +110,8 @@ export const QuizQuestionsPage = () => {
     const setQuestionsInLocal = async () => {
         const quizDetails = {
             timeTaken: timer,
-            quizQuestionList
+            quizQuestionList,
+            chapterNames: reqObject?.chapterName
         }
         AsyncStorage.setItem('questions', JSON.stringify(quizDetails));
     }
@@ -199,7 +200,8 @@ export const QuizQuestionsPage = () => {
         try {
             const quizDetails = {
                 timeTaken: timer,
-                quizQuestionList
+                quizQuestionList,
+                chapterNames: reqObject?.chapterName
             }
             quizQuestionList['timeTaken'] = timer;
             const list = JSON.stringify(quizDetails)
