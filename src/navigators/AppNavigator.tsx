@@ -27,7 +27,10 @@ export const AppNavigator = () => {
        const userData: UserType = JSON.parse(user as string);
         if(userData && userData.userId) {
             setUser(userData);
-            navigation.navigate('DashboardNavigator' as never)
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'DashboardNavigator' } as never] // Replace 'Home' with the actual name of your main screen
+              });
         } else {
             navigation.navigate('OnBoarding' as never)  
         }
