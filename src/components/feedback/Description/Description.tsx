@@ -55,7 +55,7 @@ export const Description: React.FC<DescriptionComponentProps> = ({
     <TouchableWithoutFeedback onPress={handleTapOutside}>
       <View>
         {/* Title */}
-        <Text style={styles.title}>{title}</Text>
+       {title && <Text style={styles.title}>{title}</Text>}
         {/* TextInput */}
         <TextInput
           style={styles.input}

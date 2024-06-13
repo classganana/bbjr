@@ -35,15 +35,15 @@ function ReportComponent(props: ReportProps) {
             </View>
           </TouchableOpacity>
         ))}
-        <View style={{marginTop: -20}}>
+        <View style={{marginVertical: 10, marginHorizontal: 2}}>
           <Description placeholder={'Write your feedback'} title={''} />
         </View>
         <View
           style={{
             flexDirection: "row",
             gap: 20,
-            paddingHorizontal: 10,
-            paddingVertical: 20,
+            paddingHorizontal: 5,
+            paddingVertical: 10,
             justifyContent: "space-between",
             width: '100%'
             }}>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     color: Colors.black_01,
     fontFamily: 'Inter-Bold',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
     marginBottom: 16
   },
   text: {
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 0,
     },
+    marginHorizontal: 2,
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2, // for Android shadow
