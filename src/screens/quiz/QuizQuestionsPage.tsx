@@ -41,7 +41,7 @@ export const QuizQuestionsPage = () => {
     const [quizType, setQuizType] = useState<string | null>('');
     const [quizFlow, setQuizFlow] = useState<string | null>('');
     const [quizzId, setQuizzId] = useState<string | null>('');
-    const {user} = useUser();
+    const { user } = useUser();
     const [subject, setSubject] = useState<string | null>('');
     const reportOptions = ['Incorrect or incomplete question', 'Incorrect or incomplete Options', 'Formatting or Image Quality issue'];
 
@@ -60,15 +60,15 @@ export const QuizQuestionsPage = () => {
             quizList = JSON.parse(quizList);
             const matchingQuizzes = quizList.filter((quiz: any) => {
                 if (!Array.isArray(quiz.chapterName) || !Array.isArray(route?.params?.chapterName)) {
-                  return false; // Handle cases where either value is not an array
+                    return false; // Handle cases where either value is not an array
                 }
-            
+
                 const setA = new Set(quiz.chapterName);
                 const setB = new Set(route?.params?.chapterName);
-            
+
                 return setA.size === setB.size &&
-                       [...setA].every((item) => setB.has(item))
-              }); 
+                    [...setA].every((item) => setB.has(item))
+            });
         }
     }
 
@@ -87,25 +87,25 @@ export const QuizQuestionsPage = () => {
 
     useFocusEffect(
         useCallback(() => {
-          const fetchData = async () => {
-            getQuizType();
-            getQuizFlow();
-            // add time score dataType screenpage
-            setQuizQuestionList(route.params.mcqs);
-            await AsyncStorage.removeItem('questions');
-            setTimer(1000);
-            // setTimer(route.params.time);
-            setQuizzId(route.params.quizzId);
-            setQuestionsInLocal();
-          };
-      
-          fetchData();
-      
-          return () => {
-            // Cleanup function if necessary
-          };
+            const fetchData = async () => {
+                getQuizType();
+                getQuizFlow();
+                // add time score dataType screenpage
+                setQuizQuestionList(route.params.mcqs);
+                await AsyncStorage.removeItem('questions');
+                setTimer(1000);
+                // setTimer(route.params.time);
+                setQuizzId(route.params.quizzId);
+                setQuestionsInLocal();
+            };
+
+            fetchData();
+
+            return () => {
+                // Cleanup function if necessary
+            };
         }, [route.params])
-      );
+    );
 
     const setQuestionsInLocal = async () => {
         const quizDetails = {
@@ -136,7 +136,7 @@ export const QuizQuestionsPage = () => {
 
     useEffect(() => {
         setQuestionsInLocal();
-    },[quizQuestionList])
+    }, [quizQuestionList])
 
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds / 60);
@@ -208,7 +208,7 @@ export const QuizQuestionsPage = () => {
             await AsyncStorage.setItem('questions', list);
             const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
             const quizType = await UtilService.getQuizType();
-            if(quizType == 'practice') {
+            if (quizType == 'practice') {
                 UtilService.updateLocalPracticeMcqs(reqObject?.chapterName, quizQuestionList)
                 submitPractice(UserAnswerList)
             } else {
@@ -237,7 +237,7 @@ export const QuizQuestionsPage = () => {
         tempRequest.studentName = user?.name;
         tempRequest.screenPage = quizFlow != 'Quizzes' ? 'examPreparation' : `quizzes`
         tempRequest.quizzType = quizFlow == 'Quizzes' ? 'class' : `chapter`;
-        if(quizFlow == 'Quizzes') delete tempRequest.chapterName;
+        if (quizFlow == 'Quizzes') delete tempRequest.chapterName;
 
         setReqObject(tempRequest);
         const reqObj = {
@@ -247,7 +247,7 @@ export const QuizQuestionsPage = () => {
             "requestBody": reqObject
         }
 
-        if(quizType != 'practice') {
+        if (quizType != 'practice') {
             return httpClient.post(`auth/c-auth`, reqObj)
                 .then((res) => {
                     if (res.data.statusCode == 200) {
@@ -261,7 +261,7 @@ export const QuizQuestionsPage = () => {
 
     const submitPractice = async (answerList: questionWithTime) => {
         const q = {
-            mcqId : currentQuestion.mcqId,
+            mcqId: currentQuestion.mcqId,
             selectedAnswer: currentQuestion.selectedAnswer
         }
 
@@ -277,8 +277,8 @@ export const QuizQuestionsPage = () => {
         tempRequest.studentName = user?.name;
         tempRequest.screenPage = quizFlow != 'Quizzes' ? 'examPreparation' : `quizzes`;
         tempRequest.quizzType = quizFlow == 'Quizzes' ? 'class' : `chapter`;
-        
-        if(quizFlow == 'Quizzes') delete tempRequest.chapterName;
+
+        if (quizFlow == 'Quizzes') delete tempRequest.chapterName;
 
         tempRequest.dataType = "school";
         setReqObject(tempRequest);
@@ -292,7 +292,7 @@ export const QuizQuestionsPage = () => {
         return httpClient.post(`auth/c-auth`, reqObj)
             .then((res) => {
                 if (res.data.statusCode == 200) {
-                    if(currentQuestionIndex === quizQuestionList.length - 1){
+                    if (currentQuestionIndex === quizQuestionList.length - 1) {
                         userEndsThequiz();
                     } else {
                         setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -308,13 +308,13 @@ export const QuizQuestionsPage = () => {
 
     const userEndsThequiz = async () => {
         const UserAnswerList = JSON.parse((await AsyncStorage.getItem('questions')) as string);
-        if(quizType != 'practice') {
+        if (quizType != 'practice') {
             submitQuiz(UserAnswerList);
         } else {
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'QuizHomepage' } as never] // Replace 'Home' with the actual name of your main screen
-              });
+            });
             // navigation.navigate('QuizHomepage' as never, { replace: true } as never);
         }
     }
@@ -327,25 +327,32 @@ export const QuizQuestionsPage = () => {
             className: user?.class,
             studentId: user?.userId,
             feedbackOn: "mcqs",
-            msg: [
-                {"feedback": "negative"},
-                {"feedbackMessage": feedback},
-            ],
+            msg: {
+                "feedback": "negative",
+                "feedbackMessage": feedback,
+            },
             mcqId: currentQuestion.mcqId,
-          }
-          const reqObj = {
+        }
+        const requestObject = {
             "service": "ml_service",
             "endpoint": `/feedback`,
             "requestMethod": "POST",
             "requestBody": req
         }
 
-        const res = await httpClient.post(`auth/c-auth`, reqObj);
-        if (res.data.statusCode == 200) {
-            setBottomSheetVisible(false);
-            ToastService("Thanks, we will look into the issue.")
-        } else {
-            ToastService("Something went wrong! please try again later.")
+        try {
+            const response = await httpClient.post(`auth/c-auth`, requestObject);
+
+            if (response.data.statusCode === 200) {
+                setBottomSheetVisible(false);
+                ToastService("Thanks, we will look into the issue.");
+            } else {
+                throw new Error("Failed to report feedback");
+            }
+        } catch (error) {
+            console.error("Error reporting feedback:", error);
+            ToastService("Something went wrong! Please try again later.");
+        } finally {
             setBottomSheetVisible(false);
             navigateToNextQuestion();
         }
@@ -364,20 +371,20 @@ export const QuizQuestionsPage = () => {
                 <View style={styles.heading}>
                     <View style={styles.headingLeft}>
                         {/* <Text style={styles.headingTitle}>{quizType == 'practice' ? 'Practice': 'Test'}</Text> */}
-                        <Button className={SmallOutlineButton} 
-                            label={quizType == 'practice' ? 'Finish': 'Finish'} 
+                        <Button className={SmallOutlineButton}
+                            label={quizType == 'practice' ? 'Finish' : 'Finish'}
                             disabled={false} onPress={() => {
                                 setModalVisible(true)
-                                }} />
+                            }} />
                         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.headingInfo}>{reqObject?.chapterName}</Text>
                     </View>
                     <View style={styles.headingRight}>
                         <View style={{ display: 'flex', gap: 2, flex: 1, alignItems: "flex-end", }}>
-                        {timer > 0 && 
-                            <View style={styles.timerBlock}>
-                                <Text style={styles.timerText}>Time Left:</Text>
-                                <Text style={styles.timer}>{formatTime(timer)}</Text>
-                            </View>}
+                            {timer > 0 &&
+                                <View style={styles.timerBlock}>
+                                    <Text style={styles.timerText}>Time Left:</Text>
+                                    <Text style={styles.timer}>{formatTime(timer)}</Text>
+                                </View>}
                         </View>
                     </View>
                 </View>
@@ -386,14 +393,14 @@ export const QuizQuestionsPage = () => {
                 <View style={styles.questionInfo}>
                     <View style={styles.questionInfoDropDown}>
                         <Text style={styles.questionInfoText}>Question {currentQuestionIndex + 1}/{quizQuestionList.length}</Text>
-                        <TouchableOpacity onPress={() => setQuestionInfoSheet(true)} style={{height: 40, width: 40}}>
-                            <InfoIcon accessible={true} accessibilityLabel={"Quiz Info"} height={'20'} width={'20'} fill={'black'} />
+                        <TouchableOpacity onPress={() => setQuestionInfoSheet(true)} style={{ height: 40, width: 40 }}>
+                            <InfoIcon accessible={true} accessibilityLabel={"Quiz Info"} height={'40'} width={'30'} fill={'black'} />
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity
                         onPress={() => setBottomSheetVisible(true)}
                     >
-                        <ReportIcon height={'18'} width={'18'} fill={'white'} accessible={true} accessibilityLabel={"Report"}  />
+                        <ReportIcon height={'18'} width={'18'} fill={'white'} accessible={true} accessibilityLabel={"Report"} />
                     </TouchableOpacity>
                 </View>
                 <ScrollView ref={questionScrollViewRef} horizontal style={styles.questionNumbersScroll}>
@@ -405,14 +412,14 @@ export const QuizQuestionsPage = () => {
                                     styles.questionNumber,
                                     currentQuestionIndex === index && styles.activeQuestion,
                                     quizQuestionList[index].selectedAnswer && styles.activeQuestion,
-                                    quizType == 'practice' && quizQuestionList[index].answer == quizQuestionList[index].selectedAnswer  && { backgroundColor: '#4BAE4F'},
-                                    quizType == 'practice' && quizQuestionList[index].selectedAnswer && quizQuestionList[index].answer != quizQuestionList[index].selectedAnswer  && { backgroundColor: 'red'},
+                                    quizType == 'practice' && quizQuestionList[index].answer == quizQuestionList[index].selectedAnswer && { backgroundColor: '#4BAE4F' },
+                                    quizType == 'practice' && quizQuestionList[index].selectedAnswer && quizQuestionList[index].answer != quizQuestionList[index].selectedAnswer && { backgroundColor: 'red' },
                                 ]}
                                 onPress={() => navigateToQuestion(index)}
                             >
                                 <Text style={[styles.questionNumberText,
-                                            currentQuestionIndex === index && {color: 'white'},
-                                            quizQuestionList[index].selectedAnswer && {color: 'white'}]}>{index + 1}</Text>
+                                currentQuestionIndex === index && { color: 'white' },
+                                quizQuestionList[index].selectedAnswer && { color: 'white' }]}>{index + 1}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -422,7 +429,7 @@ export const QuizQuestionsPage = () => {
                         question={quizQuestionList[currentQuestionIndex].question}
                         options={quizQuestionList[currentQuestionIndex].options}
                         selectedAnswer={quizQuestionList[currentQuestionIndex].selectedAnswer}
-                        onSelectOption={handleSelectOption} 
+                        onSelectOption={handleSelectOption}
                         correctAnswer={quizQuestionList[currentQuestionIndex].answer}
                         isResult={quizType == 'practice'}
                     />
@@ -431,30 +438,30 @@ export const QuizQuestionsPage = () => {
                 {
                     //    quizQuestionList[currentQuestionIndex] && quizQuestionList[currentQuestionIndex].selectedAnswer && quizType == 'practice' && <View style={styles.hintSheetContainer}>
                     quizQuestionList[currentQuestionIndex] && quizQuestionList[currentQuestionIndex].selectedAnswer && quizType == 'practice' && <View style={styles.hintSheetContainer}>
-                            <View style={styles.hintSheetContainerHeader}>
-                                <View style={styles.hintSheetContainerHeaderLeft}>
-                                    <Text style={styles.hintSheetContainerHeaderLeftText}>
-                                        Explanation
+                        <View style={styles.hintSheetContainerHeader}>
+                            <View style={styles.hintSheetContainerHeaderLeft}>
+                                <Text style={styles.hintSheetContainerHeaderLeftText}>
+                                    Explanation
+                                </Text>
+                                <View style={styles.aiGeneratedCircle}>
+                                    <Text style={{ color: Colors.primary }}>
+                                        AI Generated
                                     </Text>
-                                    <View style={styles.aiGeneratedCircle}>
-                                        <Text style={{color: Colors.primary }}>
-                                            AI Generated
-                                        </Text>
-                                    </View>                                
                                 </View>
-                                <TouchableOpacity onPress={() => {setHideHintText(!hideHintText)}} 
-                                style={[styles.hintTextButton, hideHintText && {transform: [{rotate: '90deg'}]} ]}>
-                                    <NewBackIcon accessible={true} accessibilityLabel={'Show Hint'}  height={18} width={18} fill={Colors.black_01} />
-                                </TouchableOpacity>
                             </View>
-                            {hideHintText && 
-                                <View style={styles.hintAnswer}>
-                                    <Text style={styles.hintAnswerText}>{quizQuestionList[currentQuestionIndex].explanation}</Text>
-                                </View>
-                            }
+                            <TouchableOpacity onPress={() => { setHideHintText(!hideHintText) }}
+                                style={[styles.hintTextButton, hideHintText && { transform: [{ rotate: '90deg' }] }]}>
+                                <NewBackIcon accessible={true} accessibilityLabel={'Show Hint'} height={18} width={18} fill={Colors.black_01} />
+                            </TouchableOpacity>
+                        </View>
+                        {hideHintText &&
+                            <View style={styles.hintAnswer}>
+                                <Text style={styles.hintAnswerText}>{quizQuestionList[currentQuestionIndex].explanation}</Text>
+                            </View>
+                        }
                     </View>
-                    }
-                <View> 
+                }
+                <View>
                     <View style={styles.nextQuizButton}>
                         {
                             currentQuestionIndex != 0 && <Button
@@ -484,9 +491,9 @@ export const QuizQuestionsPage = () => {
                     <View style={styles.bottomSheetContainer}>
                         <ReportComponent report={(item) => {
                             reportQuestion(item);
-                        } } closeModal={function (value: React.SetStateAction<boolean>): void {
+                        }} closeModal={function (value: React.SetStateAction<boolean>): void {
                             setBottomSheetVisible(false);
-                        } } options={reportOptions} />
+                        }} options={reportOptions} />
                     </View>
                 </View>
             </Modal>
@@ -496,9 +503,9 @@ export const QuizQuestionsPage = () => {
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}>
                 <Popup setModalVisible={setModalVisible} exit={function (value: React.SetStateAction<string>): void {
-                        userEndsThequiz();
-                        setModalVisible(!modalVisible)
-                    } } />
+                    userEndsThequiz();
+                    setModalVisible(!modalVisible)
+                }} />
             </Modal>
             <Modal
                 animationType="fade"
@@ -508,11 +515,11 @@ export const QuizQuestionsPage = () => {
             >
                 <View style={{ backgroundColor: 'rgba(0, 0, 0,0.3)', flex: 1 }}>
                     <View style={styles.bottomSheetContainer}>
-                        {reqObject && <QuizOverView chapterNames={reqObject.chapterName} time={formatTime(timer)} onCloseSheet={() => setQuestionInfoSheet(false)} questions={quizQuestionList} 
-                        clickedQuestion={function (n: number): void {
-                            setQuestionInfoSheet(false)
-                            navigateToQuestion(n);
-                        } } />}
+                        {reqObject && <QuizOverView chapterNames={reqObject.chapterName} time={formatTime(timer)} onCloseSheet={() => setQuestionInfoSheet(false)} questions={quizQuestionList}
+                            clickedQuestion={function (n: number): void {
+                                setQuestionInfoSheet(false)
+                                navigateToQuestion(n);
+                            }} />}
                     </View>
                 </View>
             </Modal>

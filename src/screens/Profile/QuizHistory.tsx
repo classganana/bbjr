@@ -10,6 +10,7 @@ import { styles } from '../quiz/QuizHomePageStyle';
 import { QuizDropDown } from '../../components/profile/QuizDropDown';
 import { Button } from '../../components/common/ButttonComponent/Button';
 import { Examprep, LoginButton } from '../../components/common/ButttonComponent/ButtonStyles';
+import { Eaction, useQuizContext } from '../../context/QuizContext';
 
 export interface Chapter {
     name: string[];
@@ -29,6 +30,7 @@ export const QuizHistory = () => {
     const {user} = useUser();
     const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation();
+    const { state, dispatch } = useQuizContext();
 
     useEffect(() => {
         AsyncStorage.removeItem('quizType');
@@ -93,12 +95,16 @@ export const QuizHistory = () => {
     }
 
     const moveToExploreQuizPage = async () => {
-        await AsyncStorage.setItem('quizFlow', 'Quizzes');
+        dispatch({
+            type: Eaction.SET_QUIZ_FLOW, payload: 'Quizzes'
+        })
         navigation.navigate('Quiz' as never);
     }
 
     const moveToExploreExamPrepPage = async () => {
-        await AsyncStorage.setItem('quizFlow', 'Exam Prep');
+        dispatch({
+            type: Eaction.SET_QUIZ_FLOW, payload: 'Exam Preparation'
+        })
         navigation.navigate('Quiz' as never);
     }
 
@@ -114,7 +120,7 @@ export const QuizHistory = () => {
             </View>
             <View style={styles.body}>
                 <View style={styles.tabs}>
-                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Prep']} onChangeTab={(i) => setTab(i)} ></Tabs>
+                    <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Preparation']} onChangeTab={(i) => setTab(i)} ></Tabs>
                 </View>
                 <ScrollView style={styles.tabs}>
                     {tab == "Quizzes" && <View style={{flex: 1}}>
@@ -139,7 +145,7 @@ export const QuizHistory = () => {
                         }
                         
                     </View>}
-                    {tab == 'Exam Prep' && <>
+                    {tab == 'Exam Preparation' && <>
                         <View>
                             <TouchableOpacity >
                                 <Text style={styles.examPreparation}>Exam Prep History</Text>

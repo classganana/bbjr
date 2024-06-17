@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native
 import { Colors } from '../../styles/colors';
 import { BasicCheck, Cross } from '../common/SvgComponent/SvgComponent';
 import { UtilService } from '../../services/UtilService';
+import { useQuizContext } from '../../context/QuizContext';
 
 
 type QuestionProps = {
@@ -23,24 +24,6 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   onSelectOption,
 }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [quizType, setQuizType] = useState<string | null>('');
-
-  useEffect(() => {
-    console.log(correctAnswer, selectedAnswer);
-    getQuizType();
-  }, [])
-
-  useEffect(() => {
-    console.log(correctAnswer, selectedAnswer);
-    getQuizType();
-  }, [selectedAnswer])
-
-
-  const getQuizType = async () => {
-    const quizType = await UtilService.getQuizType();
-    setQuizType(quizType);
-    console.log(quizType)
-  }
 
   return (
     <View style={styles.container}>
