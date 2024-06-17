@@ -25,7 +25,7 @@
         "backgroundColor": "#2947D4"
       },
       "package": "com.classganana.BBJr",
-      "versionCode": 38
+      "versionCode": 41
     },
     "web": {
       "favicon": "./assets/favicon.png"

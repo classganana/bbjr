@@ -22,7 +22,6 @@ const BottomTabSetup = () => {
     "FeedBackScreen" | "PasswordScreen" | "LoginScreen" | "PerformanceNavigator"
   >("FeedBackScreen");
   const navigation = useNavigation();
-  const [showPopup, setShowPopup] = useState(false);
   const scaleValues: { [key: string]: Animated.Value } = {
     FeedBackScreen: useRef(new Animated.Value(1)).current,
     PasswordScreen: useRef(new Animated.Value(1)).current,
@@ -233,25 +232,6 @@ const BottomTabSetup = () => {
           }}
         />
       </Tab.Navigator>
-      {/* Popup */}
-      <Modal visible={showPopup} transparent animationType="fade">
-        <TouchableOpacity
-          style={styles.popupContainer}
-          onPress={handleClosePopup}
-        >
-          <Animated.View
-            style={[
-              styles.popupContent,
-              {
-                transform: [{ translateY: popupOffset }],
-              },
-            ]}
-          >
-            {/* You can place your popup content here */}
-            <Text style={styles.popupText}>This is a Popup!</Text>
-          </Animated.View>
-        </TouchableOpacity>
-      </Modal>
     </View>
   );
 };

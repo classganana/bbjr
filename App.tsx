@@ -31,7 +31,7 @@ export default function App() {
       } else {
           setTimeout(() => {
             setSplashDone(true);
-          }, 3000)
+          }, 4000)
       }
     })
   }

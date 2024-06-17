@@ -177,10 +177,6 @@ export const Dashboard = () => {
 
     return (
         <View style={DashboardStyle.container}>
-            {/* <View style={DashboardStyle.header}>
-                <Image style={{ height: 50, width: 50 }} source={require("../../../assets/gifs/bot.gif")}></Image>
-                <Text style={DashboardStyle.brand}>{Constants.BrandName}</Text>
-            </View> */}
             <ScrollView style={DashboardStyle.body}>
                 <View style={DashboardStyle.leaderboardHeader}>
                     <View style={DashboardStyle.leaderBoardSection}>
@@ -232,7 +228,6 @@ export const Dashboard = () => {
                                     <Sprit height={'30'} width={'30'} fill={'red'} />
                                     <View>
                                         {noOfQuiz != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfQuiz}</Text>}
-                                        {/* <Text style={DashboardStyle.optionHeaderInfoText}>Quizzes</Text> */}
                                     </View>
                                 </View>
                                 <Text style={DashboardStyle.optionCardHeading}>Quizzes</Text>
@@ -240,15 +235,6 @@ export const Dashboard = () => {
                                     {noOfQuiz == 0 ? "Fortify your knowledge with our quizzes!" :
                                         `You have played ${noOfQuiz == 1 ? '' : 'total'} ${noOfQuiz} ${noOfQuiz == 1 ? 'quiz in the' : 'quizzes'} last month!`}
                                 </Text>
-                                {/* {<View style={{marginLeft: 10}}> */}
-                                {/* <IconButton className={OutlinePlaneButton} onPress={function (): void {
-                                    moveToExploreQuizPage()
-                                }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
-                                <View style={DashboardStyle.circularDiv}>
-                                    <ArrowLeft height={20} width={20} fill={'black'} />
-                                </View>
-                                </View>} label={'Take Quiz'} pos={'right'}></IconButton>                                 */}
-                                {/* </View>} */}
                             </View>
                         </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback onPress={function (): void {
@@ -261,7 +247,6 @@ export const Dashboard = () => {
                                     </View>
                                     <View>
                                         {noOfExamPrep != 0 && <Text style={DashboardStyle.optionHeaderText}>{noOfExamPrep}</Text>}
-                                        {/* <Text style={DashboardStyle.optionHeaderInfoText}>Subjects Taken</Text> */}
                                     </View>
                                 </View>
                                 <Text style={DashboardStyle.optionCardHeading}>Exam Preparation</Text>
@@ -269,14 +254,6 @@ export const Dashboard = () => {
                                     {noOfExamPrep == 0 ? "Ace your exams with our practice tests!" :
                                         "Keep Going! You're Doing Great!"}
                                 </Text>
-                                {/* {<View style={{marginLeft: 10}}><IconButton className={OutlinePlaneButton} onPress={function (): void {
-                                    moveToExploreExamPrepPage()
-                                }} icon={<View style={{ transform: [{ rotate: '180deg' }] }}>
-                                    <View style={DashboardStyle.circularDiv}>
-                                        <ArrowLeft height={20} width={20} fill={'black'} />
-                                    </View>
-                                </View>} label={'Continue'} pos={'right'}></IconButton>
-                                </View>} */}
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
@@ -300,15 +277,10 @@ export const Dashboard = () => {
                     </View>}
                     <View style={DashboardStyle.botBlockDesc}>
                         <Text style={{ fontSize: 16 }}>Chat with Ezy</Text>
-                        {/* <Text style={{fontSize: 16}}>Chat with Ezy</Text> */}
-                        {/* <View style={{ flex: 1}}> */}
                         <TouchableOpacity style={DashboardStyle.botButton} onPress={() => moveToExploreBotPage()}>
                             <Text style={DashboardStyle.botButtonText}>{lastChatQuestion.length ? "Let's Continue " : 'Get Started'}</Text>
                             <Send height={'20'} width={'20'} fill={'white'} />
                         </TouchableOpacity>
-                        {/* <IconButton className={PrimaryIconDefaultButton}
-                                onPress={() => moveToExploreBotPage()} icon={<Send height={'20'} width={'20'} fill={'white'} />} label={lastChatQuestion.length ? "Let's Continue " : 'Get Started'} pos={'right'} backgroundColor={Colors.primary} /> */}
-                        {/* </View> */}
                     </View>
                     <Image style={DashboardStyle.botGif}
                         source={{ uri: "https://d1n3r5qejwo9yi.cloudfront.net/assets/bot.gif" }} />
