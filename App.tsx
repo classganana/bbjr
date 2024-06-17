@@ -7,6 +7,7 @@ import { AppNavigator } from './src/navigators/AppNavigator';
 import AnimatedSplash from "react-native-animated-splash-screen";
 import { UserProvider } from './src/context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { QuizProvider } from './src/context/QuizContext';
 
 
 
@@ -54,7 +55,9 @@ export default function App() {
       {isSplashDone && isFontLoaded ? (
         <NavigationContainer>
           <UserProvider>
-            <AppNavigator />
+            <QuizProvider>
+              <AppNavigator />
+            </QuizProvider>
           </UserProvider>
         </NavigationContainer>
       ) : (

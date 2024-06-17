@@ -10,7 +10,7 @@ import { CDN, httpClient } from '../../services/HttpServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ChipComponent, Student } from '../../components/StudentAiAssistant/subjectbuttons/Subject';
 import { Button } from '../../components/common/ButttonComponent/Button';
-import { EditButton, LoginButton, TakeTest } from '../../components/common/ButttonComponent/ButtonStyles';
+import { EditButton, TakeTest } from '../../components/common/ButttonComponent/ButtonStyles';
 import { useUser } from '../../context/UserContext';
 import { styles } from './QuizHomePageStyle';
 import { UtilService } from '../../services/UtilService';
@@ -18,6 +18,7 @@ import { ExamPrepAllChapter } from '../../components/quiz/ExamPrepAllChapter';
 import { Image } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { TextStyles } from '../../styles/texts';
+import { Eaction, useQuizContext } from '../../context/QuizContext';
 
 interface Chapter {
     chapterName: string;
@@ -41,15 +42,9 @@ export const QuizHomePage = () => {
     const [loadingText, setLoadingText] = useState('');
     const [subjectUrl, setSubjectUrl] = useState('');
     const [tempSubject, setTempSubject] = useState<Record<string, any>>({});
-
-    const [subjects, setSubject] = useState([
-        "Maths", "Science", "Hindi", "Physics", "Biology", "Civics"
-    ]);
+    const { state, dispatch } = useQuizContext();
+    const {quizFlow, quizSubject} = state;
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-
-    const [selectedSubject, setSelectedSubject] = useState<{
-        subjectName: string;
-    }>({subjectName:""});
 
     const [allChapterSelected, setAllChapterSelected] = useState(false);
 
@@ -62,64 +57,14 @@ export const QuizHomePage = () => {
 
     useEffect(() => {
         setScreen();
-        UtilService.checkIfCDNHasTheImage(selectedSubject.subjectName).then((item) => {
-            console.log("here is URL => ", selectedSubject.subjectName);
+        UtilService.checkIfCDNHasTheImage(quizSubject).then((item) => {
             setSubjectUrl(item+ "?v="+ Date.now());
         }).catch((err) => {
-            console.log("here is error => ", err, selectedSubject.subjectName);
+            console.debug("here is error => ", err, quizSubject);
         })
 
         fetchData();
-        // const s = {
-        //     "schoolId": "default",
-        //     "boardId": user?.board,
-        //     "className": user?.class,
-        //     "studentId": user?.userId,
-        //     "screenPage": (tab == 'Quizzes') ? "quizzes" : "examPreparation",
-        //     // "subject": "Science"
-        //     "subject": selectedSubject.subjectName
-        // }
-
-        // const reqObj = {
-        //     "service": "ml_service",
-        //     "endpoint": `/explore_quizzes/data`,
-        //     "requestMethod": "POST",
-        //     "requestBody": s
-        // }
-        // httpClient.post(`auth/c-auth`, reqObj)
-        //     .then((res) => {
-        //         let list = res.data.data.quizzes
-        //         if(list && list.map) {
-        //             list = list.map((item: any, index: number) => {
-        //                 return {
-        //                     id: index,
-        //                     title: (tab == 'Quizzes') ? item.name : item.chapterName,
-        //                     infoText: 'Info about Card 1',
-        //                     imageUrl: 'https://placehold.co/400',
-        //                     done: false,
-        //                     noOfQuestions: item.totalQuestions,
-        //                     timeRequired: item.time,
-        //                     selected: false,
-        //                     score: item.score,
-        //                     practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
-        //                 }
-        //             })
-        //             setData(list);
-        //         }
-        //     });
-    },[selectedSubject?.subjectName, tab]);
-
-    // useEffect(() => {
-    //     setOptions(false);
-    //     setData([]);
-    //     AsyncStorage.removeItem('quizType');
-    //     fetchData();
-    // }, [tab])
-
-    useEffect(() => {
-        // setAvailableSubject();
-        getSubjectFromLocal();
-    }, []);
+    },[quizSubject, tab]);
 
     useEffect(() => {
         setOptions(false);
@@ -146,7 +91,7 @@ export const QuizHomePage = () => {
             // You might want to set loading state here.
             setLoading(true);
             setLoadingText("Loading");
-            const currentTab = await AsyncStorage.getItem('quizFlow');
+            const currentTab = quizFlow;
             const s = {
                 "schoolId": "default",
                 "boardId": user?.board,
@@ -154,7 +99,7 @@ export const QuizHomePage = () => {
                 "studentId": user?.userId,
                 "screenPage": (currentTab == 'Quizzes') ? "quizzes" : "examPreparation",
                 // "subject": "Science"
-                "subject": selectedSubject.subjectName
+                "subject": quizSubject
             }
 
             const reqObj = {
@@ -164,7 +109,7 @@ export const QuizHomePage = () => {
                 "requestBody": s
             }
             
-            if(selectedSubject.subjectName && selectedSubject.subjectName.length){
+            if(quizSubject && quizSubject.length){
                 const response = await httpClient.post(`auth/c-auth`, reqObj);
                 
                 // Handle successful response
@@ -183,7 +128,7 @@ export const QuizHomePage = () => {
                         selected: false,
                         score: item.score,
                         // subject: "Science"
-                        subject: selectedSubject.subjectName,
+                        subject: quizSubject,
                         practiceProgress: (item.practicedQuestions/item.totalQuestions)*100
                     }));
                     // console.log(list);
@@ -247,24 +192,12 @@ export const QuizHomePage = () => {
 
     const setSubjectToLocal = async (item: {subjectName: string}) => {
         try {
+          dispatch({ type: Eaction.SET_QUIZ_SUBJECT, payload: item.subjectName})
           await AsyncStorage.setItem('quizSubject', item.subjectName);
         } catch (e) {
           console.log("Error => ", e);
         }
       }
-    
-    const getSubjectFromLocal = async () => {
-        try {
-            const subject = await AsyncStorage.getItem('quizSubject');
-            if (subject && subject.length) {
-                setSelectedSubject({subjectName : subject});
-            } else {
-                setAvailableSubject();
-            }
-        } catch (e) {
-            console.log("Error => ", e);
-        }
-    }
 
     const resetSelection = () => {
         let tempData = data;
@@ -291,7 +224,7 @@ export const QuizHomePage = () => {
             });
             if(tem[index].selected) tem[index].selected = false;
             else tem[index].selected = true;
-            tem[index].subject = selectedSubject.subjectName;
+            tem[index].subject = quizSubject;
             setOptions(true);
             return tem;
         })
@@ -317,14 +250,14 @@ export const QuizHomePage = () => {
 
     const setSubjectAndCloseModal = () => {
         setBottomSheetVisible(false);
-        setSelectedSubject(tempSubject as any);
         setSubjectToLocal(tempSubject as any);
         setTempSubject({});
       };
 
       const changeSelectedSubject = (subject: any) => {
-        setSelectedSubject(subject as any);
-        setSubjectToLocal(subject as any);
+        dispatch({
+            type: Eaction.SET_QUIZ_SUBJECT, payload: subject.subjectName
+        })
         setTempSubject({});
       };
 
@@ -337,6 +270,10 @@ export const QuizHomePage = () => {
     const startTheQuiz = async () => {
         await AsyncStorage.removeItem('quizType');
         await AsyncStorage.setItem('quizType', 'quiz');
+        dispatch({
+            type: Eaction.SET_QUIZ_TYPE, payload: 'quiz'
+        })
+
         UtilService.setQuizType('quiz');
         setAllChapterSelected(false);
         resetSelection();
@@ -364,7 +301,6 @@ export const QuizHomePage = () => {
     const setAvailableSubject = () => {
         const reqObj = {
           "service": "ml_service",
-          // "endpoint":  `data/quizz/${board}/${className}/${subjects}`,
           "endpoint": `/subjects?board_id=${user?.board}&class_name=${user?.class}&school_id=default`,
           "requestMethod": "GET"
       }
@@ -376,14 +312,15 @@ export const QuizHomePage = () => {
             subjectName: sub.subject
           }
         })
-        setSelectedSubject(result[0]);
+        dispatch({type: Eaction.SET_QUIZ_SUBJECT, payload: result[0].subjectName})
+
       })
       
     };
     
     const setScreen = async () => {
-        const screen = await AsyncStorage.getItem('quizFlow');
-        if(screen == "Quizzes") {
+        setTab(quizFlow);
+        if(quizFlow == "Quizzes") {
             setTab('Quizzes');
         } else {
             setTab('Exam Preparation')
@@ -401,9 +338,9 @@ export const QuizHomePage = () => {
 
     const allChapterNavigate = () => {
         const a = [[{
-                    subject: selectedSubject.subjectName,
+                    subject: quizSubject,
                     allChapter: true,
-                    title: ["All Chapters: " + selectedSubject.subjectName]
+                    title: ["All Chapters: " + quizSubject]
                 }]]
         navigation.navigate('QuizFirstPage' as never, a as never);       
     }
@@ -430,7 +367,7 @@ export const QuizHomePage = () => {
                             style={{ height: 200, width: "100%" }} 
                             />
                     </View>
-                    <Text style={styles.allChapterCardtext}>{selectedSubject.subjectName} - All Chapters</Text>
+                    <Text style={styles.allChapterCardtext}>{quizSubject} - All Chapters</Text>
                 </View>
                 )
         }
@@ -456,7 +393,17 @@ export const QuizHomePage = () => {
                 <View style={styles.tabs}>
                     <Tabs activeTab={tab} tabs={['Quizzes', 'Exam Preparation']} onChangeTab={(i) => {
                         setTab(i)
-                        UtilService.setQuizFlow(i);}} ></Tabs>
+                        UtilService.setQuizFlow(i);
+                        if(i == 'Quizzes'){
+                            dispatch({
+                                type: Eaction.SET_QUIZ_FLOW, payload: 'Quizzes'
+                            })
+                        } else {
+                            dispatch({
+                                type: Eaction.SET_QUIZ_FLOW, payload: 'Exam Preparation'
+                            })
+                        }
+                    }} ></Tabs>
                 </View>
                 {tab == 'Exam Preparation' && 
                 <View style={[styles.buttoncontainer]}>
@@ -469,9 +416,9 @@ export const QuizHomePage = () => {
                             </View>
                             <ChipComponent
                                 themeColor={true}
-                                key={selectedSubject.subjectName + 'selected'}
+                                key={quizSubject + 'selected'}
                                 buttonData={{
-                                text: selectedSubject.subjectName,
+                                text: quizSubject,
                                 color: Colors.primary,
                                 }}
                                 isPressed={true}
@@ -479,7 +426,7 @@ export const QuizHomePage = () => {
                             />
                         </View>
                         <View style={styles.verticalSeperator}></View>
-                        <Student scrollable={false} selectedSubject={(item: any) => {changeSelectedSubject(item)}} themeColor={true} subject={selectedSubject.subjectName} />
+                        <Student scrollable={false} selectedSubject={(item: any) => {changeSelectedSubject(item)}} themeColor={true} subject={quizSubject} />
                     </ScrollView>
                 </View>}
                 <ScrollView style={styles.tabs}>
@@ -487,10 +434,10 @@ export const QuizHomePage = () => {
                     <Text style={styles.selectedOption}>{tab}</Text>
                     {data.map((item, key) => (
                             <ExamPrepQuizCard
-                            practiceProgress={item.practiceProgress} key={key}
+                            key={key}
                             score={item.score}
                             {...item}
-                            onCardClick={(i) => updateList(i)}                            />
+                            onCardClick={(i) => updateList(i)}/>
                         ))}
                         {loading && <>
                             {/* <Text style={{fontSize: 100}}>{loadingText}</Text> */}
@@ -506,22 +453,6 @@ export const QuizHomePage = () => {
                     {tab == 'Exam Preparation' && <>
                         {/* <ExamPrepSubjects subjects={subjects} /> */}
                         <View>
-                            {/* <TouchableOpacity >
-                                <Text style={styles.examPreparation}>Exam Preparation</Text>
-                            </TouchableOpacity> */}
-                            {/* <Text>Selected Subject</Text> */}
-
-                            {/* <View style={styles.buttoncontainer}>
-                                <Text style={styles.selectedSubject} numberOfLines={1} ellipsizeMode="tail" >
-                                    {selectedSubject?.subjectName}
-                                </Text>
-                                <TouchableOpacity onPress={() => setBottomSheetVisible(true)} style={styles.changebutton} >
-                                    <Text>Change</Text>
-                                    <View style={styles.pencil}>
-                                        <NewBackIcon height={'12'} width={'12'} fill={Colors.white} />
-                                    </View>
-                                </TouchableOpacity>
-                            </View> */}
                             <ExamPrepAllChapter selected={allChapterSelected} onCardClick={() => { allChapterCardClick ()}}
                             id={0} title={'All Chapters'} infoText={''} imageUrl={subjectUrl && subjectUrl.length ? subjectUrl: 'https://placehold.co/400'} noOfQuestions={0} done={false} practiceProgress={0} score={0} />
                         </View>
@@ -673,7 +604,7 @@ export const QuizHomePage = () => {
                                     <Student
                                     themeColor={true}
                                     selectedSubject={(item: any) => setTempSubject(item)}
-                                    subject={selectedSubject?.subjectName}
+                                    subject={quizSubject}
                                     scrollable={true}
                                     />
                                 </View>

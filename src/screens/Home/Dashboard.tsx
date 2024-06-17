@@ -16,6 +16,7 @@ import { ContinutPractice } from '../../components/home/components/ContinutPract
 import { httpClient } from '../../services/HttpServices'
 import { OutlinePlaneButton } from '../../components/common/IconButtonComponent/iconButtonStyle'
 import { LinearGradient } from 'expo-linear-gradient';
+import { useQuizContext, Eaction } from '../../context/QuizContext'
 
 
 interface mcqType {
@@ -49,10 +50,12 @@ export const Dashboard = () => {
         6: { uri: 'https://d1n3r5qejwo9yi.cloudfront.net/assets/users/f6.png' },
     };
 
+    const { state, dispatch } = useQuizContext()
+
+
     useFocusEffect(
         React.useCallback(() => {
-            // here we call api to update the data on home page
-            console.log("hii")
+            console.log("This is homepage")
         }, [])
     );
 
@@ -73,12 +76,16 @@ export const Dashboard = () => {
     }, [])
 
     const moveToExploreQuizPage = async () => {
-        await AsyncStorage.setItem('quizFlow', 'Quizzes');
+        dispatch({
+            type: Eaction.SET_QUIZ_FLOW, payload: 'Quizzes'
+        })
         navigator.navigate('Quiz' as never);
     }
 
     const moveToExploreExamPrepPage = async () => {
-        await AsyncStorage.setItem('quizFlow', 'Exam Prep');
+        dispatch({
+            type: Eaction.SET_QUIZ_FLOW, payload: 'Exam Preparation'
+        })
         navigator.navigate('Quiz' as never);
     }
 
